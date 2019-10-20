@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native'
 import { Text, Form, Item, Input, Label, Button } from 'native-base'
 import Layout from '../../constants/Layout'
 import PropTypes from 'prop-types'
+import Colors from '../../constants/Colors'
 
 class LoginForm extends Component {
   constructor(props) {
@@ -10,7 +11,7 @@ class LoginForm extends Component {
     this.state = {
       email: '',
       password: '',
-      inputValidity: false,
+      inputValidity: true,
     }
 
     this.onChangePassword = this.onChangePassword.bind(this)
@@ -89,7 +90,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   label: {
-    color: '#8c8c8c',
+    color: Colors.textGray,
   },
 })
 

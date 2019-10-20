@@ -34,6 +34,7 @@ const Trip = ({ timestamp, spacesAvailable }) => {
 
 Trip.propTypes = {
   timestamp: PropTypes.number.isRequired,
+  spacesAvailable: PropTypes.number.isRequired,
 }
 
 const styles = StyleSheet.create({

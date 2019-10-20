@@ -8,7 +8,7 @@ import {
 import TabBarIcon from '../components/TabBarIcon'
 import HomeScreen from '../screens/HomeScreen'
 import SettingsScreen from '../screens/SettingsScreen'
-import MyTripsScreen from '../screens/MyTripsScreen'
+import MyTripsNavigator from './MyTripsNavigator'
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -40,7 +40,7 @@ HomeStack.path = ''
 
 const MyTripsStack = createStackNavigator(
   {
-    MyTrips: MyTripsScreen,
+    MyTrips: MyTripsNavigator,
   },
   config
 )

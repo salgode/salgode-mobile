@@ -10,6 +10,7 @@ import HomeScreen from '../screens/HomeScreen'
 import SettingsScreen from '../screens/SettingsScreen'
 import TripsNavigator from './TripsNavigator'
 import MyTripsNavigator from './MyTripsNavigator'
+import EditProfileScreen from "../screens/EditProfileScreen"
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -77,6 +78,25 @@ MyTripsStack.navigationOptions = {
 
 MyTripsStack.path = ''
 
+const EditProfileStack = createStackNavigator(
+  {
+    EditProfile: EditProfileScreen,
+  },
+  config
+)
+
+EditProfileStack.navigationOptions = {
+  tabBarLabel: 'Perfil',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name='md-person'
+    />
+  ),
+}
+
+EditProfileStack.path = ''
+
 const SettingsStack = createStackNavigator(
   {
     Settings: SettingsScreen,
@@ -100,6 +120,7 @@ const tabNavigator = createBottomTabNavigator({
   HomeStack,
   TripsStack,
   MyTripsStack,
+  EditProfileStack,
   SettingsStack,
 })
 

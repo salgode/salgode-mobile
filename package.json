@@ -10,7 +10,8 @@
     "eject": "expo eject",
     "test": "jest --watchAll",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "release": "standard-version && git push --follow-tags origin master"
   },
   "jest": {
     "preset": "jest-expo"

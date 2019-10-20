@@ -7,7 +7,7 @@
     {"type": "chore", "section": "Chore"},
     {"type": "style", "section": "Style Improvements"},
     {"type": "refactor", "section": "Refactor"},
-    {"type": "docs", "hidden": true},
+    {"type": "docs", "section": "Docs"},
     {"type": "prerelease", "hidden": true},
     {"type": "release", "hidden": true},
     {"type": "perf", "hidden": true}

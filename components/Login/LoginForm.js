@@ -11,7 +11,7 @@ class LoginForm extends Component {
     this.state = {
       phoneNumber: '+56',
       password: '',
-      inputValidity: true,
+      inputValidity: false,
     }
 
     this.onChangePassword = this.onChangePassword.bind(this)

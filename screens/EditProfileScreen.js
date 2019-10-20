@@ -8,8 +8,6 @@ import {
   Keyboard,
   Alert,
   ActivityIndicator,
-  ScrollView,
-  Platform,
 } from 'react-native'
 import {
   Button,
@@ -19,7 +17,6 @@ import {
   Label,
   Text,
   Content,
-  Container,
   View,
 } from 'native-base'
 import { MaterialCommunityIcons } from '@expo/vector-icons'

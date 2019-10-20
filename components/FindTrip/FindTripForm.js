@@ -145,6 +145,11 @@ class FindTripForm extends Component {
               ))
             }
           </Picker>
+          <Input
+            editable={false}
+            value={this.state.startLocation ? this.state.startLocation.toString() : undefined}
+            isVisible={false}
+          />
         </Item>
         <Item inlineLabel regular style={styles.item} onPress={this.showDatePicker}>
           <Label style={styles.label}>DÍA</Label>

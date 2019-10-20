@@ -9,6 +9,7 @@ import TabBarIcon from '../components/TabBarIcon'
 import HomeScreen from '../screens/HomeScreen'
 import SettingsScreen from '../screens/SettingsScreen'
 import TripsNavigator from './TripsNavigator'
+import MyTripsNavigator from './MyTripsNavigator'
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -38,19 +39,38 @@ HomeStack.navigationOptions = {
 
 HomeStack.path = ''
 
-const MyTripsStack = createStackNavigator(
+const TripsStack = createStackNavigator(
   {
-    MyTrips: TripsNavigator,
+    Trips: TripsNavigator,
   },
   config
 )
 
-MyTripsStack.navigationOptions = {
+TripsStack.navigationOptions = {
   tabBarLabel: 'Viajes',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
       name={Platform.OS === 'ios' ? 'ios-car' : 'md-car'}
+    />
+  ),
+}
+
+TripsStack.path = ''
+
+const MyTripsStack = createStackNavigator(
+  {
+    MyTrips: MyTripsNavigator,
+  },
+  config
+)
+
+MyTripsStack.navigationOptions = {
+  tabBarLabel: 'Mis Viajes',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? 'ios-journal' : 'md-journal'}
     />
   ),
 }
@@ -78,6 +98,7 @@ SettingsStack.path = ''
 
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
+  TripsStack,
   MyTripsStack,
   SettingsStack,
 })

@@ -7,7 +7,7 @@ import RequestedTrip from './Trip/RequestedTrip'
 class MyTrips extends Component {
   constructor(props) {
     super(props)
-    this.Trip = this.props.isRequestedTrips ? MyTrip : RequestedTrip
+    this.Trip = this.props.isRequestedTrips ? RequestedTrip : MyTrip
   }
 
   render() {

@@ -1,6 +1,6 @@
 import BackendUrls from '../constants/BackendUrls'
 
-export const loginAsync = async ({ email, password }) => {
+export const loginAsync = async (email, password) => {
   const response = await fetch(BackendUrls.login, {
     method: 'POST',
     headers: {

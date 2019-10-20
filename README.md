@@ -5,7 +5,7 @@
 
 # Salgode
 
-Aplicación móvil para compartir viajes construida con [React Native](https://facebook.github.io/react-native/) para iOS y Android.
+Aplicación móvil para compartir viajes construida con [React Native](https://facebook.github.io/react-native/) para iOS y Android. Backend se encuentra [aquí](https://github.com/Varuscl/salgode-api)
 
 Sigue el desarrollo en [nuestro Trello](https://trello.com/b/GCTJ1iMU/salgode).
 

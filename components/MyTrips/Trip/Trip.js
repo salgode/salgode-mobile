@@ -19,6 +19,7 @@ const Trip = ({ timestamp, spacesAvailable }) => {
       <View style={styles.iconContainer}>
         <CardIcon
           name={Platform.OS === 'ios' ? 'ios-person-add' : 'md-person-add'}
+          onPress={() => null}
         />
         <View style={styles.spacesAvailableContainer}>
           <Text style={styles.spacesAvailable}>{spacesAvailable}</Text>

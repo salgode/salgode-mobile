@@ -4,16 +4,39 @@ import { Text, Form, Item, Input, Label, Button } from 'native-base'
 import Layout from '../../constants/Layout'
 
 class LoginForm extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      phoneNumber: '',
+      password: '',
+    }
+
+    this.onChangePassword = this.onChangePassword.bind(this)
+    this.onChangePhoneNumber = this.onChangePhoneNumber.bind(this)
+  }
+
+  onChangePhoneNumber(phoneNumber) {
+    this.setState({ phoneNumber })
+  }
+
+  onChangePassword(password) {
+    this.setState({ password })
+  }
+
   render() {
     return (
       <Form style={styles.form}>
         <Item inlineLabel regular style={styles.item}>
           <Label style={styles.label}>Celular</Label>
-          <Input style={styles.input} />
+          <Input style={styles.input} onChangeText={this.onChangePhoneNumber} />
         </Item>
         <Item inlineLabel last regular style={styles.item}>
           <Label style={styles.label}>Clave</Label>
-          <Input style={styles.input} secureTextEntry />
+          <Input
+            style={styles.input}
+            onChangeText={this.onChangePassword}
+            secureTextEntry
+          />
         </Item>
         <Button block borderRadius={10} style={styles.button}>
           <Text>Entrar</Text>

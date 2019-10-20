@@ -7,8 +7,9 @@ class LoginForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      phoneNumber: '',
+      phoneNumber: '+56',
       password: '',
+      inputValidity: false,
     }
 
     this.onChangePassword = this.onChangePassword.bind(this)
@@ -16,7 +17,8 @@ class LoginForm extends Component {
   }
 
   onChangePhoneNumber(phoneNumber) {
-    this.setState({ phoneNumber })
+    const validity = phoneNumber.match(/^(\+56)?\d{9}$/)
+    this.setState({ phoneNumber, inputValidity: !!validity })
   }
 
   onChangePassword(password) {
@@ -28,7 +30,12 @@ class LoginForm extends Component {
       <Form style={styles.form}>
         <Item inlineLabel regular style={styles.item}>
           <Label style={styles.label}>Celular</Label>
-          <Input style={styles.input} onChangeText={this.onChangePhoneNumber} />
+          <Input
+            style={styles.input}
+            onChangeText={this.onChangePhoneNumber}
+            keyboardType="phone-pad"
+            value={this.state.phoneNumber}
+          />
         </Item>
         <Item inlineLabel last regular style={styles.item}>
           <Label style={styles.label}>Clave</Label>
@@ -36,9 +43,15 @@ class LoginForm extends Component {
             style={styles.input}
             onChangeText={this.onChangePassword}
             secureTextEntry
+            value={this.state.password}
           />
         </Item>
-        <Button block borderRadius={10} style={styles.button}>
+        <Button
+          block
+          borderRadius={10}
+          style={styles.button}
+          disabled={!this.state.inputValidity}
+        >
           <Text>Entrar</Text>
         </Button>
       </Form>
@@ -58,7 +71,6 @@ const styles = StyleSheet.create({
     margin: 15,
   },
   input: {
-    textAlign: 'right',
     width: Layout.window.width * 0.85,
   },
   item: {

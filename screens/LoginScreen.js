@@ -1,5 +1,10 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import {
+  SafeAreaView,
+  Text,
+  StyleSheet,
+  KeyboardAvoidingView,
+} from 'react-native'
 import PropTypes from 'prop-types'
 import LoginForm from '../components/Login/LoginForm'
 
@@ -10,10 +15,10 @@ class LoginScreen extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView style={styles.container} behavior="height" enabled>
         <Text style={styles.title}>#Salgode</Text>
         <LoginForm />
-      </View>
+      </KeyboardAvoidingView>
     )
   }
 }
@@ -25,6 +30,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'space-evenly',
+    ...StyleSheet.absoluteFillObject,
   },
   title: {
     fontSize: 50,

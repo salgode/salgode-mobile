@@ -7,17 +7,28 @@ import {
 } from 'react-native'
 import PropTypes from 'prop-types'
 import LoginForm from '../components/Login/LoginForm'
+import { loginAsync } from '../utils/login'
 
 class LoginScreen extends Component {
   static navigationOptions = {
     header: null,
   }
 
+  constructor(props) {
+    super(props)
+    this.onSend = this.onSend.bind(this)
+  }
+
+  async onSend(email, password) {
+    const user = await loginAsync(email, password)
+    console.log(user)
+  }
+
   render() {
     return (
       <KeyboardAvoidingView style={styles.container} behavior="height" enabled>
         <Text style={styles.title}>#Salgode</Text>
-        <LoginForm />
+        <LoginForm onSend={this.onSend} />
       </KeyboardAvoidingView>
     )
   }

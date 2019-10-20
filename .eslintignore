@@ -1,0 +1,5 @@
+/node_modules/*
+/.expo-shared/*
+/assets/*
+__tests__/*
+components/__tests__/*

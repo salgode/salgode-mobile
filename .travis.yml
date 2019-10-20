@@ -1,0 +1,32 @@
+if: tag IS blank
+
+language: node_js
+node_js:
+  - 12.9.1
+
+branches:
+  only:
+    - dev
+
+cache:
+  npm: true
+  yarn: true
+  directories:
+    - node_modules
+
+before_install:
+  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.17.3
+  - source /home/travis/.bashrc
+
+stages:
+  - name: linter
+    if: type != push
+
+jobs:
+  include:
+    # Opened pull request
+    - stage: linter
+      install:
+        - yarn install
+      script:
+        - yarn lint

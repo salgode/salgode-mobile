@@ -9,6 +9,7 @@ import TabBarIcon from '../components/TabBarIcon'
 import HomeScreen from '../screens/HomeScreen'
 import SettingsScreen from '../screens/SettingsScreen'
 import TripsNavigator from './TripsNavigator'
+import ChooseTripsScreen from '../screens/ChooseTripsScreen'
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -57,6 +58,25 @@ MyTripsStack.navigationOptions = {
 
 MyTripsStack.path = ''
 
+const ChooseTripsStack = createStackNavigator(
+  {
+    ChooseTrips: ChooseTripsScreen,
+  },
+  config
+)
+
+ChooseTripsStack.navigationOptions = {
+  tabBarLabel: 'Pedir Viaje',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? 'ios-car' : 'md-car'}
+    />
+  ),
+}
+
+ChooseTripsStack.path = ''
+
 const SettingsStack = createStackNavigator(
   {
     Settings: SettingsScreen,
@@ -69,7 +89,7 @@ SettingsStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+      name={Platform.OS === 'ios' ? 'ios-settings' : 'md-options'}
     />
   ),
 }
@@ -79,6 +99,7 @@ SettingsStack.path = ''
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
   MyTripsStack,
+  ChooseTripsStack,
   SettingsStack,
 })
 

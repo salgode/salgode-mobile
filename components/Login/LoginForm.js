@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { StyleSheet } from 'react-native'
 import { Text, Form, Item, Input, Label, Button } from 'native-base'
 import Layout from '../../constants/Layout'
+import PropTypes from 'prop-types'
+import Colors from '../../constants/Colors'
 
 class LoginForm extends Component {
   constructor(props) {
@@ -9,7 +11,7 @@ class LoginForm extends Component {
     this.state = {
       phoneNumber: '+56',
       password: '',
-      inputValidity: false,
+      inputValidity: true,
     }
 
     this.onChangePassword = this.onChangePassword.bind(this)
@@ -51,6 +53,7 @@ class LoginForm extends Component {
           borderRadius={10}
           style={styles.button}
           disabled={!this.state.inputValidity}
+          onPress={this.props.onSend}
         >
           <Text>Entrar</Text>
         </Button>
@@ -59,7 +62,9 @@ class LoginForm extends Component {
   }
 }
 
-LoginForm.propTypes = {}
+LoginForm.propTypes = {
+  onSend: PropTypes.func.isRequired,
+}
 
 const styles = StyleSheet.create({
   button: {
@@ -79,7 +84,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   label: {
-    color: '#8c8c8c',
+    color: Colors.textGray,
   },
 })
 

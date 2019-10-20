@@ -1,10 +1,17 @@
 import React, { Component } from 'react'
 import { FlatList, SafeAreaView } from 'react-native'
 import PropTypes from 'prop-types'
-import Trip from './Trip/Trip'
+import MyTrip from './Trip/Trip'
+import RequestedTrip from './Trip/RequestedTrip'
 
 class MyTrips extends Component {
+  constructor(props) {
+    super(props)
+    this.Trip = this.props.isRequestedTrips ? MyTrip : RequestedTrip
+  }
+
   render() {
+    const Trip = this.Trip
     return (
       <SafeAreaView>
         <FlatList
@@ -12,7 +19,9 @@ class MyTrips extends Component {
           renderItem={({ item }) => (
             <Trip
               timestamp={item.timestamp}
-              spacesAvailable={item.spacesAvailable}
+              spacesUsed={item.spacesUsed}
+              user={item.user}
+              status={item.status}
             />
           )}
         />
@@ -23,10 +32,12 @@ class MyTrips extends Component {
 
 MyTrips.propTypes = {
   trips: PropTypes.array,
+  isRequestedTrips: PropTypes.bool,
 }
 
 MyTrips.defaultProps = {
   trips: [],
+  isRequestedTrips: false,
 }
 
 export default MyTrips

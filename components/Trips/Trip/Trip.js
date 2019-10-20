@@ -7,7 +7,7 @@ import Colors from '../../../constants/Colors'
 import CardIcon from './CardIcon'
 import TimeInfo from './TimeInfo'
 
-const Trip = ({ timestamp, spacesAvailable }) => {
+export const Trip = ({ timestamp, spacesUsed }) => {
   return (
     <Card style={styles.container}>
       <View style={styles.locationContainer}>
@@ -21,8 +21,8 @@ const Trip = ({ timestamp, spacesAvailable }) => {
           name={Platform.OS === 'ios' ? 'ios-person-add' : 'md-person-add'}
           onPress={() => null}
         />
-        <View style={styles.spacesAvailableContainer}>
-          <Text style={styles.spacesAvailable}>{spacesAvailable}</Text>
+        <View style={styles.spacesUsedContainer}>
+          <Text style={styles.spacesUsed}>{spacesUsed}</Text>
           <CardIcon
             name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'}
             bottom
@@ -35,7 +35,7 @@ const Trip = ({ timestamp, spacesAvailable }) => {
 
 Trip.propTypes = {
   timestamp: PropTypes.number.isRequired,
-  spacesAvailable: PropTypes.number.isRequired,
+  spacesUsed: PropTypes.number.isRequired,
 }
 
 const styles = StyleSheet.create({
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     borderRadius: 20,
     flexDirection: 'row',
-    height: 180,
+    // height: 180,
     justifyContent: 'space-between',
     padding: 15,
   },
@@ -56,13 +56,13 @@ const styles = StyleSheet.create({
     height: 150,
     justifyContent: 'space-evenly',
   },
-  spacesAvailable: {
+  spacesUsed: {
     color: Colors.textGray,
     fontWeight: '700',
     marginBottom: 10,
     marginRight: 10,
   },
-  spacesAvailableContainer: { alignItems: 'center', flexDirection: 'row' },
+  spacesUsedContainer: { alignItems: 'center', flexDirection: 'row' },
 })
 
 export default Trip

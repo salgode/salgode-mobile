@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
   },
   location: {
     fontSize: 17,
+    marginRight: 15,
   },
 })
 

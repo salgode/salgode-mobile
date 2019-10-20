@@ -9,7 +9,7 @@ export const timestampToDate = timestamp => {
     if (tomorrow.setHours(0, 0, 0, 0) === date.setHours(0, 0, 0, 0)) {
       return 'Mañana'
     }
-    return date.toDateString()
+    return date.toLocaleDateString()
   }
 }
 

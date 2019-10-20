@@ -19,3 +19,14 @@ export function loginUser(email, password) {
     },
   }
 }
+
+export function setUser(user) {
+  return {
+    type: actions.USER_LOGIN_SUCESS,
+    payload: {
+      data: {
+        user: user,
+      },
+    },
+  }
+}

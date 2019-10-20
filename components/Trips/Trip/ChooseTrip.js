@@ -6,14 +6,15 @@ import Colors from '../../../constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
 import TimeInfo from './TimeInfo'
 import PedirBoton from './PedirBoton'
+import PropTypes from 'prop-types'
 
-const ChooseTrip = ({ timestamp, spacesUsed, user}) => {
+const ChooseTrip = ({ timestamp, spacesUsed, user, onSend}) => {
   let statusColor
   let statusText
 
   return (
     <Card style={styles.containerRequested}>
-      <View style={{backgroundColor: statusColor }}>
+      <View style={{ backgroundColor: statusColor }}>
         <Text style={styles.statusText}>{statusText}</Text>
       </View>
       <CardItem>
@@ -51,10 +52,16 @@ const ChooseTrip = ({ timestamp, spacesUsed, user}) => {
       </CardItem>
       <CardItem>
         <TimeInfo timestamp={timestamp} />
-        <PedirBoton />
+        <PedirBoton onSend={onSend}/>
       </CardItem>
     </Card>
   )
+}
+
+ChooseTrip.propTypes = {
+  timestamp: PropTypes.number.isRequired,
+  spacesUsed: PropTypes.number.isRequired,
+  onSend: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

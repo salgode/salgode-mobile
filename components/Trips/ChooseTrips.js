@@ -21,6 +21,7 @@ class ChooseTrips extends Component {
               spacesUsed={item.spacesUsed}
               user={item.user}
               status={item.status}
+              onSend={this.props.onSend}
             />
           )}
         />
@@ -32,6 +33,7 @@ class ChooseTrips extends Component {
 ChooseTrips.propTypes = {
   trips: PropTypes.array,
   isRequestedTrips: PropTypes.bool,
+  onSend: PropTypes.func,
 }
 
 ChooseTrips.defaultProps = {

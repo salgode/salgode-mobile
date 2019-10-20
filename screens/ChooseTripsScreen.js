@@ -8,10 +8,29 @@ class ChooseTripsScreen extends Component {
     title: 'Pedir Viaje',
   }
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      avalibleTrips: null,
+      rerender: true,
+    }
+
+    this.onSend = this.onSend.bind(this)
+  }
+
+  onSend() {
+    //fetch to POST new passanger in trip
+  }
+
+  getTrips() {
+    //fetch to GET actual trips to show in screen
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <ChooseTrips
+          onSend={this.state.onSend}
           trips={[
             {
               timestamp: 1571590002,

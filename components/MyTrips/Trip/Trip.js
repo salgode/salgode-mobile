@@ -1,13 +1,13 @@
 import React from 'react'
 import { StyleSheet, Platform } from 'react-native'
-import { Card, View } from 'native-base'
+import { Card, View, Text } from 'native-base'
 import Location from './Location'
 import PropTypes from 'prop-types'
 import Colors from '../../../constants/Colors'
 import CardIcon from './CardIcon'
 import TimeInfo from './TimeInfo'
 
-const Trip = ({ timestamp }) => {
+const Trip = ({ timestamp, spacesAvailable }) => {
   return (
     <Card style={styles.container}>
       <View style={styles.locationContainer}>
@@ -20,10 +20,13 @@ const Trip = ({ timestamp }) => {
         <CardIcon
           name={Platform.OS === 'ios' ? 'ios-person-add' : 'md-person-add'}
         />
-        <CardIcon
-          name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'}
-          bottom
-        />
+        <View style={styles.spacesAvailableContainer}>
+          <Text style={styles.spacesAvailable}>{spacesAvailable}</Text>
+          <CardIcon
+            name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'}
+            bottom
+          />
+        </View>
       </View>
     </Card>
   )
@@ -42,11 +45,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 15,
   },
-  iconContainer: { height: 150, justifyContent: 'space-between' },
+  iconContainer: {
+    alignItems: 'flex-end',
+    height: 150,
+    justifyContent: 'space-between',
+  },
   locationContainer: {
     height: 150,
     justifyContent: 'space-evenly',
   },
+  spacesAvailable: {
+    color: Colors.textGray,
+    fontWeight: '700',
+    marginBottom: 10,
+    marginRight: 10,
+  },
+  spacesAvailableContainer: { alignItems: 'center', flexDirection: 'row' },
 })
 
 export default Trip

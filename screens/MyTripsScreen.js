@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { View, StyleSheet } from 'react-native'
 import PropTypes from 'prop-types'
 import Trip from '../components/MyTrips/Trip/Trip'
+import MyTrips from '../components/MyTrips/MyTrips'
 
 class MyTripsScreen extends Component {
   static navigationOptions = {
@@ -11,7 +12,7 @@ class MyTripsScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Trip timestamp={Date.now()} />
+        <MyTrips />
       </View>
     )
   }

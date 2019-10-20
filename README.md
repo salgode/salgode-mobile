@@ -11,11 +11,13 @@ Sigue el desarrollo en [nuestro Trello](https://trello.com/b/GCTJ1iMU/salgode).
 
 ## Indice
 
-- [Scripts](#scripts)
-- [Workflow](#workflow)
-  - [Gitflow](#gitflow)
-  - [Release](#release)
-- [Motores](#motores)
+- [Salgode](#salgode)
+  - [Indice](#indice)
+  - [Scripts](#scripts)
+  - [Workflow](#workflow)
+    - [Development](#development)
+    - [Release](#release)
+  - [Motores](#motores)
 
 ## Scripts
 

@@ -10,7 +10,7 @@ import HomeScreen from '../screens/HomeScreen'
 import SettingsScreen from '../screens/SettingsScreen'
 import TripsNavigator from './TripsNavigator'
 import MyTripsNavigator from './MyTripsNavigator'
-import EditProfileScreen from "../screens/EditProfileScreen"
+import EditProfileScreen from '../screens/EditProfileScreen'
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -88,10 +88,7 @@ const EditProfileStack = createStackNavigator(
 EditProfileStack.navigationOptions = {
   tabBarLabel: 'Perfil',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name='md-person'
-    />
+    <TabBarIcon focused={focused} name="md-person" />
   ),
 }
 

@@ -24,6 +24,7 @@ class MyTrips extends Component {
               status={item.status}
             />
           )}
+          keyExtractor={item => item.tripId}
         />
       </SafeAreaView>
     )

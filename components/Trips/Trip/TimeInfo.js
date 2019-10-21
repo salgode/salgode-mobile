@@ -29,22 +29,27 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'flex-start',
     flexDirection: 'column',
+    marginLeft: 5,
   },
   icon: {
     color: 'grey',
-    fontSize: 18,
+    fontSize: 15,
     paddingLeft: 5,
     paddingRight: 10,
     // Correct icons white space
-    top: 2,
+    //top: 2,
+    alignSelf: 'center'
   },
   location: {
     color: 'grey',
-    fontSize: 17,
+    fontSize: 13,
     marginRight: 15,
+    fontWeight: '500',
+    alignSelf: 'center',
   },
   rowElement: {
     flexDirection: 'row',
+    alignContent: 'center',
   },
 })
 

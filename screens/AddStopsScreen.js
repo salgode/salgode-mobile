@@ -7,6 +7,7 @@ import CardInput from '../components/CardInput'
 
 class AddStopsScreen extends Component {
   render() {
+    const { startStop, endStop } = this.props
     return (
       <View style={styles.container}>
         <ScrollView
@@ -14,25 +15,9 @@ class AddStopsScreen extends Component {
           contentContainerStyle={styles.contentContainer}
         >
           <View style={styles.group}>
-            <CardInput
-              text={this.props.startStop}
-              input={
-                <Picker selectedValue="java" mode="dropdown">
-                  <Picker.Item label="Java" value="java" />
-                  <Picker.Item label="JavaScript" value="js" />
-                </Picker>
-              }
-            />
+            <CardInput text={startStop} />
 
-            <CardInput
-              text="#A"
-              input={
-                <Picker selectedValue="java" mode="dropdown">
-                  <Picker.Item label="Java" value="java" />
-                  <Picker.Item label="JavaScript" value="js" />
-                </Picker>
-              }
-            />
+            <CardInput text={endStop} />
           </View>
 
           <View style={styles.group}>
@@ -121,6 +106,7 @@ const mapStateToProps = ({ user, createTrip }) => {
   return {
     user,
     startStop: createTrip.startStop,
+    endStop: createTrip.endStop,
   }
 }
 

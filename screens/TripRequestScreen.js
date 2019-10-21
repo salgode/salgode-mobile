@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Spinner } from 'native-base'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 import TripRequest from '../components/Trips/TripRequest'
 import { createSlot } from '../redux/actions/slots'
 import { connect } from 'react-redux'
@@ -47,8 +47,8 @@ class TripRequestScreen extends Component {
     return !this.state.stops ? (
       <Spinner />
     ) : (
-        <TripRequest stops={this.state.stops} onSend={this.onRequestSlot} />
-      )
+      <TripRequest stops={this.state.stops} onSend={this.onRequestSlot} />
+    )
   }
 }
 

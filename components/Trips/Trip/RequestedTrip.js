@@ -1,10 +1,10 @@
 import React from 'react'
 import { StyleSheet, Platform } from 'react-native'
-import { Card, View, Text, CardItem } from 'native-base'
 import Location from './Location'
 import Colors from '../../../constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
 import TimeInfo from './TimeInfo'
+import { Card, View, Text, CardItem } from 'native-base'
 
 const RequestedTrip = ({ timestamp, spacesUsed, user, status }) => {
   let statusColor

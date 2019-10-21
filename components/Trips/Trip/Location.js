@@ -21,14 +21,14 @@ const circleDiameter = 17
 const styles = StyleSheet.create({
   circle: {
     borderRadius: circleDiameter / 2,
+    elevation: 1,
     height: circleDiameter,
     marginRight: 15,
-    width: circleDiameter,
     shadowColor: '#bbb',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
-    elevation: 1,
+    width: circleDiameter,
   },
   container: {
     alignItems: 'center',

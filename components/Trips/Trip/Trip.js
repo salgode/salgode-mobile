@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     borderRadius: 20,
     flexDirection: 'row',
-    // height: 180,
     justifyContent: 'space-between',
     padding: 15,
   },

@@ -1,10 +1,8 @@
 import React from 'react'
-import { Platform, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { View, Text } from 'native-base'
-import { Ionicons } from '@expo/vector-icons'
-import Icon from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
-import Colors from '../../../constants/Colors'
 import { showDate, showOnlyTime } from '../../../utils/time'
 
 const TimeInfo = ({ timestamp }) => {
@@ -32,21 +30,21 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     flexDirection: 'column',
   },
-  rowElement: {
-    flexDirection: 'row',
-  },
   icon: {
     color: 'grey',
     fontSize: 18,
     paddingLeft: 5,
     paddingRight: 10,
     // Correct icons white space
-    top: 2
+    top: 2,
   },
   location: {
     color: 'grey',
     fontSize: 17,
     marginRight: 15,
+  },
+  rowElement: {
+    flexDirection: 'row',
   },
 })
 

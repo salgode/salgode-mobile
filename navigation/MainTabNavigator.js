@@ -114,9 +114,9 @@ CreateTripStack.path = ''
 const tabNavigator = createBottomTabNavigator({
   ChooseTripsStack,
   TripsStack,
+  CreateTripStack,
   EditProfileStack,
   // SettingsStack,
-  CreateTripStack,
 })
 
 tabNavigator.path = ''

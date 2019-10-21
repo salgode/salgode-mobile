@@ -1,6 +1,5 @@
 {
   "expo": {
-    "bundleIdentifier": "cl.salgode.salgodeapp",
     "name": "SALGODE",
     "slug": "salgode",
     "privacy": "public",
@@ -25,6 +24,7 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "cl.salgode.salgodeapp",
       "supportsTablet": true
     }
   }

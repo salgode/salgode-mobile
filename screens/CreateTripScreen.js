@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { ScrollView, StyleSheet, View, Text } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
-import { DatePicker, Button } from 'native-base'
-import CardInput from '../components/CardInput'
+import { Button } from 'native-base'
+import styled from 'styled-components'
 import CardInputSelector from '../components/CardInputSelector'
 import {
   setStartStop,
@@ -18,6 +18,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker'
 class CreateTripScreen extends Component {
   state = {
     isDateTimePickerVisible: false,
+    pickedDate: null,
   }
 
   componentDidMount = () => {
@@ -35,11 +36,22 @@ class CreateTripScreen extends Component {
 
   handleDatePicked = date => {
     this.props.setStartTime(date)
+    this.setState({ pickedDate: date })
     this.hideDateTimePicker()
   }
 
   render() {
     const { navigation, startStop, endStop, startTime } = this.props
+    const disabled = startStop && endStop && startTime ? false : true
+    const { pickedDate } = this.state
+    let day
+    let hours
+    let minutes
+    if (pickedDate) {
+      day = pickedDate.toLocaleDateString()
+      hours = pickedDate.getHours()
+      minutes = pickedDate.getMinutes()
+    }
 
     return (
       <View style={styles.container}>
@@ -64,11 +76,12 @@ class CreateTripScreen extends Component {
           </View>
 
           <View style={styles.group}>
-            <Button
-              style={{ justifyContent: 'center' }}
-              onPress={this.showDateTimePicker}
-            >
-              <Text>Hora/Fecha de Salida</Text>
+            <Button style={styles.dateButton} onPress={this.showDateTimePicker}>
+              <WhiteText>
+                {pickedDate
+                  ? `${day} - ${hours}:${minutes < 10 ? '0' : ''}${minutes}`
+                  : 'Hora/Fecha de Salida'}
+              </WhiteText>
             </Button>
             <DateTimePicker
               mode="datetime"
@@ -82,11 +95,11 @@ class CreateTripScreen extends Component {
         <View>
           <Button
             block
-            style={styles.addButton}
-            disabled={startStop && endStop && startTime ? false : true}
+            style={disabled ? styles.addButtonDisabled : styles.addButton}
+            disabled={disabled}
             onPress={() => navigation.navigate('AddStopsScreen')}
           >
-            <Text>Agrega una Parada</Text>
+            <WhiteText>Agrega una Parada</WhiteText>
           </Button>
         </View>
       </View>
@@ -100,6 +113,14 @@ CreateTripScreen.navigationOptions = {
 
 const styles = StyleSheet.create({
   addButton: {
+    backgroundColor: '#33C534',
+    marginBottom: 25,
+    marginLeft: 15,
+    marginRight: 15,
+    marginTop: 10,
+  },
+  addButtonDisabled: {
+    backgroundColor: '#818E94',
     marginBottom: 25,
     marginLeft: 15,
     marginRight: 15,
@@ -109,17 +130,25 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     flex: 1,
   },
-
   contentContainer: {
     paddingTop: 30,
   },
-  group: {
-    marginBottom: 20,
-    marginLeft: 20,
-    marginRight: 20,
+
+  dateButton: {
+    backgroundColor: '#0000FF',
+    justifyContent: 'center',
     marginTop: 20,
   },
+  group: {
+    marginBottom: 40,
+    marginLeft: 20,
+    marginRight: 20,
+  },
 })
+
+const WhiteText = styled.Text`
+  color: white;
+`
 
 const mapStateToProps = ({ user, createTrip, spots }) => {
   return {
@@ -140,7 +169,9 @@ const mapDispatchToProps = {
   clearEndStop,
   getAllSpots,
 }
-
+CreateTripScreen.navigationOptions = {
+  title: 'Crear un viaje',
+}
 export default connect(
   mapStateToProps,
   mapDispatchToProps

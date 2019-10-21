@@ -115,7 +115,7 @@ const tabNavigator = createBottomTabNavigator({
   ChooseTripsStack,
   TripsStack,
   EditProfileStack,
-  SettingsStack,
+  // SettingsStack,
   CreateTripStack,
 })
 

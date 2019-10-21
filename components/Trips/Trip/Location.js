@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     width: circleDiameter,
   },
   container: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
     flexDirection: 'row',
     marginLeft: 9,
   },

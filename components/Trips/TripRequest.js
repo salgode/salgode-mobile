@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import StopsList from '../CurrentTrip/StopsList'
 
 const TripRequest = ({ stops = ['SJ', 'CC', 'MVP'], onSend }) => {
-  console.log(stops)
+  // console.log(stops)
   const [state, setState] = React.useState({ selectedStop: stops[0] })
 
   return (
@@ -20,7 +20,7 @@ const TripRequest = ({ stops = ['SJ', 'CC', 'MVP'], onSend }) => {
         selectedValue={state.selectedStop}
         onValueChange={value => setState({ selectedStop: value })}
         mode="dropdown"
-        style={styles.pciker}
+        style={styles.picker}
       >
         {stops.map((stop, i) => (
           <Picker.Item key={`PickerItem${i}`} label={stop} value={stop} />
@@ -41,18 +41,20 @@ TripRequest.propTypes = {
 const styles = StyleSheet.create({
   button: {
     alignSelf: 'center',
+    backgroundColor: '#33C534',
     borderRadius: 10,
-    height: '10%',
+    // height: '10%',
     justifyContent: 'center',
+    marginTop: 20,
     width: '70%',
   },
   container: {
     padding: '10%',
     ...StyleSheet.absoluteFillObject,
   },
-  pciker: {
-    borderWidth: 1,
+  picker: {
     borderRadius: 15,
+    borderWidth: 1,
   },
   stopsTitle: {
     fontSize: 20,

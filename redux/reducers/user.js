@@ -4,7 +4,7 @@ export default function userReducer(state = {}, action) {
   switch (action.type) {
     case userActions.USER_LOGIN:
       return { ...state, loading: true }
-    case userActions.USER_LOGIN_SUCESS:
+    case userActions.USER_LOGIN_SUCCESS:
       return { ...state, loading: false, user: action.payload.data }
     case userActions.USER_LOGIN_FAIL:
       return {

@@ -72,7 +72,7 @@ class LoginScreen extends Component {
       return response
     })
 
-    console.log(user.payload.data)
+    console.log(user.payload)
 
     this.setState({ loading: false })
 

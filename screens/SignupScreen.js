@@ -43,8 +43,7 @@ class SignupScreen extends Component {
     ) {
       alert('Hubo un problema registrandote. Por favor intentalo de nuevo.')
     } else {
-      console.log('Exito')
-      this.props.navigation.navigate('Trips')
+      this.props.navigation.navigate('ChooseTrips')
     }
   }
 

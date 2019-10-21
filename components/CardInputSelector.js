@@ -14,12 +14,7 @@ export default class CardInputSelector extends Component {
     this.textInputRef = React.createRef()
   }
   static defaultProps = {
-    data: [
-      { comuna: 'Lo Espejo', parada: 'Municipalidad' },
-      { comuna: 'Lo Espejo', parada: 'Colegio Salvador' },
-      { comuna: 'Lo Espejo', parada: 'Metro' },
-      { comuna: 'Santiago', parada: 'Metro Santiago' },
-    ],
+    data: [],
     placeHolder: '',
     onSelect: () => {},
     onClear: () => {},
@@ -37,7 +32,7 @@ export default class CardInputSelector extends Component {
   onItemPress = item => {
     const { setValue } = this.props
     if (setValue) {
-      this.setState({ input: item.parada })
+      this.setState({ input: item.name })
     } else {
       this.setState({ input: '' })
     }
@@ -57,8 +52,8 @@ export default class CardInputSelector extends Component {
         <View style={{ flex: 1 }}>
           {this.props.data.map((item, index) => {
             if (
-              item.parada.toLowerCase().includes(input) ||
-              item.comuna.toLowerCase().includes(input)
+              item.name.toLowerCase().includes(input) ||
+              item.address.toLowerCase().includes(input)
             ) {
               return (
                 <TouchableOpacity
@@ -67,7 +62,7 @@ export default class CardInputSelector extends Component {
                   style={styles.listItem}
                 >
                   <Text>
-                    {item.parada}, {item.comuna}
+                    {item.name}, {item.address}
                   </Text>
                 </TouchableOpacity>
               )

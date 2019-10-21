@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, KeyboardAvoidingView } from 'react-native'
+import ScaledImage from 'react-native-scaled-image'
+import styled from 'styled-components'
+import { StyleSheet, KeyboardAvoidingView } from 'react-native'
 import { connect } from 'react-redux'
 import { Spinner } from 'native-base'
 import PropTypes from 'prop-types'
@@ -7,6 +9,7 @@ import LoginForm from '../components/Login/LoginForm'
 import { loginAsync } from '../utils/login'
 import { setUser } from '../redux/actions/user'
 
+const logo = require('../assets/images/login_icon.png')
 class LoginScreen extends Component {
   static navigationOptions = {
     header: null,
@@ -38,8 +41,8 @@ class LoginScreen extends Component {
 
   render() {
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="height" enabled>
-        <Text style={styles.title}>#Salgode</Text>
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <SalgoDeLogo source={logo} height={160} />
         <LoginForm onSend={this.onSend} />
         {this.state.loading && <Spinner />}
       </KeyboardAvoidingView>
@@ -61,10 +64,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     ...StyleSheet.absoluteFillObject,
   },
-  title: {
-    fontSize: 50,
-    fontWeight: '900',
-  },
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -75,3 +74,8 @@ export default connect(
   null,
   mapDispatchToProps
 )(LoginScreen)
+
+const SalgoDeLogo = styled(ScaledImage)`
+  margin-right: auto;
+  margin-left: auto;
+`

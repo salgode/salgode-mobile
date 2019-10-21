@@ -14,7 +14,7 @@ class AddStopsScreen extends Component {
   renderStops = () => {
     const { stops } = this.state
     return stops.map((stop, index) => {
-      return <Text key={index}>{stop.parada}</Text>
+      return <CardInput key={index} text={stop.parada}></CardInput>
     })
   }
 

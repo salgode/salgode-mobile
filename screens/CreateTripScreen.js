@@ -6,8 +6,26 @@ import { DatePicker, Button } from 'native-base'
 import CardInput from '../components/CardInput'
 import CardInputSelector from '../components/CardInputSelector'
 import { setStartStop, setEndStop, setStops } from '../redux/actions/createtrip'
+import DateTimePicker from 'react-native-modal-datetime-picker'
 
 class CreateTripScreen extends Component {
+  state = {
+    isDateTimePickerVisible: false,
+  }
+
+  showDateTimePicker = () => {
+    this.setState({ isDateTimePickerVisible: true })
+  }
+
+  hideDateTimePicker = () => {
+    this.setState({ isDateTimePickerVisible: false })
+  }
+
+  handleDatePicked = date => {
+    console.log('A date has been picked: ', date)
+    this.hideDateTimePicker()
+  }
+
   render() {
     const { navigation } = this.props
     return (
@@ -29,42 +47,14 @@ class CreateTripScreen extends Component {
           </View>
 
           <View style={styles.group}>
-            <CardInput
-              text="Día"
-              input={
-                <DatePicker
-                  defaultDate={new Date(2018, 4, 4)}
-                  minimumDate={new Date(2018, 1, 1)}
-                  locale={'es'}
-                  modalTransparent={false}
-                  animationType={'fade'}
-                  androidMode={'default'}
-                  placeHolderText="Select date"
-                  textStyle={{ color: 'green' }}
-                  placeHolderTextStyle={{ color: '#d3d3d3' }}
-                  //   onDateChange={this.setDate}
-                  disabled={false}
-                />
-              }
-            />
-
-            <CardInput
-              text="Hora"
-              input={
-                <DatePicker
-                  defaultDate={new Date(2018, 4, 4)}
-                  minimumDate={new Date(2018, 1, 1)}
-                  locale={'es'}
-                  modalTransparent={false}
-                  animationType={'fade'}
-                  androidMode={'default'}
-                  placeHolderText="Select date"
-                  textStyle={{ color: 'green' }}
-                  placeHolderTextStyle={{ color: '#d3d3d3' }}
-                  //   onDateChange={this.setDate}
-                  disabled={false}
-                />
-              }
+            <Button onPress={this.showDateTimePicker}>
+              <Text>Show DatePicker</Text>
+            </Button>
+            <DateTimePicker
+              mode="datetime"
+              isVisible={this.state.isDateTimePickerVisible}
+              onConfirm={this.handleDatePicked}
+              onCancel={this.hideDateTimePicker}
             />
           </View>
         </ScrollView>

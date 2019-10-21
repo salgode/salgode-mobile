@@ -21,8 +21,13 @@ const circleDiameter = 17
 const styles = StyleSheet.create({
   circle: {
     borderRadius: circleDiameter / 2,
+    elevation: 1,
     height: circleDiameter,
     marginRight: 15,
+    shadowColor: '#bbb',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
     width: circleDiameter,
   },
   container: {
@@ -30,6 +35,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   location: {
+    color: 'grey',
     fontSize: 17,
   },
 })

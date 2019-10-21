@@ -49,7 +49,11 @@ export const showTime = timeTimestamp => {
   timeTimestamp -= hoursToMilliseconds(hours)
   const minutes = Math.floor(timeTimestamp / (60 * 1000))
   timeTimestamp -= minutesToMilliseconds(minutes)
-  return hours.toString() + ':' + minutes.toString()
+  return (
+    hours.toString().padStart(2, '0') +
+    ':' +
+    minutes.toString().padStart(2, '0')
+  )
 }
 
 export const showOnlyTime = timestamp => {
@@ -61,7 +65,11 @@ export const showOnlyTime = timestamp => {
   timestamp -= hoursToMilliseconds(hours)
   const minutes = Math.floor(timestamp / (60 * 1000))
   timestamp -= minutesToMilliseconds(minutes)
-  return hours.toString() + ':' + minutes.toString()
+  return (
+    hours.toString().padStart(2, '0') +
+    ':' +
+    minutes.toString().padStart(2, '0')
+  )
 }
 
 export const getDateTimestamp = date => {

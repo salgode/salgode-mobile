@@ -9,6 +9,7 @@ import TabBarIcon from '../components/TabBarIcon'
 import HomeScreen from '../screens/HomeScreen'
 import SettingsScreen from '../screens/SettingsScreen'
 import CreateTripScreen from '../screens/CreateTripScreen'
+import AddStopsScreen from '../screens/AddStopsScreen'
 import TripsNavigator from './TripsNavigator'
 import MyTripsNavigator from './MyTripsNavigator'
 
@@ -99,7 +100,8 @@ SettingsStack.path = ''
 
 const CreateTripStack = createStackNavigator(
   {
-    Home: CreateTripScreen,
+    CreateTripScreen,
+    AddStopsScreen
   },
   config
 )

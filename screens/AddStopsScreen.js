@@ -5,9 +5,8 @@ import { loginUser } from '../redux/actions/user'
 import { Picker, DatePicker, Button } from 'native-base'
 import CardInput from '../components/CardInput'
 
-class CreateTripScreen extends Component {
+class AddStopsScreen extends Component {
   render() {
-    const { navigation } = this.props;
     return (
       <View style={styles.container}>
         <ScrollView
@@ -16,7 +15,7 @@ class CreateTripScreen extends Component {
         >
           <View style={styles.group}>
             <CardInput
-              text="#De"
+              text="#Agrega Paradas"
               input={
                 <Picker selectedValue="java" mode="dropdown">
                   <Picker.Item label="Java" value="java" />
@@ -81,9 +80,9 @@ class CreateTripScreen extends Component {
           <Button
             block
             style={styles.addButton}
-            onPress={() => navigation.navigate('AddStopsScreen')}
+            onPress={() => console.log('')}
           >
-            <Text>Agrega una Parada</Text>
+            <Text>Crear Viaje</Text>
           </Button>
         </View>
       </View>
@@ -91,7 +90,7 @@ class CreateTripScreen extends Component {
   }
 }
 
-CreateTripScreen.navigationOptions = {
+AddStopsScreen.navigationOptions = {
   header: null,
 }
 
@@ -131,4 +130,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CreateTripScreen)
+)(AddStopsScreen)

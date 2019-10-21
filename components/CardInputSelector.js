@@ -46,7 +46,7 @@ export default class CardInputSelector extends Component {
   }
 
   cleanInput = () => {
-    this.setState({ input: ''})
+    this.setState({ input: '' })
     this.props.onClear()
   }
 
@@ -54,7 +54,7 @@ export default class CardInputSelector extends Component {
     const { displayList, input } = this.state
     if (displayList) {
       return (
-        <View style={styles.itemsList}>
+        <View style={{ flex: 1 }}>
           {this.props.data.map((item, index) => {
             if (
               item.parada.toLowerCase().includes(input) ||
@@ -96,14 +96,10 @@ export default class CardInputSelector extends Component {
                 }
                 onFocus={() => this.setState({ displayList: true })}
               />
-              {/*
-              <Button icon transparen>
-                <Icon name="close" /> 
-              </Button>
-              */}
-              <TouchableOpacity onPress={this.cleanInput}>
+
+              <Button icon transparen onPress={this.cleanInput}>
                 <Icon name="close" />
-              </TouchableOpacity>
+              </Button>
             </View>
           </Card>
           <Card style={(styles.paper, styles.textView)}>
@@ -116,15 +112,16 @@ export default class CardInputSelector extends Component {
 }
 
 const styles = StyleSheet.create({
-  columnViews: { alignItems: 'center', flexDirection: 'column' },
-  input: { alignItems: 'flex-end', flex: 1 },
-  itemsList: {
-    position: 'absolute',
-    zIndex: 10,
+  listItem: {
+    borderColor: '#faaaaa',
+    borderRadius: 4,
+    borderWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: 1,
+    padding: 10,
   },
-  listItem: { alignItems: 'center', flexDirection: 'row' },
   paper: { borderRadius: 10 },
-  rowView: { alignItems: 'center', flexDirection: 'row' },
   text: { fontWeight: 'bold', margin: 10 },
   textView: {
     alignItems: 'center',
@@ -132,6 +129,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginLeft: 10,
-    position: 'relative',
   },
 })

@@ -44,22 +44,25 @@ class CreateTripScreen extends Component {
           <View style={styles.group}>
             <CardInputSelector
               text="#Desde"
-              placeHolder="Agrega punto de partida"
+              placeHolder="Filtra por Comuna o Parada"
               onSelect={item => this.props.setStartStop(item.parada)}
               onClear={this.props.clearStartStop}
             />
 
             <CardInputSelector
               text="#A"
-              placeHolder="Agrega punto de termino"
+              placeHolder="Filtra por Comuna o Parada"
               onSelect={item => this.props.setEndStop(item.parada)}
               onClear={this.props.clearEndStop}
             />
           </View>
 
           <View style={styles.group}>
-            <Button onPress={this.showDateTimePicker}>
-              <Text>Show DatePicker</Text>
+            <Button
+              style={{ justifyContent: 'center' }}
+              onPress={this.showDateTimePicker}
+            >
+              <Text>Hora/Fecha de Salida</Text>
             </Button>
             <DateTimePicker
               mode="datetime"

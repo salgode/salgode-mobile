@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Text, Button } from 'native-base'
 import ScaledImage from 'react-native-scaled-image'
 import styled from 'styled-components'
 import { StyleSheet, KeyboardAvoidingView, Alert } from 'react-native'
@@ -20,6 +21,7 @@ class LoginScreen extends Component {
       loading: false,
     }
     this.onSend = this.onSend.bind(this)
+    this.onCreateAccountPress = this.onCreateAccountPress.bind(this)
   }
 
   async onSend(email, password) {
@@ -38,6 +40,11 @@ class LoginScreen extends Component {
     } else {
       this.props.navigation.navigate('Home')
     }
+    await this.setState({ loading: false })
+  }
+
+  onCreateAccountPress() {
+    this.props.navigation.navigate('Signup')
   }
 
   render() {
@@ -45,6 +52,9 @@ class LoginScreen extends Component {
       <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
         <SalgoDeLogo source={logo} height={160} />
         <LoginForm onSend={this.onSend} />
+        <Button transparent onPress={this.onCreateAccountPress}>
+          <Text>No tienes una cuenta? Crea una aquí</Text>
+        </Button>
         {this.state.loading && <Spinner />}
       </KeyboardAvoidingView>
     )

@@ -6,7 +6,21 @@ import ChooseTrip from './Trip/ChooseTrip'
 class ChooseTrips extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      loading: false,
+    }
     this.ChooseTrip = ChooseTrip
+    this.onReload = this.onReload.bind(this)
+  }
+
+  componentDidMount() {
+    this.onReload()
+  }
+
+  async onReload() {
+    this.setState({ loading: true })
+    await this.props.onReload()
+    this.setState({ loading: false })
   }
 
   render() {
@@ -15,10 +29,11 @@ class ChooseTrips extends Component {
       <SafeAreaView>
         <FlatList
           data={this.props.trips}
+          onRefresh={this.onReload}
+          refreshing={this.state.loading}
           renderItem={({ item }) => (
             <Trip
               timestamp={item.timestamp}
-              spacesUsed={item.spacesUsed}
               user={item.user}
               status={item.status}
               startPoint={item.startPoint}
@@ -26,6 +41,7 @@ class ChooseTrips extends Component {
               onSend={this.props.onSend}
             />
           )}
+          keyExtractor={item => item.tripId}
         />
       </SafeAreaView>
     )
@@ -36,6 +52,7 @@ ChooseTrips.propTypes = {
   trips: PropTypes.array,
   isRequestedTrips: PropTypes.bool,
   onSend: PropTypes.func,
+  onReload: PropTypes.func.isRequired,
 }
 
 ChooseTrips.defaultProps = {

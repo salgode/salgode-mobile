@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, KeyboardAvoidingView, Text } from 'react-native'
-import Layout from '../constants/Layout'
+import { View, StyleSheet, Text, Alert } from 'react-native'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import ChooseTrips from '../components/Trips/ChooseTrips'
+import { fetchFutureTrips } from '../redux/actions/trips'
 
 class ChooseTripsScreen extends Component {
   static navigationOptions = {
-    title: 'Pedir Viaje',
+    // title: 'Pedir Viaje',
+    header: null,
   }
 
   constructor(props) {
@@ -17,14 +19,22 @@ class ChooseTripsScreen extends Component {
     }
 
     this.onSend = this.onSend.bind(this)
+    this.getTrips = this.getTrips.bind(this)
   }
 
   onSend() {
     //fetch to POST new passanger in trip
   }
 
-  getTrips() {
-    //fetch to GET actual trips to show in screen
+  async getTrips() {
+    // console.log(this.props.user)
+    const response = await this.props.fetchFutureTrips(this.props.user.token)
+
+    if (response.error) {
+      Alert.alert(
+        'Hubo un problema obteniendo los viajes. Por favor intentalo de nuevo.'
+      )
+    }
   }
 
   render() {
@@ -34,74 +44,17 @@ class ChooseTripsScreen extends Component {
         <View>
           <ChooseTrips
             onSend={this.state.onSend}
-            trips={[
-              {
-                timestamp: 1571633513000,
-                spacesUsed: 3,
-                key: '0',
-                user: {
-                  name: 'Thomas Brahm',
-                  reputation: 10,
-                },
-                startPoint: 'Metro San Joaquín',
-                endPoint: 'Estadio Banco Central'
+            onReload={this.getTrips}
+            trips={this.props.trips.map(trip => ({
+              timestamp: new Date(trip.etd).getTime(),
+              user: {
+                name: 'Temp',
+                reputation: 0,
               },
-              {
-                timestamp: 1571503602000,
-                spacesUsed: 3,
-                key: '1',
-                user: {
-                  name: 'Daniel Leal',
-                  reputation: 7,
-                },
-                startPoint: 'Metro San Joaquín',
-                endPoint: 'Universo Chino'
-              },
-              {
-                timestamp: 1571586402000,
-                spacesUsed: 3,
-                key: '2',
-                user: {
-                  name: 'Example User',
-                  reputation: 8,
-                },
-                startPoint: 'Metro San Joaquín',
-                endPoint: 'Costanera Center'
-              },
-              {
-                timestamp: 1570985202000,
-                spacesUsed: 3,
-                key: '3',
-                user: {
-                  name: 'John Doe',
-                  reputation: 3,
-                },
-                startPoint: 'Metro San Joaquín',
-                endPoint: 'Universidad Alberto Hurtado'
-              },
-              {
-                timestamp: 1571593602000,
-                spacesUsed: 3,
-                key: '4',
-                user: {
-                  name: 'Alexander Rovint',
-                  reputation: 9,
-                },
-                startPoint: 'Metro San Joaquín',
-                endPoint: 'Parroquia Nuestra Señora de la Medalla Milagrosa'
-              },
-              {
-                timestamp: 1571676402000,
-                spacesUsed: 3,
-                key: '5',
-                user: {
-                  name: 'Mike Hansen',
-                  reputation: 1,
-                },
-                startPoint: 'Metro San Joaquín',
-                endPoint: 'Mall VIVO El Centro'
-              },
-            ]}
+              startPoint: trip.route_points[0],
+              endPoint: trip.route_points[trip.route_points.length - 1],
+              tripId: trip.trip_id,
+            }))}
           />
         </View>
       </View>
@@ -111,6 +64,11 @@ class ChooseTripsScreen extends Component {
 
 ChooseTripsScreen.propTypes = {
   isRequestedTrips: PropTypes.bool,
+  fetchFutureTrips: PropTypes.func.isRequired,
+  // user: PropTypes.shape({
+  //   token: PropTypes.string.isRequired,
+  // }).isRequired,
+  trips: PropTypes.array.isRequired,
 }
 
 ChooseTripsScreen.defaultProps = {
@@ -126,11 +84,26 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#3b3e43',
-    padding: 15,
-    textAlign: 'center',
     fontSize: 35,
     fontWeight: '900',
+    padding: 15,
+    textAlign: 'center',
   },
 })
 
-export default ChooseTripsScreen
+const mapStateToProps = state => {
+  console.log(state)
+  return {
+    user: state.user,
+    trips: state.futureTrips.futureTrips || [],
+  }
+}
+
+const mapDispatchToProps = dispatch => ({
+  fetchFutureTrips: token => dispatch(fetchFutureTrips(token)),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ChooseTripsScreen)

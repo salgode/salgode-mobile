@@ -22,6 +22,7 @@ export default class CardInputSelector extends Component {
     ],
     placeHolder: '',
     onSelect: () => {},
+    onClear: () => {},
     fields: [],
     text: '',
     setValue: true,
@@ -40,6 +41,11 @@ export default class CardInputSelector extends Component {
     }
     this.setState({ displayList: false })
     this.props.onSelect(item)
+  }
+
+  cleanInput = () => {
+    this.setState({ input: ''})
+    this.props.onClear()
   }
 
   renderList = () => {
@@ -88,9 +94,14 @@ export default class CardInputSelector extends Component {
                 }
                 onFocus={() => this.setState({ displayList: true })}
               />
+              {/*
               <Button icon transparen>
-                <Icon name="close" />
+                <Icon name="close" /> 
               </Button>
+              */}
+              <TouchableOpacity onPress={this.cleanInput}>
+                <Icon name="close" />
+              </TouchableOpacity>
             </View>
           </Card>
           <Card style={(styles.paper, styles.textView)}>

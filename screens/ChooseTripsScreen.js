@@ -92,7 +92,6 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = state => {
-  console.log(state)
   return {
     user: state.user,
     trips: state.futureTrips.futureTrips || [],

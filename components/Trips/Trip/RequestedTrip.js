@@ -104,6 +104,7 @@ const styles = StyleSheet.create({
   containerBottom: {
     justifyContent: 'space-evenly',
     width: '100%',
+  },
   container: {
     flexDirection: 'column',
   },

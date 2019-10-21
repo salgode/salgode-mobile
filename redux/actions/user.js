@@ -5,8 +5,6 @@ export const actions = {
 }
 
 export function loginUser(email, password) {
-  console.log(email, password)
-
   return {
     type: actions.USER_LOGIN,
     payload: {

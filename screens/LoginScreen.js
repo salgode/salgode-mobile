@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, KeyboardAvoidingView } from 'react-native'
+import { Text, StyleSheet, KeyboardAvoidingView, Alert } from 'react-native'
 import { connect } from 'react-redux'
 import { Spinner } from 'native-base'
 import PropTypes from 'prop-types'
@@ -26,9 +26,11 @@ class LoginScreen extends Component {
       return response.payload.data
     })
     if (!user) {
-      return 'Hubo un problema iniciando sesión. Por favor intentalo de nuevo.'
+      Alert.alert(
+        'Hubo un problema iniciando sesión. Por favor intentalo de nuevo.'
+      )
     } else if (!user.email) {
-      alert(
+      Alert.alert(
         'Las credenciales ingresadas son inválidas. Por favor intentalo de nuevo.'
       )
     } else {

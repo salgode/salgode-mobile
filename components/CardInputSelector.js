@@ -97,8 +97,8 @@ export default class CardInputSelector extends Component {
                 onFocus={() => this.setState({ displayList: true })}
               />
 
-              <Button icon transparen onPress={this.cleanInput}>
-                <Icon name="close" />
+              <Button icon transparent onPress={this.cleanInput}>
+                <Icon name="close" color="#0000FF" />
               </Button>
             </View>
           </Card>
@@ -113,7 +113,7 @@ export default class CardInputSelector extends Component {
 
 const styles = StyleSheet.create({
   listItem: {
-    borderColor: '#faaaaa',
+    borderColor: '#818E94',
     borderRadius: 4,
     borderWidth: 1,
     flexDirection: 'row',

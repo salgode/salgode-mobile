@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FlatList, SafeAreaView } from 'react-native'
+import { FlatList, SafeAreaView, View, ActivityIndicator } from 'react-native'
 import PropTypes from 'prop-types'
 import ChooseTrip from './Trip/ChooseTrip'
 
@@ -25,6 +25,13 @@ class ChooseTrips extends Component {
 
   render() {
     const Trip = this.ChooseTrip
+    if (this.state.loading) {
+      return (
+        <View>
+          <ActivityIndicator size="large" color="#0000FF" marginTop={20} />
+        </View>
+      )
+    }
     return (
       <SafeAreaView>
         <FlatList

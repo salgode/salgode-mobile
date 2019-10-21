@@ -1,13 +1,22 @@
 import React, { Component } from 'react'
 import { Text, Button } from 'native-base'
-import ScaledImage from 'react-native-scaled-image'
-import styled from 'styled-components'
-import { StyleSheet, KeyboardAvoidingView, Alert } from 'react-native'
+import {
+  StyleSheet,
+  KeyboardAvoidingView,
+  Alert,
+  Dimensions,
+  Animated,
+  Keyboard,
+} from 'react-native'
 import { connect } from 'react-redux'
 import { Spinner } from 'native-base'
 import PropTypes from 'prop-types'
 import LoginForm from '../components/Login/LoginForm'
 import { loginUser } from '../redux/actions/user'
+
+const window = Dimensions.get('window')
+export const IMAGE_HEIGHT = window.width / 1.5
+export const IMAGE_HEIGHT_SMALL = window.width / 5
 
 const logo = require('../assets/images/login_icon.png')
 class LoginScreen extends Component {
@@ -22,6 +31,37 @@ class LoginScreen extends Component {
     }
     this.onSend = this.onSend.bind(this)
     this.onCreateAccountPress = this.onCreateAccountPress.bind(this)
+    this.imageHeight = new Animated.Value(IMAGE_HEIGHT)
+  }
+
+  componentWillMount() {
+    this.keyboardWillShowSub = Keyboard.addListener(
+      'keyboardWillShow',
+      this.keyboardWillShow
+    )
+    this.keyboardWillHideSub = Keyboard.addListener(
+      'keyboardWillHide',
+      this.keyboardWillHide
+    )
+  }
+
+  componentWillUnmount() {
+    this.keyboardWillShowSub.remove()
+    this.keyboardWillHideSub.remove()
+  }
+
+  keyboardWillShow = event => {
+    Animated.timing(this.imageHeight, {
+      duration: event.duration,
+      toValue: IMAGE_HEIGHT_SMALL,
+    }).start()
+  }
+
+  keyboardWillHide = event => {
+    Animated.timing(this.imageHeight, {
+      duration: event.duration,
+      toValue: IMAGE_HEIGHT,
+    }).start()
   }
 
   async onSend(email, password) {
@@ -48,13 +88,19 @@ class LoginScreen extends Component {
 
   render() {
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-        <SalgoDeLogo source={logo} height={160} />
-        <LoginForm onSend={this.onSend} />
-        <Button transparent onPress={this.onCreateAccountPress}>
-          <Text>No tienes una cuenta? Crea una aquí</Text>
-        </Button>
-        {this.state.loading && <Spinner />}
+      <KeyboardAvoidingView style={styles.container} behavior="padding">
+        <Animated.Image
+          source={logo}
+          style={[styles.logo, { height: this.imageHeight }]}
+        />
+        {!this.state.loading && <LoginForm onSend={this.onSend} />}
+        {this.state.loading && <Spinner color="blue" />}
+        {!this.state.loading && (
+          <Button transparent onPress={this.onCreateAccountPress}>
+            <Text>No tienes una cuenta? Crea una aquí</Text>
+          </Button>
+        )}
+        {this.state.loading && <Text>Comprobando datos</Text>}
       </KeyboardAvoidingView>
     )
   }
@@ -71,8 +117,14 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flex: 1,
-    justifyContent: 'space-evenly',
-    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+  },
+  logo: {
+    height: IMAGE_HEIGHT,
+    marginBottom: 20,
+    marginTop: 20,
+    padding: 10,
+    resizeMode: 'contain',
   },
 })
 
@@ -84,8 +136,3 @@ export default connect(
   null,
   mapDispatchToProps
 )(LoginScreen)
-
-const SalgoDeLogo = styled(ScaledImage)`
-  margin-right: auto;
-  margin-left: auto;
-`

@@ -33,4 +33,71 @@ export const timestampToTime = timestamp => {
   }
 }
 
+export const showDate = dateTimestamp => {
+  // Requires every timestamp to be in milliseconds
+  const date = new Date(dateTimestamp)
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1 // Months start at 0
+  const day = date.getDate()
+  return day.toString() + '/' + month.toString() + '/' + year.toString()
+}
+
+export const showTime = timeTimestamp => {
+  // Requires every timestamp to be in milliseconds
+  // Gets milliseconds since the day started
+  const hours = Math.floor(timeTimestamp / (60 * 60 * 1000))
+  timeTimestamp -= hoursToMilliseconds(hours)
+  const minutes = Math.floor(timeTimestamp / (60 * 1000))
+  timeTimestamp -= minutesToMilliseconds(minutes)
+  return hours.toString() + ':' + minutes.toString()
+}
+
+export const showOnlyTime = timestamp => {
+  // Requires every timestamp to be in milliseconds
+  const date = new Date(timestamp)
+  date.setHours(0, 0, 0, 0)
+  timestamp -= date.getTime()
+  const hours = Math.floor(timestamp / (60 * 60 * 1000))
+  timestamp -= hoursToMilliseconds(hours)
+  const minutes = Math.floor(timestamp / (60 * 1000))
+  timestamp -= minutesToMilliseconds(minutes)
+  return hours.toString() + ':' + minutes.toString()
+}
+
+export const getDateTimestamp = date => {
+  // Requires every timestamp to be in milliseconds
+  // Offset into the day
+  const millisecondsOffset = date.getMilliseconds()
+  const secondsOffset = secondsToMilliseconds(date.getSeconds())
+  const minutesOffset = minutesToMilliseconds(date.getMinutes())
+  const hoursOffset = hoursToMilliseconds(date.getHours())
+  const offset =
+    millisecondsOffset + secondsOffset + minutesOffset + hoursOffset
+
+  // Return start of the day timestamp
+  return date.getTime() - offset
+}
+
+export const getTimeTimestamp = time => {
+  // Requires every timestamp to be in milliseconds
+  // Milliseconds since the start of the day
+  const milliseconds = time.getMilliseconds()
+  const seconds = secondsToMilliseconds(time.getSeconds())
+  const minutes = minutesToMilliseconds(time.getMinutes())
+  const hours = hoursToMilliseconds(time.getHours())
+  return milliseconds + seconds + minutes + hours
+}
+
+export const secondsToMilliseconds = seconds => {
+  return seconds * 1000
+}
+
+export const minutesToMilliseconds = minutes => {
+  return minutes * 60 * 1000
+}
+
+export const hoursToMilliseconds = hours => {
+  return hours * 60 * 60 * 1000
+}
+
 export default timestampToDate

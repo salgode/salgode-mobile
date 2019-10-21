@@ -2,23 +2,28 @@ import React, { Component } from 'react'
 import { StyleSheet } from 'react-native'
 import { Text, Form, Item, Input, Label, Button } from 'native-base'
 import Layout from '../../constants/Layout'
+import PropTypes from 'prop-types'
+import Colors from '../../constants/Colors'
 
 class LoginForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      phoneNumber: '+56',
+      email: '',
       password: '',
-      inputValidity: false,
+      inputValidity: true,
     }
 
     this.onChangePassword = this.onChangePassword.bind(this)
-    this.onChangePhoneNumber = this.onChangePhoneNumber.bind(this)
+    this.onChangeEmail = this.onChangeEmail.bind(this)
   }
 
-  onChangePhoneNumber(phoneNumber) {
-    const validity = phoneNumber.match(/^(\+56)?\d{9}$/)
-    this.setState({ phoneNumber, inputValidity: !!validity })
+  onChangeEmail(email) {
+    const validity = email.match(
+      // eslint-disable-next-line no-useless-escape
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    )
+    this.setState({ email, inputValidity: validity })
   }
 
   onChangePassword(password) {
@@ -29,12 +34,13 @@ class LoginForm extends Component {
     return (
       <Form style={styles.form}>
         <Item inlineLabel regular style={styles.item}>
-          <Label style={styles.label}>Celular</Label>
+          <Label style={styles.label}>Email</Label>
           <Input
             style={styles.input}
-            onChangeText={this.onChangePhoneNumber}
-            keyboardType="phone-pad"
-            value={this.state.phoneNumber}
+            onChangeText={this.onChangeEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            value={this.state.email}
           />
         </Item>
         <Item inlineLabel last regular style={styles.item}>
@@ -51,6 +57,9 @@ class LoginForm extends Component {
           borderRadius={10}
           style={styles.button}
           disabled={!this.state.inputValidity}
+          onPress={() =>
+            this.props.onSend(this.state.email, this.state.password)
+          }
         >
           <Text>Entrar</Text>
         </Button>
@@ -59,7 +68,9 @@ class LoginForm extends Component {
   }
 }
 
-LoginForm.propTypes = {}
+LoginForm.propTypes = {
+  onSend: PropTypes.func.isRequired,
+}
 
 const styles = StyleSheet.create({
   button: {
@@ -79,7 +90,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   label: {
-    color: '#8c8c8c',
+    color: Colors.textGray,
   },
 })
 

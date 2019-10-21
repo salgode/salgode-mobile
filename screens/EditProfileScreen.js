@@ -303,7 +303,7 @@ const EditProfileScreen = () => {
   if (isLoading) {
     return (
       <View>
-        <ActivityIndicator size="large" color="orange" />
+        <ActivityIndicator size="large" color="blue" marginTop={20} />
       </View>
     )
   }
@@ -360,7 +360,7 @@ const EditProfileScreen = () => {
               <Button
                 block
                 borderRadius={10}
-                style={styles.button}
+                style={styles.blueButton}
                 disabled={isSaving || !isValidUser}
                 onPress={onPressSaveProfile}
               >
@@ -375,7 +375,7 @@ const EditProfileScreen = () => {
   )
 }
 EditProfileScreen.navigationOptions = {
-  title: 'Editar Perfil',
+  title: 'Editar perfil',
 }
 export default EditProfileScreen
 
@@ -383,6 +383,10 @@ const photoSize = 96
 
 const styles = StyleSheet.create({
   artificialKeyboardPadding: { height: 128 },
+  blueButton: {
+    backgroundColor: '#0000FF',
+    marginTop: 20,
+  },
   button: {
     marginTop: 20,
   },

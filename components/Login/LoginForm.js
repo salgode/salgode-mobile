@@ -73,6 +73,7 @@ LoginForm.propTypes = {
 
 const styles = StyleSheet.create({
   button: {
+    backgroundColor: '#0000FF',
     marginTop: 20,
   },
   form: {

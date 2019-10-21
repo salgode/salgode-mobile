@@ -2,14 +2,20 @@ import React from 'react'
 import { StyleSheet, Platform } from 'react-native'
 import { Card, View, Text, CardItem } from 'native-base'
 import Location from './Location'
-import Colors from '../../../constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
-import Icon from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/AntDesign'
 import TimeInfo from './TimeInfo'
 import PedirBoton from './PedirBoton'
 import PropTypes from 'prop-types'
 
-const ChooseTrip = ({ timestamp, spacesUsed, user, startPoint, endPoint, onSend}) => {
+const ChooseTrip = ({
+  timestamp,
+  // spacesUsed,
+  user,
+  startPoint,
+  endPoint,
+  onSend,
+}) => {
   return (
     <Card style={styles.containerRequested}>
       <CardItem style={styles.dataContainer}>
@@ -26,10 +32,6 @@ const ChooseTrip = ({ timestamp, spacesUsed, user, startPoint, endPoint, onSend}
               <Icon name="like1" style={styles.infoIcon} />
               <Text style={styles.iconText}>{user.reputation}</Text>
             </View>
-            <View style={styles.iconContainer}>
-              <Icon name="addusergroup" style={styles.infoIcon} />
-              <Text style={styles.iconText}>{spacesUsed}</Text>
-            </View>
           </View>
         </View>
       </CardItem>
@@ -39,7 +41,7 @@ const ChooseTrip = ({ timestamp, spacesUsed, user, startPoint, endPoint, onSend}
       </CardItem>
       <CardItem style={styles.bottomSection}>
         <TimeInfo timestamp={timestamp} />
-        <PedirBoton onSend={onSend}/>
+        <PedirBoton onSend={onSend} />
       </CardItem>
     </Card>
   )
@@ -47,43 +49,50 @@ const ChooseTrip = ({ timestamp, spacesUsed, user, startPoint, endPoint, onSend}
 
 ChooseTrip.propTypes = {
   timestamp: PropTypes.number.isRequired,
-  spacesUsed: PropTypes.number.isRequired,
+  // spacesUsed: PropTypes.number.isRequired,
   onSend: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
+  bottomSection: {
+    alignSelf: 'stretch',
+  },
   containerRequested: {
+    alignItems: 'flex-start',
     backgroundColor: '#fff',
     borderColor: '#ffffff',
-    borderWidth: 0,
-    alignItems: 'flex-start',
     borderRadius: 20,
+    borderWidth: 0,
+    elevation: 1,
     padding: 15,
     shadowColor: '#bbb',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
-    elevation: 1,
   },
   dataContainer: {
-    alignSelf: 'stretch'
-  },
-  iconInfoGroup: {
-    position: 'absolute',
-    right: 5
+    alignSelf: 'stretch',
   },
   iconContainer: {
     alignItems: 'center',
     flexDirection: 'row',
   },
+  iconInfoGroup: {
+    position: 'absolute',
+    right: 5,
+  },
   iconText: {
     color: 'grey',
+  },
+  infoIcon: {
+    color: 'grey',
+    fontSize: 30,
+    paddingRight: 5,
   },
   locationContainer: {
     alignItems: 'flex-start',
     flexDirection: 'column',
   },
-  statusText: { color: 'white' },
   user: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -97,14 +106,6 @@ const styles = StyleSheet.create({
   userText: {
     fontSize: 17,
     marginLeft: 15,
-  },
-  bottomSection: {
-    alignSelf: 'stretch'
-  },
-  infoIcon: {
-    color: 'grey',
-    fontSize: 30,
-    paddingRight: 5,
   },
 })
 

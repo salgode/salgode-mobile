@@ -1,5 +1,6 @@
 {
   "expo": {
+    "bundleIdentifier": "cl.salgode.salgodeapp",
     "name": "SALGODE",
     "slug": "salgode",
     "privacy": "public",

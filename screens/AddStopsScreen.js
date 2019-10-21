@@ -43,7 +43,7 @@ class AddStopsScreen extends Component {
             <Text style={{ fontWeight: 'bold', marginRight: 10 }}>
               #Parada {index + 1}{' '}
             </Text>
-            <Text>{stop.parada}</Text>
+            <Text>{stop.name}</Text>
           </View>
           <Button icon transparen onPress={() => this.cleanInput(index)}>
             <Icon name="close" />
@@ -66,13 +66,13 @@ class AddStopsScreen extends Component {
               <Text style={{ fontWeight: 'bold', marginRight: 10 }}>
                 #Desde{' '}
               </Text>
-              <Text>{startStop}</Text>
+              <Text>{startStop.name}</Text>
             </View>
             <View style={styles.stopContainer}>
               <Text style={{ fontWeight: 'bold', marginRight: 10 }}>
                 #Hasta{' '}
               </Text>
-              <Text>{endStop}</Text>
+              <Text>{endStop.name}</Text>
             </View>
           </View>
           <View style={styles.group}>

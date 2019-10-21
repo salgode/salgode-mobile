@@ -51,7 +51,7 @@ class CreateTripScreen extends Component {
             <CardInputSelector
               text="#Desde"
               placeHolder="Filtra por Comuna o Parada"
-              onSelect={item => this.props.setStartStop(item.parada)}
+              onSelect={item => this.props.setStartStop(item)}
               onClear={this.props.clearStartStop}
               data={this.props.spots}
             />
@@ -59,7 +59,7 @@ class CreateTripScreen extends Component {
             <CardInputSelector
               text="#A"
               placeHolder="Filtra por Comuna o Parada"
-              onSelect={item => this.props.setEndStop(item.parada)}
+              onSelect={item => this.props.setEndStop(item)}
               onClear={this.props.clearEndStop}
               data={this.props.spots}
             />
@@ -78,6 +78,11 @@ class CreateTripScreen extends Component {
               onConfirm={this.handleDatePicked}
               onCancel={this.hideDateTimePicker}
             />
+
+            <Text>
+              {startStop ? 'start' : 'nostart'} {endStop ? 'end' : 'no end'}{' '}
+              {startTime ? 'time' : 'no time'}
+            </Text>
           </View>
         </ScrollView>
 

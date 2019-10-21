@@ -38,7 +38,7 @@ class LoginScreen extends Component {
         'Hubo un problema iniciando sesión. Por favor intentalo de nuevo.'
       )
     } else {
-      this.props.navigation.navigate('Home')
+      this.props.navigation.navigate('Trips')
     }
     await this.setState({ loading: false })
   }

@@ -6,7 +6,6 @@ import {
 } from 'react-navigation'
 
 import TabBarIcon from '../components/TabBarIcon'
-import HomeScreen from '../screens/HomeScreen'
 import SettingsScreen from '../screens/SettingsScreen'
 import TripsNavigator from './TripsNavigator'
 import MyTripsNavigator from './MyTripsNavigator'
@@ -16,29 +15,6 @@ const config = Platform.select({
   web: { headerMode: 'screen' },
   default: {},
 })
-
-const HomeStack = createStackNavigator(
-  {
-    Home: HomeScreen,
-  },
-  config
-)
-
-HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
-    />
-  ),
-}
-
-HomeStack.path = ''
 
 const TripsStack = createStackNavigator(
   {
@@ -114,7 +90,6 @@ SettingsStack.navigationOptions = {
 SettingsStack.path = ''
 
 const tabNavigator = createBottomTabNavigator({
-  HomeStack,
   TripsStack,
   MyTripsStack,
   EditProfileStack,

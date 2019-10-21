@@ -26,6 +26,9 @@
     "ios": {
       "bundleIdentifier": "cl.salgode.salgodeapp",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "cl.salgode.salgodeapp"
     }
   }
 }

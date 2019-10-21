@@ -44,7 +44,7 @@ class ChooseTrips extends Component {
               user={item.user}
               status={item.status}
               stops={item.stops}
-              onSend={() => this.props.onSend(item.stops)}
+              onSend={() => this.props.onSend(item.stops, item.tripId)}
             />
           )}
           keyExtractor={item => item.tripId}

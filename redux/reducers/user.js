@@ -15,7 +15,7 @@ export default function userReducer(state = {}, action) {
     case userActions.USER_SIGNUP:
       return { ...state, loading: true }
     case userActions.USER_SIGNUP_SUCCESS:
-      return { ...state, loading: false, user: action.payload.data }
+      return { ...state, loading: false, user: action.payload.data.user }
     case userActions.USER_SIGNUP_FAIL:
       return {
         ...state,

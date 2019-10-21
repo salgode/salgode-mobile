@@ -26,7 +26,7 @@ const TripRequest = ({ stops = ['SJ', 'CC', 'MVP'], onSend }) => {
           <Picker.Item key={`PickerItem${i}`} label={stop} value={stop} />
         ))}
       </Picker>
-      <Button style={styles.button} onSend={() => onSend(state.selectedStop)}>
+      <Button style={styles.button} onPress={() => onSend(state.selectedStop)}>
         <Text>Confirmar Solicitud</Text>
       </Button>
     </View>

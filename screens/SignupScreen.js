@@ -36,10 +36,15 @@ class SignupScreen extends Component {
     this.setState({ loading: false })
 
     console.log(user)
-    if (user.error || !user.payload.data.email) {
+    if (
+      user.error ||
+      !user.payload.data.user ||
+      !user.payload.data.user.email
+    ) {
       alert('Hubo un problema registrandote. Por favor intentalo de nuevo.')
     } else {
-      this.props.navigation.navigate('Home')
+      console.log('Exito')
+      this.props.navigation.navigate('Trips')
     }
   }
 
@@ -48,10 +53,9 @@ class SignupScreen extends Component {
       <KeyboardAvoidingView behavior="padding" enabled>
         <ScrollView>
           <View style={styles.container}>
-            <SignupForm onSend={this.onSend} />
             {this.state.loading && <Spinner />}
+            <SignupForm onSend={this.onSend} />
           </View>
-          {this.state.loading && <Spinner />}
         </ScrollView>
       </KeyboardAvoidingView>
     )

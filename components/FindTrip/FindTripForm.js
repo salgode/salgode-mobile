@@ -209,15 +209,23 @@ FindTripForm.propTypes = {}
 const styles = StyleSheet.create({
   form: {
     alignItems: 'center',
-    height: 250,
+    height: 450,
     margin: 15,
   },
   item: {
+    backgroundColor: '#ffffff',
+    borderColor: '#ffffff',
+    borderWidth: 0,
     borderRadius: 12,
     marginBottom: 10,
     paddingHorizontal: 10,
     height: 50,
     width: Layout.window.width * 0.85,
+    shadowColor: '#bbb',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 1,
   },
   disabledButton: {
     borderRadius: 12,

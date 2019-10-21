@@ -104,8 +104,8 @@ CreateTripStack.navigationOptions = {
       focused={focused}
       name={
         Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
+          ? `ios-add-circle${focused ? '' : '-outline'}`
+          : 'md-add-circle'
       }
     />
   ),
@@ -116,9 +116,9 @@ CreateTripStack.path = ''
 const tabNavigator = createBottomTabNavigator({
   ChooseTripsStack,
   TripsStack,
+  CreateTripStack,
   EditProfileStack,
   // SettingsStack,
-  CreateTripStack,
 })
 
 tabNavigator.path = ''

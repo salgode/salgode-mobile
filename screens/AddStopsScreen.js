@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
 import { Button, Icon } from 'native-base'
 import CardInputSelector from '../components/CardInputSelector'
+import { AuthSession } from 'expo'
 
 class AddStopsScreen extends Component {
   state = {
@@ -63,6 +64,9 @@ class AddStopsScreen extends Component {
             </View>
           </View>
           <View style={styles.group}>
+            <Text style={styles.centeredText}>
+              Agrega paradas extra (opcional)
+            </Text>
             {this.renderStops()}
             <CardInputSelector
               text="+"
@@ -81,7 +85,7 @@ class AddStopsScreen extends Component {
             style={styles.addButton}
             onPress={() => console.log('')}
           >
-            <Text>Crear Viaje</Text>
+            <Text style={styles.whiteText}>Crear Viaje</Text>
           </Button>
         </View>
       </View>
@@ -95,10 +99,15 @@ AddStopsScreen.navigationOptions = {
 
 const styles = StyleSheet.create({
   addButton: {
+    backgroundColor: '#33C534',
     marginBottom: 25,
     marginLeft: 15,
     marginRight: 15,
     marginTop: 10,
+  },
+  centeredText:{
+    marginRight: 'auto',
+    marginLeft: 'auto',
   },
   container: {
     backgroundColor: '#fff',
@@ -128,6 +137,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginLeft: 10,
   },
+  whiteText: {
+    color: 'white',
+  },
 })
 
 const mapStateToProps = ({ user, createTrip }) => {
@@ -141,7 +153,10 @@ const mapStateToProps = ({ user, createTrip }) => {
 const mapDispatchToProps = {
   loginUser,
 }
-
+AddStopsScreen.navigationOptions = {
+  title: 'Añadir paradas',
+  headerBackTitle: '', // TODO: que no diga 'Back'
+}
 export default connect(
   mapStateToProps,
   mapDispatchToProps

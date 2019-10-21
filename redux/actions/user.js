@@ -9,23 +9,12 @@ export function loginUser(email, password) {
     type: actions.USER_LOGIN,
     payload: {
       request: {
-        url: `/users`,
+        url: `/users/login`,
         method: 'post',
         data: {
           email,
           password,
         },
-      },
-    },
-  }
-}
-
-export function setUser(user) {
-  return {
-    type: actions.USER_LOGIN_SUCESS,
-    payload: {
-      data: {
-        user: user,
       },
     },
   }

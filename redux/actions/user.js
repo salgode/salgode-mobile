@@ -65,3 +65,18 @@ export function signupUser(
     },
   }
 }
+
+export function fetchUser(authToken, id) {
+  return {
+    type: actions.USER_LOGIN,
+    payload: {
+      request: {
+        url: `/users/${id}`,
+        method: 'get',
+        headers: {
+          Authorization: authToken,
+        },
+      },
+    },
+  }
+}

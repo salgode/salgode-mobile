@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
-import { StyleSheet, KeyboardAvoidingView } from 'react-native'
-import { Text, Button } from 'native-base'
+import { StyleSheet, KeyboardAvoidingView, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
-import { Spinner } from 'native-base'
+import { Spinner, View } from 'native-base'
 import PropTypes from 'prop-types'
-import LoginForm from '../components/Login/LoginForm'
-import { loginAsync } from '../utils/login'
 import { setUser } from '../redux/actions/user'
+import SignupForm from '../components/Login/SignupForm'
+import { signupAsync } from '../utils/login'
 
-class LoginScreen extends Component {
+class SignupScreen extends Component {
   static navigationOptions = {
     header: null,
   }
@@ -19,15 +18,14 @@ class LoginScreen extends Component {
       loading: false,
     }
     this.onSend = this.onSend.bind(this)
-    this.onCreateAccountPress = this.onCreateAccountPress.bind(this)
   }
 
-  async onSend(email, password) {
+  async onSend(userInfo) {
     this.setState({ loading: true })
-    const user = await loginAsync(email, password)
+    const user = await signupAsync(userInfo)
     this.setState({ loading: false })
     if (!user) {
-      alert('Hubo un problema iniciando sesión. Por favor intentalo de nuevo.')
+      alert('Hubo un problema registrandote. Por favor intentalo de nuevo.')
     } else if (!user.email) {
       alert(
         'Las credenciales ingresadas son inválidas. Por favor intentalo de nuevo.'
@@ -38,25 +36,22 @@ class LoginScreen extends Component {
     }
   }
 
-  onCreateAccountPress() {
-    this.props.navigation.navigate('Signup')
-  }
-
   render() {
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="height" enabled>
-        <Text style={styles.title}>#Salgode</Text>
-        <LoginForm onSend={this.onSend} />
-        <Button transparent onPress={this.onCreateAccountPress}>
-          <Text>No tienes una cuenta? Crea una aquí</Text>
-        </Button>
-        {this.state.loading && <Spinner />}
+      <KeyboardAvoidingView behavior="height" enabled>
+        <ScrollView>
+          <View style={styles.container}>
+            <SignupForm onSend={this.onSend} />
+            {this.state.loading && <Spinner />}
+          </View>
+          {this.state.loading && <Spinner />}
+        </ScrollView>
       </KeyboardAvoidingView>
     )
   }
 }
 
-LoginScreen.propTypes = {
+SignupScreen.propTypes = {
   setUser: PropTypes.func.isRequired,
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
@@ -68,11 +63,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'space-evenly',
-    ...StyleSheet.absoluteFillObject,
-  },
-  title: {
-    fontSize: 50,
-    fontWeight: '900',
   },
 })
 
@@ -83,4 +73,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   null,
   mapDispatchToProps
-)(LoginScreen)
+)(SignupScreen)

@@ -4,4 +4,5 @@ const backendUrl =
 export default {
   backend: backendUrl,
   login: `${backendUrl}/users/login`,
+  signup: `${backendUrl}/users`,
 }

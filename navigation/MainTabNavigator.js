@@ -56,6 +56,7 @@ ChooseTripsStack.navigationOptions = {
 }
 
 ChooseTripsStack.path = ''
+
 EditProfileStack.navigationOptions = {
   tabBarLabel: 'Perfil',
   tabBarIcon: ({ focused }) => (

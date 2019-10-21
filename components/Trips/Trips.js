@@ -22,6 +22,7 @@ class MyTrips extends Component {
               spacesUsed={item.spacesUsed}
               user={item.user}
               status={item.status}
+              tripId={item.tripId}
             />
           )}
           keyExtractor={item => item.tripId}

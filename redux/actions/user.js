@@ -29,10 +29,10 @@ export function signupUser(
   email,
   phone,
   password,
-  passwordRepeat
-  // selfieLink,
-  // driverLicenseLink,
-  // dniLink,
+  passwordRepeat,
+  selfieLink = 'placeholder',
+  driverLicenseLink = 'placeholder',
+  dniLink = 'placeholder'
   // carPlate,
   // carColor,
   // carBrand,
@@ -51,9 +51,9 @@ export function signupUser(
           phone,
           password,
           passwordRepeat,
-          // selfieLink,
-          // driverLicenseLink,
-          // dniLink,
+          selfieLink,
+          driverLicenseLink,
+          dniLink,
           // car: {
           //   carPlate,
           //   carColor,

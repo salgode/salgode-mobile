@@ -5,27 +5,18 @@ export const actions = {
 }
 
 export function loginUser(email, password) {
+  console.log(email, password)
+
   return {
     type: actions.USER_LOGIN,
     payload: {
       request: {
-        url: `/users`,
+        url: `/users/login`,
         method: 'post',
         data: {
           email,
           password,
         },
-      },
-    },
-  }
-}
-
-export function setUser(user) {
-  return {
-    type: actions.USER_LOGIN_SUCESS,
-    payload: {
-      data: {
-        user: user,
       },
     },
   }

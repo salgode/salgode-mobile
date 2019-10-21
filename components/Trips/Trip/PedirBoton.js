@@ -17,7 +17,10 @@ PedirBoton.propTypes = {
 
 const styles = StyleSheet.create({
   button: {
-    marginLeft: 5,
+    backgroundColor: '#886afe',
+    borderRadius: 12,
+    position: 'absolute',
+    right: 5,
   },
 })
 

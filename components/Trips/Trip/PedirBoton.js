@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 const PedirBoton = ({ onSend }) => {
   return (
     <Button borderRadius={10} style={styles.button} onPress={onSend}>
-      <Text>Pedir Viaje</Text>
+      <Text>Solicitar Viaje</Text>
     </Button>
   )
 }
@@ -21,6 +21,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     position: 'absolute',
     right: 5,
+    shadowColor: '#bbb',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 1,
   },
 })
 

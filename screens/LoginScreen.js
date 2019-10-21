@@ -22,6 +22,7 @@ const logo = require('../assets/images/login_icon.png')
 class LoginScreen extends Component {
   static navigationOptions = {
     header: null,
+    headerBackTitle: 'Atrás',
   }
 
   constructor(props) {

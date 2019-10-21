@@ -5,6 +5,7 @@ import { Text, Form, Item, Input, Label, Button, Picker } from 'native-base';
 import Icon from 'react-native-vector-icons/AntDesign';
 import DateTimePicker from "react-native-modal-datetime-picker";
 import Layout from '../../constants/Layout'
+import { showDate, showTime, getDateTimestamp, getTimeTimestamp } from '../../utils/time'
 
 const colorScheme = Appearance.getColorScheme();
 
@@ -12,9 +13,9 @@ class FindTripForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      chosenDate: this.getDateTimestamp(new Date()),
+      chosenDate: getDateTimestamp(new Date()),
       // 15 minutes offfset
-      chosenTime: this.getTimeTimestamp(new Date()) + (15 * 60 * 1000),
+      chosenTime: getTimeTimestamp(new Date()) + (15 * 60 * 1000),
       startLocation: undefined,
       inputValidity: false,
       isDatePickerVisible: false,
@@ -38,7 +39,7 @@ class FindTripForm extends Component {
   }
 
   handleDatePicked(date) {
-    dateTimestamp = this.getDateTimestamp(date);
+    dateTimestamp = getDateTimestamp(date);
     now = new Date();
     const validity =  dateTimestamp + this.state.chosenTime >= now.getTime();
     this.setState({ chosenDate: dateTimestamp, inputValidity: !!validity });
@@ -54,7 +55,7 @@ class FindTripForm extends Component {
   };
 
   handleTimePicked(time) {
-    timeTimestamp = this.getTimeTimestamp(time);
+    timeTimestamp = getTimeTimestamp(time);
     now = new Date();
     const validity = this.state.chosenDate + timeTimestamp >= now.getTime();
     this.setState({ chosenTime: timeTimestamp, inputValidity: !!validity });
@@ -70,55 +71,6 @@ class FindTripForm extends Component {
   hideDatePicker() {
     this.setState({ isDatePickerVisible: false });
   };
-
-  getDateTimestamp(date) {
-    // Offset into the day
-    millisecondsOffset = date.getMilliseconds()
-    secondsOffset = this.secondsToMilliseconds(date.getSeconds());
-    minutesOffset = this.minutesToMilliseconds(date.getMinutes());
-    hoursOffset = this.hoursToMilliseconds(date.getHours());
-    offset = millisecondsOffset + secondsOffset + minutesOffset + hoursOffset;
-
-    // Return start of the day timestamp
-    return date.getTime() - offset;
-  }
-
-  getTimeTimestamp(time) {
-    // Milliseconds since the start of the day
-    milliseconds = time.getMilliseconds()
-    seconds = this.secondsToMilliseconds(time.getSeconds());
-    minutes = this.minutesToMilliseconds(time.getMinutes());
-    hours = this.hoursToMilliseconds(time.getHours());
-    return milliseconds + seconds + minutes + hours;
-  }
-
-  secondsToMilliseconds(seconds) {
-    return seconds * 1000;
-  }
-
-  minutesToMilliseconds(minutes) {
-    return minutes * 60 * 1000;
-  }
-
-  hoursToMilliseconds(hours) {
-    return hours * 60 * 60 * 1000;
-  }
-
-  showTime(timeTimestamp) {
-    hours = Math.floor(timeTimestamp / (60 * 60 * 1000));
-    timeTimestamp -= this.hoursToMilliseconds(hours);
-    minutes =  Math.floor(timeTimestamp / (60 * 1000));
-    timeTimestamp -= this.minutesToMilliseconds(minutes);
-    return hours.toString() + ":" + minutes.toString();
-  }
-
-  showDate(dateTimestamp) {
-    date = new Date(dateTimestamp);
-    year = date.getFullYear();
-    month = date.getMonth() + 1;  // Months start at 0
-    day = date.getDate();
-    return day.toString() + "/" + month.toString() + "/" + year.toString();
-  }
 
   // RENDERER
 
@@ -157,11 +109,11 @@ class FindTripForm extends Component {
         <Item inlineLabel regular style={styles.item} onPress={this.showDatePicker}>
           <Icon name="calendar" style={styles.icon} />
           <Label style={styles.label}>Día</Label>
-          <Text style={styles.rightAlign}>{this.showDate(this.state.chosenDate)}</Text>
+          <Text style={styles.rightAlign}>{showDate(this.state.chosenDate)}</Text>
           <Input
             style={styles.invisible}
             editable={false}
-            value={this.showDate(this.state.chosenDate)}
+            value={this.state.chosenDate.toString()}
             isVisible={false}
           />
           <DateTimePicker
@@ -176,11 +128,11 @@ class FindTripForm extends Component {
         <Item inlineLabel regular style={styles.item} onPress={this.showTimePicker}>
           <Icon name="clockcircleo" style={styles.icon} />
           <Label style={styles.label}>Hora</Label>
-          <Text style={styles.rightAlign}>{this.showTime(this.state.chosenTime)}</Text>
+          <Text style={styles.rightAlign}>{showTime(this.state.chosenTime)}</Text>
           <Input
             style={styles.invisible}
             editable={false}
-            value={this.showTime(this.state.chosenTime)}
+            value={this.state.chosenTime.toString()}
             isVisible={false}
           />
           <DateTimePicker

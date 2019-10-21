@@ -4,6 +4,7 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 
 import MainTabNavigator from './MainTabNavigator'
 import LoginNavigator from './LoginNavigator'
+import TripRequest from '../components/Trips/TripRequest'
 
 export default createAppContainer(
   createSwitchNavigator({

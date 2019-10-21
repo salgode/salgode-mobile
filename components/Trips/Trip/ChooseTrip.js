@@ -12,8 +12,7 @@ const ChooseTrip = ({
   timestamp,
   // spacesUsed,
   user,
-  startPoint,
-  endPoint,
+  stops,
   onSend,
 }) => {
   return (
@@ -36,8 +35,8 @@ const ChooseTrip = ({
         </View>
       </CardItem>
       <CardItem style={styles.locationContainer}>
-        <Location color={'#fd5844'} location={startPoint} />
-        <Location color={'#886afe'} location={endPoint} />
+        <Location color={'#fd5844'} location={stops[0]} />
+        <Location color={'#886afe'} location={stops[stops.length - 1]} />
       </CardItem>
       <CardItem style={styles.bottomSection}>
         <TimeInfo timestamp={timestamp} />

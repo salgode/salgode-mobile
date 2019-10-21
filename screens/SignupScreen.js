@@ -8,7 +8,7 @@ import SignupForm from '../components/Login/SignupForm'
 
 class SignupScreen extends Component {
   static navigationOptions = {
-    header: null,
+    title: 'Registro',
   }
 
   constructor(props) {

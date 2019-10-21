@@ -27,7 +27,7 @@ class LoginScreen extends Component {
     })
 
     this.setState({ loading: false })
-    console.log(user.error)
+
     if (user.error) {
       Alert.alert(
         'Hubo un problema iniciando sesión. Por favor intentalo de nuevo.'

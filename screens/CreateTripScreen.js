@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { ScrollView, StyleSheet, View, Text } from 'react-native'
+import { Appearance } from 'react-native-appearance';
 import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
 import { Button } from 'native-base'
@@ -13,6 +14,8 @@ import {
 } from '../redux/actions/createtrip'
 import { getAllSpots } from '../redux/actions/spots'
 import DateTimePicker from 'react-native-modal-datetime-picker'
+
+const colorScheme = Appearance.getColorScheme();
 
 class CreateTripScreen extends Component {
   state = {
@@ -84,6 +87,7 @@ class CreateTripScreen extends Component {
               </Text>
             </Button>
             <DateTimePicker
+              isDarkModeEnabled={colorScheme === 'dark'}
               mode="datetime"
               isVisible={this.state.isDateTimePickerVisible}
               onConfirm={this.handleDatePicked}

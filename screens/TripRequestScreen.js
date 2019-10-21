@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Spinner } from 'native-base'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 import TripRequest from '../components/Trips/TripRequest'
 import { createSlot } from '../redux/actions/slots'
 import { connect } from 'react-redux'
@@ -72,3 +72,8 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(TripRequestScreen)
+
+TripRequestScreen.navigationOptions = {
+  title: 'Solicitud de viaje',
+  headerBackTitle: '', // TODO: que no diga 'Back'
+}

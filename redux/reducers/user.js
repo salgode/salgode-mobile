@@ -6,7 +6,12 @@ export default function userReducer(state = {}, action) {
     case userActions.USER_LOGIN:
       return { ...state, loading: true }
     case userActions.USER_LOGIN_SUCCESS:
-      return { ...state, loading: false, user: action.payload.data }
+      return {
+        ...state,
+        loading: false,
+        ...action.payload.data,
+        token: action.payload.data.bearer_token,
+      }
     case userActions.USER_LOGIN_FAIL:
       return {
         ...state,

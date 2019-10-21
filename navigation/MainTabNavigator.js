@@ -6,40 +6,17 @@ import {
 } from 'react-navigation'
 
 import TabBarIcon from '../components/TabBarIcon'
-import HomeScreen from '../screens/HomeScreen'
 import SettingsScreen from '../screens/SettingsScreen'
 import CreateTripScreen from '../screens/CreateTripScreen'
 import AddStopsScreen from '../screens/AddStopsScreen'
 import TripsNavigator from './TripsNavigator'
 import MyTripsNavigator from './MyTripsNavigator'
+import EditProfileScreen from '../screens/EditProfileScreen'
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
   default: {},
 })
-
-const HomeStack = createStackNavigator(
-  {
-    Home: HomeScreen,
-  },
-  config
-)
-
-HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
-    />
-  ),
-}
-
-HomeStack.path = ''
 
 const TripsStack = createStackNavigator(
   {
@@ -78,6 +55,22 @@ MyTripsStack.navigationOptions = {
 }
 
 MyTripsStack.path = ''
+
+const EditProfileStack = createStackNavigator(
+  {
+    EditProfile: EditProfileScreen,
+  },
+  config
+)
+
+EditProfileStack.navigationOptions = {
+  tabBarLabel: 'Perfil',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon focused={focused} name="md-person" />
+  ),
+}
+
+EditProfileStack.path = ''
 
 const SettingsStack = createStackNavigator(
   {
@@ -123,9 +116,9 @@ CreateTripStack.navigationOptions = {
 CreateTripStack.path = ''
 
 const tabNavigator = createBottomTabNavigator({
-  HomeStack,
   TripsStack,
   MyTripsStack,
+  EditProfileStack,
   SettingsStack,
   CreateTripStack
 })

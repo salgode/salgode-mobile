@@ -5,6 +5,7 @@ export const actions = {
   CLEAR_CREATE_TRIP_INFO: 'CLEAR_CREATE_TRIP_INFO',
   CLEAR_START_STOP: 'CLEAR_START_STOP',
   CLEAR_END_STOP: 'CLEAR_END_STOP',
+  CREATE_TRIP: 'CREATE_TRIP',
 }
 
 export function setStartStop(startStop) {
@@ -42,4 +43,20 @@ export function setStartTime(time) {
 
 export function clearCreateTripInfo() {
   return { type: actions.CLEAR_CREATE_TRIP_INFO }
+}
+
+export function createTrip(email, password) {
+  return {
+    type: actions.CREATE_TRIP,
+    payload: {
+      request: {
+        url: `/trips`,
+        method: 'post',
+        data: {
+          email,
+          password,
+        },
+      },
+    },
+  }
 }

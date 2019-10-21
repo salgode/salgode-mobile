@@ -12,11 +12,16 @@ import {
   clearStartStop,
   clearEndStop,
 } from '../redux/actions/createtrip'
+import { getAllSpots } from '../redux/actions/spots'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 
 class CreateTripScreen extends Component {
   state = {
     isDateTimePickerVisible: false,
+  }
+
+  componentDidMount = () => {
+    this.props.getAllSpots()
   }
 
   showDateTimePicker = () => {
@@ -115,12 +120,13 @@ const styles = StyleSheet.create({
   },
 })
 
-const mapStateToProps = ({ user, createTrip }) => {
+const mapStateToProps = ({ user, createTrip, spots }) => {
   return {
     user: user,
     startStop: createTrip.startStop,
     endStop: createTrip.endStop,
     startTime: createTrip.startTime,
+    spots: spots.spots,
   }
 }
 
@@ -131,6 +137,7 @@ const mapDispatchToProps = {
   setStartTime,
   clearStartStop,
   clearEndStop,
+  getAllSpots,
 }
 
 export default connect(

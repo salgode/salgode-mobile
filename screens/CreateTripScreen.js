@@ -5,15 +5,11 @@ import { loginUser } from '../redux/actions/user'
 import { Picker, DatePicker, Button } from 'native-base'
 import CardInput from '../components/CardInput'
 import CardInputSelector from '../components/CardInputSelector'
-import {
-  setStartStop,
-  setEndStop,
-  setStops,
-} from '../redux/actions/createtrip'
+import { setStartStop, setEndStop, setStops } from '../redux/actions/createtrip'
 
 class CreateTripScreen extends Component {
   render() {
-    const { navigation } = this.props;
+    const { navigation } = this.props
     return (
       <View style={styles.container}>
         <ScrollView
@@ -22,13 +18,11 @@ class CreateTripScreen extends Component {
         >
           <View style={styles.group}>
             <CardInputSelector
-              
-              />
-
-            <CardInputSelector
-              text="#A"
-              onSelect={this.props.setEndStop}
+              text="#Desde"
+              onSelect={this.props.setStartStop}
             />
+
+            <CardInputSelector text="#A" onSelect={this.props.setEndStop} />
           </View>
 
           <View style={styles.group}>

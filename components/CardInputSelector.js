@@ -46,6 +46,7 @@ export default class CardInputSelector extends Component {
                 <TouchableOpacity
                   key={index}
                   onPress={() => this.onItemPress(item)}
+                  style={styles.listItem}
                 >
                   <Text>
                     {item.parada}, {item.comuna}
@@ -84,8 +85,14 @@ export default class CardInputSelector extends Component {
 const styles = StyleSheet.create({
   columnViews: { alignItems: 'center', flexDirection: 'column' },
   input: { alignItems: 'flex-end', flex: 0.5 },
+  listItem: { alignItems: 'center', flexDirection: 'row' },
   paper: { borderRadius: 10 },
   rowView: { alignItems: 'center', flexDirection: 'row' },
   text: { fontWeight: 'bold' },
-  textView: { flex: 0.5, flexDirection: 'column', marginLeft: 10 },
+  textView: {
+    alignItems: 'center',
+    flex: 0.5,
+    flexDirection: 'column',
+    marginLeft: 10,
+  },
 })

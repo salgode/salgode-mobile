@@ -18,9 +18,145 @@ import {
   Text,
   Content,
   View,
+  Icon,
 } from 'native-base'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Layout from '../constants/Layout'
+import PropTypes from 'prop-types'
+
+function validateName(str) {
+  if (typeof str !== 'string') {
+    return false
+  }
+  str = str.trim()
+
+  if (str.length < 'Ana'.length) {
+    return false
+  }
+  if (str.length >= 256) {
+    return false
+  }
+
+  // letters, dash, space
+  return /^[- A-Za-zÁÉÍÓÚÑÜáéíóúñü]+$/g.test(str)
+}
+
+function validatePlate(str) {
+  if (typeof str !== 'string') {
+    return false
+  }
+  str = str.trim()
+
+  // old format: XX1234
+  let firstLetter = 'ABCEFGHDKLNPRSTUVXYZWM'
+  let secondLetter = 'ABCDEFGHIJKLNPRSTUVXYZW'
+  firstLetter = '[' + firstLetter + firstLetter.toLowerCase() + ']'
+  secondLetter = '[' + secondLetter + secondLetter.toLowerCase() + ']'
+  const oldFormat = new RegExp(
+    '^' + firstLetter + secondLetter + '[1-9][0-9][0-9][0-9]$',
+    'g'
+  )
+
+  // new format: XXXX12
+  const whitelist = 'BCDFGHJKLPRSTVWXYZ'
+  const letter = '[' + whitelist + whitelist.toLowerCase() + ']'
+  const newFormat = new RegExp(
+    '^' + letter + letter + letter + letter + '[1-9][0-9]$',
+    'g'
+  )
+
+  return oldFormat.test(str) || newFormat.test(str)
+}
+
+function validateColor(str) {
+  if (typeof str !== 'string') {
+    return false
+  }
+  str = str.trim()
+
+  if (str.length < 'azul'.length) {
+    return false
+  }
+  if (str.length >= 256) {
+    return false
+  }
+
+  // letters, dash, space, parenthesis
+  return /^[- A-Za-z()ÁÉÍÓÚÑÜáéíóúñü]+$/g.test(str)
+}
+
+function validateBrand(str) {
+  if (typeof str !== 'string') {
+    return false
+  }
+  str = str.trim()
+
+  if (str.length < 'BMW'.length) {
+    return false
+  }
+  if (str.length >= 256) {
+    return false
+  }
+
+  // letters, numbers, dash, space, parenthesis
+  return /^[- A-Za-z\d()ÁÉÍÓÚÑÜáéíóúñü]+$/g.test(str)
+}
+
+function validateModel(str) {
+  return validateBrand(str)
+}
+
+const Field = props => {
+  const { field } = props
+  const [isEditing, setIsEditing] = React.useState(false)
+  const [hasBeenBlurred, setHasBeenBlurred] = React.useState(false)
+
+  const validity = field.validate(field.value)
+    ? 'valid'
+    : isEditing
+    ? 'partial'
+    : hasBeenBlurred
+    ? 'invalid'
+    : 'partial'
+
+  return (
+    <Item
+      key={field.label}
+      inlineLabel
+      regular
+      style={styles.item}
+      success={validity === 'valid'}
+      error={validity === 'invalid'}
+    >
+      <Label style={styles.label}>{field.label}</Label>
+      <Input
+        style={styles.input}
+        onChangeText={value => {
+          field.setValue(value)
+          setIsEditing(true)
+        }}
+        onEndEditing={() => {
+          setIsEditing(false)
+          setHasBeenBlurred(true)
+        }}
+        value={field.value}
+      />
+      {validity === 'valid' ? (
+        <Icon name="checkmark-circle" />
+      ) : validity === 'invalid' ? (
+        <Icon name="close-circle" />
+      ) : null}
+    </Item>
+  )
+}
+Field.propTypes = {
+  field: PropTypes.exact({
+    label: PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired,
+    setValue: PropTypes.func.isRequired,
+    validate: PropTypes.func.isRequired,
+  }).isRequired,
+}
 
 const EditProfileScreen = () => {
   const [name, setName] = React.useState('')
@@ -38,14 +174,39 @@ const EditProfileScreen = () => {
   const [saveErr, setSaveErr] = React.useState(null)
 
   const commonFields = [
-    { label: 'Nombre', value: name, setValue: setName },
-    { label: 'Apellido', value: lastName, setValue: setLastName },
+    { label: 'Nombre', value: name, setValue: setName, validate: validateName },
+    {
+      label: 'Apellido',
+      value: lastName,
+      setValue: setLastName,
+      validate: validateName,
+    },
   ]
   const carFields = [
-    { label: 'Patente', value: carPlate, setValue: setCarPlate },
-    { label: 'Color', value: carColor, setValue: setCarColor },
-    { label: 'Marca', value: carBrand, setValue: setCarBrand },
-    { label: 'Modelo', value: carModel, setValue: setCarModel },
+    {
+      label: 'Patente',
+      value: carPlate,
+      setValue: setCarPlate,
+      validate: validatePlate,
+    },
+    {
+      label: 'Color',
+      value: carColor,
+      setValue: setCarColor,
+      validate: validateColor,
+    },
+    {
+      label: 'Marca',
+      value: carBrand,
+      setValue: setCarBrand,
+      validate: validateBrand,
+    },
+    {
+      label: 'Modelo',
+      value: carModel,
+      setValue: setCarModel,
+      validate: validateModel,
+    },
   ]
 
   const user = {
@@ -60,6 +221,10 @@ const EditProfileScreen = () => {
         }
       : null,
   }
+
+  const isValidUser = [...commonFields, ...carFields].every(field =>
+    field.validate(field.value)
+  )
 
   React.useEffect(() => {
     const loadUser = async () => {
@@ -176,14 +341,7 @@ const EditProfileScreen = () => {
             </View>
             <Form style={styles.form}>
               {commonFields.map(field => (
-                <Item key={field.label} inlineLabel regular style={styles.item}>
-                  <Label style={styles.label}>{field.label}</Label>
-                  <Input
-                    style={styles.input}
-                    onChangeText={field.setValue}
-                    value={field.value}
-                  />
-                </Item>
+                <Field key={field.label} field={field} validity="partial" />
               ))}
               <View style={styles.rowCenter}>
                 <CheckBox value={hasCar} onValueChange={setHasCar} />
@@ -195,19 +353,7 @@ const EditProfileScreen = () => {
                     <Text style={styles.headerText}>Datos auto</Text>
                   </View>
                   {carFields.map(field => (
-                    <Item
-                      key={field.label}
-                      inlineLabel
-                      regular
-                      style={styles.item}
-                    >
-                      <Label style={styles.label}>{field.label}</Label>
-                      <Input
-                        style={styles.input}
-                        onChangeText={field.setValue}
-                        value={field.value}
-                      />
-                    </Item>
+                    <Field key={field.label} field={field} validity="partial" />
                   ))}
                 </>
               ) : null}
@@ -215,7 +361,7 @@ const EditProfileScreen = () => {
                 block
                 borderRadius={10}
                 style={styles.button}
-                disabled={isSaving}
+                disabled={isSaving || !isValidUser}
                 onPress={onPressSaveProfile}
               >
                 <Text>Guardar cambios</Text>

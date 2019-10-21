@@ -4,7 +4,7 @@ import Location from './Location'
 import Colors from '../../../constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
 import TimeInfo from './TimeInfo'
-import { Card, View, Text, CardItem } from 'native-base'
+import { Card, View, Text, CardItem, Col } from 'native-base'
 
 const RequestedTrip = ({ timestamp, spacesUsed, user, status }) => {
   let statusColor
@@ -22,7 +22,7 @@ const RequestedTrip = ({ timestamp, spacesUsed, user, status }) => {
   }
 
   return (
-    <Card style={styles.containerRequested}>
+    <Card style={[styles.containerRequested, styles.shadow]}>
       <View style={{ ...styles.status, backgroundColor: statusColor }}>
         <Text style={styles.statusText}>{statusText}</Text>
       </View>
@@ -32,14 +32,15 @@ const RequestedTrip = ({ timestamp, spacesUsed, user, status }) => {
             <Ionicons
               name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
               size={40}
+              color={Colors.textGray}
             />
             <Text style={styles.userText}>{user.name}</Text>
           </View>
-          <View>
+          <View style={styles.container}>
             <View style={styles.iconContainer}>
               <Ionicons
                 name={Platform.OS === 'ios' ? 'ios-thumbs-up' : 'md-thumbs-up'}
-                size={30}
+                size={20}
                 color={Colors.textGray}
               />
               <Text style={styles.iconText}>{user.reputation}</Text>
@@ -47,7 +48,7 @@ const RequestedTrip = ({ timestamp, spacesUsed, user, status }) => {
             <View style={styles.iconContainer}>
               <Ionicons
                 name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'}
-                size={30}
+                size={20}
                 color={Colors.textGray}
               />
               <Text style={styles.iconText}>{spacesUsed}</Text>
@@ -68,28 +69,48 @@ const RequestedTrip = ({ timestamp, spacesUsed, user, status }) => {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'column',
+  },
   containerRequested: {
     alignItems: 'flex-start',
+    borderColor: 'white',
     borderRadius: 20,
     padding: 15,
   },
   iconContainer: { alignItems: 'center', flexDirection: 'row' },
-  iconText: { marginLeft: 10 },
+  iconText: {
+    color: Colors.textGray,
+    fontSize: 13,
+    fontWeight: '700',
+    marginLeft: 10,
+  },
   locationContainer: { flexDirection: 'column' },
+  shadow: {
+    shadowColor: '#b3b3b3',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+  },
   status: { borderRadius: 15, paddingHorizontal: 10, paddingVertical: 2 },
-  statusText: { color: 'white' },
+  statusText: { color: 'white', fontSize: 12, fontWeight: '700' },
   user: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: 300,
+    width: 280,
   },
   userData: {
     alignItems: 'center',
     flexDirection: 'row',
   },
   userText: {
-    fontSize: 17,
+    color: Colors.textGray,
+    fontSize: 16,
+    fontWeight: '800',
     marginLeft: 15,
   },
 })

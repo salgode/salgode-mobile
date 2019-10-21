@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
 import { Picker, DatePicker, Button } from 'native-base'
 import CardInput from '../components/CardInput'
+import CardInputSelector from '../components/CardInputSelector'
 
 class CreateTripScreen extends Component {
   render() {
@@ -14,15 +15,7 @@ class CreateTripScreen extends Component {
           contentContainerStyle={styles.contentContainer}
         >
           <View style={styles.group}>
-            <CardInput
-              text="#De"
-              input={
-                <Picker selectedValue="java" mode="dropdown">
-                  <Picker.Item label="Java" value="java" />
-                  <Picker.Item label="JavaScript" value="js" />
-                </Picker>
-              }
-            />
+            <CardInputSelector text="#Desde" />
 
             <CardInput
               text="#A"

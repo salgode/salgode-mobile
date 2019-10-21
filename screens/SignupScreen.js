@@ -3,9 +3,8 @@ import { StyleSheet, KeyboardAvoidingView, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
 import { Spinner, View } from 'native-base'
 import PropTypes from 'prop-types'
-import { setUser } from '../redux/actions/user'
+import { signupUser } from '../redux/actions/user'
 import SignupForm from '../components/Login/SignupForm'
-import { signupAsync } from '../utils/login'
 
 class SignupScreen extends Component {
   static navigationOptions = {
@@ -22,16 +21,22 @@ class SignupScreen extends Component {
 
   async onSend(userInfo) {
     this.setState({ loading: true })
-    const user = await signupAsync(userInfo)
-    this.setState({ loading: false })
-    if (!user) {
-      alert('Hubo un problema registrandote. Por favor intentalo de nuevo.')
-    } else if (!user.email) {
-      alert(
-        'Las credenciales ingresadas son inválidas. Por favor intentalo de nuevo.'
+    const user = await this.props
+      .signup(
+        userInfo.name,
+        userInfo.lastName,
+        userInfo.email,
+        userInfo.phone,
+        userInfo.password,
+        userInfo.passwordRepeat
       )
+      .then(response => {
+        return response
+      })
+    this.setState({ loading: false })
+    if (!user.error) {
+      alert('Hubo un problema registrandote. Por favor intentalo de nuevo.')
     } else {
-      this.props.setUser(user)
       this.props.navigation.navigate('Home')
     }
   }
@@ -52,7 +57,7 @@ class SignupScreen extends Component {
 }
 
 SignupScreen.propTypes = {
-  setUser: PropTypes.func.isRequired,
+  signup: PropTypes.func.isRequired,
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
   }).isRequired,
@@ -67,7 +72,38 @@ const styles = StyleSheet.create({
 })
 
 const mapDispatchToProps = dispatch => ({
-  setUser: user => dispatch(setUser(user)),
+  signup: (
+    name,
+    lastName,
+    email,
+    phone,
+    password,
+    passwordRepeat
+    // selfieLink,
+    // driverLicenseLink,
+    // dniLink,
+    // carPlate,
+    // carColor,
+    // carBrand,
+    // carModel
+  ) =>
+    dispatch(
+      signupUser(
+        name,
+        lastName,
+        email,
+        phone,
+        password,
+        passwordRepeat
+        // selfieLink,
+        // driverLicenseLink,
+        // dniLink,
+        // carPlate,
+        // carColor,
+        // carBrand,
+        // carModel
+      )
+    ),
 })
 
 export default connect(

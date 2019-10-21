@@ -6,6 +6,8 @@ export const actions = {
   CLEAR_START_STOP: 'CLEAR_START_STOP',
   CLEAR_END_STOP: 'CLEAR_END_STOP',
   CREATE_TRIP: 'CREATE_TRIP',
+  CREATE_TRIP_SUCCESS: 'CREATE_TRIP_SUCCESS',
+  CREATE_TRIP_FAIL: 'CREATE_TRIP_FAIL',
 }
 
 export function setStartStop(startStop) {

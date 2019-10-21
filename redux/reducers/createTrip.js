@@ -18,6 +18,16 @@ export default function spotsReducer(state = {}, action) {
         endStop: '',
         startTime: '',
       }
+    case createTripActions.CREATE_TRIP:
+      return { ...state, loading: true }
+    case createTripActions.CREATE_TRIP_SUCCESS:
+      return { ...state, loading: false }
+    case createTripActions.RETRIEVE_ALL_SPOTS_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: 'Error while retrieving spots',
+      }
     default:
       return state
   }

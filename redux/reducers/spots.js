@@ -1,7 +1,6 @@
 import { actions as spotsActions } from '../actions/spots'
 
 export default function spotsReducer(state = {}, action) {
-  console.log('spots', action)
   switch (action.type) {
     case spotsActions.RETRIEVE_ALL_SPOTS:
       return { ...state, loading: true }

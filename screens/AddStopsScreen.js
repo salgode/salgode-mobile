@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { ScrollView, StyleSheet, View, Text } from 'react-native'
 import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
-import { postTrip } from '../redux/actions/createtrip'
+import { createTrip } from '../redux/actions/createtrip'
 import { Button, Icon } from 'native-base'
 import CardInputSelector from '../components/CardInputSelector'
 
@@ -23,13 +23,12 @@ class AddStopsScreen extends Component {
   createTrip = () => {
     const { startStop, endStop, startTime } = this.props
     const { stops } = this.state
-    // route_pints: [ id1, id2, ... ],
-    // day: "Lunes",
-    // hour: "16:00",
-    const route_points = [1, 2, 3, 4]
+    const route_points = [startStop.id, endStop.id]
+    console.log(startTime)
+    console.log(startTime.getDay())
     const day = 'Lunes'
     const hour = '16:15'
-    this.props.postTrip(route_points, day, hour)
+    this.props.createTrip(route_points, day, hour)
   }
 
   renderStops = () => {
@@ -151,7 +150,7 @@ const mapStateToProps = ({ user, createTrip, spots }) => {
 
 const mapDispatchToProps = {
   loginUser,
-  postTrip,
+  createTrip,
 }
 
 export default connect(

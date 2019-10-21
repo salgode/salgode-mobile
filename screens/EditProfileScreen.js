@@ -1,7 +1,6 @@
 import React from 'react'
 import {
   StyleSheet,
-  CheckBox,
   KeyboardAvoidingView,
   Dimensions,
   TouchableWithoutFeedback,
@@ -19,10 +18,12 @@ import {
   Content,
   View,
   Icon,
+  CheckBox,
 } from 'native-base'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Layout from '../constants/Layout'
 import PropTypes from 'prop-types'
+import Colors from '../constants/Colors'
 
 function validateName(str) {
   if (typeof str !== 'string') {
@@ -303,7 +304,7 @@ const EditProfileScreen = () => {
   if (isLoading) {
     return (
       <View>
-        <ActivityIndicator size="large" color="orange" />
+        <ActivityIndicator size="large" color="blue" marginTop={20} />
       </View>
     )
   }
@@ -329,13 +330,14 @@ const EditProfileScreen = () => {
                   <Text style={styles.readonlyFieldText}>+56976543210</Text>
                 </View>
                 <Button
+                  small
                   block
                   borderRadius={10}
                   style={styles.button}
                   disabled={true}
                   onPress={() => {}}
                 >
-                  <Text>Cambiar contraseña</Text>
+                  <Text style={styles.buttonText}>Cambiar contraseña</Text>
                 </Button>
               </View>
             </View>
@@ -344,8 +346,12 @@ const EditProfileScreen = () => {
                 <Field key={field.label} field={field} validity="partial" />
               ))}
               <View style={styles.rowCenter}>
-                <CheckBox value={hasCar} onValueChange={setHasCar} />
-                <Text style={styles.checkboxLabel}>Tiene auto</Text>
+                <CheckBox
+                  color={Colors.textGray}
+                  checked={hasCar}
+                  onPress={() => setHasCar(!hasCar)}
+                />
+                <Text style={styles.checkboxLabel}>Auto</Text>
               </View>
               {hasCar ? (
                 <>
@@ -360,11 +366,11 @@ const EditProfileScreen = () => {
               <Button
                 block
                 borderRadius={10}
-                style={styles.button}
+                style={styles.blueButton}
                 disabled={isSaving || !isValidUser}
                 onPress={onPressSaveProfile}
               >
-                <Text>Guardar cambios</Text>
+                <Text style={styles.buttonText}> Guardar cambios</Text>
               </Button>
             </Form>
           </View>
@@ -375,7 +381,7 @@ const EditProfileScreen = () => {
   )
 }
 EditProfileScreen.navigationOptions = {
-  title: 'Editar Perfil',
+  title: 'Editar perfil',
 }
 export default EditProfileScreen
 
@@ -383,10 +389,22 @@ const photoSize = 96
 
 const styles = StyleSheet.create({
   artificialKeyboardPadding: { height: 128 },
+  blueButton: {
+    backgroundColor: '#0000FF',
+    marginTop: 20,
+  },
   button: {
     marginTop: 20,
   },
-  checkboxLabel: { fontSize: 16 },
+  buttonText: {
+    fontSize: 14,
+  },
+  checkboxLabel: {
+    color: Colors.textGray,
+    fontSize: 13,
+    fontWeight: '600',
+    marginLeft: 15,
+  },
   flex1: {
     flex: 1,
   },
@@ -395,18 +413,27 @@ const styles = StyleSheet.create({
     height: 250,
     margin: 15,
   },
-  headerText: { fontSize: 20, marginBottom: 8 },
-  headerTextContainer: { alignSelf: 'flex-start' },
+  headerText: {
+    color: Colors.textGray,
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 8,
+    marginLeft: 5,
+  },
+  headerTextContainer: { alignSelf: 'flex-start', marginTop: 10 },
   input: {
+    fontSize: 14,
+    height: 40,
     width: Layout.window.width * 0.85,
   },
   item: {
     borderRadius: 10,
-    marginBottom: 20,
+    marginBottom: 15,
     paddingHorizontal: 10,
   },
   label: {
     color: '#8c8c8c',
+    fontSize: 14,
   },
   profilePhoto: {
     alignItems: 'center',
@@ -424,9 +451,11 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   readonlyFieldText: {
+    fontSize: 14,
     paddingHorizontal: 8,
   },
   readonlyFieldsContainer: {
+    marginTop: 20,
     paddingHorizontal: 12,
   },
   row: {

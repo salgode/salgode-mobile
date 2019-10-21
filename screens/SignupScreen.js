@@ -8,7 +8,7 @@ import SignupForm from '../components/Login/SignupForm'
 
 class SignupScreen extends Component {
   static navigationOptions = {
-    header: null,
+    title: 'Registro',
   }
 
   constructor(props) {
@@ -34,7 +34,9 @@ class SignupScreen extends Component {
         return response
       })
     this.setState({ loading: false })
-    if (!user.error) {
+
+    console.log(user)
+    if (user.error || !user.payload.data.email) {
       alert('Hubo un problema registrandote. Por favor intentalo de nuevo.')
     } else {
       this.props.navigation.navigate('Home')
@@ -43,7 +45,7 @@ class SignupScreen extends Component {
 
   render() {
     return (
-      <KeyboardAvoidingView behavior="height" enabled>
+      <KeyboardAvoidingView behavior="padding" enabled>
         <ScrollView>
           <View style={styles.container}>
             <SignupForm onSend={this.onSend} />

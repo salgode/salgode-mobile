@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Text, Alert } from 'react-native'
+import { View, StyleSheet, Alert } from 'react-native'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import ChooseTrips from '../components/Trips/ChooseTrips'
@@ -18,12 +18,13 @@ class ChooseTripsScreen extends Component {
       rerender: true,
     }
 
-    this.onSend = this.onSend.bind(this)
+    this.onRequestTrip = this.onRequestTrip.bind(this)
     this.getTrips = this.getTrips.bind(this)
   }
 
-  onSend() {
-    //fetch to POST new passanger in trip
+  onRequestTrip(stops) {
+    console.log('Here:;', stops)
+    this.props.navigation.navigate('RequestTrip', { stops })
   }
 
   async getTrips() {
@@ -40,10 +41,9 @@ class ChooseTripsScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Busca tu viaje</Text>
         <View>
           <ChooseTrips
-            onSend={this.state.onSend}
+            onSend={this.onRequestTrip}
             onReload={this.getTrips}
             trips={this.props.trips.map(trip => ({
               timestamp: new Date(trip.etd).getTime(),
@@ -51,8 +51,7 @@ class ChooseTripsScreen extends Component {
                 name: 'Temp',
                 reputation: 0,
               },
-              startPoint: trip.route_points[0],
-              endPoint: trip.route_points[trip.route_points.length - 1],
+              stops: trip.route_points,
               tripId: trip.trip_id,
             }))}
           />
@@ -82,17 +81,10 @@ const styles = StyleSheet.create({
     paddingBottom: 90,
     ...StyleSheet.absoluteFill,
   },
-  title: {
-    color: '#3b3e43',
-    fontSize: 35,
-    fontWeight: '900',
-    padding: 15,
-    textAlign: 'center',
-  },
 })
 
 const mapStateToProps = state => {
-  console.log(state)
+
   return {
     user: state.user,
     trips: state.futureTrips.futureTrips || [],
@@ -103,6 +95,9 @@ const mapDispatchToProps = dispatch => ({
   fetchFutureTrips: token => dispatch(fetchFutureTrips(token)),
 })
 
+ChooseTripsScreen.navigationOptions = {
+  title: 'Busca tu viaje',
+}
 export default connect(
   mapStateToProps,
   mapDispatchToProps

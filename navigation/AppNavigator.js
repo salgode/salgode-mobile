@@ -4,13 +4,13 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 
 import MainTabNavigator from './MainTabNavigator'
 import LoginNavigator from './LoginNavigator'
-import CreateTripScreen from '../screens/CreateTripScreen'
+import TripRequest from '../components/Trips/TripRequest'
 
 export default createAppContainer(
   createSwitchNavigator({
     // You could add another route here for authentication.
     // Read more at https://reactnavigation.org/docs/en/auth-flow.html
-    LoginStack: CreateTripScreen,
+    LoginStack: LoginNavigator,
     Main: MainTabNavigator,
   })
 )

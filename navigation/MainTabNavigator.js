@@ -7,6 +7,8 @@ import {
 
 import TabBarIcon from '../components/TabBarIcon'
 import SettingsScreen from '../screens/SettingsScreen'
+import CreateTripScreen from '../screens/CreateTripScreen'
+import AddStopsScreen from '../screens/AddStopsScreen'
 import ChooseTripsScreen from '../screens/ChooseTripsScreen'
 import TripsNavigator from './TripsNavigator'
 import EditProfileScreen from '../screens/EditProfileScreen'
@@ -85,11 +87,36 @@ SettingsStack.navigationOptions = {
 
 SettingsStack.path = ''
 
+const CreateTripStack = createStackNavigator(
+  {
+    CreateTripScreen,
+    AddStopsScreen,
+  },
+  config
+)
+
+CreateTripStack.navigationOptions = {
+  tabBarLabel: 'Crear Viaje',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={
+        Platform.OS === 'ios'
+          ? `ios-information-circle${focused ? '' : '-outline'}`
+          : 'md-information-circle'
+      }
+    />
+  ),
+}
+
+CreateTripStack.path = ''
+
 const tabNavigator = createBottomTabNavigator({
   ChooseTripsStack,
   TripsStack,
   EditProfileStack,
   SettingsStack,
+  CreateTripStack,
 })
 
 tabNavigator.path = ''

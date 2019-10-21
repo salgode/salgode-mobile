@@ -6,38 +6,15 @@ import {
 } from 'react-navigation'
 
 import TabBarIcon from '../components/TabBarIcon'
-import HomeScreen from '../screens/HomeScreen'
 import SettingsScreen from '../screens/SettingsScreen'
+import ChooseTripsScreen from '../screens/ChooseTripsScreen'
 import TripsNavigator from './TripsNavigator'
-import MyTripsNavigator from './MyTripsNavigator'
+import EditProfileScreen from '../screens/EditProfileScreen'
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
   default: {},
 })
-
-const HomeStack = createStackNavigator(
-  {
-    Home: HomeScreen,
-  },
-  config
-)
-
-HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
-    />
-  ),
-}
-
-HomeStack.path = ''
 
 const TripsStack = createStackNavigator(
   {
@@ -58,24 +35,36 @@ TripsStack.navigationOptions = {
 
 TripsStack.path = ''
 
-const MyTripsStack = createStackNavigator(
+const ChooseTripsStack = createStackNavigator({
+  ChooseTrips: ChooseTripsScreen,
+})
+const EditProfileStack = createStackNavigator(
   {
-    MyTrips: MyTripsNavigator,
+    EditProfile: EditProfileScreen,
   },
   config
 )
 
-MyTripsStack.navigationOptions = {
-  tabBarLabel: 'Mis Viajes',
+ChooseTripsStack.navigationOptions = {
+  tabBarLabel: 'Pedir Viaje',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-journal' : 'md-journal'}
+      name={Platform.OS === 'ios' ? 'ios-car' : 'md-car'}
     />
   ),
 }
 
-MyTripsStack.path = ''
+ChooseTripsStack.path = ''
+
+EditProfileStack.navigationOptions = {
+  tabBarLabel: 'Perfil',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon focused={focused} name="md-person" />
+  ),
+}
+
+EditProfileStack.path = ''
 
 const SettingsStack = createStackNavigator(
   {
@@ -89,7 +78,7 @@ SettingsStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+      name={Platform.OS === 'ios' ? 'ios-settings' : 'md-options'}
     />
   ),
 }
@@ -97,9 +86,9 @@ SettingsStack.navigationOptions = {
 SettingsStack.path = ''
 
 const tabNavigator = createBottomTabNavigator({
-  HomeStack,
+  ChooseTripsStack,
   TripsStack,
-  MyTripsStack,
+  EditProfileStack,
   SettingsStack,
 })
 

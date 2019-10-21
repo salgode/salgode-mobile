@@ -17,7 +17,7 @@ class TripsScreen extends Component {
             {
               timestamp: 1571590002,
               spacesUsed: 3,
-              tripId: '0',
+              key: '0',
               user: {
                 name: 'Benjamin Earle',
                 reputation: 17,
@@ -27,7 +27,7 @@ class TripsScreen extends Component {
             {
               timestamp: 1571503602,
               spacesUsed: 3,
-              tripId: '1',
+              key: '1',
               user: {
                 name: 'Benjamin Earle',
                 reputation: 17,
@@ -37,7 +37,7 @@ class TripsScreen extends Component {
             {
               timestamp: 1571586402,
               spacesUsed: 3,
-              tripId: '2',
+              key: '2',
               user: {
                 name: 'Benjamin Earle',
                 reputation: 17,
@@ -47,7 +47,7 @@ class TripsScreen extends Component {
             {
               timestamp: 1570985202,
               spacesUsed: 3,
-              tripId: '3',
+              key: '3',
               user: {
                 name: 'Benjamin Earle',
                 reputation: 17,
@@ -57,7 +57,7 @@ class TripsScreen extends Component {
             {
               timestamp: 1571593602,
               spacesUsed: 3,
-              tripId: '4',
+              key: '4',
               user: {
                 name: 'Benjamin Earle',
                 reputation: 17,
@@ -67,7 +67,7 @@ class TripsScreen extends Component {
             {
               timestamp: 1571676402,
               spacesUsed: 3,
-              tripId: '5',
+              key: '5',
               user: {
                 name: 'Benjamin Earle',
                 reputation: 17,

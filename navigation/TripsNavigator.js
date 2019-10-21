@@ -4,14 +4,14 @@ import TripsScreen from '../screens/TripsScreen'
 
 export default createMaterialTopTabNavigator(
   {
-    Disponibles: {
-      screen: props => <TripsScreen isRequestedTrips={false} {...props} />,
+    Realizados: {
+      screen: props => <TripsScreen isRequestedTrips {...props} />,
       navigationOptions: () => ({
-        title: 'Disponibles',
+        title: 'Realizados',
       }),
     },
     Pedidos: {
-      screen: props => <TripsScreen isRequestedTrips {...props} />,
+      screen: props => <TripsScreen isRequestedTrips={false} {...props} />,
       navigationOptions: () => ({
         title: 'Pedidos',
       }),

@@ -1,29 +1,21 @@
 import React from 'react'
-import { Platform, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { View, Text } from 'native-base'
-import { Ionicons } from '@expo/vector-icons'
+import Icon from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
-import Colors from '../../../constants/Colors'
-import timestampToDate, { timestampToTime } from '../../../utils/time'
+import { showDate, showOnlyTime } from '../../../utils/time'
 
-const TimeInfo = ({ timestamp, isDate = false }) => {
-  const iconName = isDate
-    ? Platform.OS === 'ios'
-      ? 'ios-calendar'
-      : 'md-calendar'
-    : 'md-time'
-  const timestampText = isDate
-    ? timestampToDate(timestamp)
-    : timestampToTime(timestamp)
+const TimeInfo = ({ timestamp }) => {
   return (
     <View style={styles.container}>
-      <Ionicons
-        name={iconName}
-        color={Colors.textGray}
-        size={25}
-        style={styles.icon}
-      />
-      <Text style={styles.location}>{timestampText}</Text>
+      <View style={styles.rowElement}>
+        <Icon name="calendar" style={styles.icon} />
+        <Text style={styles.location}>{showDate(timestamp)}</Text>
+      </View>
+      <View style={styles.rowElement}>
+        <Icon name="clockcircleo" style={styles.icon} />
+        <Text style={styles.location}>{showOnlyTime(timestamp)}</Text>
+      </View>
     </View>
   )
 }
@@ -35,15 +27,24 @@ TimeInfo.propTypes = {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    flexDirection: 'row',
+    alignItems: 'flex-start',
+    flexDirection: 'column',
   },
   icon: {
-    marginRight: 15,
+    color: 'grey',
+    fontSize: 18,
+    paddingLeft: 5,
+    paddingRight: 10,
+    // Correct icons white space
+    top: 2,
   },
   location: {
+    color: 'grey',
     fontSize: 17,
     marginRight: 15,
+  },
+  rowElement: {
+    flexDirection: 'row',
   },
 })
 

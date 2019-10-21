@@ -5,8 +5,9 @@ import userReducer from './reducers/user'
 import { userModel } from './models/user'
 
 const client = axios.create({
-  baseURL: 'https://jsonplaceholder.typicode.com/',
+  baseURL: 'https://7wsx5vxfbi.execute-api.us-east-1.amazonaws.com/staging',
   responseType: 'json',
+  requestType: 'json',
 })
 
 const reducer = combineReducers({

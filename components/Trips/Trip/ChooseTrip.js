@@ -104,6 +104,7 @@ const styles = StyleSheet.create({
   infoIcon: {
     color: 'grey',
     fontSize: 30,
+    paddingRight: 5,
   },
 })
 

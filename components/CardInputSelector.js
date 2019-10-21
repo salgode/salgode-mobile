@@ -29,7 +29,7 @@ export default class CardInputSelector extends Component {
 
   onItemPress = item => {
     this.setState({ displayList: false, input: item.parada })
-    this.props.onSelect(item.parada)
+    this.props.onSelect(item)
   }
 
   renderList = () => {

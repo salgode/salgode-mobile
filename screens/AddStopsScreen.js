@@ -2,10 +2,21 @@ import React, { Component } from 'react'
 import { ScrollView, StyleSheet, View, Text } from 'react-native'
 import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
-import { Picker, DatePicker, Button } from 'native-base'
+import { Button } from 'native-base'
 import CardInput from '../components/CardInput'
 
 class AddStopsScreen extends Component {
+  state = {
+    stops: [],
+  }
+
+  renderStops = () => {
+    const { stops } = this.state
+    return stops.map((stop, index) => {
+      return <Text key={index}>{stop.parada}</Text>
+    })
+  }
+
   render() {
     const { startStop, endStop } = this.props
     return (
@@ -19,43 +30,12 @@ class AddStopsScreen extends Component {
 
             <CardInput text={endStop} />
           </View>
-
           <View style={styles.group}>
+            {this.renderStops()}
             <CardInput
-              text="Día"
-              input={
-                <DatePicker
-                  defaultDate={new Date(2018, 4, 4)}
-                  minimumDate={new Date(2018, 1, 1)}
-                  locale={'es'}
-                  modalTransparent={false}
-                  animationType={'fade'}
-                  androidMode={'default'}
-                  placeHolderText="Select date"
-                  textStyle={{ color: 'green' }}
-                  placeHolderTextStyle={{ color: '#d3d3d3' }}
-                  //   onDateChange={this.setDate}
-                  disabled={false}
-                />
-              }
-            />
-
-            <CardInput
-              text="Hora"
-              input={
-                <DatePicker
-                  defaultDate={new Date(2018, 4, 4)}
-                  minimumDate={new Date(2018, 1, 1)}
-                  locale={'es'}
-                  modalTransparent={false}
-                  animationType={'fade'}
-                  androidMode={'default'}
-                  placeHolderText="Select date"
-                  textStyle={{ color: 'green' }}
-                  placeHolderTextStyle={{ color: '#d3d3d3' }}
-                  //   onDateChange={this.setDate}
-                  disabled={false}
-                />
+              text="Añande una parada"
+              onSelect={item =>
+                this.setState({ stops: this.state.stops.concat([item]) })
               }
             />
           </View>

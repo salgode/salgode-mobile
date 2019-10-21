@@ -19,10 +19,13 @@ class CreateTripScreen extends Component {
           <View style={styles.group}>
             <CardInputSelector
               text="#Donde"
-              onSelect={this.props.setStartStop}
+              onSelect={item => this.props.setStartStop(item.parada)}
             />
 
-            <CardInputSelector text="#A" onSelect={this.props.setEndStop} />
+            <CardInputSelector
+              text="#A"
+              onSelect={item => this.props.setEndStop(item.parada)}
+            />
           </View>
 
           <View style={styles.group}>

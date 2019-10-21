@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import { StyleSheet } from 'react-native'
-import { Text, Form, Item, Input, Label, Button } from 'native-base'
+import { Text, Form, Item, Input, Button } from 'native-base'
 import Layout from '../../constants/Layout'
 import PropTypes from 'prop-types'
-import Colors from '../../constants/Colors'
 
 class LoginForm extends Component {
   constructor(props) {
@@ -34,8 +33,8 @@ class LoginForm extends Component {
     return (
       <Form style={styles.form}>
         <Item inlineLabel regular style={styles.item}>
-          <Label style={styles.label}>Email</Label>
           <Input
+            placeholder="Email"
             style={styles.input}
             onChangeText={this.onChangeEmail}
             keyboardType="email-address"
@@ -44,8 +43,8 @@ class LoginForm extends Component {
           />
         </Item>
         <Item inlineLabel last regular style={styles.item}>
-          <Label style={styles.label}>Clave</Label>
           <Input
+            placeholder="Contraseña"
             style={styles.input}
             onChangeText={this.onChangePassword}
             secureTextEntry
@@ -88,9 +87,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 20,
     paddingHorizontal: 10,
-  },
-  label: {
-    color: Colors.textGray,
   },
 })
 

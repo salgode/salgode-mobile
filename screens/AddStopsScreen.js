@@ -94,17 +94,8 @@ class AddStopsScreen extends Component {
         </ScrollView>
 
         <View>
-<<<<<<< HEAD
           <Button block style={styles.addButton} onPress={this.createTrip}>
             <Text>Crear Viaje</Text>
-=======
-          <Button
-            block
-            style={styles.addButton}
-            onPress={() => console.log('')}
-          >
-            <Text style={styles.whiteText}>Crear Viaje</Text>
->>>>>>> 897f30b5d37ff51ad9cbc4ad89bf6203081c183d
           </Button>
         </View>
       </View>
@@ -124,9 +115,9 @@ const styles = StyleSheet.create({
     marginRight: 15,
     marginTop: 10,
   },
-  centeredText:{
-    marginRight: 'auto',
+  centeredText: {
     marginLeft: 'auto',
+    marginRight: 'auto',
   },
   container: {
     backgroundColor: '#fff',

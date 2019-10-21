@@ -11,7 +11,7 @@ class LoginForm extends Component {
     this.state = {
       email: '',
       password: '',
-      inputValidity: true,
+      inputValidity: false,
     }
 
     this.onChangePassword = this.onChangePassword.bind(this)

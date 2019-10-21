@@ -76,10 +76,10 @@ RequestedTrip.propTypes = {
     selfieLink: PropTypes.string,
   }).isRequired,
   status: PropTypes.oneOf(['accepted', 'pending', 'rejected']),
-  startLocation: PropTypes.string.isRequired,
-  endLocation: PropTypes.string.isRequired,
-  onSend: PropTypes.func.isRequired,
-  tripId: PropTypes.string.isRequired,
+  startLocation: PropTypes.string,
+  endLocation: PropTypes.string,
+  onSend: PropTypes.func,
+  tripId: PropTypes.string,
 }
 
 const styles = StyleSheet.create({

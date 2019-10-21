@@ -98,7 +98,7 @@ class CreateTripScreen extends Component {
             disabled={disabled}
             onPress={() => navigation.navigate('AddStopsScreen')}
           >
-            <Text style={styles.whiteText}>Agrega una Parada</Text>
+            <Text style={styles.whiteText}>Siguiente</Text>
           </Button>
         </View>
       </View>

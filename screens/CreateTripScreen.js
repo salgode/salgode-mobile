@@ -5,7 +5,11 @@ import { loginUser } from '../redux/actions/user'
 import { DatePicker, Button } from 'native-base'
 import CardInput from '../components/CardInput'
 import CardInputSelector from '../components/CardInputSelector'
-import { setStartStop, setEndStop, setStops } from '../redux/actions/createtrip'
+import {
+  setStartStop,
+  setEndStop,
+  setStartTime,
+} from '../redux/actions/createtrip'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 
 class CreateTripScreen extends Component {
@@ -22,12 +26,13 @@ class CreateTripScreen extends Component {
   }
 
   handleDatePicked = date => {
-    console.log('A date has been picked: ', date)
+    this.props.setStartTime(date)
     this.hideDateTimePicker()
   }
 
   render() {
-    const { navigation } = this.props
+    const { navigation, startStop, endStop, startTime } = this.props
+
     return (
       <View style={styles.container}>
         <ScrollView
@@ -36,12 +41,14 @@ class CreateTripScreen extends Component {
         >
           <View style={styles.group}>
             <CardInputSelector
-              text="#Donde"
+              text="#Desde"
+              placeHolder="Agrega punto de partida"
               onSelect={item => this.props.setStartStop(item.parada)}
             />
 
             <CardInputSelector
               text="#A"
+              placeHolder="Agrega punto de termino"
               onSelect={item => this.props.setEndStop(item.parada)}
             />
           </View>
@@ -63,6 +70,7 @@ class CreateTripScreen extends Component {
           <Button
             block
             style={styles.addButton}
+            disabled={startStop && endStop && startTime ? false : true}
             onPress={() => navigation.navigate('AddStopsScreen')}
           >
             <Text>Agrega una Parada</Text>
@@ -100,9 +108,12 @@ const styles = StyleSheet.create({
   },
 })
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ user, createTrip }) => {
   return {
-    user: state.user,
+    user: user,
+    startStop: createTrip.startStop,
+    endStop: createTrip.endStop,
+    startTime: createTrip.startTime,
   }
 }
 
@@ -110,7 +121,7 @@ const mapDispatchToProps = {
   loginUser,
   setStartStop,
   setEndStop,
-  setStops,
+  setStartTime,
 }
 
 export default connect(

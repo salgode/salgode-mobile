@@ -1,7 +1,7 @@
 export const actions = {
   SET_START_STOP: 'SET_START_STOP',
   SET_END_STOP: 'SET_END_STOP',
-  SET_STOPS: 'SET_STOPS',
+  SET_START_TIME: 'SET_START_TIME',
   CLEAR_CREATE_TRIP_INFO: 'CLEAR_CREATE_TRIP_INFO',
 }
 
@@ -19,10 +19,10 @@ export function setEndStop(endStop) {
   }
 }
 
-export function setStops(stops) {
+export function setStartTime(time) {
   return {
-    type: actions.SET_STOPS,
-    payload: stops,
+    type: actions.SET_START_TIME,
+    payload: time,
   }
 }
 

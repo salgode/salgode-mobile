@@ -6,9 +6,13 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native'
-import { Card } from 'native-base'
+import { Card, Button, Icon } from 'native-base'
 
 export default class CardInputSelector extends Component {
+  constructor(props) {
+    super(props)
+    this.textInputRef = React.createRef()
+  }
   static defaultProps = {
     data: [
       { comuna: 'Lo Espejo', parada: 'Municipalidad' },
@@ -21,6 +25,7 @@ export default class CardInputSelector extends Component {
     fields: [],
     text: '',
     setValue: true,
+    textInputRef: null,
   }
 
   state = {
@@ -66,23 +71,33 @@ export default class CardInputSelector extends Component {
   }
 
   render() {
+    const { placeHolder } = this.props
     return (
-      <View>
-        <Card style={styles.paper}>
-          <View style={styles.textView}>
-            <Text style={styles.text}>{this.props.text}</Text>
-            <TextInput
-              placeholder="Hola"
-              value={this.state.input}
-              onChangeText={text =>
-                this.setState({ input: text.toLowerCase() })
-              }
-              onFocus={() => this.setState({ displayList: true })}
-            />
-          </View>
-        </Card>
-        <Card style={(styles.paper, styles.textView)}>{this.renderList()}</Card>
-      </View>
+      <TouchableOpacity onPress={() => this.textInputRef.current.focus()}>
+        <View>
+          <Card style={styles.paper}>
+            <View style={styles.textView}>
+              <Text style={styles.text}>{this.props.text}</Text>
+              <TextInput
+                ref={this.textInputRef}
+                id="selectorInput"
+                placeholder={placeHolder}
+                value={this.state.input}
+                onChangeText={text =>
+                  this.setState({ input: text.toLowerCase() })
+                }
+                onFocus={() => this.setState({ displayList: true })}
+              />
+              <Button icon transparen>
+                <Icon name="close" />
+              </Button>
+            </View>
+          </Card>
+          <Card style={(styles.paper, styles.textView)}>
+            {this.renderList()}
+          </Card>
+        </View>
+      </TouchableOpacity>
     )
   }
 }
@@ -93,11 +108,12 @@ const styles = StyleSheet.create({
   listItem: { alignItems: 'center', flexDirection: 'row' },
   paper: { borderRadius: 10 },
   rowView: { alignItems: 'center', flexDirection: 'row' },
-  text: { fontWeight: 'bold' },
+  text: { fontWeight: 'bold', margin: 10 },
   textView: {
     alignItems: 'center',
     flex: 1,
-    flexDirection: 'column',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginLeft: 10,
   },
 })

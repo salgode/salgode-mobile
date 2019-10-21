@@ -1,5 +1,5 @@
 export const createTripModel = {
   startStop: '',
-  stops: [],
+  startTime: '',
   endStop: '',
 }

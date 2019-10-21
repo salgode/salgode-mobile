@@ -4,20 +4,15 @@ import { Card, View, Text, CardItem } from 'native-base'
 import Location from './Location'
 import Colors from '../../../constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
+import Icon from 'react-native-vector-icons/AntDesign';
 import TimeInfo from './TimeInfo'
 import PedirBoton from './PedirBoton'
 import PropTypes from 'prop-types'
 
-const ChooseTrip = ({ timestamp, spacesUsed, user, onSend}) => {
-  let statusColor
-  let statusText
-
+const ChooseTrip = ({ timestamp, spacesUsed, user, startPoint, endPoint, onSend}) => {
   return (
     <Card style={styles.containerRequested}>
-      <View style={{ backgroundColor: statusColor }}>
-        <Text style={styles.statusText}>{statusText}</Text>
-      </View>
-      <CardItem>
+      <CardItem style={styles.dataContainer}>
         <View style={styles.user}>
           <View style={styles.userData}>
             <Ionicons
@@ -26,31 +21,23 @@ const ChooseTrip = ({ timestamp, spacesUsed, user, onSend}) => {
             />
             <Text style={styles.userText}>{user.name}</Text>
           </View>
-          <View>
+          <View style={styles.iconInfoGroup}>
             <View style={styles.iconContainer}>
-              <Ionicons
-                name={Platform.OS === 'ios' ? 'ios-thumbs-up' : 'md-thumbs-up'}
-                size={30}
-                color={Colors.textGray}
-              />
+              <Icon name="like1" style={styles.infoIcon} />
               <Text style={styles.iconText}>{user.reputation}</Text>
             </View>
             <View style={styles.iconContainer}>
-              <Ionicons
-                name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'}
-                size={30}
-                color={Colors.textGray}
-              />
+              <Icon name="addusergroup" style={styles.infoIcon} />
               <Text style={styles.iconText}>{spacesUsed}</Text>
             </View>
           </View>
         </View>
       </CardItem>
       <CardItem style={styles.locationContainer}>
-        <Location color={'red'} location="Campus San Joaquin" />
-        <Location color={Colors.tintColor} location="Campus San Joaquin" />
+        <Location color={'#fd5844'} location={startPoint} />
+        <Location color={'#886afe'} location={endPoint} />
       </CardItem>
-      <CardItem>
+      <CardItem style={styles.bottomSection}>
         <TimeInfo timestamp={timestamp} />
         <PedirBoton onSend={onSend}/>
       </CardItem>
@@ -66,13 +53,36 @@ ChooseTrip.propTypes = {
 
 const styles = StyleSheet.create({
   containerRequested: {
+    backgroundColor: '#fff',
+    borderColor: '#ffffff',
+    borderWidth: 0,
     alignItems: 'flex-start',
     borderRadius: 20,
     padding: 15,
+    shadowColor: '#bbb',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 1,
   },
-  iconContainer: { alignItems: 'center', flexDirection: 'row' },
-  iconText: { marginLeft: 10 },
-  locationContainer: { flexDirection: 'column' },
+  dataContainer: {
+    alignSelf: 'stretch'
+  },
+  iconInfoGroup: {
+    position: 'absolute',
+    right: 5
+  },
+  iconContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  iconText: {
+    color: 'grey',
+  },
+  locationContainer: {
+    alignItems: 'flex-start',
+    flexDirection: 'column',
+  },
   statusText: { color: 'white' },
   user: {
     alignItems: 'center',
@@ -87,6 +97,13 @@ const styles = StyleSheet.create({
   userText: {
     fontSize: 17,
     marginLeft: 15,
+  },
+  bottomSection: {
+    alignSelf: 'stretch'
+  },
+  infoIcon: {
+    color: 'grey',
+    fontSize: 30,
   },
 })
 

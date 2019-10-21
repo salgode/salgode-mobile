@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   icon: {
+    color: 'grey',
     fontSize: 18,
     paddingLeft: 5,
     paddingRight: 10,
@@ -43,6 +44,7 @@ const styles = StyleSheet.create({
     top: 2
   },
   location: {
+    color: 'grey',
     fontSize: 17,
     marginRight: 15,
   },

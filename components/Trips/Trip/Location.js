@@ -24,12 +24,18 @@ const styles = StyleSheet.create({
     height: circleDiameter,
     marginRight: 15,
     width: circleDiameter,
+    shadowColor: '#bbb',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 1,
   },
   container: {
     alignItems: 'center',
     flexDirection: 'row',
   },
   location: {
+    color: 'grey',
     fontSize: 17,
   },
 })

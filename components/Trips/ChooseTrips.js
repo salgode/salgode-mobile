@@ -21,6 +21,8 @@ class ChooseTrips extends Component {
               spacesUsed={item.spacesUsed}
               user={item.user}
               status={item.status}
+              startPoint={item.startPoint}
+              endPoint={item.endPoint}
               onSend={this.props.onSend}
             />
           )}

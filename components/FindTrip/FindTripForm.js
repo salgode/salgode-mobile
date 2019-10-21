@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { StyleSheet } from 'react-native'
 import { Appearance } from 'react-native-appearance';
-import { Text, Form, Item, Input, Label, Button, Picker, Icon } from 'native-base'
+import { Text, Form, Item, Input, Label, Button, Picker } from 'native-base';
+import Icon from 'react-native-vector-icons/AntDesign';
 import DateTimePicker from "react-native-modal-datetime-picker";
 import Layout from '../../constants/Layout'
 
@@ -125,13 +126,14 @@ class FindTripForm extends Component {
     return (
       <Form style={styles.form}>
         <Item inlineLabel regular picker style={styles.item}>
+          <Icon name="rightcircle" style={styles.icon} color={'#fd5844'} />
+          <Label style={styles.label}>De</Label>
           <Picker
             mode="dropdown"
-            iosIcon={<Icon name="arrow-down" />}
-            style={styles.input}
-            placeholder="Seleccionar punto de partida"
-            placeholderStyle={styles.label}
+            style={styles.picker}
+            placeholder="Punto de partida"
             placeholderIconColor="#007aff"
+            textStyle={styles.rightAlign}
             selectedValue={this.state.startLocation}
             onValueChange={this.handleStartLocationPicked}
           >
@@ -146,15 +148,18 @@ class FindTripForm extends Component {
             }
           </Picker>
           <Input
+            style={styles.invisible}
             editable={false}
             value={this.state.startLocation ? this.state.startLocation.toString() : undefined}
             isVisible={false}
           />
         </Item>
         <Item inlineLabel regular style={styles.item} onPress={this.showDatePicker}>
-          <Label style={styles.label}>DÍA</Label>
-          <Text style={styles.input}>{this.showDate(this.state.chosenDate)}</Text>
+          <Icon name="calendar" style={styles.icon} />
+          <Label style={styles.label}>Día</Label>
+          <Text style={styles.rightAlign}>{this.showDate(this.state.chosenDate)}</Text>
           <Input
+            style={styles.invisible}
             editable={false}
             value={this.showDate(this.state.chosenDate)}
             isVisible={false}
@@ -168,10 +173,12 @@ class FindTripForm extends Component {
             mode="date"
           />
         </Item>
-        <Item inlineLabel last regular style={styles.item} onPress={this.showTimePicker}>
-          <Label style={styles.label}>HORA</Label>
-          <Text style={styles.input}>{this.showTime(this.state.chosenTime)}</Text>
+        <Item inlineLabel regular style={styles.item} onPress={this.showTimePicker}>
+          <Icon name="clockcircleo" style={styles.icon} />
+          <Label style={styles.label}>Hora</Label>
+          <Text style={styles.rightAlign}>{this.showTime(this.state.chosenTime)}</Text>
           <Input
+            style={styles.invisible}
             editable={false}
             value={this.showTime(this.state.chosenTime)}
             isVisible={false}
@@ -187,8 +194,7 @@ class FindTripForm extends Component {
         </Item>
         <Button
           block
-          borderRadius={10}
-          style={styles.button}
+          style={!!this.state.inputValidity ? styles.button : styles.disabledButton}
           disabled={!this.state.inputValidity}
         >
           <Text>Buscar Viaje</Text>
@@ -201,29 +207,47 @@ class FindTripForm extends Component {
 FindTripForm.propTypes = {}
 
 const styles = StyleSheet.create({
-  form_element: {
-    width: Layout.window.width * 0.85,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  button: {
-    marginTop: 20,
-  },
   form: {
     alignItems: 'center',
     height: 250,
     margin: 15,
   },
-  input: {
+  item: {
+    borderRadius: 12,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    height: 50,
     width: Layout.window.width * 0.85,
   },
-  item: {
-    borderRadius: 10,
-    marginBottom: 20,
-    paddingHorizontal: 10,
+  disabledButton: {
+    borderRadius: 12,
+    marginTop: 130,
+  },
+  button: {
+    backgroundColor: '#886afe',
+    borderRadius: 12,
+    marginTop: 130,
   },
   label: {
+    color: '#333333',
+  },
+  icon: {
+    fontSize: 25,
+    paddingLeft: 5,
+    paddingRight: 10,
+    // Correct icons white space
+    marginBottom: -3,
+  },
+  invisible: {
+    display: 'none',
+  },
+  rightAlign: {
     color: '#8c8c8c',
+    position: 'absolute',
+    right: 10,
+  },
+  picker: {
+    width: (Layout.window.width * 0.85) - 77,
   },
 })
 

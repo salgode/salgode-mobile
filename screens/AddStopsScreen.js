@@ -2,11 +2,24 @@ import React, { Component } from 'react'
 import { ScrollView, StyleSheet, View, Text } from 'react-native'
 import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
-import { Picker, DatePicker, Button } from 'native-base'
+import { Button } from 'native-base'
 import CardInput from '../components/CardInput'
+import CardInputSelector from '../components/CardInputSelector'
 
 class AddStopsScreen extends Component {
+  state = {
+    stops: [],
+  }
+
+  renderStops = () => {
+    const { stops } = this.state
+    return stops.map((stop, index) => {
+      return <Text key={index}>{stop.parada}</Text>
+    })
+  }
+
   render() {
+    const { startStop, endStop } = this.props
     return (
       <View style={styles.container}>
         <ScrollView
@@ -14,63 +27,16 @@ class AddStopsScreen extends Component {
           contentContainerStyle={styles.contentContainer}
         >
           <View style={styles.group}>
-            <CardInput
-              text={this.props.startStop}
-              input={
-                <Picker selectedValue="java" mode="dropdown">
-                  <Picker.Item label="Java" value="java" />
-                  <Picker.Item label="JavaScript" value="js" />
-                </Picker>
-              }
-            />
+            <CardInput text={startStop} />
 
-            <CardInput
-              text="#A"
-              input={
-                <Picker selectedValue="java" mode="dropdown">
-                  <Picker.Item label="Java" value="java" />
-                  <Picker.Item label="JavaScript" value="js" />
-                </Picker>
-              }
-            />
+            <CardInput text={endStop} />
           </View>
-
           <View style={styles.group}>
-            <CardInput
-              text="Día"
-              input={
-                <DatePicker
-                  defaultDate={new Date(2018, 4, 4)}
-                  minimumDate={new Date(2018, 1, 1)}
-                  locale={'es'}
-                  modalTransparent={false}
-                  animationType={'fade'}
-                  androidMode={'default'}
-                  placeHolderText="Select date"
-                  textStyle={{ color: 'green' }}
-                  placeHolderTextStyle={{ color: '#d3d3d3' }}
-                  //   onDateChange={this.setDate}
-                  disabled={false}
-                />
-              }
-            />
-
-            <CardInput
-              text="Hora"
-              input={
-                <DatePicker
-                  defaultDate={new Date(2018, 4, 4)}
-                  minimumDate={new Date(2018, 1, 1)}
-                  locale={'es'}
-                  modalTransparent={false}
-                  animationType={'fade'}
-                  androidMode={'default'}
-                  placeHolderText="Select date"
-                  textStyle={{ color: 'green' }}
-                  placeHolderTextStyle={{ color: '#d3d3d3' }}
-                  //   onDateChange={this.setDate}
-                  disabled={false}
-                />
+            {this.renderStops()}
+            <CardInputSelector
+              text="Añande una parada"
+              onSelect={item =>
+                this.setState({ stops: this.state.stops.concat([item]) })
               }
             />
           </View>
@@ -121,6 +87,7 @@ const mapStateToProps = ({ user, createTrip }) => {
   return {
     user,
     startStop: createTrip.startStop,
+    endStop: createTrip.endStop,
   }
 }
 

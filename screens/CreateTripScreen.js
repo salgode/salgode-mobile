@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { ScrollView, StyleSheet, View, Text } from 'react-native'
 import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
-import { Picker, DatePicker, Button } from 'native-base'
+import { DatePicker, Button } from 'native-base'
 import CardInput from '../components/CardInput'
 import CardInputSelector from '../components/CardInputSelector'
 import { setStartStop, setEndStop, setStops } from '../redux/actions/createtrip'
@@ -18,11 +18,14 @@ class CreateTripScreen extends Component {
         >
           <View style={styles.group}>
             <CardInputSelector
-              text="#Desde"
-              onSelect={this.props.setStartStop}
+              text="#Donde"
+              onSelect={item => this.props.setStartStop(item.parada)}
             />
 
-            <CardInputSelector text="#A" onSelect={this.props.setEndStop} />
+            <CardInputSelector
+              text="#A"
+              onSelect={item => this.props.setEndStop(item.parada)}
+            />
           </View>
 
           <View style={styles.group}>

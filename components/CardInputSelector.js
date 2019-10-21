@@ -15,10 +15,24 @@ export default class CardInputSelector extends Component {
   }
   static defaultProps = {
     data: [
-      { comuna: 'Lo Espejo', parada: 'Municipalidad' },
-      { comuna: 'Lo Espejo', parada: 'Colegio Salvador' },
-      { comuna: 'Lo Espejo', parada: 'Metro' },
-      { comuna: 'Santiago', parada: 'Metro Santiago' },
+      {
+        address: 'Los Suspiros 1400-1318, Santiago, Región Metropolitana',
+        city: 'Santiago',
+        id: 'spt_85aa1ebe-88bd-43e6-b5cd-7dff053192db',
+        name: 'Mueso Botánico - Crasulácea',
+      },
+      {
+        address: 'mall, Arauco, Maipú, Región Metropolitana',
+        city: 'Santiago',
+        id: 'spt_d652cca4-d2a8-4856-a454-068ad720e655',
+        name: 'Outlet Pollini',
+      },
+      {
+        address: 'Av. Domingo Sta. María 3640, Renca, Región Metropolitana',
+        city: 'Santiago',
+        id: 'spt_512d90ff-dad0-4040-a38c-704ea1d95154',
+        name: 'Colegio Andes, DUOC UC',
+      },
     ],
     placeHolder: '',
     onSelect: () => {},
@@ -37,7 +51,7 @@ export default class CardInputSelector extends Component {
   onItemPress = item => {
     const { setValue } = this.props
     if (setValue) {
-      this.setState({ input: item.parada })
+      this.setState({ input: item.name })
     } else {
       this.setState({ input: '' })
     }
@@ -57,8 +71,8 @@ export default class CardInputSelector extends Component {
         <View style={{ flex: 1 }}>
           {this.props.data.map((item, index) => {
             if (
-              item.parada.toLowerCase().includes(input) ||
-              item.comuna.toLowerCase().includes(input)
+              item.name.toLowerCase().includes(input) ||
+              item.address.toLowerCase().includes(input)
             ) {
               return (
                 <TouchableOpacity
@@ -67,7 +81,7 @@ export default class CardInputSelector extends Component {
                   style={styles.listItem}
                 >
                   <Text>
-                    {item.parada}, {item.comuna}
+                    {item.name}, {item.address}
                   </Text>
                 </TouchableOpacity>
               )

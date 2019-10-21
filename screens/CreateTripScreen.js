@@ -53,6 +53,7 @@ class CreateTripScreen extends Component {
               placeHolder="Filtra por Comuna o Parada"
               onSelect={item => this.props.setStartStop(item.parada)}
               onClear={this.props.clearStartStop}
+              data={this.props.spots}
             />
 
             <CardInputSelector
@@ -60,6 +61,7 @@ class CreateTripScreen extends Component {
               placeHolder="Filtra por Comuna o Parada"
               onSelect={item => this.props.setEndStop(item.parada)}
               onClear={this.props.clearEndStop}
+              data={this.props.spots}
             />
           </View>
 

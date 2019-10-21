@@ -130,11 +130,12 @@ const styles = StyleSheet.create({
   },
 })
 
-const mapStateToProps = ({ user, createTrip }) => {
+const mapStateToProps = ({ user, createTrip, spots }) => {
   return {
     user,
     startStop: createTrip.startStop,
     endStop: createTrip.endStop,
+    spots: spots.spots,
   }
 }
 

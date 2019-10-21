@@ -36,7 +36,8 @@ class AddStopsScreen extends Component {
           <View style={styles.group}>
             {this.renderStops()}
             <CardInputSelector
-              text="Añande una parada"
+              text="+"
+              placeHolder="Añade una parada"
               setValue={false}
               onSelect={item =>
                 this.setState({ stops: this.state.stops.concat([item]) })

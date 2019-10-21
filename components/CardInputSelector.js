@@ -37,6 +37,8 @@ export default class CardInputSelector extends Component {
     const { setValue } = this.props
     if (setValue) {
       this.setState({ input: item.parada })
+    } else {
+      this.setState({ input: '' })
     }
     this.setState({ displayList: false })
     this.props.onSelect(item)
@@ -46,7 +48,7 @@ export default class CardInputSelector extends Component {
     const { displayList, input } = this.state
     if (displayList) {
       return (
-        <View>
+        <View style={styles.itemsList}>
           {this.props.data.map((item, index) => {
             if (
               item.parada.toLowerCase().includes(input) ||
@@ -105,6 +107,10 @@ export default class CardInputSelector extends Component {
 const styles = StyleSheet.create({
   columnViews: { alignItems: 'center', flexDirection: 'column' },
   input: { alignItems: 'flex-end', flex: 1 },
+  itemsList: {
+    position: 'absolute',
+    zIndex: 10,
+  },
   listItem: { alignItems: 'center', flexDirection: 'row' },
   paper: { borderRadius: 10 },
   rowView: { alignItems: 'center', flexDirection: 'row' },
@@ -115,5 +121,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginLeft: 10,
+    position: 'relative',
   },
 })

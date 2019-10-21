@@ -23,20 +23,18 @@ class LoginScreen extends Component {
     this.setState({ loading: true })
 
     const user = await this.props.login(email, password).then(response => {
-      return response.payload.data
+      return response
     })
-    if (!user) {
+
+    this.setState({ loading: false })
+    console.log(user.error)
+    if (user.error) {
       Alert.alert(
         'Hubo un problema iniciando sesión. Por favor intentalo de nuevo.'
-      )
-    } else if (!user.email) {
-      Alert.alert(
-        'Las credenciales ingresadas son inválidas. Por favor intentalo de nuevo.'
       )
     } else {
       this.props.navigation.navigate('Home')
     }
-    await this.setState({ loading: false })
   }
 
   render() {

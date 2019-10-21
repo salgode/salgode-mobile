@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Spinner } from 'native-base'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 import TripRequest from '../components/Trips/TripRequest'
 
 class TripRequestScreen extends Component {
@@ -17,20 +17,22 @@ class TripRequestScreen extends Component {
 
   componentDidMount() {
     const stops = this.props.navigation.getParam('stops', null)
-    console.log(stops)
+    // console.log(stops)
     this.setState({ stops })
   }
 
   render() {
-    console.log(this.state.stops)
+    // console.log(this.state.stops)
     return !this.state.stops ? (
       <Spinner />
     ) : (
-        <TripRequest stops={this.state.stops} />
-      )
+      <TripRequest stops={this.state.stops} />
+    )
   }
 }
 
-TripRequestScreen.propTypes = {}
-
+TripRequestScreen.navigationOptions = {
+  title: 'Solicitud de viaje',
+  headerBackTitle: '', // TODO: que no diga 'Back'
+}
 export default TripRequestScreen

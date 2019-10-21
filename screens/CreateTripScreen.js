@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { ScrollView, StyleSheet, View, Text } from 'react-native'
 import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
 import { Button } from 'native-base'
-import styled from 'styled-components'
 import CardInputSelector from '../components/CardInputSelector'
 import {
   setStartStop,
@@ -77,11 +76,11 @@ class CreateTripScreen extends Component {
 
           <View style={styles.group}>
             <Button style={styles.dateButton} onPress={this.showDateTimePicker}>
-              <WhiteText>
+              <Text style={styles.whiteText}>
                 {pickedDate
                   ? `${day} - ${hours}:${minutes < 10 ? '0' : ''}${minutes}`
                   : 'Hora/Fecha de Salida'}
-              </WhiteText>
+              </Text>
             </Button>
             <DateTimePicker
               mode="datetime"
@@ -99,7 +98,7 @@ class CreateTripScreen extends Component {
             disabled={disabled}
             onPress={() => navigation.navigate('AddStopsScreen')}
           >
-            <WhiteText>Agrega una Parada</WhiteText>
+            <Text style={styles.whiteText}>Agrega una Parada</Text>
           </Button>
         </View>
       </View>
@@ -144,11 +143,10 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
   },
+  whiteText: {
+    color: 'white',
+  },
 })
-
-const WhiteText = styled.Text`
-  color: white;
-`
 
 const mapStateToProps = ({ user, createTrip, spots }) => {
   return {

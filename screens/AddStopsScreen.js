@@ -4,16 +4,9 @@ import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
 import { Picker, DatePicker, Button } from 'native-base'
 import CardInput from '../components/CardInput'
-import CardInputSelector from '../components/CardInputSelector'
-import {
-  setStartStop,
-  setEndStop,
-  setStops,
-} from '../redux/actions/createtrip'
 
-class CreateTripScreen extends Component {
+class AddStopsScreen extends Component {
   render() {
-    const { navigation } = this.props;
     return (
       <View style={styles.container}>
         <ScrollView
@@ -21,13 +14,24 @@ class CreateTripScreen extends Component {
           contentContainerStyle={styles.contentContainer}
         >
           <View style={styles.group}>
-            <CardInputSelector
-              
-              />
+            <CardInput
+              text={this.props.startStop}
+              input={
+                <Picker selectedValue="java" mode="dropdown">
+                  <Picker.Item label="Java" value="java" />
+                  <Picker.Item label="JavaScript" value="js" />
+                </Picker>
+              }
+            />
 
-            <CardInputSelector
+            <CardInput
               text="#A"
-              onSelect={this.props.setEndStop}
+              input={
+                <Picker selectedValue="java" mode="dropdown">
+                  <Picker.Item label="Java" value="java" />
+                  <Picker.Item label="JavaScript" value="js" />
+                </Picker>
+              }
             />
           </View>
 
@@ -76,9 +80,9 @@ class CreateTripScreen extends Component {
           <Button
             block
             style={styles.addButton}
-            onPress={() => navigation.navigate('AddStopsScreen')}
+            onPress={() => console.log('')}
           >
-            <Text>Agrega una Parada</Text>
+            <Text>Crear Viaje</Text>
           </Button>
         </View>
       </View>
@@ -86,7 +90,7 @@ class CreateTripScreen extends Component {
   }
 }
 
-CreateTripScreen.navigationOptions = {
+AddStopsScreen.navigationOptions = {
   header: null,
 }
 
@@ -113,20 +117,18 @@ const styles = StyleSheet.create({
   },
 })
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ user, createTrip }) => {
   return {
-    user: state.user,
+    user,
+    startStop: createTrip.startStop,
   }
 }
 
 const mapDispatchToProps = {
   loginUser,
-  setStartStop,
-  setEndStop,
-  setStops,
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CreateTripScreen)
+)(AddStopsScreen)

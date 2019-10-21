@@ -1,5 +1,11 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Text, TextInput } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native'
 import { Card } from 'native-base'
 
 export default class CardInputSelector extends Component {
@@ -11,7 +17,7 @@ export default class CardInputSelector extends Component {
       { comuna: 'Santiago', parada: 'Metro Santiago' },
     ],
     placeHolder: '',
-    onPress: () => {},
+    onSelect: () => {},
     fields: [],
     text: '',
   }
@@ -20,34 +26,66 @@ export default class CardInputSelector extends Component {
     displayList: false,
     input: '',
   }
+
+  onItemPress = item => {
+    this.setState({ displayList: false, input: item.parada })
+    this.props.onSelect(item.parada)
+  }
+
   renderList = () => {
-    const { displayList } = this.state
+    const { displayList, input } = this.state
     if (displayList) {
-      console.log('ricci la chupa')
+      return (
+        <View>
+          {this.props.data.map((item, index) => {
+            if (
+              item.parada.toLowerCase().includes(input) ||
+              item.comuna.toLowerCase().includes(input)
+            ) {
+              return (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => this.onItemPress(item)}
+                >
+                  <Text>
+                    {item.parada}, {item.comuna}
+                  </Text>
+                </TouchableOpacity>
+              )
+            }
+          })}
+        </View>
+      )
     }
   }
 
   render() {
     return (
-      <Card style={styles.paper}>
-        <View style={styles.textView}>
-          <Text style={styles.text}>{this.props.text}</Text>
-          <TextInput
-            placeholder="Hola"
-            onFocus={() => this.setState({ displayList: true })}
-          />
-          {this.renderList()}
-        </View>
-      </Card>
+      <View>
+        <Card style={styles.paper}>
+          <View style={styles.textView}>
+            <Text style={styles.text}>{this.props.text}</Text>
+            <TextInput
+              placeholder="Hola"
+              value={this.state.input}
+              onChangeText={text =>
+                this.setState({ input: text.toLowerCase() })
+              }
+              onFocus={() => this.setState({ displayList: true })}
+            />
+          </View>
+        </Card>
+        <Card style={(styles.paper, styles.textView)}>{this.renderList()}</Card>
+      </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  columnViews: { alignItems: 'center', flexDirection: 'column' },
   input: { alignItems: 'flex-end', flex: 0.5 },
   paper: { borderRadius: 10 },
   rowView: { alignItems: 'center', flexDirection: 'row' },
   text: { fontWeight: 'bold' },
-  textView: { flex: 0.5, marginLeft: 10, flexDirection: 'column'},
-  columnViews: { alignItems: 'center', flexDirection: 'column' },
+  textView: { flex: 0.5, flexDirection: 'column', marginLeft: 10 },
 })

@@ -18,6 +18,8 @@ class AddStopsScreen extends Component {
     })
   }
 
+  addStop = () => {}
+
   render() {
     const { startStop, endStop } = this.props
     return (
@@ -35,6 +37,7 @@ class AddStopsScreen extends Component {
             {this.renderStops()}
             <CardInputSelector
               text="Añande una parada"
+              setValue={false}
               onSelect={item =>
                 this.setState({ stops: this.state.stops.concat([item]) })
               }

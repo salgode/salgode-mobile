@@ -20,6 +20,7 @@ export default class CardInputSelector extends Component {
     onSelect: () => {},
     fields: [],
     text: '',
+    setValue: true,
   }
 
   state = {
@@ -28,7 +29,11 @@ export default class CardInputSelector extends Component {
   }
 
   onItemPress = item => {
-    this.setState({ displayList: false, input: item.parada })
+    const { setValue } = this.props
+    if (setValue) {
+      this.setState({ input: item.parada })
+    }
+    this.setState({ displayList: false })
     this.props.onSelect(item)
   }
 

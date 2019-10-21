@@ -5,9 +5,18 @@ import Icon from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
 import { showDate, showOnlyTime } from '../../../utils/time'
 
-const TimeInfo = ({ timestamp }) => {
+const TimeInfo = ({ timestamp, displayAsRow = false }) => {
+  const contaierStyle = {
+    ...styles.container,
+    ...(displayAsRow
+      ? {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+      }
+      : {}),
+  }
   return (
-    <View style={styles.container}>
+    <View style={contaierStyle}>
       <View style={styles.rowElement}>
         <Icon name="calendar" style={styles.icon} />
         <Text style={styles.location}>{showDate(timestamp)}</Text>
@@ -22,7 +31,7 @@ const TimeInfo = ({ timestamp }) => {
 
 TimeInfo.propTypes = {
   timestamp: PropTypes.number.isRequired,
-  isDate: PropTypes.bool,
+  displayAsRow: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

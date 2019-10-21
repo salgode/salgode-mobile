@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Layout from '../constants/Layout'
 import {
   SafeAreaView,
   Text,
@@ -27,13 +28,18 @@ FindTripScreen.propTypes = {}
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: 100,
+    backgroundColor: '#f4f7fc',
     alignItems: 'center',
     flex: 1,
     justifyContent: 'space-evenly',
     ...StyleSheet.absoluteFillObject,
   },
   title: {
-    fontSize: 50,
+    width: Layout.window.width * 0.85,
+    color: '#3b3e43',
+    textAlign: 'left',
+    fontSize: 35,
     fontWeight: '900',
   },
 })

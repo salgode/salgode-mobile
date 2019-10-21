@@ -8,8 +8,17 @@ import CardInputSelector from '../components/CardInputSelector'
 import { setStartStop, setEndStop, setStops } from '../redux/actions/createtrip'
 
 class CreateTripScreen extends Component {
+  changeAddStopsScreen = () => {
+    if (startStop && endStop){
+      navigation.navigate('AddStopsScreen')
+    } else {
+      // TODO: show alert
+      console.log("show alert, falta agregar inicio y fin")
+    }
+  }
   render() {
     const { navigation } = this.props
+    const { startStop, endStop } = this.state
     return (
       <View style={styles.container}>
         <ScrollView
@@ -73,7 +82,8 @@ class CreateTripScreen extends Component {
           <Button
             block
             style={styles.addButton}
-            onPress={() => navigation.navigate('AddStopsScreen')}
+            disabled={startStop && endStop}
+            onPress={this.changeAddStopsScreen}
           >
             <Text>Agrega una Parada</Text>
           </Button>
@@ -110,9 +120,11 @@ const styles = StyleSheet.create({
   },
 })
 
-const mapStateToProps = state => {
+const mapStateToProps = ({user, createTrip}) => {
   return {
-    user: state.user,
+    user: user,
+    startStop: createTrip.startStop,
+    endStop: createTrip.endStop,
   }
 }
 

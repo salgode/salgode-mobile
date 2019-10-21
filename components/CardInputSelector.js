@@ -14,26 +14,7 @@ export default class CardInputSelector extends Component {
     this.textInputRef = React.createRef()
   }
   static defaultProps = {
-    data: [
-      {
-        address: 'Los Suspiros 1400-1318, Santiago, Región Metropolitana',
-        city: 'Santiago',
-        id: 'spt_85aa1ebe-88bd-43e6-b5cd-7dff053192db',
-        name: 'Mueso Botánico - Crasulácea',
-      },
-      {
-        address: 'mall, Arauco, Maipú, Región Metropolitana',
-        city: 'Santiago',
-        id: 'spt_d652cca4-d2a8-4856-a454-068ad720e655',
-        name: 'Outlet Pollini',
-      },
-      {
-        address: 'Av. Domingo Sta. María 3640, Renca, Región Metropolitana',
-        city: 'Santiago',
-        id: 'spt_512d90ff-dad0-4040-a38c-704ea1d95154',
-        name: 'Colegio Andes, DUOC UC',
-      },
-    ],
+    data: [],
     placeHolder: '',
     onSelect: () => {},
     onClear: () => {},

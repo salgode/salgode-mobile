@@ -21,7 +21,6 @@ class CreateTripScreen extends Component {
   }
 
   componentDidMount = () => {
-    console.log('create screen mounted')
     this.props.getAllSpots()
   }
 
@@ -78,11 +77,6 @@ class CreateTripScreen extends Component {
               onConfirm={this.handleDatePicked}
               onCancel={this.hideDateTimePicker}
             />
-
-            <Text>
-              {startStop ? 'start' : 'nostart'} {endStop ? 'end' : 'no end'}{' '}
-              {startTime ? 'time' : 'no time'}
-            </Text>
           </View>
         </ScrollView>
 

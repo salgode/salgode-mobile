@@ -1,6 +1,6 @@
 import { actions as createTripActions } from '../actions/createtrip'
 
-export default function spotsReducer(state = {}, action) {
+export default function createTripReducer(state = {}, action) {
   switch (action.type) {
     case createTripActions.SET_START_STOP:
       return { ...state, startStop: action.payload }

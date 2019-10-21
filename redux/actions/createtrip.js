@@ -47,7 +47,8 @@ export function clearCreateTripInfo() {
   return { type: actions.CLEAR_CREATE_TRIP_INFO }
 }
 
-export function createTrip(route_points, day, hour) {
+export function createTrip(route_points, etd) {
+  // missing car_i and driver_id. Checkoput backend repo to work with
   return {
     type: actions.CREATE_TRIP,
     payload: {
@@ -56,8 +57,7 @@ export function createTrip(route_points, day, hour) {
         method: 'post',
         data: {
           route_points,
-          day,
-          hour,
+          etd,
         },
       },
     },

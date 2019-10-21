@@ -23,12 +23,13 @@ class AddStopsScreen extends Component {
   createTrip = () => {
     const { startStop, endStop, startTime } = this.props
     const { stops } = this.state
-    const route_points = [startStop.id, endStop.id]
-    console.log(startTime)
-    console.log(startTime.getDay())
-    const day = 'Lunes'
-    const hour = '16:15'
-    this.props.createTrip(route_points, day, hour)
+    const stops_ids = stops.map(stop => {
+      return stop.id
+    })
+
+    const route_points = [startStop.id].concat(stops_ids, endStop.id)
+
+    this.props.createTrip(route_points, startTime)
   }
 
   renderStops = () => {
@@ -80,6 +81,7 @@ class AddStopsScreen extends Component {
               text="+"
               placeHolder="Filtra por Comuna o Parada"
               setValue={false}
+              data={this.props.spots}
               onSelect={item =>
                 this.setState({ stops: this.state.stops.concat([item]) })
               }

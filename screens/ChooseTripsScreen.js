@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, KeyboardAvoidingView, Text } from 'react-native'
+import Layout from '../constants/Layout'
 import PropTypes from 'prop-types'
 import ChooseTrips from '../components/Trips/ChooseTrips'
 
@@ -29,65 +30,80 @@ class ChooseTripsScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <ChooseTrips
-          onSend={this.state.onSend}
-          trips={[
-            {
-              timestamp: 1571590002,
-              spacesUsed: 3,
-              key: '0',
-              user: {
-                name: 'Thomas Brahm',
-                reputation: 10,
+        <Text style={styles.title}>Busca tu viaje</Text>
+        <View>
+          <ChooseTrips
+            onSend={this.state.onSend}
+            trips={[
+              {
+                timestamp: 1571633513000,
+                spacesUsed: 3,
+                key: '0',
+                user: {
+                  name: 'Thomas Brahm',
+                  reputation: 10,
+                },
+                startPoint: 'Metro San Joaquín',
+                endPoint: 'Estadio Banco Central'
               },
-            },
-            {
-              timestamp: 1571503602,
-              spacesUsed: 3,
-              key: '1',
-              user: {
-                name: 'Thomas Brahm',
-                reputation: 10,
+              {
+                timestamp: 1571503602000,
+                spacesUsed: 3,
+                key: '1',
+                user: {
+                  name: 'Daniel Leal',
+                  reputation: 7,
+                },
+                startPoint: 'Metro San Joaquín',
+                endPoint: 'Universo Chino'
               },
-            },
-            {
-              timestamp: 1571586402,
-              spacesUsed: 3,
-              key: '2',
-              user: {
-                name: 'Thomas Brahm',
-                reputation: 10,
+              {
+                timestamp: 1571586402000,
+                spacesUsed: 3,
+                key: '2',
+                user: {
+                  name: 'Example User',
+                  reputation: 8,
+                },
+                startPoint: 'Metro San Joaquín',
+                endPoint: 'Costanera Center'
               },
-            },
-            {
-              timestamp: 1570985202,
-              spacesUsed: 3,
-              key: '3',
-              user: {
-                name: 'Thomas Brahm',
-                reputation: 10,
+              {
+                timestamp: 1570985202000,
+                spacesUsed: 3,
+                key: '3',
+                user: {
+                  name: 'John Doe',
+                  reputation: 3,
+                },
+                startPoint: 'Metro San Joaquín',
+                endPoint: 'Universidad Alberto Hurtado'
               },
-            },
-            {
-              timestamp: 1571593602,
-              spacesUsed: 3,
-              key: '4',
-              user: {
-                name: 'Thomas Brahm',
-                reputation: 10,
+              {
+                timestamp: 1571593602000,
+                spacesUsed: 3,
+                key: '4',
+                user: {
+                  name: 'Alexander Rovint',
+                  reputation: 9,
+                },
+                startPoint: 'Metro San Joaquín',
+                endPoint: 'Parroquia Nuestra Señora de la Medalla Milagrosa'
               },
-            },
-            {
-              timestamp: 1571676402,
-              spacesUsed: 3,
-              key: '5',
-              user: {
-                name: 'Thomas Brahm',
-                reputation: 10,
+              {
+                timestamp: 1571676402000,
+                spacesUsed: 3,
+                key: '5',
+                user: {
+                  name: 'Mike Hansen',
+                  reputation: 1,
+                },
+                startPoint: 'Metro San Joaquín',
+                endPoint: 'Mall VIVO El Centro'
               },
-            },
-          ]}
-        />
+            ]}
+          />
+        </View>
       </View>
     )
   }
@@ -103,8 +119,17 @@ ChooseTripsScreen.defaultProps = {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#f4f7fc',
     padding: 15,
+    paddingBottom: 90,
     ...StyleSheet.absoluteFill,
+  },
+  title: {
+    color: '#3b3e43',
+    padding: 15,
+    textAlign: 'center',
+    fontSize: 35,
+    fontWeight: '900',
   },
 })
 

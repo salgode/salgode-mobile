@@ -84,14 +84,14 @@ export default class CardInputSelector extends Component {
 
 const styles = StyleSheet.create({
   columnViews: { alignItems: 'center', flexDirection: 'column' },
-  input: { alignItems: 'flex-end', flex: 0.5 },
+  input: { alignItems: 'flex-end', flex: 1 },
   listItem: { alignItems: 'center', flexDirection: 'row' },
   paper: { borderRadius: 10 },
   rowView: { alignItems: 'center', flexDirection: 'row' },
   text: { fontWeight: 'bold' },
   textView: {
     alignItems: 'center',
-    flex: 0.5,
+    flex: 1,
     flexDirection: 'column',
     marginLeft: 10,
   },

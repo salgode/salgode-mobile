@@ -76,8 +76,6 @@ ChooseTripsScreen.defaultProps = {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f4f7fc',
-    borderColor: 'red',
-    borderWidth: 1,
     padding: 15,
     paddingBottom: 90,
     ...StyleSheet.absoluteFill,

@@ -113,7 +113,7 @@ class FindTripForm extends Component {
           <Input
             style={styles.invisible}
             editable={false}
-            value={showDate(this.state.chosenDate)}
+            value={this.state.chosenDate.toString()}
             isVisible={false}
           />
           <DateTimePicker
@@ -132,7 +132,7 @@ class FindTripForm extends Component {
           <Input
             style={styles.invisible}
             editable={false}
-            value={showTime(this.state.chosenTime)}
+            value={this.state.chosenTime.toString()}
             isVisible={false}
           />
           <DateTimePicker

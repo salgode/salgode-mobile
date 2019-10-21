@@ -21,7 +21,6 @@ class CreateTripScreen extends Component {
   }
 
   componentDidMount = () => {
-    console.log('create screen mounted')
     this.props.getAllSpots()
   }
 
@@ -62,15 +61,17 @@ class CreateTripScreen extends Component {
             <CardInputSelector
               text="#Desde"
               placeHolder="Filtra por Comuna o Parada"
-              onSelect={item => this.props.setStartStop(item.parada)}
+              onSelect={item => this.props.setStartStop(item)}
               onClear={this.props.clearStartStop}
+              data={this.props.spots}
             />
 
             <CardInputSelector
               text="#A"
               placeHolder="Filtra por Comuna o Parada"
-              onSelect={item => this.props.setEndStop(item.parada)}
+              onSelect={item => this.props.setEndStop(item)}
               onClear={this.props.clearEndStop}
+              data={this.props.spots}
             />
           </View>
 

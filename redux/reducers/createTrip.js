@@ -1,6 +1,6 @@
 import { actions as createTripActions } from '../actions/createtrip'
 
-export default function spotsReducer(state = {}, action) {
+export default function createTripReducer(state = {}, action) {
   switch (action.type) {
     case createTripActions.SET_START_STOP:
       return { ...state, startStop: action.payload }
@@ -17,6 +17,16 @@ export default function spotsReducer(state = {}, action) {
         startStop: '',
         endStop: '',
         startTime: '',
+      }
+    case createTripActions.CREATE_TRIP:
+      return { ...state, loading: true }
+    case createTripActions.CREATE_TRIP_SUCCESS:
+      return { ...state, loading: false }
+    case createTripActions.RETRIEVE_ALL_SPOTS_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: 'Error while retrieving spots',
       }
     default:
       return state

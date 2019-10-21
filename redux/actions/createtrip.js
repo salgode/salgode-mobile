@@ -6,6 +6,8 @@ export const actions = {
   CLEAR_START_STOP: 'CLEAR_START_STOP',
   CLEAR_END_STOP: 'CLEAR_END_STOP',
   CREATE_TRIP: 'CREATE_TRIP',
+  CREATE_TRIP_SUCCESS: 'CREATE_TRIP_SUCCESS',
+  CREATE_TRIP_FAIL: 'CREATE_TRIP_FAIL',
 }
 
 export function setStartStop(startStop) {
@@ -45,7 +47,8 @@ export function clearCreateTripInfo() {
   return { type: actions.CLEAR_CREATE_TRIP_INFO }
 }
 
-export function createTrip(email, password) {
+export function createTrip(route_points, etd) {
+  // missing car_i and driver_id. Checkoput backend repo to work with
   return {
     type: actions.CREATE_TRIP,
     payload: {
@@ -53,8 +56,8 @@ export function createTrip(email, password) {
         url: `/trips`,
         method: 'post',
         data: {
-          email,
-          password,
+          route_points,
+          etd,
         },
       },
     },

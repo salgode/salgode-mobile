@@ -22,9 +22,9 @@ class ChooseTripsScreen extends Component {
     this.getTrips = this.getTrips.bind(this)
   }
 
-  onRequestTrip(stops) {
-    console.log('Here:;', stops)
-    this.props.navigation.navigate('RequestTrip', { stops })
+  onRequestTrip(stops, tripId) {
+    console.log(tripId)
+    this.props.navigation.navigate('RequestTrip', { stops, tripId })
   }
 
   async getTrips() {
@@ -64,9 +64,12 @@ class ChooseTripsScreen extends Component {
 ChooseTripsScreen.propTypes = {
   isRequestedTrips: PropTypes.bool,
   fetchFutureTrips: PropTypes.func.isRequired,
-  // user: PropTypes.shape({
-  //   token: PropTypes.string.isRequired,
-  // }).isRequired,
+  user: PropTypes.shape({
+    token: PropTypes.string.isRequired,
+  }).isRequired,
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
   trips: PropTypes.array.isRequired,
 }
 
@@ -78,13 +81,11 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f4f7fc',
     padding: 15,
-    paddingBottom: 90,
     ...StyleSheet.absoluteFill,
   },
 })
 
 const mapStateToProps = state => {
-
   return {
     user: state.user,
     trips: state.futureTrips.futureTrips || [],

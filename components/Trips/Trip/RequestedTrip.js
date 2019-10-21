@@ -41,31 +41,13 @@ const RequestedTrip = ({
             {user.selfieLink ? (
               <Thumbnail source={{ uri: user.selfieLink }} />
             ) : (
-                <Ionicons
-                  name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-                  size={40}
-                />
-              )}
+              <Ionicons
+                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                size={40}
+              />
+            )}
             <Text style={styles.userText}>{user.name}</Text>
           </View>
-          {/* <View>
-            <View style={styles.iconContainer}>
-              <Ionicons
-                name={Platform.OS === 'ios' ? 'ios-thumbs-up' : 'md-thumbs-up'}
-                size={20}
-                color={Colors.textGray}
-              />
-              <Text style={styles.iconText}>{user.reputation}</Text>
-            </View>
-            <View style={styles.iconContainer}>
-              <Ionicons
-                name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'}
-                size={20}
-                color={Colors.textGray}
-              />
-              <Text style={styles.iconText}>{spacesUsed}</Text>
-            </View>
-          </View> */}
         </View>
       </CardItem>
       <CardItem style={styles.locationContainer}>
@@ -94,10 +76,10 @@ RequestedTrip.propTypes = {
     selfieLink: PropTypes.string,
   }).isRequired,
   status: PropTypes.oneOf(['accepted', 'pending', 'rejected']),
-  startLocation: PropTypes.string.isRequired,
-  endLocation: PropTypes.string.isRequired,
-  onSend: PropTypes.func.isRequired,
-  tripId: PropTypes.string.isRequired,
+  startLocation: PropTypes.string,
+  endLocation: PropTypes.string,
+  onSend: PropTypes.func,
+  tripId: PropTypes.string,
 }
 
 const styles = StyleSheet.create({
@@ -105,22 +87,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     width: '100%',
   },
-  container: {
-    flexDirection: 'column',
-  },
   containerRequested: {
     alignItems: 'flex-start',
     borderColor: 'white',
     borderRadius: 20,
     padding: 15,
   },
-  iconContainer: { alignItems: 'center', flexDirection: 'row' },
-  iconText: {
-    color: Colors.textGray,
-    fontSize: 13,
-    fontWeight: '700',
-    marginLeft: 10,
-  },
+
   locationContainer: { flexDirection: 'column' },
   shadow: {
     shadowColor: '#b3b3b3',

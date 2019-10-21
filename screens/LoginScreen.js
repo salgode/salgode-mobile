@@ -72,9 +72,11 @@ class LoginScreen extends Component {
       return response
     })
 
+    console.log(user.payload.data)
+
     this.setState({ loading: false })
 
-    if (user.error) {
+    if (user.error || !user.payload.data.email) {
       Alert.alert(
         'Hubo un problema iniciando sesión. Por favor intentalo de nuevo.'
       )

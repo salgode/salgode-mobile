@@ -1,9 +1,6 @@
 import { actions as spotsActions } from '../actions/spots'
 
 export default function spotsReducer(state = {}, action) {
-  if (action.payload == spotsActions.RETRIEVE_ALL_SPOTS_SUCCESS) {
-    console.log('SPOTS', action)
-  }
   switch (action.type) {
     case spotsActions.RETRIEVE_ALL_SPOTS:
       return { ...state, loading: true }

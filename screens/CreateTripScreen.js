@@ -21,6 +21,7 @@ class CreateTripScreen extends Component {
   }
 
   componentDidMount = () => {
+    console.log('create screen mounted')
     this.props.getAllSpots()
   }
 

@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { Text, Button } from 'native-base'
+import ScaledImage from 'react-native-scaled-image'
+import styled from 'styled-components'
 import { StyleSheet, KeyboardAvoidingView, Alert } from 'react-native'
 import { connect } from 'react-redux'
 import { Spinner } from 'native-base'
@@ -7,6 +9,7 @@ import PropTypes from 'prop-types'
 import LoginForm from '../components/Login/LoginForm'
 import { loginUser } from '../redux/actions/user'
 
+const logo = require('../assets/images/login_icon.png')
 class LoginScreen extends Component {
   static navigationOptions = {
     header: null,
@@ -25,15 +28,14 @@ class LoginScreen extends Component {
     this.setState({ loading: true })
 
     const user = await this.props.login(email, password).then(response => {
-      return response.payload.data
+      return response
     })
-    if (!user) {
+
+    this.setState({ loading: false })
+
+    if (user.error) {
       Alert.alert(
         'Hubo un problema iniciando sesión. Por favor intentalo de nuevo.'
-      )
-    } else if (!user.email) {
-      Alert.alert(
-        'Las credenciales ingresadas son inválidas. Por favor intentalo de nuevo.'
       )
     } else {
       this.props.navigation.navigate('Home')
@@ -47,8 +49,8 @@ class LoginScreen extends Component {
 
   render() {
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="height" enabled>
-        <Text style={styles.title}>#Salgode</Text>
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <SalgoDeLogo source={logo} height={160} />
         <LoginForm onSend={this.onSend} />
         <Button transparent onPress={this.onCreateAccountPress}>
           <Text>No tienes una cuenta? Crea una aquí</Text>
@@ -73,10 +75,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     ...StyleSheet.absoluteFillObject,
   },
-  title: {
-    fontSize: 50,
-    fontWeight: '900',
-  },
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -87,3 +85,8 @@ export default connect(
   null,
   mapDispatchToProps
 )(LoginScreen)
+
+const SalgoDeLogo = styled(ScaledImage)`
+  margin-right: auto;
+  margin-left: auto;
+`

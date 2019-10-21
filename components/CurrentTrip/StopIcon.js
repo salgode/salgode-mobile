@@ -1,5 +1,4 @@
 import React from 'react'
-import { StyleSheet } from 'react-native'
 import { View } from 'native-base'
 import { MaterialIcons } from '@expo/vector-icons'
 import PropTypes from 'prop-types'
@@ -11,7 +10,8 @@ export const STOP_ICON_TYPES = {
   end: 2,
 }
 
-const StopIcon = ({ type }) => {
+const StopIcon = ({ type, size = 50 }) => {
+  const styles = getStyles(size)
   switch (type) {
     case STOP_ICON_TYPES.start:
       return <View style={[styles.icon, styles.start]} />
@@ -19,7 +19,7 @@ const StopIcon = ({ type }) => {
       return (
         <MaterialIcons
           name="location-searching"
-          size={50}
+          size={size}
           color={Colors.textGray}
         />
       )
@@ -30,22 +30,25 @@ const StopIcon = ({ type }) => {
 
 StopIcon.propTypes = {
   type: PropTypes.oneOf(Object.values(STOP_ICON_TYPES)).isRequired,
+  size: PropTypes.number,
 }
 
-const circleDiameter = 50
-const styles = StyleSheet.create({
-  end: {
-    backgroundColor: 'green',
-  },
-  icon: {
-    borderRadius: circleDiameter / 2,
-    elevation: 5,
-    height: circleDiameter,
-    width: circleDiameter,
-  },
-  start: {
-    backgroundColor: 'red',
-  },
-})
+const getStyles = size => {
+  const circleDiameter = size
+  return {
+    end: {
+      backgroundColor: 'green',
+    },
+    icon: {
+      borderRadius: circleDiameter / 2,
+      elevation: 5,
+      height: circleDiameter,
+      width: circleDiameter,
+    },
+    start: {
+      backgroundColor: 'red',
+    },
+  }
+}
 
 export default StopIcon

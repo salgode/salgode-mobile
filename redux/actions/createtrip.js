@@ -45,7 +45,7 @@ export function clearCreateTripInfo() {
   return { type: actions.CLEAR_CREATE_TRIP_INFO }
 }
 
-export function createTrip(email, password) {
+export function createTrip(route_points, day, hour) {
   return {
     type: actions.CREATE_TRIP,
     payload: {
@@ -53,8 +53,9 @@ export function createTrip(email, password) {
         url: `/trips`,
         method: 'post',
         data: {
-          email,
-          password,
+          route_points,
+          day,
+          hour,
         },
       },
     },

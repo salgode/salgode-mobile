@@ -40,7 +40,6 @@ class LoginScreen extends Component {
     } else {
       this.props.navigation.navigate('Trips')
     }
-    await this.setState({ loading: false })
   }
 
   onCreateAccountPress() {

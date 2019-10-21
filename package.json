@@ -35,12 +35,9 @@
     "react-native-appearance": "^0.1.0",
     "react-native-gesture-handler": "~1.3.0",
     "react-native-modal-datetime-picker": "^7.6.0",
-<<<<<<< HEAD
-=======
     "react-native-vector-icons": "^6.6.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.1",
     "react-native-scaled-image": "^0.0.1",
->>>>>>> 115df515f86d1696586bad4e0f7dd237ab6f15ba
     "react-native-web": "^0.11.7",
     "react-navigation": "^3.12.0",
     "react-redux": "^7.1.1",

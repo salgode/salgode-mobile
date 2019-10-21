@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Text, Alert } from 'react-native'
+import { View, StyleSheet, Alert } from 'react-native'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import ChooseTrips from '../components/Trips/ChooseTrips'
@@ -40,7 +40,6 @@ class ChooseTripsScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Busca tu viaje</Text>
         <View>
           <ChooseTrips
             onSend={this.state.onSend}
@@ -82,13 +81,6 @@ const styles = StyleSheet.create({
     paddingBottom: 90,
     ...StyleSheet.absoluteFill,
   },
-  title: {
-    color: '#3b3e43',
-    fontSize: 35,
-    fontWeight: '900',
-    padding: 15,
-    textAlign: 'center',
-  },
 })
 
 const mapStateToProps = state => {
@@ -103,6 +95,9 @@ const mapDispatchToProps = dispatch => ({
   fetchFutureTrips: token => dispatch(fetchFutureTrips(token)),
 })
 
+ChooseTripsScreen.navigationOptions = {
+  title: 'Busca tu viaje',
+}
 export default connect(
   mapStateToProps,
   mapDispatchToProps

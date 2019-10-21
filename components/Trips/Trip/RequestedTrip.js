@@ -31,7 +31,7 @@ const RequestedTrip = ({
   }
 
   return (
-    <Card style={styles.containerRequested}>
+    <Card style={[styles.containerRequested, styles.shadow]}>
       <View style={{ ...styles.status, backgroundColor: statusColor }}>
         <Text style={styles.statusText}>{statusText}</Text>
       </View>
@@ -52,7 +52,7 @@ const RequestedTrip = ({
             <View style={styles.iconContainer}>
               <Ionicons
                 name={Platform.OS === 'ios' ? 'ios-thumbs-up' : 'md-thumbs-up'}
-                size={30}
+                size={20}
                 color={Colors.textGray}
               />
               <Text style={styles.iconText}>{user.reputation}</Text>
@@ -60,7 +60,7 @@ const RequestedTrip = ({
             <View style={styles.iconContainer}>
               <Ionicons
                 name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'}
-                size={30}
+                size={20}
                 color={Colors.textGray}
               />
               <Text style={styles.iconText}>{spacesUsed}</Text>
@@ -104,29 +104,48 @@ const styles = StyleSheet.create({
   containerBottom: {
     justifyContent: 'space-evenly',
     width: '100%',
+  container: {
+    flexDirection: 'column',
   },
   containerRequested: {
     alignItems: 'flex-start',
+    borderColor: 'white',
     borderRadius: 20,
     padding: 15,
   },
-  // iconContainer: { alignItems: 'center', flexDirection: 'row' },
-  // iconText: { marginLeft: 10 },
+  iconContainer: { alignItems: 'center', flexDirection: 'row' },
+  iconText: {
+    color: Colors.textGray,
+    fontSize: 13,
+    fontWeight: '700',
+    marginLeft: 10,
+  },
   locationContainer: { flexDirection: 'column' },
+  shadow: {
+    shadowColor: '#b3b3b3',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+  },
   status: { borderRadius: 15, paddingHorizontal: 10, paddingVertical: 2 },
-  statusText: { color: 'white' },
+  statusText: { color: 'white', fontSize: 12, fontWeight: '700' },
   user: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: 300,
+    width: 280,
   },
   userData: {
     alignItems: 'center',
     flexDirection: 'row',
   },
   userText: {
-    fontSize: 17,
+    color: Colors.textGray,
+    fontSize: 16,
+    fontWeight: '800',
     marginLeft: 15,
   },
 })

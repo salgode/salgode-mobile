@@ -9,6 +9,8 @@ import {
   setStartStop,
   setEndStop,
   setStartTime,
+  clearStartStop,
+  clearEndStop,
 } from '../redux/actions/createtrip'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 
@@ -44,12 +46,14 @@ class CreateTripScreen extends Component {
               text="#Desde"
               placeHolder="Agrega punto de partida"
               onSelect={item => this.props.setStartStop(item.parada)}
+              onClear={this.props.clearStartStop}
             />
 
             <CardInputSelector
               text="#A"
               placeHolder="Agrega punto de termino"
               onSelect={item => this.props.setEndStop(item.parada)}
+              onClear={this.props.clearEndStop}
             />
           </View>
 
@@ -122,6 +126,8 @@ const mapDispatchToProps = {
   setStartStop,
   setEndStop,
   setStartTime,
+  clearStartStop,
+  clearEndStop,
 }
 
 export default connect(

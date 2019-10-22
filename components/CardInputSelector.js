@@ -59,7 +59,7 @@ export default class CardInputSelector extends Component {
         )
       })
       return (
-        <View style={{ flex: 1 }}>
+        <View style={{ height: 300 }}>
           <FlatList
             data={filteredData}
             renderItem={({ item }) => (
@@ -120,8 +120,13 @@ const styles = StyleSheet.create({
     marginVertical: 1,
     padding: 10,
   },
-  paper: { borderRadius: 10 },
-  text: { fontWeight: 'bold', margin: 10 },
+  paper: {
+    borderRadius: 10,
+  },
+  text: {
+    fontWeight: 'bold',
+    margin: 10,
+  },
   textView: {
     alignItems: 'center',
     flex: 1,

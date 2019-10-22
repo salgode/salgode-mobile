@@ -6,36 +6,44 @@ import PropTypes from 'prop-types'
 import Colors from '../../../constants/Colors'
 import CardIcon from './CardIcon'
 import TimeInfo from './TimeInfo'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
-export const Trip = ({ timestamp, spacesUsed }) => {
+export const Trip = ({ timestamp, spacesUsed, onPressTrip, asDriver }) => {
   return (
-    <Card style={styles.container}>
-      <View style={styles.locationContainer}>
-        <Location color={'red'} location="Campus San Joaquin" />
-        <Location color={Colors.tintColor} location="Campus San Joaquin" />
-        <TimeInfo timestamp={timestamp} isDate />
-        <TimeInfo timestamp={timestamp} />
-      </View>
-      <View style={styles.iconContainer}>
-        <CardIcon
-          name={Platform.OS === 'ios' ? 'ios-person-add' : 'md-person-add'}
-          onPress={() => null}
-        />
-        <View style={styles.spacesUsedContainer}>
-          <Text style={styles.spacesUsed}>{spacesUsed}</Text>
-          <CardIcon
-            name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'}
-            bottom
-          />
+    <TouchableOpacity
+      onPress={() => {
+        onPressTrip(asDriver)
+      }}
+    >
+      <Card style={styles.container} pointerEvents="none">
+        <View style={styles.locationContainer}>
+          <Location color={'red'} location="Campus San Joaquin" />
+          <Location color={Colors.tintColor} location="Campus San Joaquin" />
+          <TimeInfo timestamp={timestamp} isDate />
         </View>
-      </View>
-    </Card>
+        <View style={styles.iconContainer}>
+          <CardIcon
+            name={Platform.OS === 'ios' ? 'ios-person-add' : 'md-person-add'}
+            onPress={() => null}
+          />
+          <View style={styles.spacesUsedContainer}>
+            <Text style={styles.spacesUsed}>{spacesUsed}</Text>
+            <CardIcon
+              name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'}
+              bottom
+            />
+          </View>
+        </View>
+      </Card>
+    </TouchableOpacity>
   )
 }
 
 Trip.propTypes = {
   timestamp: PropTypes.number.isRequired,
   spacesUsed: PropTypes.number.isRequired,
+  onPressTrip: PropTypes.func.isRequired,
+  asDriver: PropTypes.bool.isRequired,
 }
 
 const styles = StyleSheet.create({

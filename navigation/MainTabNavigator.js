@@ -12,6 +12,7 @@ import AddStopsScreen from '../screens/AddStopsScreen'
 import ChooseTripsScreen from '../screens/ChooseTripsScreen'
 import TripsNavigator from './TripsNavigator'
 import EditProfileScreen from '../screens/EditProfileScreen'
+import DetailedTripScreen from '../screens/DetailedTripScreen'
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -21,6 +22,7 @@ const config = Platform.select({
 const TripsStack = createStackNavigator(
   {
     Trips: TripsNavigator,
+    DetailedTrip: DetailedTripScreen,
   },
   config
 )

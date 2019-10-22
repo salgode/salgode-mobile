@@ -1,12 +1,20 @@
 import React from 'react'
-import { StyleSheet, Platform } from 'react-native'
+import { StyleSheet, Platform, TouchableOpacity } from 'react-native'
 import Location from './Location'
 import Colors from '../../../constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
 import TimeInfo from './TimeInfo'
+import PropTypes from 'prop-types'
 import { Card, View, Text, CardItem } from 'native-base'
 
-const RequestedTrip = ({ timestamp, spacesUsed, user, status }) => {
+const RequestedTrip = ({
+  timestamp,
+  spacesUsed,
+  user,
+  status,
+  onPressTrip,
+  asDriver,
+}) => {
   let statusColor
   let statusText
 
@@ -22,48 +30,56 @@ const RequestedTrip = ({ timestamp, spacesUsed, user, status }) => {
   }
 
   return (
-    <Card style={styles.containerRequested}>
-      <View style={{ ...styles.status, backgroundColor: statusColor }}>
-        <Text style={styles.statusText}>{statusText}</Text>
-      </View>
-      <CardItem>
-        <View style={styles.user}>
-          <View style={styles.userData}>
-            <Ionicons
-              name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-              size={40}
-            />
-            <Text style={styles.userText}>{user.name}</Text>
-          </View>
-          <View>
-            <View style={styles.iconContainer}>
-              <Ionicons
-                name={Platform.OS === 'ios' ? 'ios-thumbs-up' : 'md-thumbs-up'}
-                size={30}
-                color={Colors.textGray}
-              />
-              <Text style={styles.iconText}>{user.reputation}</Text>
-            </View>
-            <View style={styles.iconContainer}>
-              <Ionicons
-                name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'}
-                size={30}
-                color={Colors.textGray}
-              />
-              <Text style={styles.iconText}>{spacesUsed}</Text>
-            </View>
-          </View>
+    <TouchableOpacity
+      onPress={() => {
+        onPressTrip(asDriver)
+      }}
+    >
+      <Card style={styles.containerRequested}>
+        <View style={{ ...styles.status, backgroundColor: statusColor }}>
+          <Text style={styles.statusText}>{statusText}</Text>
         </View>
-      </CardItem>
-      <CardItem style={styles.locationContainer}>
-        <Location color={'red'} location="Campus San Joaquin" />
-        <Location color={Colors.tintColor} location="Campus San Joaquin" />
-      </CardItem>
-      <CardItem>
-        <TimeInfo timestamp={timestamp} isDate />
-        <TimeInfo timestamp={timestamp} />
-      </CardItem>
-    </Card>
+        <CardItem>
+          <View style={styles.user}>
+            <View style={styles.userData}>
+              <Ionicons
+                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                size={40}
+              />
+              <Text style={styles.userText}>{user.name}</Text>
+            </View>
+            <View>
+              <View style={styles.iconContainer}>
+                <Ionicons
+                  name={
+                    Platform.OS === 'ios' ? 'ios-thumbs-up' : 'md-thumbs-up'
+                  }
+                  size={30}
+                  color={Colors.textGray}
+                />
+                <Text style={styles.iconText}>{user.reputation}</Text>
+              </View>
+              <View style={styles.iconContainer}>
+                <Ionicons
+                  name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'}
+                  size={30}
+                  color={Colors.textGray}
+                />
+                <Text style={styles.iconText}>{spacesUsed}</Text>
+              </View>
+            </View>
+          </View>
+        </CardItem>
+        <CardItem style={styles.locationContainer}>
+          <Location color={'red'} location="Campus San Joaquin" />
+          <Location color={Colors.tintColor} location="Campus San Joaquin" />
+        </CardItem>
+        <CardItem>
+          <TimeInfo timestamp={timestamp} isDate />
+          <TimeInfo timestamp={timestamp} />
+        </CardItem>
+      </Card>
+    </TouchableOpacity>
   )
 }
 
@@ -95,3 +111,12 @@ const styles = StyleSheet.create({
 })
 
 export default RequestedTrip
+
+RequestedTrip.propTypes = {
+  timestamp: PropTypes.number.isRequired,
+  spacesUsed: PropTypes.number.isRequired,
+  user: PropTypes.object.isRequired,
+  status: PropTypes.string.isRequired,
+  onPressTrip: PropTypes.func.isRequired,
+  asDriver: PropTypes.bool.isRequired,
+}

@@ -32,6 +32,12 @@ export function loginUser(email, password) {
             selfieLink: data.user_identifications.selfie_image,
             dniFrontLink: data.user_identifications.identification_image_front,
             dniBackLink: data.user_identifications.identification_image_back,
+            car: data.car || {
+              plate: '',
+              color: '',
+              brand: '',
+              model: '',
+            },
           }
         },
       },
@@ -83,7 +89,7 @@ export function signupUser(
 export function updateUser(
   name,
   lastName,
-  email,
+  // email,
   phone,
   // password,
   car,
@@ -100,7 +106,7 @@ export function updateUser(
   // carModel
 ) {
   const data = {
-    email,
+    // email,
     last_name: lastName,
     first_name: name,
     phone,

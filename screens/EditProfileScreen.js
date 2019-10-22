@@ -7,6 +7,7 @@ import {
   Keyboard,
   Alert,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native'
 import {
   Button,
@@ -27,7 +28,6 @@ import { updateUser } from '../redux/actions/user'
 import Layout from '../constants/Layout'
 import PropTypes from 'prop-types'
 import Colors from '../constants/Colors'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 
 function validateName(str) {
   if (typeof str !== 'string') {
@@ -70,7 +70,7 @@ function validatePlate(str) {
     'g'
   )
 
-  return oldFormat.test(str) || newFormat.test(str) || str === ''
+  return oldFormat.test(str) || newFormat.test(str)
 }
 
 function validateColor(str) {
@@ -79,7 +79,7 @@ function validateColor(str) {
   }
   str = str.trim()
 
-  if (str !== '' && str.length < 'azul'.length) {
+  if (str.length < 'azul'.length) {
     return false
   }
   if (str.length >= 256) {
@@ -96,7 +96,7 @@ function validateBrand(str) {
   }
   str = str.trim()
 
-  if (str !== '' && str.length < 'BMW'.length) {
+  if (str.length < 'BMW'.length) {
     return false
   }
   if (str.length >= 256) {
@@ -207,7 +207,7 @@ const EditProfileScreen = props => {
       label: 'Teléfono',
       value: phone,
       setValue: setPhone,
-      validate: phone => phone.match(/(\+56)?\d{9}/),
+      validate: phone => phone.match(/^(\+56)?\d{9}$/),
       keyboardType: 'phone-pad',
     },
     // {
@@ -249,19 +249,27 @@ const EditProfileScreen = props => {
     name,
     lastName,
     phone,
-    car: hasCar
-      ? {
-          plate: carPlate,
-          color: carColor,
-          brand: carBrand,
-          model: carModel,
-        }
-      : null,
+    car: {
+      plate: carPlate,
+      color: carColor,
+      brand: carBrand,
+      model: carModel,
+    },
   }
 
-  const isValidUser = [...commonFields, ...carFields].every(field =>
-    field.validate(field.value)
-  )
+  const isValidUser = () => {
+    const isCarValid =
+      !hasCar ||
+      (validateBrand(user.car.brand) &&
+        validateColor(user.car.color) &&
+        validateModel(user.car.model) &&
+        validatePlate(user.car.plate))
+    const validFields = [...commonFields].every(field =>
+      field.validate(field.value)
+    )
+
+    return isCarValid && validFields
+  }
 
   React.useEffect(() => {
     const stateUser = props.user
@@ -278,17 +286,22 @@ const EditProfileScreen = props => {
         brand: stateUser.car.brand,
         model: stateUser.car.model,
       }
+    } else {
+      user.car = {
+        plate: '',
+        color: '',
+        brand: '',
+        model: '',
+      }
     }
 
     setName(user.name)
     setLastName(user.lastName)
     setPhone(user.phone)
-    if (user.car != null) {
-      setCarPlate(user.car.plate)
-      setCarColor(user.car.color)
-      setCarBrand(user.car.brand)
-      setCarModel(user.car.model)
-    }
+    setCarPlate(user.car.plate)
+    setCarColor(user.car.color)
+    setCarBrand(user.car.brand)
+    setCarModel(user.car.model)
 
     setIsLoading(false)
   }, [])
@@ -307,7 +320,7 @@ const EditProfileScreen = props => {
     const response = await props.updateUser(
       user.name,
       user.lastName,
-      props.user.email,
+      // props.user.email,
       user.phone,
       user.car,
       props.user.userId,
@@ -414,7 +427,7 @@ const EditProfileScreen = props => {
                 borderRadius={10}
                 color="#0000FF"
                 style={styles.blueButton}
-                disabled={isSaving || !isValidUser}
+                disabled={isSaving || !isValidUser()}
                 onPress={onPressSaveProfile}
               >
                 <Text style={styles.buttonText}> Guardar cambios</Text>

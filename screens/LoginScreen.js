@@ -72,8 +72,6 @@ class LoginScreen extends Component {
       return response
     })
 
-    console.log(user.payload)
-
     this.setState({ loading: false })
 
     if (user.error || !user.payload.data.email) {

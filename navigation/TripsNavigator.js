@@ -4,7 +4,7 @@ import TripsScreen from '../screens/TripsScreen'
 
 export default createMaterialTopTabNavigator(
   {
-    Realizados: {
+    MisViajes: {
       screen: props => <TripsScreen isRequestedTrips={false} {...props} />,
       navigationOptions: () => ({
         tabBarOptions: {
@@ -14,7 +14,7 @@ export default createMaterialTopTabNavigator(
             backgroundColor: 'black',
           },
         },
-        title: 'Realizados',
+        title: 'Mis Viajes',
       }),
     },
     Pedidos: {

@@ -14,7 +14,7 @@ const TripRequest = ({ stops, onSend }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.stopsTitle}>Paradas:</Text>
-      <StopsList stops={stops.map(s => s.address)} />
+      <StopsList stops={stops.map(s => s.address)}/>
       <Picker
         placeholder="Selecciona la parada en la que te subirás"
         selectedValue={state.selectedStop}
@@ -67,18 +67,13 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   picker: {
+    borderColor: 'black',
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: "black",
   },
   stopsTitle: {
     fontSize: 20,
     fontWeight: '500',
-    marginBottom: '10%',
-  },
-  title: {
-    fontSize: 40,
-    fontWeight: '900',
     marginBottom: '10%',
   },
   unselectedButton: {

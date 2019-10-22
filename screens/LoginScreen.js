@@ -7,7 +7,6 @@ import {
   Dimensions,
   Animated,
   Keyboard,
-  AsyncStorage,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Spinner } from 'native-base'

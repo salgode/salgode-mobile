@@ -10,7 +10,6 @@ const TripRequest = ({ stops = ['SJ', 'CC', 'MVP'], onSend }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>#Llego en 5</Text>
       <Text style={styles.stopsTitle}>Paradas:</Text>
       <StopsList stops={stops} />
       <Text style={styles.stopsTitle}>

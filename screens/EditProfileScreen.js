@@ -110,8 +110,7 @@ function validateModel(str) {
   return validateBrand(str)
 }
 
-const Field = props => {
-  const { field } = props
+const Field = ({ field }) => {
   const [isEditing, setIsEditing] = React.useState(false)
   const [hasBeenBlurred, setHasBeenBlurred] = React.useState(false)
 
@@ -144,6 +143,8 @@ const Field = props => {
           setHasBeenBlurred(true)
         }}
         value={field.value}
+        secureTextEntry={field.isSecure}
+        keyboardType={field.keyboardType || 'default'}
       />
       {validity === 'valid' ? (
         <Icon name="checkmark-circle" style={styles.checkMark} />
@@ -159,6 +160,15 @@ Field.propTypes = {
     value: PropTypes.string.isRequired,
     setValue: PropTypes.func.isRequired,
     validate: PropTypes.func.isRequired,
+    isSecure: PropTypes.bool,
+    keyboardType: PropTypes.oneOf([
+      'default',
+      'number-pad',
+      'decimal-pad',
+      'numeric',
+      'email-address',
+      'phone-pad',
+    ]),
   }).isRequired,
 }
 
@@ -168,6 +178,7 @@ const EditProfileScreen = props => {
   const [name, setName] = React.useState('')
   const [lastName, setLastName] = React.useState('')
   const [phone, setPhone] = React.useState('')
+  const [password, setPassword] = React.useState('')
   const [hasCar, setHasCar] = React.useState(false)
   const [carPlate, setCarPlate] = React.useState('BC2019')
   const [carColor, setCarColor] = React.useState('Gris')
@@ -188,6 +199,20 @@ const EditProfileScreen = props => {
       value: lastName,
       setValue: setLastName,
       validate: validateName,
+    },
+    {
+      label: 'Teléfono',
+      value: phone,
+      setValue: setPhone,
+      validate: phone => phone.match(/(\+56)?\d{9}/),
+      keyboardType: 'phone-pad',
+    },
+    {
+      label: 'Contraseña',
+      value: password,
+      setValue: setPassword,
+      validate: pass => typeof pass === 'string' && pass.length > 3,
+      isSecure: true,
     },
   ]
   const carFields = [

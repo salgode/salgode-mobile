@@ -8,6 +8,7 @@ import {
   FlatList,
 } from 'react-native'
 import { Card, Button, Icon } from 'native-base'
+import { cleanString } from '../utils/cleanString'
 
 export default class CardInputSelector extends Component {
   constructor(props) {
@@ -51,8 +52,8 @@ export default class CardInputSelector extends Component {
     if (displayList) {
       const filteredData = this.props.data.filter(item => {
         return (
-          item.name.toLowerCase().includes(input) ||
-          item.address.toLowerCase().includes(input)
+          cleanString(item.name).includes(input) ||
+          cleanString(item.address).includes(input)
         )
       })
       return (
@@ -90,7 +91,7 @@ export default class CardInputSelector extends Component {
                 placeholder={placeHolder}
                 value={this.state.input}
                 onChangeText={text =>
-                  this.setState({ input: text.toLowerCase() })
+                  this.setState({ input: cleanString(text) })
                 }
                 onFocus={() => this.setState({ displayList: true })}
               />

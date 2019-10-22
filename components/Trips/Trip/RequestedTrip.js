@@ -51,8 +51,8 @@ const RequestedTrip = ({
         </View>
       </CardItem>
       <CardItem style={styles.locationContainer}>
-        <Location color={'red'} location={startLocation} />
-        <Location color={Colors.tintColor} location={endLocation} />
+        <Location color={'#0000FF'} location={startLocation} />
+        <Location color={'#33C534'} location={endLocation} />
       </CardItem>
       <CardItem>
         <TimeInfo timestamp={timestamp} />
@@ -61,7 +61,7 @@ const RequestedTrip = ({
         <Button borderRadius={10} style={styles.button} onPress={onSend}>
           <Text>Ver Viaje</Text>
         </Button>
-        <Button borderRadius={10} style={styles.button} onPress={onSend}>
+        <Button borderRadius={10} style={styles.cancelButton} onPress={onSend}>
           <Text>Cancelar</Text>
         </Button>
       </CardItem>
@@ -83,6 +83,12 @@ RequestedTrip.propTypes = {
 }
 
 const styles = StyleSheet.create({
+  button: {
+    backgroundColor: '#0000FF',
+  },
+  cancelButton: {
+    backgroundColor: '#FF5242',
+  },
   containerBottom: {
     justifyContent: 'space-evenly',
     width: '100%',
@@ -94,7 +100,10 @@ const styles = StyleSheet.create({
     padding: 15,
   },
 
-  locationContainer: { flexDirection: 'column' },
+  locationContainer: {
+    alignItems: 'flex-start',
+    flexDirection: 'column',
+  },
   shadow: {
     shadowColor: '#b3b3b3',
     shadowOffset: {

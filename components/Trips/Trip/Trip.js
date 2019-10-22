@@ -11,8 +11,8 @@ export const Trip = ({ timestamp, spacesUsed }) => {
   return (
     <Card style={[styles.container, styles.shadow]}>
       <View style={styles.locationContainer}>
-        <Location color={'red'} location="Campus San Joaquin" />
-        <Location color={Colors.tintColor} location="Campus San Joaquin" />
+        <Location color={'#0000FF'} location="Campus San Joaquin" />
+        <Location color={'#33C534'} location="Campus San Joaquin" />
         <TimeInfo timestamp={timestamp} isDate />
         <TimeInfo timestamp={timestamp} />
       </View>

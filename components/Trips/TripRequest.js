@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import StopsList from '../CurrentTrip/StopsList'
 
 const TripRequest = ({ stops, onSend }) => {
-  // console.log(stops)
   const [state, setState] = React.useState({
     selectedStop: 'Selecciona la parada en la que te subirás',
     selected: false,
@@ -14,7 +13,7 @@ const TripRequest = ({ stops, onSend }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.stopsTitle}>Paradas:</Text>
-      <StopsList stops={stops.map(s => s.address)}/>
+      <StopsList stops={stops.map(s => s.address)} />
       <Picker
         placeholder="Selecciona la parada en la que te subirás"
         selectedValue={state.selectedStop}

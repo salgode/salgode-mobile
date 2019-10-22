@@ -7,6 +7,7 @@ import {
   Dimensions,
   Animated,
   Keyboard,
+  AsyncStorage,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Spinner } from 'native-base'
@@ -81,7 +82,10 @@ class LoginScreen extends Component {
         'Hubo un problema iniciando sesión. Por favor intentalo de nuevo.'
       )
     } else {
-      this.props.navigation.navigate('Trips')
+      AsyncStorage.setItem('@userToken', this.props.user.token)
+      AsyncStorage.setItem('@userId', this.props.user.user_id)
+
+      this.props.navigation.navigate('Main')
     }
   }
 
@@ -131,11 +135,17 @@ const styles = StyleSheet.create({
   },
 })
 
+const mapStateToProps = state => {
+  return {
+    user: state.user,
+  }
+}
+
 const mapDispatchToProps = dispatch => ({
   login: (email, password) => dispatch(loginUser(email, password)),
 })
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(LoginScreen)

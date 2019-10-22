@@ -307,6 +307,7 @@ const EditProfileScreen = props => {
     const response = await props.updateUser(
       user.name,
       user.lastName,
+      props.user.email,
       user.phone,
       user.car,
       props.user.userId,

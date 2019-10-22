@@ -83,7 +83,7 @@ export function signupUser(
 export function updateUser(
   name,
   lastName,
-  // email,
+  email,
   phone,
   // password,
   car,
@@ -100,7 +100,7 @@ export function updateUser(
   // carModel
 ) {
   const data = {
-    // email,
+    email,
     last_name: lastName,
     first_name: name,
     phone,

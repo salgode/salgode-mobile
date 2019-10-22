@@ -16,7 +16,6 @@ const RequestedTrip = ({
   onSend,
   onPressTrip,
   asDriver,
-  tripId,
 }) => {
   let statusColor
   let statusText
@@ -48,11 +47,11 @@ const RequestedTrip = ({
               {user.selfieLink ? (
                 <Thumbnail source={{ uri: user.selfieLink }} />
               ) : (
-                  <Ionicons
-                    name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-                    size={40}
-                  />
-                )}
+                <Ionicons
+                  name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                  size={40}
+                />
+              )}
               <Text style={styles.userText}>{user.name}</Text>
             </View>
           </View>
@@ -94,9 +93,6 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#0000FF',
   },
-  cancelButton: {
-    backgroundColor: '#FF5242',
-  },
   containerBottom: {
     justifyContent: 'space-evenly',
     width: '100%',
@@ -107,19 +103,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 15,
   },
-
   locationContainer: {
     alignItems: 'flex-start',
     flexDirection: 'column',
-  },
-  shadow: {
-    shadowColor: '#b3b3b3',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: 5,
   },
   status: { borderRadius: 15, paddingHorizontal: 10, paddingVertical: 2 },
   statusText: { color: 'white', fontSize: 12, fontWeight: '700' },

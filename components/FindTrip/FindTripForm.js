@@ -1,13 +1,18 @@
 import React, { Component } from 'react'
 import { StyleSheet } from 'react-native'
-import { Appearance } from 'react-native-appearance';
-import { Text, Form, Item, Input, Label, Button, Picker } from 'native-base';
-import Icon from 'react-native-vector-icons/AntDesign';
-import DateTimePicker from "react-native-modal-datetime-picker";
+import { Appearance } from 'react-native-appearance'
+import { Text, Form, Item, Input, Label, Button, Picker } from 'native-base'
+import Icon from 'react-native-vector-icons/AntDesign'
+import DateTimePicker from 'react-native-modal-datetime-picker'
 import Layout from '../../constants/Layout'
-import { showDate, showTime, getDateTimestamp, getTimeTimestamp } from '../../utils/time'
+import {
+  showDate,
+  showTime,
+  getDateTimestamp,
+  getTimeTimestamp,
+} from '../../utils/time'
 
-const colorScheme = Appearance.getColorScheme();
+const colorScheme = Appearance.getColorScheme()
 
 class FindTripForm extends Component {
   constructor(props) {
@@ -15,7 +20,7 @@ class FindTripForm extends Component {
     this.state = {
       chosenDate: getDateTimestamp(new Date()),
       // 15 minutes offfset
-      chosenTime: getTimeTimestamp(new Date()) + (15 * 60 * 1000),
+      chosenTime: getTimeTimestamp(new Date()) + 15 * 60 * 1000,
       startLocation: undefined,
       inputValidity: false,
       isDatePickerVisible: false,
@@ -34,43 +39,43 @@ class FindTripForm extends Component {
   }
 
   handleStartLocationPicked(startLocation) {
-    const validity =  startLocation != undefined;
-    this.setState({ startLocation: startLocation, inputValidity: !!validity });
+    const validity = startLocation !== undefined
+    this.setState({ startLocation: startLocation, inputValidity: !!validity })
   }
 
   handleDatePicked(date) {
-    dateTimestamp = getDateTimestamp(date);
-    now = new Date();
-    const validity =  dateTimestamp + this.state.chosenTime >= now.getTime();
-    this.setState({ chosenDate: dateTimestamp, inputValidity: !!validity });
-    this.hideDatePicker();
-  };
+    const dateTimestamp = getDateTimestamp(date)
+    const now = new Date()
+    const validity = dateTimestamp + this.state.chosenTime >= now.getTime()
+    this.setState({ chosenDate: dateTimestamp, inputValidity: !!validity })
+    this.hideDatePicker()
+  }
 
   showTimePicker() {
-    this.setState({ isTimePickerVisible: true });
-  };
+    this.setState({ isTimePickerVisible: true })
+  }
 
   hideTimePicker() {
-    this.setState({ isTimePickerVisible: false });
-  };
+    this.setState({ isTimePickerVisible: false })
+  }
 
   handleTimePicked(time) {
-    timeTimestamp = getTimeTimestamp(time);
-    now = new Date();
-    const validity = this.state.chosenDate + timeTimestamp >= now.getTime();
-    this.setState({ chosenTime: timeTimestamp, inputValidity: !!validity });
-    this.hideTimePicker();
-  };
+    const timeTimestamp = getTimeTimestamp(time)
+    const now = new Date()
+    const validity = this.state.chosenDate + timeTimestamp >= now.getTime()
+    this.setState({ chosenTime: timeTimestamp, inputValidity: !!validity })
+    this.hideTimePicker()
+  }
 
   // HELPERS
 
   showDatePicker() {
-    this.setState({ isDatePickerVisible: true });
-  };
+    this.setState({ isDatePickerVisible: true })
+  }
 
   hideDatePicker() {
-    this.setState({ isDatePickerVisible: false });
-  };
+    this.setState({ isDatePickerVisible: false })
+  }
 
   // RENDERER
 
@@ -89,27 +94,36 @@ class FindTripForm extends Component {
             selectedValue={this.state.startLocation}
             onValueChange={this.handleStartLocationPicked}
           >
-            {
-              this.props.items.map(item => (
-                <Picker.Item
-                  key={item["id"]}
-                  value={item["id"]}
-                  label={item["name"]}
-                />
-              ))
-            }
+            {this.props.items.map(item => (
+              <Picker.Item
+                key={item['id']}
+                value={item['id']}
+                label={item['name']}
+              />
+            ))}
           </Picker>
           <Input
             style={styles.invisible}
             editable={false}
-            value={this.state.startLocation ? this.state.startLocation.toString() : undefined}
+            value={
+              this.state.startLocation
+                ? this.state.startLocation.toString()
+                : undefined
+            }
             isVisible={false}
           />
         </Item>
-        <Item inlineLabel regular style={styles.item} onPress={this.showDatePicker}>
+        <Item
+          inlineLabel
+          regular
+          style={styles.item}
+          onPress={this.showDatePicker}
+        >
           <Icon name="calendar" style={styles.icon} />
           <Label style={styles.label}>Día</Label>
-          <Text style={styles.rightAlign}>{showDate(this.state.chosenDate)}</Text>
+          <Text style={styles.rightAlign}>
+            {showDate(this.state.chosenDate)}
+          </Text>
           <Input
             style={styles.invisible}
             editable={false}
@@ -125,10 +139,17 @@ class FindTripForm extends Component {
             mode="date"
           />
         </Item>
-        <Item inlineLabel regular style={styles.item} onPress={this.showTimePicker}>
+        <Item
+          inlineLabel
+          regular
+          style={styles.item}
+          onPress={this.showTimePicker}
+        >
           <Icon name="clockcircleo" style={styles.icon} />
           <Label style={styles.label}>Hora</Label>
-          <Text style={styles.rightAlign}>{showTime(this.state.chosenTime)}</Text>
+          <Text style={styles.rightAlign}>
+            {showTime(this.state.chosenTime)}
+          </Text>
           <Input
             style={styles.invisible}
             editable={false}
@@ -146,7 +167,9 @@ class FindTripForm extends Component {
         </Item>
         <Button
           block
-          style={!!this.state.inputValidity ? styles.button : styles.disabledButton}
+          style={
+            this.state.inputValidity ? styles.button : styles.disabledButton
+          }
           disabled={!this.state.inputValidity}
         >
           <Text>Buscar Viaje</Text>
@@ -159,55 +182,55 @@ class FindTripForm extends Component {
 FindTripForm.propTypes = {}
 
 const styles = StyleSheet.create({
-  form: {
-    alignItems: 'center',
-    height: 450,
-    margin: 15,
-  },
-  item: {
-    backgroundColor: '#ffffff',
-    borderColor: '#ffffff',
-    borderWidth: 0,
-    borderRadius: 12,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    height: 50,
-    width: Layout.window.width * 0.85,
-    shadowColor: '#bbb',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  disabledButton: {
-    borderRadius: 12,
-    marginTop: 130,
-  },
   button: {
     backgroundColor: '#886afe',
     borderRadius: 12,
     marginTop: 130,
   },
-  label: {
-    color: '#333333',
+  disabledButton: {
+    borderRadius: 12,
+    marginTop: 130,
+  },
+  form: {
+    alignItems: 'center',
+    height: 450,
+    margin: 15,
   },
   icon: {
     fontSize: 25,
+    marginBottom: -3,
     paddingLeft: 5,
     paddingRight: 10,
     // Correct icons white space
-    marginBottom: -3,
   },
   invisible: {
     display: 'none',
+  },
+  item: {
+    backgroundColor: '#ffffff',
+    borderColor: '#ffffff',
+    borderRadius: 12,
+    borderWidth: 0,
+    elevation: 1,
+    height: 50,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    shadowColor: '#bbb',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    width: Layout.window.width * 0.85,
+  },
+  label: {
+    color: '#333333',
+  },
+  picker: {
+    width: Layout.window.width * 0.85 - 77,
   },
   rightAlign: {
     color: '#8c8c8c',
     position: 'absolute',
     right: 10,
-  },
-  picker: {
-    width: (Layout.window.width * 0.85) - 77,
   },
 })
 

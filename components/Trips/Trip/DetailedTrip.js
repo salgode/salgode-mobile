@@ -11,25 +11,29 @@ export const DetailedTrip = ({ trip, asDriver }) => {
   const driver = trip ? trip.driver : null
 
   function renderLocation(locations) {
-    return locations.map((location, index) => (
-      <Location
-        key={`location-${index}`}
-        color={
-          index === 0
-            ? 'red'
-            : index === locations.length - 1
-            ? Colors.tintColor
-            : Colors.textGray
-        }
-        location={location.name}
-      />
-    ))
+    return locations.map((location, index) => {
+      let color
+      if (index === 0) {
+        color = '#0000FF'
+      } else if (index === locations.length - 1) {
+        color = '#33C534'
+      } else {
+        color = Colors.textGray //index === locations.length - 1 ? '#33C534'
+      }
+      return (
+        <Location
+          key={`location-${index}`}
+          color={color}
+          location={location.name}
+        />
+      )
+    })
   }
-  
-  function startTrip(){
+
+  function startTrip() {
     // TODO: connect to server
     // TODO: navigate to current trip screen
-    console.log('trip!')
+    // console.log('trip!')
   }
 
   return trip != null ? (

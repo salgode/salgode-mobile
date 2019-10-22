@@ -19,6 +19,7 @@ export default class TripRequestCard extends Component {
   componentDidMount() {
     this.setState({
       passenger: this.props.passenger,
+      finalLocation: this.props.finalLocation,
     })
   }
 
@@ -43,6 +44,7 @@ export default class TripRequestCard extends Component {
   }
 
   render() {
+    const { finalLocation } = this.state
     return this.state.passenger != null ? (
       <Card style={styles.container}>
         <CardItem>
@@ -56,9 +58,13 @@ export default class TripRequestCard extends Component {
         </CardItem>
 
         <CardItem style={styles.locationContainer}>
-          <Location color={'red'} location={this.state.passenger.start} />
+          <Location color={'#0000FF'} location={this.state.passenger.start} />
           <Location
-            color={Colors.tintColor}
+            color={
+              finalLocation === this.state.passenger.finish
+                ? '#33C534'
+                : Colors.textGray
+            }
             location={this.state.passenger.finish}
           />
         </CardItem>
@@ -142,6 +148,7 @@ export default class TripRequestCard extends Component {
 
 TripRequestCard.propTypes = {
   passenger: PropTypes.object.isRequired,
+  finalLocation: PropTypes.string,
 }
 
 const styles = StyleSheet.create({

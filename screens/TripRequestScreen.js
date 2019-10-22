@@ -8,7 +8,8 @@ import { connect } from 'react-redux'
 
 class TripRequestScreen extends Component {
   static navigationOptions = {
-    header: null,
+    title: 'Solicitud de viaje',
+    headerBackTitle: '', // TODO: que no diga 'Back'
   }
 
   constructor(props) {
@@ -92,8 +93,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(TripRequestScreen)
-
-TripRequestScreen.navigationOptions = {
-  title: 'Solicitud de viaje',
-  headerBackTitle: '', // TODO: que no diga 'Back'
-}

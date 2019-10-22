@@ -124,6 +124,7 @@ class SignupForm extends Component {
             style={styles.input}
             onChangeText={this.onChangeName}
             value={this.state.name}
+            autoCompleteType="name"
           />
         </Item>
         <Item floatingLabel style={styles.item}>
@@ -160,6 +161,7 @@ class SignupForm extends Component {
             keyboardType="email-address"
             autoCapitalize="none"
             value={this.state.email}
+            autoCompleteType="email"
           />
         </Item>
         <Item floatingLabel style={styles.item}>
@@ -171,13 +173,14 @@ class SignupForm extends Component {
                   : 'red',
             }}
           >
-            Número de Teléfono
+            Número de Teléfono (9 dígitos)
           </Label>
           <Input
             style={styles.input}
             onChangeText={this.onChangePhoneNumber}
             keyboardType="phone-pad"
             value={this.state.phoneNumber}
+            autoCompleteType="tel"
           />
         </Item>
         <Item floatingLabel style={styles.item}>

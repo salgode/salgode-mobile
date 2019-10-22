@@ -3,9 +3,14 @@ import { StyleSheet } from 'react-native'
 import { Text, Button } from 'native-base'
 import PropTypes from 'prop-types'
 
-const PedirBoton = ({ text = 'Solicitar Viaje', onSend }) => {
+const PedirBoton = ({ text = 'Solicitar Viaje', onSend, disabled = false }) => {
   return (
-    <Button borderRadius={10} style={styles.button} onPress={onSend}>
+    <Button
+      borderRadius={10}
+      style={styles.button}
+      onPress={onSend}
+      disabled={disabled}
+    >
       <Text>{text}</Text>
     </Button>
   )
@@ -14,6 +19,7 @@ const PedirBoton = ({ text = 'Solicitar Viaje', onSend }) => {
 PedirBoton.propTypes = {
   onSend: PropTypes.func,
   text: PropTypes.string,
+  disabled: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

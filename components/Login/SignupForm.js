@@ -63,7 +63,7 @@ class SignupForm extends Component {
   }
 
   onChangePhoneNumber(phoneNumber) {
-    const validity = phoneNumber.match(/(\+56)?\d{9}/)
+    const validity = phoneNumber.match(/^(\+56)?\d{9}$/)
     this.setState(oldState => ({
       phoneNumber,
       validity: { ...oldState.validity, phoneNumber: !!validity },

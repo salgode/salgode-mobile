@@ -71,7 +71,6 @@ class LoginScreen extends Component {
     const user = await this.props.login(email, password).then(response => {
       return response
     })
-
     this.setState({ loading: false })
 
     if (user.error || !user.payload.data.email) {

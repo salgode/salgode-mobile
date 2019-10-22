@@ -16,10 +16,21 @@ class ChooseTripsScreen extends Component {
     this.state = {
       avalibleTrips: null,
       rerender: true,
+      trips: [],
     }
 
     this.onRequestTrip = this.onRequestTrip.bind(this)
     this.getTrips = this.getTrips.bind(this)
+  }
+
+  async componentDidMount() {
+    await this.getTrips()
+    // const trips = await mapTripIdsToTripInfo(
+    //   this.props.trips,
+    //   this.props.user.token
+    // )
+    // console.log(trips)
+    this.setState({ trips: this.props.trips })
   }
 
   onRequestTrip(stops, tripId) {
@@ -34,6 +45,8 @@ class ChooseTripsScreen extends Component {
         'Hubo un problema obteniendo los viajes. Por favor intentalo de nuevo.'
       )
     }
+
+    this.setState({ trips: this.props.trips })
   }
 
   render() {
@@ -43,7 +56,7 @@ class ChooseTripsScreen extends Component {
           <ChooseTrips
             onSend={this.onRequestTrip}
             onReload={this.getTrips}
-            trips={this.props.trips.map(trip => ({
+            trips={this.state.trips.map(trip => ({
               timestamp: new Date(trip.etd).getTime(),
               user: {
                 name: 'Temp',
@@ -51,6 +64,7 @@ class ChooseTripsScreen extends Component {
               },
               stops: trip.route_points,
               tripId: trip.trip_id,
+              token: this.props.user.token,
             }))}
           />
         </View>

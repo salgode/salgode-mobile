@@ -4,7 +4,7 @@ import { View, Text, Button, Picker } from 'native-base'
 import PropTypes from 'prop-types'
 import StopsList from '../CurrentTrip/StopsList'
 
-const TripRequest = ({ stops = ['SJ', 'CC', 'MVP'], onSend }) => {
+const TripRequest = ({ stops, onSend }) => {
   // console.log(stops)
   const [state, setState] = React.useState({
     selectedStop: 'Selecciona la parada en la que te subirás',
@@ -14,10 +14,7 @@ const TripRequest = ({ stops = ['SJ', 'CC', 'MVP'], onSend }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.stopsTitle}>Paradas:</Text>
-      <StopsList stops={stops} />
-      {/* <Text style={styles.stopsTitle}>
-
-      </Text> */}
+      <StopsList stops={stops.map(s => s.address)}/>
       <Picker
         placeholder="Selecciona la parada en la que te subirás"
         selectedValue={state.selectedStop}
@@ -28,7 +25,11 @@ const TripRequest = ({ stops = ['SJ', 'CC', 'MVP'], onSend }) => {
         style={styles.picker}
       >
         {stops.map((stop, i) => (
-          <Picker.Item key={`PickerItem${i}`} label={stop} value={stop} />
+          <Picker.Item
+            key={`PickerItem${i}`}
+            label={stop.address}
+            value={stop.address}
+          />
         ))}
       </Picker>
       <Button
@@ -43,7 +44,11 @@ const TripRequest = ({ stops = ['SJ', 'CC', 'MVP'], onSend }) => {
 }
 
 TripRequest.propTypes = {
-  stops: PropTypes.array.isRequired,
+  stops: PropTypes.arrayOf(
+    PropTypes.shape({
+      address: PropTypes.string.isRequired,
+    }).isRequired
+  ),
   onSend: PropTypes.func.isRequired,
 }
 

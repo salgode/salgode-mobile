@@ -1,10 +1,10 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import { View, Text, Button, Picker } from 'native-base'
+import { View, Text, Button, Picker, Spinner } from 'native-base'
 import PropTypes from 'prop-types'
 import StopsList from '../CurrentTrip/StopsList'
 
-const TripRequest = ({ stops, onSend }) => {
+const TripRequest = ({ stops, onSend, loading }) => {
   const [state, setState] = React.useState({
     selectedStop: 'Selecciona la parada',
     selected: false,
@@ -34,13 +34,16 @@ const TripRequest = ({ stops, onSend }) => {
           />
         ))}
       </Picker>
-      <Button
-        disabled={!state.selected}
-        style={state.selected ? styles.button : styles.unselectedButton}
-        onPress={() => onSend(state.selectedStop)}
-      >
-        <Text>Confirmar Solicitud</Text>
-      </Button>
+      {loading && <Spinner color={'#0000FF'} />}
+      {!loading && (
+        <Button
+          disabled={!state.selected}
+          style={state.selected ? styles.button : styles.unselectedButton}
+          onPress={() => onSend(state.selectedStop)}
+        >
+          <Text>Confirmar Solicitud</Text>
+        </Button>
+      )}
     </View>
   )
 }
@@ -52,6 +55,7 @@ TripRequest.propTypes = {
     }).isRequired
   ),
   onSend: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

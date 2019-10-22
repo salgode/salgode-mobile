@@ -37,7 +37,7 @@ const getStyles = size => {
   const circleDiameter = size
   return {
     end: {
-      backgroundColor: 'green',
+      backgroundColor: '#33C534',
     },
     icon: {
       borderRadius: circleDiameter / 2,
@@ -46,7 +46,7 @@ const getStyles = size => {
       width: circleDiameter,
     },
     start: {
-      backgroundColor: 'red',
+      backgroundColor: '#0000FF',
     },
   }
 }

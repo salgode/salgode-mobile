@@ -26,6 +26,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Layout from '../constants/Layout'
 import PropTypes from 'prop-types'
 import Colors from '../constants/Colors'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 function validateName(str) {
   if (typeof str !== 'string') {
@@ -145,7 +146,7 @@ const Field = props => {
         value={field.value}
       />
       {validity === 'valid' ? (
-        <Icon name="checkmark-circle" />
+        <Icon name="checkmark-circle" style={{color:"#33C534"}} />
       ) : validity === 'invalid' ? (
         <Icon name="close-circle" />
       ) : null}
@@ -312,8 +313,6 @@ const EditProfileScreen = ({ navigation }) => {
   }
 
   const signOut = () => {
-    AsyncStorage.removeItem('@userToken')
-    AsyncStorage.removeItem('@userId')
     navigation.navigate('LoginStack')
   }
 
@@ -353,14 +352,14 @@ const EditProfileScreen = ({ navigation }) => {
               {commonFields.map(field => (
                 <Field key={field.label} field={field} validity="partial" />
               ))}
-              <View style={styles.rowCenter}>
+              <TouchableOpacity style={styles.rowCenter} onPress={() => setHasCar(!hasCar)}>
                 <CheckBox
                   color={Colors.textGray}
                   checked={hasCar}
                   onPress={() => setHasCar(!hasCar)}
                 />
-                <Text style={styles.checkboxLabel}>Auto</Text>
-              </View>
+                <Text style={styles.checkboxLabel}>Tengo Auto</Text>
+              </TouchableOpacity>
               {hasCar ? (
                 <>
                   <View style={styles.headerTextContainer}>
@@ -383,7 +382,7 @@ const EditProfileScreen = ({ navigation }) => {
               <Button
                 block
                 borderRadius={10}
-                style={styles.blueButton}
+                style={styles.redButton}
                 disabled={isSaving || !isValidUser}
                 onPress={() => signOut()}
               >
@@ -408,7 +407,7 @@ const styles = StyleSheet.create({
   artificialKeyboardPadding: { height: 128 },
   blueButton: {
     backgroundColor: '#0000FF',
-    marginTop: 20,
+    marginTop: 30,
   },
   button: {
     marginTop: 20,
@@ -431,7 +430,6 @@ const styles = StyleSheet.create({
     margin: 15,
   },
   headerText: {
-    color: Colors.textGray,
     fontSize: 18,
     fontWeight: '700',
     marginBottom: 8,
@@ -447,6 +445,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 15,
     paddingHorizontal: 10,
+    borderColor: "black",
   },
   label: {
     color: '#8c8c8c',
@@ -474,6 +473,10 @@ const styles = StyleSheet.create({
   readonlyFieldsContainer: {
     marginTop: 20,
     paddingHorizontal: 12,
+  },
+  redButton: {
+    backgroundColor: '#FF5242',
+    marginTop: 20,
   },
   row: {
     flexDirection: 'row',

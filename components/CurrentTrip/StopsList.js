@@ -18,18 +18,19 @@ const stopIndexToStopType = (i, length) => {
 }
 
 const StopsList = ({ stops = [] }) => {
-  console.log(stops)
   return (
-    <ScrollView>
-      {stops.map((stop, i) => (
-        <View key={`stop-${stop}-${i}`} style={styles.stopContainer}>
-          <View style={styles.iconView}>
-            <StopIcon type={stopIndexToStopType(i, stops.length)} size={25} />
+    <View style={styles.container}>
+      <ScrollView>
+        {stops.map((stop, i) => (
+          <View key={`stop-${stop}-${i}`} style={styles.stopContainer}>
+            <View style={styles.iconView}>
+              <StopIcon type={stopIndexToStopType(i, stops.length)} size={25} />
+            </View>
+            <Text styles={styles.stopText}>{stop}</Text>
           </View>
-          <Text styles={styles.stopText}>{stop}</Text>
-        </View>
-      ))}
-    </ScrollView>
+        ))}
+      </ScrollView>
+    </View>
   )
 }
 
@@ -38,6 +39,9 @@ StopsList.propTypes = {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    height: 200,
+  },
   iconView: {
     marginRight: 15,
   },

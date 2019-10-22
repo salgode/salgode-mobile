@@ -136,9 +136,15 @@ class DetailedTripScreen extends Component {
     ]
   }
 
-  renderPassengers(passengers) {
+  renderPassengers(passengers, trip) {
+    const locationsLength = trip.route_points.length
+    const finalLocation = trip.route_points[locationsLength - 1].name
     return passengers.map((passenger, index) => (
-      <TripRequestCard key={`passenger-${index}`} passenger={passenger} />
+      <TripRequestCard
+        key={`passenger-${index}`}
+        passenger={passenger}
+        finalLocation={finalLocation}
+      />
     ))
   }
 
@@ -150,7 +156,7 @@ class DetailedTripScreen extends Component {
           <DetailedTrip asDriver={this.state.asDriver} trip={this.state.trip} />
         )}
         {this.state.asDriver && !this.state.loadingPassengers
-          ? this.renderPassengers(this.state.passengers)
+          ? this.renderPassengers(this.state.passengers, this.state.trip)
           : null}
       </ScrollView>
     )

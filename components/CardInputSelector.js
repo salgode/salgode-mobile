@@ -8,7 +8,7 @@ import {
   FlatList,
 } from 'react-native'
 import { Card, Button, Icon } from 'native-base'
-import { cleanString } from '../utils/cleanString'
+import { normalizeText } from '../utils/normalizeText'
 
 export default class CardInputSelector extends Component {
   constructor(props) {
@@ -50,14 +50,16 @@ export default class CardInputSelector extends Component {
   renderList = () => {
     const { displayList, input } = this.state
     if (displayList) {
+      const normalizedInput = normalizeText(input)
+
       const filteredData = this.props.data.filter(item => {
         return (
-          cleanString(item.name).includes(input) ||
-          cleanString(item.address).includes(input)
+          normalizeText(item.name).includes(normalizedInput) ||
+          normalizeText(item.address).includes(normalizedInput)
         )
       })
       return (
-        <View style={{ flex: 1 }}>
+        <View style={{ height: 300 }}>
           <FlatList
             data={filteredData}
             renderItem={({ item }) => (
@@ -90,10 +92,8 @@ export default class CardInputSelector extends Component {
                 id="selectorInput"
                 placeholder={placeHolder}
                 value={this.state.input}
-                onChangeText={text =>
-                  this.setState({ input: cleanString(text) })
-                }
                 onFocus={() => this.setState({ displayList: true })}
+                onChangeText={text => this.setState({ input: text })}
               />
 
               <Button icon transparent onPress={this.cleanInput}>
@@ -120,8 +120,13 @@ const styles = StyleSheet.create({
     marginVertical: 1,
     padding: 10,
   },
-  paper: { borderRadius: 10 },
-  text: { fontWeight: 'bold', margin: 10 },
+  paper: {
+    borderRadius: 10,
+  },
+  text: {
+    fontWeight: 'bold',
+    margin: 10,
+  },
   textView: {
     alignItems: 'center',
     flex: 1,

@@ -25,8 +25,8 @@ export const DetailedTrip = ({ trip, asDriver }) => {
       />
     ))
   }
-  
-  function startTrip(){
+
+  function startTrip() {
     // TODO: connect to server
     // TODO: navigate to current trip screen
     console.log('trip!')

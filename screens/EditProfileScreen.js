@@ -7,7 +7,6 @@ import {
   Keyboard,
   Alert,
   ActivityIndicator,
-  AsyncStorage,
 } from 'react-native'
 import {
   Button,

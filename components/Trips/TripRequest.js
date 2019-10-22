@@ -7,14 +7,14 @@ import StopsList from '../CurrentTrip/StopsList'
 const TripRequest = ({ stops = ['SJ', 'CC', 'MVP'], onSend }) => {
   // console.log(stops)
   const [state, setState] = React.useState({ selectedStop: "Selecciona la parada en la que te subirás", selected: false })
-  
+
 
   return (
     <View style={styles.container}>
       <Text style={styles.stopsTitle}>Paradas:</Text>
       <StopsList stops={stops} />
       {/* <Text style={styles.stopsTitle}>
-        
+
       </Text> */}
       <Picker
         placeholder="Selecciona la parada en la que te subirás"

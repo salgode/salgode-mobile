@@ -23,7 +23,6 @@ class ChooseTripsScreen extends Component {
   }
 
   onRequestTrip(stops, tripId) {
-    console.log(tripId)
     this.props.navigation.navigate('RequestTrip', { stops, tripId })
   }
 
@@ -88,7 +87,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     user: state.user,
-    trips: state.futureTrips.futureTrips || [],
+    trips: state.futureTrips.trips || [],
   }
 }
 

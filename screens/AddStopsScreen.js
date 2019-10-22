@@ -5,7 +5,7 @@ import { loginUser } from '../redux/actions/user'
 import { createTrip } from '../redux/actions/createtrip'
 import { Button, Icon } from 'native-base'
 import CardInputSelector from '../components/CardInputSelector'
-import { AuthSession } from 'expo'
+import { spotsFilter } from '../utils/spotsFilter'
 
 class AddStopsScreen extends Component {
   state = {
@@ -85,7 +85,10 @@ class AddStopsScreen extends Component {
               text="+"
               placeHolder="Filtra por Comuna o Parada"
               setValue={false}
-              data={this.props.spots}
+              data={spotsFilter(
+                this.props.spots,
+                [startStop, endStop].concat(this.state.stops)
+              )}
               onSelect={item =>
                 this.setState({ stops: this.state.stops.concat([item]) })
               }

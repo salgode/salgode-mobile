@@ -5,6 +5,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  FlatList,
 } from 'react-native'
 import { Card, Button, Icon } from 'native-base'
 
@@ -48,26 +49,28 @@ export default class CardInputSelector extends Component {
   renderList = () => {
     const { displayList, input } = this.state
     if (displayList) {
+      const filteredData = this.props.data.filter(item => {
+        return (
+          item.name.toLowerCase().includes(input) ||
+          item.address.toLowerCase().includes(input)
+        )
+      })
       return (
         <View style={{ flex: 1 }}>
-          {this.props.data.map((item, index) => {
-            if (
-              item.name.toLowerCase().includes(input) ||
-              item.address.toLowerCase().includes(input)
-            ) {
-              return (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => this.onItemPress(item)}
-                  style={styles.listItem}
-                >
-                  <Text>
-                    {item.name}, {item.address}
-                  </Text>
-                </TouchableOpacity>
-              )
-            }
-          })}
+          <FlatList
+            data={filteredData}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() => this.onItemPress(item)}
+                style={styles.listItem}
+              >
+                <Text>
+                  {item.name}, {item.address}
+                </Text>
+              </TouchableOpacity>
+            )}
+            keyExtractor={item => item.id}
+          />
         </View>
       )
     }

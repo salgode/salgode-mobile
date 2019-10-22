@@ -46,7 +46,7 @@ const getStyles = size => {
       width: circleDiameter,
     },
     start: {
-      backgroundColor: '#FF5242',
+      backgroundColor: '#0000FF',
     },
   }
 }

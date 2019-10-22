@@ -23,6 +23,7 @@ import {
 import { withNavigation } from 'react-navigation'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { connect } from 'react-redux'
+import { updateUser } from '../redux/actions/user'
 import Layout from '../constants/Layout'
 import PropTypes from 'prop-types'
 import Colors from '../constants/Colors'
@@ -298,22 +299,26 @@ const EditProfileScreen = props => {
     }
   }, [loadErr])
 
-  const onPressSaveProfile = React.useCallback(() => {
-    const saveProfile = async () => {
-      // TODO: remove this and send `user` to backend here
-      Alert.alert(
-        'No implementado',
-        'user = ' + JSON.stringify(user, null, '  ')
+  const saveUser = async () => {
+    setIsLoading(true)
+    const user = await props.updateUser(user)
+    setIsLoading(false)
+    console.log(user)
+    if (
+      user.error ||
+      !user.payload.data.user ||
+      !user.payload.data.user.email
+    ) {
+      alert(
+        'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
       )
+    } else {
+      alert('Informacion actualizada con exito')
     }
+  }
 
-    setIsSaving(true)
-    saveProfile()
-      .then(() => setIsSaving(false))
-      .catch(err => {
-        setSaveErr(err)
-        setIsSaving(false)
-      })
+  const onPressSaveProfile = React.useCallback(() => {
+    saveUser()
   }, [user])
 
   React.useEffect(() => {
@@ -448,7 +453,17 @@ const mapPropsToState = state => ({
   user: state.user,
 })
 
-export default connect(mapPropsToState)(withNavigation(EditProfileScreen))
+const mapDispatchToState = dispatch => ({
+  updateUser: (name, lastName, email, phone, password, car, id, authToken) =>
+    dispatch(
+      updateUser(name, lastName, email, phone, password, car, id, authToken)
+    ),
+})
+
+export default connect(
+  mapPropsToState,
+  mapDispatchToState
+)(withNavigation(EditProfileScreen))
 
 const photoSize = 96
 

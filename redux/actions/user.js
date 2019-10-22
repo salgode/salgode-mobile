@@ -5,6 +5,9 @@ export const actions = {
   USER_SIGNUP: 'USER/SIGNUP',
   USER_SIGNUP_FAIL: 'USER/SIGNUP_FAIL',
   USER_SIGNUP_SUCCESS: 'USER/SIGNUP_SUCCESS',
+  USER_UPDATE: 'USER/UPDATE',
+  USER_UPDATE_FAIL: 'USER/UPDATE_FAIL',
+  USER_UPDATE_SUCCESS: 'USER/UPDATE_SUCCESS',
 }
 
 export function loginUser(email, password) {
@@ -71,6 +74,52 @@ export function signupUser(
       request: {
         url: `/users`,
         method: 'post',
+        data: data,
+      },
+    },
+  }
+}
+
+export function updateUser(
+  name,
+  lastName,
+  email,
+  phone,
+  password,
+  car,
+  id,
+  authToken
+  // passwordRepeat,
+  // selfieLink = 'placeholder',
+  // driverLicenseLink = 'placeholder',
+  // dniFrontLink = 'placeholder',
+  // dniBackLink = 'placeholder'
+  // carPlate,
+  // carColor,
+  // carBrand,
+  // carModel
+) {
+  const data = {
+    email,
+    last_name: lastName,
+    first_name: name,
+    phone,
+    password,
+  }
+
+  if (car) {
+    data.car = car
+  }
+
+  return {
+    type: actions.USER_UPDATE,
+    payload: {
+      request: {
+        url: `/users/id`,
+        method: 'put',
+        headers: {
+          Authorization: authToken,
+        },
         data: data,
       },
     },

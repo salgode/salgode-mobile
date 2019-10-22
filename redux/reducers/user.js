@@ -22,6 +22,21 @@ export default function userReducer(state = {}, action) {
         loading: false,
         error: 'Error while signup user',
       }
+    case userActions.USER_UPDATE:
+      return { ...state, loading: true }
+    case userActions.USER_UPDATE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        ...action.payload.data.user,
+        token: action.payload.data.user.bearer_token,
+      }
+    case userActions.USER_UPDATE_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: 'Error while updating user',
+      }
     default:
       return state
   }

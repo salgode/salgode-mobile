@@ -31,7 +31,7 @@ class TripRequestScreen extends Component {
 
   async onRequestSlot() {
     const { user, createSlot } = this.props
-    console.log(user)
+    // console.log(user)
 
     this.setState({ loading: true })
     const response = await createSlot(
@@ -45,7 +45,7 @@ class TripRequestScreen extends Component {
       alert('Hubo un error al reservar el puesto. Por favor inentelo de nuevo.')
     } else {
       alert('Puesto reservado correctamente!')
-      this.props.navigation.navigate('Trips')
+      this.props.navigation.popToTop()
     }
   }
 
@@ -66,6 +66,7 @@ TripRequestScreen.propTypes = {
   navigation: PropTypes.shape({
     getParam: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
+    popToTop: PropTypes.func.isRequired,
   }),
   user: PropTypes.shape({
     token: PropTypes.string.isRequired,

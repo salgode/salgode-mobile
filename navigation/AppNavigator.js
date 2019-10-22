@@ -2,6 +2,7 @@
 import React from 'react'
 import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 
+import ResolveAuthScreen from '../screens/ResolveAuthScreen'
 import MainTabNavigator from './MainTabNavigator'
 import LoginNavigator from './LoginNavigator'
 import TripRequest from '../components/Trips/TripRequest'

@@ -1,5 +1,10 @@
 import React, { Component } from 'react'
-import { StyleSheet, KeyboardAvoidingView, ScrollView } from 'react-native'
+import {
+  StyleSheet,
+  KeyboardAvoidingView,
+  ScrollView,
+  AsyncStorage,
+} from 'react-native'
 import { connect } from 'react-redux'
 import { Spinner, View } from 'native-base'
 import PropTypes from 'prop-types'
@@ -34,10 +39,12 @@ class SignupScreen extends Component {
         return response
       })
     this.setState({ loading: false })
-    if (!user.error) {
+    if (user.error) {
       alert('Hubo un problema registrandote. Por favor intentalo de nuevo.')
     } else {
-      this.props.navigation.navigate('Home')
+      AsyncStorage.setItem('@userToken', this.props.user.token)
+      AsyncStorage.setItem('@userId', this.props.user.user_id)
+      this.props.navigation.navigate('Main')
     }
   }
 
@@ -70,6 +77,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
 })
+
+const mapStateToProps = state => {
+  return {
+    user: state.user,
+  }
+}
 
 const mapDispatchToProps = dispatch => ({
   signup: (
@@ -107,6 +120,6 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(SignupScreen)

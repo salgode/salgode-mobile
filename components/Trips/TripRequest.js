@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import StopsList from '../CurrentTrip/StopsList'
 
 const TripRequest = ({ stops, onSend }) => {
-  console.log(stops)
   const [state, setState] = React.useState({
     selectedStop: 'Selecciona la parada en la que te subirás',
     selected: false,

@@ -14,6 +14,8 @@ const RequestedTrip = ({
   startLocation = 'Desde',
   endLocation = 'Hasta',
   onSend,
+  onPressTrip,
+  asDriver,
   tripId,
 }) => {
   let statusColor
@@ -43,34 +45,34 @@ const RequestedTrip = ({
         <CardItem>
           <View style={styles.user}>
             <View style={styles.userData}>
-            {user.selfieLink ? (
-              <Thumbnail source={{ uri: user.selfieLink }} />
-            ) : (
-              <Ionicons
-                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-                size={40}
-              />
-            )}
-            <Text style={styles.userText}>{user.name}</Text>
+              {user.selfieLink ? (
+                <Thumbnail source={{ uri: user.selfieLink }} />
+              ) : (
+                  <Ionicons
+                    name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                    size={40}
+                  />
+                )}
+              <Text style={styles.userText}>{user.name}</Text>
+            </View>
           </View>
-        </View>
-      </CardItem>
-      <CardItem style={styles.locationContainer}>
-        <Location color={'red'} location={startLocation} />
-        <Location color={Colors.tintColor} location={endLocation} />
-      </CardItem>
-      <CardItem>
-        <TimeInfo timestamp={timestamp} />
-      </CardItem>
-      <CardItem style={styles.containerBottom}>
-        <Button borderRadius={10} style={styles.button} onPress={onSend}>
-          <Text>Ver Viaje</Text>
-        </Button>
-        <Button borderRadius={10} style={styles.button} onPress={onSend}>
-          <Text>Cancelar</Text>
-        </Button>
-      </CardItem>
-    </Card>
+        </CardItem>
+        <CardItem style={styles.locationContainer}>
+          <Location color={'red'} location={startLocation} />
+          <Location color={Colors.tintColor} location={endLocation} />
+        </CardItem>
+        <CardItem>
+          <TimeInfo timestamp={timestamp} />
+        </CardItem>
+        <CardItem style={styles.containerBottom}>
+          <Button borderRadius={10} style={styles.button} onPress={onSend}>
+            <Text>Ver Viaje</Text>
+          </Button>
+          <Button borderRadius={10} style={styles.button} onPress={onSend}>
+            <Text>Cancelar</Text>
+          </Button>
+        </CardItem>
+      </Card>
     </TouchableOpacity>
   )
 }

@@ -15,31 +15,32 @@ export const Trip = ({ timestamp, spacesUsed, onPressTrip, asDriver }) => {
         onPressTrip(asDriver)
       }}
     >
-    <Card style={[styles.container, styles.shadow]}>
-      <View style={styles.locationContainer}>
-        <Location color={'red'} location="Campus San Joaquin" />
-        <Location color={Colors.tintColor} location="Campus San Joaquin" />
-        <TimeInfo timestamp={timestamp} isDate />
-        <TimeInfo timestamp={timestamp} />
-      </View>
-      <View style={styles.iconContainer}>
-        {/* <CardIcon
+      <Card style={[styles.container, styles.shadow]}>
+        <View style={styles.locationContainer}>
+          <Location color={'red'} location="Campus San Joaquin" />
+          <Location color={Colors.tintColor} location="Campus San Joaquin" />
+          <TimeInfo timestamp={timestamp} isDate />
+          <TimeInfo timestamp={timestamp} />
+        </View>
+        <View style={styles.iconContainer}>
+          {/* <CardIcon
           style={{ alignSelf: 'center' }}
           name={Platform.OS === 'ios' ? 'ios-person-add' : 'md-person-add'}
           onPress={() => null}
         /> */}
-        <View style={styles.spacesUsedContainer}>
-          <Text style={styles.spacesUsed}>{spacesUsed}</Text>
-          <CardIcon
-            name={Platform.OS === 'ios' ? 'ios-person-add' : 'md-person-add'}
-            onPress={() => null}
-          />
           <View style={styles.spacesUsedContainer}>
             <Text style={styles.spacesUsed}>{spacesUsed}</Text>
             <CardIcon
-              name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'}
-              bottom
+              name={Platform.OS === 'ios' ? 'ios-person-add' : 'md-person-add'}
+              onPress={() => null}
             />
+            <View style={styles.spacesUsedContainer}>
+              <Text style={styles.spacesUsed}>{spacesUsed}</Text>
+              <CardIcon
+                name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'}
+                bottom
+              />
+            </View>
           </View>
         </View>
       </Card>

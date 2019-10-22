@@ -8,6 +8,7 @@ class MyTrips extends Component {
   constructor(props) {
     super(props)
     this.Trip = this.props.isRequestedTrips ? RequestedTrip : MyTrip
+    this.asDriver = this.props.isRequestedTrips ? false : true
   }
 
   render() {
@@ -22,6 +23,8 @@ class MyTrips extends Component {
               spacesUsed={item.spacesUsed}
               user={item.user}
               status={item.status}
+              asDriver={this.asDriver}
+              onPressTrip={this.props.onPressTrip}
               tripId={item.tripId}
             />
           )}
@@ -35,6 +38,7 @@ class MyTrips extends Component {
 MyTrips.propTypes = {
   trips: PropTypes.array,
   isRequestedTrips: PropTypes.bool,
+  onPressTrip: PropTypes.func.isRequired,
 }
 
 MyTrips.defaultProps = {

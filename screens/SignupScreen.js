@@ -46,8 +46,6 @@ class SignupScreen extends Component {
     ) {
       alert('Hubo un problema registrandote. Por favor intentalo de nuevo.')
     } else {
-      AsyncStorage.setItem('@userToken', this.props.user.token)
-      AsyncStorage.setItem('@userId', this.props.user.user_id)
       this.props.navigation.navigate('ChooseTrips')
     }
   }

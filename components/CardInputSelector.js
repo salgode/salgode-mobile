@@ -49,10 +49,11 @@ export default class CardInputSelector extends Component {
   renderList = () => {
     const { displayList, input } = this.state
     if (displayList) {
+      const lowerCaseInput = input.toLocaleLowerCase()
       const filteredData = this.props.data.filter(item => {
         return (
-          item.name.toLowerCase().includes(input) ||
-          item.address.toLowerCase().includes(input)
+          item.name.toLowerCase().includes(lowerCaseInput) ||
+          item.address.toLowerCase().includes(lowerCaseInput)
         )
       })
       return (
@@ -89,10 +90,8 @@ export default class CardInputSelector extends Component {
                 id="selectorInput"
                 placeholder={placeHolder}
                 value={this.state.input}
-                onChangeText={text =>
-                  this.setState({ input: text.toLowerCase() })
-                }
                 onFocus={() => this.setState({ displayList: true })}
+                onChangeText={text => this.setState({ input: text })}
               />
 
               <Button icon transparent onPress={this.cleanInput}>

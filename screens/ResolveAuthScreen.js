@@ -46,7 +46,7 @@ class ResolveAuthScreen extends Component {
           ]
         )
       } else {
-        this.props.navigation.navigate('Trips')
+        this.props.navigation.navigate('Main')
       }
     }
   }

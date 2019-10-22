@@ -83,7 +83,7 @@ class LoginScreen extends Component {
       AsyncStorage.setItem('@userToken', this.props.user.token)
       AsyncStorage.setItem('@userId', this.props.user.user_id)
 
-      this.props.navigation.navigate('Trips')
+      this.props.navigation.navigate('Main')
     }
   }
 

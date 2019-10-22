@@ -9,6 +9,9 @@ export const actions = {
   USER_UPDATE_FAIL: 'USER/UPDATE_FAIL',
   USER_UPDATE_SUCCESS: 'USER/UPDATE_SUCCESS',
   USER_SIGNOUT: 'USER/SIGNOUT',
+  USER_UPLOAD_IMAGE: 'USER/UPLOAD_IMAGE',
+  USER_UPLOAD_IMAGE_FAIL: 'USER/UPLOAD_IMAGE_FAIL',
+  USER_UPLOAD_IMAGE_SUCCESS: 'USER/UPLOAD_IMAGE_SUCCESS',
 }
 
 const mapDataToUser = data => {
@@ -158,6 +161,26 @@ export function fetchUser(authToken, id) {
         method: 'get',
         headers: {
           Authorization: authToken,
+        },
+      },
+    },
+  }
+}
+
+export function uploadImageUser(base64string) {
+  return {
+    type: actions.USER_UPLOAD_IMAGE,
+    payload: {
+      request: {
+        url: `/images`,
+        method: 'post',
+        data: {
+          base64string,
+        },
+        transformResponse: data => {
+          return {
+            img_id: data.img_id,
+          }
         },
       },
     },

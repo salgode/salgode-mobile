@@ -5,7 +5,7 @@ export const userModel = {
   lastName: null,
   phone: null,
   passwordRepeat: null,
-  // selfieLink: null,
+  selfieLink: null,
   // driverLicenseLink: null,
   // dniLink: null,
   // car: {

@@ -40,6 +40,7 @@ class LoginForm extends Component {
             keyboardType="email-address"
             autoCapitalize="none"
             value={this.state.email}
+            autoCompleteType="email"
           />
         </Item>
         <Item inlineLabel last regular style={styles.item}>
@@ -49,6 +50,7 @@ class LoginForm extends Component {
             onChangeText={this.onChangePassword}
             secureTextEntry
             value={this.state.password}
+            autoCompleteType="email"
           />
         </Item>
         <Button

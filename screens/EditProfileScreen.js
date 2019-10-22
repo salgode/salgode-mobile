@@ -179,7 +179,7 @@ const EditProfileScreen = props => {
   const [name, setName] = React.useState('')
   const [lastName, setLastName] = React.useState('')
   const [phone, setPhone] = React.useState('')
-  const [password, setPassword] = React.useState('')
+  // const [password, setPassword] = React.useState('')
   const [hasCar, setHasCar] = React.useState(false)
   const [carPlate, setCarPlate] = React.useState('BC2019')
   const [carColor, setCarColor] = React.useState('Gris')
@@ -190,7 +190,9 @@ const EditProfileScreen = props => {
   // eslint-disable-next-line no-unused-vars
   const [loadErr, setLoadErr] = React.useState(null)
 
+  // eslint-disable-next-line no-unused-vars
   const [isSaving, setIsSaving] = React.useState(false)
+  // eslint-disable-next-line no-unused-vars
   const [saveErr, setSaveErr] = React.useState(null)
 
   const commonFields = [
@@ -208,13 +210,13 @@ const EditProfileScreen = props => {
       validate: phone => phone.match(/(\+56)?\d{9}/),
       keyboardType: 'phone-pad',
     },
-    {
-      label: 'Contraseña',
-      value: password,
-      setValue: setPassword,
-      validate: pass => typeof pass === 'string' && pass.length > 3,
-      isSecure: true,
-    },
+    // {
+    //   label: 'Contraseña',
+    //   value: password,
+    //   setValue: setPassword,
+    //   validate: pass => typeof pass === 'string' && pass.length > 3,
+    //   isSecure: true,
+    // },
   ]
   const carFields = [
     {
@@ -246,6 +248,7 @@ const EditProfileScreen = props => {
   const user = {
     name,
     lastName,
+    phone,
     car: hasCar
       ? {
           plate: carPlate,
@@ -301,13 +304,19 @@ const EditProfileScreen = props => {
 
   const saveUser = async () => {
     setIsLoading(true)
-    const user = await props.updateUser(user)
+    const response = await props.updateUser(
+      user.name,
+      user.lastName,
+      user.phone,
+      user.car,
+      props.user.userId,
+      props.user.token
+    )
     setIsLoading(false)
-    console.log(user)
     if (
-      user.error ||
-      !user.payload.data.user ||
-      !user.payload.data.user.email
+      response.error ||
+      !response.payload.data.user ||
+      !response.payload.data.user.email
     ) {
       alert(
         'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
@@ -440,6 +449,8 @@ EditProfileScreen.propTypes = {
     name: PropTypes.string.isRequired,
     lastName: PropTypes.string.isRequired,
     phone: PropTypes.string.isRequired,
+    userId: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired,
     car: PropTypes.shape({
       plate: PropTypes.string,
       color: PropTypes.string,
@@ -447,6 +458,7 @@ EditProfileScreen.propTypes = {
       model: PropTypes.string,
     }),
   }),
+  updateUser: PropTypes.func.isRequired,
 }
 
 const mapPropsToState = state => ({

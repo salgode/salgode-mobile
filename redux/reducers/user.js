@@ -1,6 +1,7 @@
 import { actions as userActions } from '../actions/user'
 
 export default function userReducer(state = {}, action) {
+  // console.log(action)
   switch (action.type) {
     case userActions.USER_LOGIN:
       return { ...state, loading: true }
@@ -29,7 +30,6 @@ export default function userReducer(state = {}, action) {
         ...state,
         loading: false,
         ...action.payload.data.user,
-        token: action.payload.data.user.bearer_token,
       }
     case userActions.USER_UPDATE_FAIL:
       return {

@@ -83,9 +83,9 @@ export function signupUser(
 export function updateUser(
   name,
   lastName,
-  email,
+  // email,
   phone,
-  password,
+  // password,
   car,
   id,
   authToken
@@ -100,11 +100,11 @@ export function updateUser(
   // carModel
 ) {
   const data = {
-    email,
+    // email,
     last_name: lastName,
     first_name: name,
     phone,
-    password,
+    // password,
   }
 
   if (car) {
@@ -115,7 +115,7 @@ export function updateUser(
     type: actions.USER_UPDATE,
     payload: {
       request: {
-        url: `/users/id`,
+        url: `/users/${id}`,
         method: 'put',
         headers: {
           Authorization: authToken,

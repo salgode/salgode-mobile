@@ -18,12 +18,13 @@ class ChooseTripsScreen extends Component {
       rerender: true,
     }
 
-    this.onSend = this.onSend.bind(this)
+    this.onRequestTrip = this.onRequestTrip.bind(this)
     this.getTrips = this.getTrips.bind(this)
   }
 
-  onSend() {
-    //fetch to POST new passanger in trip
+  onRequestTrip(stops, tripId) {
+    console.log(tripId)
+    this.props.navigation.navigate('RequestTrip', { stops, tripId })
   }
 
   async getTrips() {
@@ -41,7 +42,7 @@ class ChooseTripsScreen extends Component {
       <View style={styles.container}>
         <View>
           <ChooseTrips
-            onSend={this.state.onSend}
+            onSend={this.onRequestTrip}
             onReload={this.getTrips}
             trips={this.props.trips.map(trip => ({
               timestamp: new Date(trip.etd).getTime(),
@@ -49,8 +50,7 @@ class ChooseTripsScreen extends Component {
                 name: 'Temp',
                 reputation: 0,
               },
-              startPoint: trip.route_points[0],
-              endPoint: trip.route_points[trip.route_points.length - 1],
+              stops: trip.route_points,
               tripId: trip.trip_id,
             }))}
           />
@@ -63,9 +63,12 @@ class ChooseTripsScreen extends Component {
 ChooseTripsScreen.propTypes = {
   isRequestedTrips: PropTypes.bool,
   fetchFutureTrips: PropTypes.func.isRequired,
-  // user: PropTypes.shape({
-  //   token: PropTypes.string.isRequired,
-  // }).isRequired,
+  user: PropTypes.shape({
+    token: PropTypes.string.isRequired,
+  }).isRequired,
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
   trips: PropTypes.array.isRequired,
 }
 
@@ -77,7 +80,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f4f7fc',
     padding: 15,
-    paddingBottom: 90,
     ...StyleSheet.absoluteFill,
   },
 })

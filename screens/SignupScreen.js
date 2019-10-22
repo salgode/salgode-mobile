@@ -39,24 +39,27 @@ class SignupScreen extends Component {
         return response
       })
     this.setState({ loading: false })
-    if (user.error) {
+    if (
+      user.error ||
+      !user.payload.data.user ||
+      !user.payload.data.user.email
+    ) {
       alert('Hubo un problema registrandote. Por favor intentalo de nuevo.')
     } else {
       AsyncStorage.setItem('@userToken', this.props.user.token)
       AsyncStorage.setItem('@userId', this.props.user.user_id)
-      this.props.navigation.navigate('Main')
+      this.props.navigation.navigate('ChooseTrips')
     }
   }
 
   render() {
     return (
-      <KeyboardAvoidingView behavior="height" enabled>
+      <KeyboardAvoidingView behavior="padding" enabled>
         <ScrollView>
           <View style={styles.container}>
-            <SignupForm onSend={this.onSend} />
             {this.state.loading && <Spinner />}
+            <SignupForm onSend={this.onSend} />
           </View>
-          {this.state.loading && <Spinner />}
         </ScrollView>
       </KeyboardAvoidingView>
     )

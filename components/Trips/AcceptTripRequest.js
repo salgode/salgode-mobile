@@ -40,13 +40,13 @@ export default function AcceptTripRequest({
         {image_uri ? (
           <Thumbnail source={{ uri: image_uri }} />
         ) : (
-            <Ionicons
-              color={'grey'}
-              name={`${Platform.OS === 'ios' ? 'ios' : 'md'}-contact`}
-              size={80}
-              style={styles.icon}
-            />
-          )}
+          <Ionicons
+            color={'grey'}
+            name={`${Platform.OS === 'ios' ? 'ios' : 'md'}-contact`}
+            size={80}
+            style={styles.icon}
+          />
+        )}
         <Text style={styles.name}>{name}</Text>
       </CardItem>
       <CardItem style={styles.messageSection}>

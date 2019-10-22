@@ -4,7 +4,7 @@ import { View, Text, Button } from 'native-base'
 import PropTypes from 'prop-types'
 import StopsList from './StopsList'
 
-const TripStart = (stops = []) => {
+const TripStart = ({ stops = [] }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>#Llego en 5</Text>

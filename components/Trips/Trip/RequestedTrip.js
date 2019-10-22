@@ -4,9 +4,18 @@ import Location from './Location'
 import Colors from '../../../constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
 import TimeInfo from './TimeInfo'
-import { Card, View, Text, CardItem, Col } from 'native-base'
+import { Card, View, Text, CardItem, Thumbnail, Button } from 'native-base'
+import PropTypes from 'prop-types'
 
-const RequestedTrip = ({ timestamp, spacesUsed, user, status }) => {
+const RequestedTrip = ({
+  timestamp,
+  user,
+  status = 'pending',
+  startLocation = 'Desde',
+  endLocation = 'Hasta',
+  onSend,
+  tripId,
+}) => {
   let statusColor
   let statusText
 
@@ -29,48 +38,54 @@ const RequestedTrip = ({ timestamp, spacesUsed, user, status }) => {
       <CardItem>
         <View style={styles.user}>
           <View style={styles.userData}>
-            <Ionicons
-              name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-              size={40}
-              color={Colors.textGray}
-            />
+            {user.selfieLink ? (
+              <Thumbnail source={{ uri: user.selfieLink }} />
+            ) : (
+              <Ionicons
+                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                size={40}
+              />
+            )}
             <Text style={styles.userText}>{user.name}</Text>
-          </View>
-          <View style={styles.container}>
-            <View style={styles.iconContainer}>
-              <Ionicons
-                name={Platform.OS === 'ios' ? 'ios-thumbs-up' : 'md-thumbs-up'}
-                size={20}
-                color={Colors.textGray}
-              />
-              <Text style={styles.iconText}>{user.reputation}</Text>
-            </View>
-            <View style={styles.iconContainer}>
-              <Ionicons
-                name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'}
-                size={20}
-                color={Colors.textGray}
-              />
-              <Text style={styles.iconText}>{spacesUsed}</Text>
-            </View>
           </View>
         </View>
       </CardItem>
       <CardItem style={styles.locationContainer}>
-        <Location color={'red'} location="Campus San Joaquin" />
-        <Location color={Colors.tintColor} location="Campus San Joaquin" />
+        <Location color={'red'} location={startLocation} />
+        <Location color={Colors.tintColor} location={endLocation} />
       </CardItem>
       <CardItem>
-        <TimeInfo timestamp={timestamp} isDate />
         <TimeInfo timestamp={timestamp} />
+      </CardItem>
+      <CardItem style={styles.containerBottom}>
+        <Button borderRadius={10} style={styles.button} onPress={onSend}>
+          <Text>Ver Viaje</Text>
+        </Button>
+        <Button borderRadius={10} style={styles.button} onPress={onSend}>
+          <Text>Cancelar</Text>
+        </Button>
       </CardItem>
     </Card>
   )
 }
 
+RequestedTrip.propTypes = {
+  timestamp: PropTypes.number.isRequired,
+  user: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    selfieLink: PropTypes.string,
+  }).isRequired,
+  status: PropTypes.oneOf(['accepted', 'pending', 'rejected']),
+  startLocation: PropTypes.string,
+  endLocation: PropTypes.string,
+  onSend: PropTypes.func,
+  tripId: PropTypes.string,
+}
+
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
+  containerBottom: {
+    justifyContent: 'space-evenly',
+    width: '100%',
   },
   containerRequested: {
     alignItems: 'flex-start',
@@ -78,13 +93,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 15,
   },
-  iconContainer: { alignItems: 'center', flexDirection: 'row' },
-  iconText: {
-    color: Colors.textGray,
-    fontSize: 13,
-    fontWeight: '700',
-    marginLeft: 10,
-  },
+
   locationContainer: { flexDirection: 'column' },
   shadow: {
     shadowColor: '#b3b3b3',

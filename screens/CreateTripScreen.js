@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { ScrollView, StyleSheet, View, Text } from 'react-native'
+import { Appearance } from 'react-native-appearance';
 import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
 import { Button } from 'native-base'
@@ -14,6 +15,8 @@ import {
 import { getAllSpots } from '../redux/actions/spots'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 
+const colorScheme = Appearance.getColorScheme();
+
 class CreateTripScreen extends Component {
   state = {
     isDateTimePickerVisible: false,
@@ -21,7 +24,6 @@ class CreateTripScreen extends Component {
   }
 
   componentDidMount = () => {
-    console.log('create screen mounted')
     this.props.getAllSpots()
   }
 
@@ -62,15 +64,17 @@ class CreateTripScreen extends Component {
             <CardInputSelector
               text="#Desde"
               placeHolder="Filtra por Comuna o Parada"
-              onSelect={item => this.props.setStartStop(item.parada)}
+              onSelect={item => this.props.setStartStop(item)}
               onClear={this.props.clearStartStop}
+              data={this.props.spots}
             />
 
             <CardInputSelector
               text="#A"
               placeHolder="Filtra por Comuna o Parada"
-              onSelect={item => this.props.setEndStop(item.parada)}
+              onSelect={item => this.props.setEndStop(item)}
               onClear={this.props.clearEndStop}
+              data={this.props.spots}
             />
           </View>
 
@@ -83,6 +87,7 @@ class CreateTripScreen extends Component {
               </Text>
             </Button>
             <DateTimePicker
+              isDarkModeEnabled={colorScheme === 'dark'}
               mode="datetime"
               isVisible={this.state.isDateTimePickerVisible}
               onConfirm={this.handleDatePicked}
@@ -98,7 +103,7 @@ class CreateTripScreen extends Component {
             disabled={disabled}
             onPress={() => navigation.navigate('AddStopsScreen')}
           >
-            <Text style={styles.whiteText}>Agrega una Parada</Text>
+            <Text style={styles.whiteText}>Siguiente</Text>
           </Button>
         </View>
       </View>

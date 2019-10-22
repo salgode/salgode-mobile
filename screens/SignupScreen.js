@@ -3,7 +3,7 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   ScrollView,
-  AsyncStorage,
+  Alert,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Spinner, View } from 'native-base'
@@ -39,12 +39,11 @@ class SignupScreen extends Component {
         return response
       })
     this.setState({ loading: false })
-    if (
-      user.error ||
-      !user.payload.data.user ||
-      !user.payload.data.user.email
-    ) {
-      alert('Hubo un problema registrandote. Por favor intentalo de nuevo.')
+    if (user.error) {
+      Alert.alert(
+        'Error de registro',
+        'Hubo un problema registrandote. Por favor intentalo de nuevo.'
+      )
     } else {
       this.props.navigation.navigate('ChooseTrips')
     }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Alert } from 'react-native'
 import { Spinner, View } from 'native-base'
 import PropTypes from 'prop-types'
 import TripRequest from '../components/Trips/TripRequest'
@@ -31,7 +31,7 @@ class TripRequestScreen extends Component {
 
   async onRequestSlot() {
     const { user, createSlot } = this.props
-    console.log(user)
+    // console.log(user)
 
     this.setState({ loading: true })
     const response = await createSlot(
@@ -42,10 +42,16 @@ class TripRequestScreen extends Component {
     this.setState({ loading: false })
 
     if (!response || response.error) {
-      alert('Hubo un error al reservar el puesto. Por favor inentelo de nuevo.')
+      Alert.alert(
+        'Error de reserva',
+        'Hubo un error al reservar el puesto. Por favor inentelo de nuevo.'
+      )
     } else {
-      alert('Puesto reservado correctamente!')
-      this.props.navigation.navigate('Trips')
+      Alert.alert(
+        'Puesto reservado correctamente!',
+        'Tu pedido está siendo revisado por el conductor.'
+      )
+      this.props.navigation.popToTop()
     }
   }
 
@@ -66,6 +72,7 @@ TripRequestScreen.propTypes = {
   navigation: PropTypes.shape({
     getParam: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
+    popToTop: PropTypes.func.isRequired,
   }),
   user: PropTypes.shape({
     token: PropTypes.string.isRequired,

@@ -7,7 +7,6 @@ import {
   Dimensions,
   Animated,
   Keyboard,
-  AsyncStorage,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Spinner } from 'native-base'
@@ -72,9 +71,6 @@ class LoginScreen extends Component {
     const user = await this.props.login(email, password).then(response => {
       return response
     })
-
-    console.log(user.payload)
-
     this.setState({ loading: false })
 
     if (user.error || !user.payload.data.email) {

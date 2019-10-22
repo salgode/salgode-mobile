@@ -8,6 +8,7 @@ class ChooseTrips extends Component {
     super(props)
     this.state = {
       loading: false,
+      stops: [],
     }
     this.ChooseTrip = ChooseTrip
     this.onReload = this.onReload.bind(this)
@@ -44,7 +45,9 @@ class ChooseTrips extends Component {
               user={item.user}
               status={item.status}
               stops={item.stops}
-              onSend={() => this.props.onSend(item.stops, item.tripId)}
+              onSend={this.props.onSend}
+              token={item.token}
+              tripId={item.tripId}
             />
           )}
           keyExtractor={item => item.tripId}

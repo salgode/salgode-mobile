@@ -10,9 +10,9 @@ const TimeInfo = ({ timestamp, displayAsRow = false }) => {
     ...styles.container,
     ...(displayAsRow
       ? {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-      }
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+        }
       : {}),
   }
   return (
@@ -41,24 +41,24 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   icon: {
+    alignSelf: 'center',
     color: 'grey',
     fontSize: 15,
     paddingLeft: 5,
     paddingRight: 10,
     // Correct icons white space
     //top: 2,
-    alignSelf: 'center'
   },
   location: {
+    alignSelf: 'center',
     color: 'grey',
     fontSize: 13,
-    marginRight: 15,
     fontWeight: '500',
-    alignSelf: 'center',
+    marginRight: 15,
   },
   rowElement: {
-    flexDirection: 'row',
     alignContent: 'center',
+    flexDirection: 'row',
   },
 })
 

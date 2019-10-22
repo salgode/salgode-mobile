@@ -7,48 +7,73 @@ import Icon from 'react-native-vector-icons/AntDesign'
 import TimeInfo from './TimeInfo'
 import PedirBoton from './PedirBoton'
 import PropTypes from 'prop-types'
+import { getTripInfo } from '../../../utils/getTripInfo'
 
 const ChooseTrip = ({
   timestamp,
   // spacesUsed,
   user,
-  stops,
+  // stops,
   onSend,
+  token,
+  tripId,
 }) => {
-  return (
-    <Card style={styles.containerRequested}>
-      <CardItem style={styles.dataContainer}>
-        <View style={styles.user}>
-          <View style={styles.userData}>
-            <Ionicons
-              name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-              size={80}
-            />
-            <Text style={styles.userText}>{user.name}</Text>
-          </View>
-          <View style={styles.iconInfoGroup}>
-            <View style={styles.iconContainer}>
-              <Icon name="like1" style={styles.infoIcon} />
-              <Text style={styles.iconText}>{user.reputation}</Text>
+  const [loading, setLoading] = React.useState(true)
+  const [_stops, _setStops] = React.useState(['', ''])
+  const [stops, setStops] = React.useState(['', ''])
+
+  const parseStops = async () => {
+    const stps = await getTripInfo(tripId, token)
+    _setStops(stps.trip_route_points)
+    setStops(stps.trip_route_points.map(s => s.address))
+  }
+
+  React.useEffect(() => {
+    parseStops()
+    setLoading(false)
+  }, [])
+
+  return loading ? (
+    <View></View>
+  ) : (
+      <Card style={styles.containerRequested}>
+        <CardItem style={styles.dataContainer}>
+          <View style={styles.user}>
+            <View style={styles.userData}>
+              <Ionicons
+                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                size={80}
+              />
+              <Text style={styles.userText}>{user.name}</Text>
+            </View>
+            <View style={styles.iconInfoGroup}>
+              <View style={styles.iconContainer}>
+                <Icon name="like1" style={styles.infoIcon} />
+                <Text style={styles.iconText}>{user.reputation}</Text>
+              </View>
             </View>
           </View>
-        </View>
-      </CardItem>
-      <CardItem style={styles.locationContainer}>
-        <Location color={'#0000FF'} location={stops[0]} />
-        <Location color={'#33C534'} location={stops[stops.length - 1]} />
-      </CardItem>
-      <CardItem style={styles.bottomSection}>
-        <TimeInfo timestamp={timestamp} />
-        <PedirBoton onSend={onSend} />
-      </CardItem>
-    </Card>
-  )
+        </CardItem>
+        <CardItem style={styles.locationContainer}>
+          <Location color={'#0000FF'} location={stops[0]} />
+          <Location color={'#33C534'} location={stops[stops.length - 1]} />
+        </CardItem>
+        <CardItem style={styles.bottomSection}>
+          <TimeInfo timestamp={timestamp} />
+          <PedirBoton onSend={() => onSend(_stops, token)} disabled={loading} />
+        </CardItem>
+      </Card>
+    )
 }
 
 ChooseTrip.propTypes = {
   timestamp: PropTypes.number.isRequired,
-  // spacesUsed: PropTypes.number.isRequired,
+  user: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    reputation: PropTypes.number.isRequired,
+  }),
+  token: PropTypes.string.isRequired,
+  tripId: PropTypes.string.isRequired,
   onSend: PropTypes.func,
 }
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Alert } from 'react-native'
 import { Spinner, View } from 'native-base'
 import PropTypes from 'prop-types'
 import TripRequest from '../components/Trips/TripRequest'
@@ -42,9 +42,15 @@ class TripRequestScreen extends Component {
     this.setState({ loading: false })
 
     if (!response || response.error) {
-      alert('Hubo un error al reservar el puesto. Por favor inentelo de nuevo.')
+      Alert.alert(
+        'Error de reserva',
+        'Hubo un error al reservar el puesto. Por favor inentelo de nuevo.'
+      )
     } else {
-      alert('Puesto reservado correctamente!')
+      Alert.alert(
+        'Puesto reservado correctamente!',
+        'Tu pedido está siendo revisado por el conductor.'
+      )
       this.props.navigation.popToTop()
     }
   }

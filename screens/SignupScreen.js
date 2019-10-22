@@ -1,5 +1,10 @@
 import React, { Component } from 'react'
-import { StyleSheet, KeyboardAvoidingView, ScrollView } from 'react-native'
+import {
+  StyleSheet,
+  KeyboardAvoidingView,
+  ScrollView,
+  Alert,
+} from 'react-native'
 import { connect } from 'react-redux'
 import { Spinner, View } from 'native-base'
 import PropTypes from 'prop-types'
@@ -35,7 +40,10 @@ class SignupScreen extends Component {
       })
     this.setState({ loading: false })
     if (user.error) {
-      alert('Hubo un problema registrandote. Por favor intentalo de nuevo.')
+      Alert.alert(
+        'Error de registro',
+        'Hubo un problema registrandote. Por favor intentalo de nuevo.'
+      )
     } else {
       this.props.navigation.navigate('ChooseTrips')
     }

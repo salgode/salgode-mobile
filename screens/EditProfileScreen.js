@@ -26,6 +26,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Layout from '../constants/Layout'
 import PropTypes from 'prop-types'
 import Colors from '../constants/Colors'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 function validateName(str) {
   if (typeof str !== 'string') {
@@ -351,14 +352,14 @@ const EditProfileScreen = ({ navigation }) => {
               {commonFields.map(field => (
                 <Field key={field.label} field={field} validity="partial" />
               ))}
-              <View style={styles.rowCenter}>
+              <TouchableOpacity style={styles.rowCenter} onPress={() => setHasCar(!hasCar)}>
                 <CheckBox
                   color={Colors.textGray}
                   checked={hasCar}
                   onPress={() => setHasCar(!hasCar)}
                 />
                 <Text style={styles.checkboxLabel}>Tengo Auto</Text>
-              </View>
+              </TouchableOpacity>
               {hasCar ? (
                 <>
                   <View style={styles.headerTextContainer}>

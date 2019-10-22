@@ -272,6 +272,7 @@ const EditProfileScreen = props => {
   }
 
   React.useEffect(() => {
+    // console.log(props.user)
     const stateUser = props.user
     const user = {
       name: stateUser.name,
@@ -327,11 +328,8 @@ const EditProfileScreen = props => {
       props.user.token
     )
     setIsLoading(false)
-    if (
-      response.error ||
-      !response.payload.data.user ||
-      !response.payload.data.user.email
-    ) {
+    // console.log(response)
+    if (response.error) {
       alert(
         'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
       )

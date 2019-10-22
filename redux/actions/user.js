@@ -10,6 +10,29 @@ export const actions = {
   USER_UPDATE_SUCCESS: 'USER/UPDATE_SUCCESS',
 }
 
+const mapDataToUser = data => {
+  let user = {
+    token: data.bearer_token,
+    email: data.email,
+    name: data.first_name,
+    lastName: data.last_name,
+    phone: data.phone,
+    userId: data.user_id,
+    car: data.car,
+  }
+
+  if (data.user_identifications) {
+    user = {
+      ...user,
+      selfieLink: data.user_identifications.selfie_image,
+      dniFrontLink: data.user_identifications.identification_image_front,
+      dniBackLink: data.user_identifications.identification_image_back,
+    }
+  }
+
+  return user
+}
+
 export function loginUser(email, password) {
   return {
     type: actions.USER_LOGIN,
@@ -21,25 +44,7 @@ export function loginUser(email, password) {
           email,
           password,
         },
-        transformResponse: data => {
-          return {
-            token: data.bearer_token,
-            email: data.email,
-            name: data.first_name,
-            lastName: data.last_name,
-            phone: data.phone,
-            userId: data.user_id,
-            selfieLink: data.user_identifications.selfie_image,
-            dniFrontLink: data.user_identifications.identification_image_front,
-            dniBackLink: data.user_identifications.identification_image_back,
-            car: data.car || {
-              plate: '',
-              color: '',
-              brand: '',
-              model: '',
-            },
-          }
-        },
+        transformResponse: mapDataToUser,
       },
     },
   }
@@ -81,6 +86,7 @@ export function signupUser(
         url: `/users`,
         method: 'post',
         data: data,
+        transformResponse: data => mapDataToUser(data.user),
       },
     },
   }
@@ -114,15 +120,16 @@ export function updateUser(
   }
 
   if (car) {
-    data.car = car
+    if (car.plate && car.color && car.brand && car.model) {
+      data.car = car
+    }
   }
-
   return {
     type: actions.USER_UPDATE,
     payload: {
       request: {
         url: `/users/${id}`,
-        method: 'put',
+        method: 'patch',
         headers: {
           Authorization: authToken,
         },

@@ -15,13 +15,21 @@ export const Trip = ({ timestamp, spacesUsed, onPressTrip, asDriver }) => {
         onPressTrip(asDriver)
       }}
     >
-      <Card style={styles.container} pointerEvents="none">
-        <View style={styles.locationContainer}>
-          <Location color={'red'} location="Campus San Joaquin" />
-          <Location color={Colors.tintColor} location="Campus San Joaquin" />
-          <TimeInfo timestamp={timestamp} isDate />
-        </View>
-        <View style={styles.iconContainer}>
+    <Card style={[styles.container, styles.shadow]}>
+      <View style={styles.locationContainer}>
+        <Location color={'red'} location="Campus San Joaquin" />
+        <Location color={Colors.tintColor} location="Campus San Joaquin" />
+        <TimeInfo timestamp={timestamp} isDate />
+        <TimeInfo timestamp={timestamp} />
+      </View>
+      <View style={styles.iconContainer}>
+        {/* <CardIcon
+          style={{ alignSelf: 'center' }}
+          name={Platform.OS === 'ios' ? 'ios-person-add' : 'md-person-add'}
+          onPress={() => null}
+        /> */}
+        <View style={styles.spacesUsedContainer}>
+          <Text style={styles.spacesUsed}>{spacesUsed}</Text>
           <CardIcon
             name={Platform.OS === 'ios' ? 'ios-person-add' : 'md-person-add'}
             onPress={() => null}
@@ -49,10 +57,12 @@ Trip.propTypes = {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'flex-start',
+    borderColor: 'white',
     borderRadius: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 15,
+    paddingHorizontal: 15,
+    paddingVertical: 5,
   },
   iconContainer: {
     alignItems: 'flex-end',
@@ -63,11 +73,21 @@ const styles = StyleSheet.create({
     height: 150,
     justifyContent: 'space-evenly',
   },
+  shadow: {
+    shadowColor: '#b3b3b3',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+  },
   spacesUsed: {
+    alignSelf: 'center',
     color: Colors.textGray,
+    fontSize: 13,
     fontWeight: '700',
-    marginBottom: 10,
-    marginRight: 10,
+    marginRight: 5,
   },
   spacesUsedContainer: { alignItems: 'center', flexDirection: 'row' },
 })

@@ -25,6 +25,7 @@ class MyTrips extends Component {
               status={item.status}
               asDriver={this.asDriver}
               onPressTrip={this.props.onPressTrip}
+              tripId={item.tripId}
             />
           )}
           keyExtractor={item => item.tripId}

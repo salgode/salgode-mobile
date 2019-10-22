@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FlatList, SafeAreaView } from 'react-native'
+import { FlatList, SafeAreaView, View, ActivityIndicator } from 'react-native'
 import PropTypes from 'prop-types'
 import ChooseTrip from './Trip/ChooseTrip'
 
@@ -25,6 +25,13 @@ class ChooseTrips extends Component {
 
   render() {
     const Trip = this.ChooseTrip
+    if (this.state.loading) {
+      return (
+        <View>
+          <ActivityIndicator size="large" color="#0000FF" marginTop={20} />
+        </View>
+      )
+    }
     return (
       <SafeAreaView>
         <FlatList
@@ -36,9 +43,8 @@ class ChooseTrips extends Component {
               timestamp={item.timestamp}
               user={item.user}
               status={item.status}
-              startPoint={item.startPoint}
-              endPoint={item.endPoint}
-              onSend={this.props.onSend}
+              stops={item.stops}
+              onSend={() => this.props.onSend(item.stops, item.tripId)}
             />
           )}
           keyExtractor={item => item.tripId}

@@ -13,6 +13,7 @@ import ChooseTripsScreen from '../screens/ChooseTripsScreen'
 import TripsNavigator from './TripsNavigator'
 import EditProfileScreen from '../screens/EditProfileScreen'
 import DetailedTripScreen from '../screens/DetailedTripScreen'
+import TripRequestScreen from '../screens/TripRequestScreen'
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -41,6 +42,7 @@ TripsStack.path = ''
 
 const ChooseTripsStack = createStackNavigator({
   ChooseTrips: ChooseTripsScreen,
+  RequestTrip: TripRequestScreen,
 })
 const EditProfileStack = createStackNavigator(
   {
@@ -104,8 +106,8 @@ CreateTripStack.navigationOptions = {
       focused={focused}
       name={
         Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
+          ? `ios-add-circle${focused ? '' : '-outline'}`
+          : 'md-add-circle'
       }
     />
   ),
@@ -116,9 +118,9 @@ CreateTripStack.path = ''
 const tabNavigator = createBottomTabNavigator({
   ChooseTripsStack,
   TripsStack,
-  EditProfileStack,
-  SettingsStack,
   CreateTripStack,
+  EditProfileStack,
+  // SettingsStack,
 })
 
 tabNavigator.path = ''

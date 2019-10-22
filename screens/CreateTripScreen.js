@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { ScrollView, StyleSheet, View, Text } from 'react-native'
+import { Appearance } from 'react-native-appearance';
 import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
-import { DatePicker, Button } from 'native-base'
-import CardInput from '../components/CardInput'
+import { Button } from 'native-base'
 import CardInputSelector from '../components/CardInputSelector'
 import {
   setStartStop,
@@ -15,13 +15,15 @@ import {
 import { getAllSpots } from '../redux/actions/spots'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 
+const colorScheme = Appearance.getColorScheme();
+
 class CreateTripScreen extends Component {
   state = {
     isDateTimePickerVisible: false,
+    pickedDate: null,
   }
 
   componentDidMount = () => {
-    console.log('create screen mounted')
     this.props.getAllSpots()
   }
 
@@ -35,11 +37,22 @@ class CreateTripScreen extends Component {
 
   handleDatePicked = date => {
     this.props.setStartTime(date)
+    this.setState({ pickedDate: date })
     this.hideDateTimePicker()
   }
 
   render() {
     const { navigation, startStop, endStop, startTime } = this.props
+    const disabled = startStop && endStop && startTime ? false : true
+    const { pickedDate } = this.state
+    let day
+    let hours
+    let minutes
+    if (pickedDate) {
+      day = pickedDate.toLocaleDateString()
+      hours = pickedDate.getHours()
+      minutes = pickedDate.getMinutes()
+    }
 
     return (
       <View style={styles.container}>
@@ -51,26 +64,30 @@ class CreateTripScreen extends Component {
             <CardInputSelector
               text="#Desde"
               placeHolder="Filtra por Comuna o Parada"
-              onSelect={item => this.props.setStartStop(item.parada)}
+              onSelect={item => this.props.setStartStop(item)}
               onClear={this.props.clearStartStop}
+              data={this.props.spots}
             />
 
             <CardInputSelector
               text="#A"
               placeHolder="Filtra por Comuna o Parada"
-              onSelect={item => this.props.setEndStop(item.parada)}
+              onSelect={item => this.props.setEndStop(item)}
               onClear={this.props.clearEndStop}
+              data={this.props.spots}
             />
           </View>
 
           <View style={styles.group}>
-            <Button
-              style={{ justifyContent: 'center' }}
-              onPress={this.showDateTimePicker}
-            >
-              <Text>Hora/Fecha de Salida</Text>
+            <Button style={styles.dateButton} onPress={this.showDateTimePicker}>
+              <Text style={styles.whiteText}>
+                {pickedDate
+                  ? `${day} - ${hours}:${minutes < 10 ? '0' : ''}${minutes}`
+                  : 'Hora/Fecha de Salida'}
+              </Text>
             </Button>
             <DateTimePicker
+              isDarkModeEnabled={colorScheme === 'dark'}
               mode="datetime"
               isVisible={this.state.isDateTimePickerVisible}
               onConfirm={this.handleDatePicked}
@@ -82,11 +99,11 @@ class CreateTripScreen extends Component {
         <View>
           <Button
             block
-            style={styles.addButton}
-            disabled={startStop && endStop && startTime ? false : true}
+            style={disabled ? styles.addButtonDisabled : styles.addButton}
+            disabled={disabled}
             onPress={() => navigation.navigate('AddStopsScreen')}
           >
-            <Text>Agrega una Parada</Text>
+            <Text style={styles.whiteText}>Siguiente</Text>
           </Button>
         </View>
       </View>
@@ -100,6 +117,14 @@ CreateTripScreen.navigationOptions = {
 
 const styles = StyleSheet.create({
   addButton: {
+    backgroundColor: '#33C534',
+    marginBottom: 25,
+    marginLeft: 15,
+    marginRight: 15,
+    marginTop: 10,
+  },
+  addButtonDisabled: {
+    backgroundColor: '#818E94',
     marginBottom: 25,
     marginLeft: 15,
     marginRight: 15,
@@ -109,15 +134,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     flex: 1,
   },
-
   contentContainer: {
     paddingTop: 30,
   },
+
+  dateButton: {
+    backgroundColor: '#0000FF',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
   group: {
-    marginBottom: 20,
+    marginBottom: 40,
     marginLeft: 20,
     marginRight: 20,
-    marginTop: 20,
+  },
+  whiteText: {
+    color: 'white',
   },
 })
 
@@ -140,7 +172,9 @@ const mapDispatchToProps = {
   clearEndStop,
   getAllSpots,
 }
-
+CreateTripScreen.navigationOptions = {
+  title: 'Crear un viaje',
+}
 export default connect(
   mapStateToProps,
   mapDispatchToProps

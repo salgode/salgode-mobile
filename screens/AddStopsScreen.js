@@ -2,8 +2,10 @@ import React, { Component } from 'react'
 import { ScrollView, StyleSheet, View, Text } from 'react-native'
 import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
+import { createTrip } from '../redux/actions/createtrip'
 import { Button, Icon } from 'native-base'
 import CardInputSelector from '../components/CardInputSelector'
+import { AuthSession } from 'expo'
 
 class AddStopsScreen extends Component {
   state = {
@@ -19,6 +21,18 @@ class AddStopsScreen extends Component {
     this.setState({ stops: newStops })
   }
 
+  createTrip = () => {
+    const { startStop, endStop, startTime } = this.props
+    const { stops } = this.state
+    const stops_ids = stops.map(stop => {
+      return stop.id
+    })
+
+    const route_points = [startStop.id].concat(stops_ids, endStop.id)
+
+    this.props.createTrip(route_points, startTime)
+  }
+
   renderStops = () => {
     const { stops } = this.state
     return stops.map((stop, index) => {
@@ -30,7 +44,7 @@ class AddStopsScreen extends Component {
             <Text style={{ fontWeight: 'bold', marginRight: 10 }}>
               #Parada {index + 1}{' '}
             </Text>
-            <Text>{stop.parada}</Text>
+            <Text>{stop.name}</Text>
           </View>
           <Button icon transparen onPress={() => this.cleanInput(index)}>
             <Icon name="close" />
@@ -53,21 +67,25 @@ class AddStopsScreen extends Component {
               <Text style={{ fontWeight: 'bold', marginRight: 10 }}>
                 #Desde{' '}
               </Text>
-              <Text>{startStop}</Text>
+              <Text>{startStop.name}</Text>
             </View>
             <View style={styles.stopContainer}>
               <Text style={{ fontWeight: 'bold', marginRight: 10 }}>
                 #Hasta{' '}
               </Text>
-              <Text>{endStop}</Text>
+              <Text>{endStop.name}</Text>
             </View>
           </View>
           <View style={styles.group}>
+            <Text style={styles.centeredText}>
+              Agrega paradas extra (opcional)
+            </Text>
             {this.renderStops()}
             <CardInputSelector
               text="+"
               placeHolder="Filtra por Comuna o Parada"
               setValue={false}
+              data={this.props.spots}
               onSelect={item =>
                 this.setState({ stops: this.state.stops.concat([item]) })
               }
@@ -76,11 +94,7 @@ class AddStopsScreen extends Component {
         </ScrollView>
 
         <View>
-          <Button
-            block
-            style={styles.addButton}
-            onPress={() => console.log('')}
-          >
+          <Button block style={styles.addButton} onPress={this.createTrip}>
             <Text>Crear Viaje</Text>
           </Button>
         </View>
@@ -95,10 +109,15 @@ AddStopsScreen.navigationOptions = {
 
 const styles = StyleSheet.create({
   addButton: {
+    backgroundColor: '#33C534',
     marginBottom: 25,
     marginLeft: 15,
     marginRight: 15,
     marginTop: 10,
+  },
+  centeredText: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
   },
   container: {
     backgroundColor: '#fff',
@@ -128,20 +147,29 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginLeft: 10,
   },
+  whiteText: {
+    color: 'white',
+  },
 })
 
-const mapStateToProps = ({ user, createTrip }) => {
+const mapStateToProps = ({ user, createTrip, spots }) => {
   return {
     user,
     startStop: createTrip.startStop,
     endStop: createTrip.endStop,
+    startTime: createTrip.startTime,
+    spots: spots.spots,
   }
 }
 
 const mapDispatchToProps = {
   loginUser,
+  createTrip,
 }
-
+AddStopsScreen.navigationOptions = {
+  title: 'Añadir paradas',
+  headerBackTitle: '', // TODO: que no diga 'Back'
+}
 export default connect(
   mapStateToProps,
   mapDispatchToProps

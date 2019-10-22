@@ -14,6 +14,7 @@ exports[`App renders the root without loading screen 1`] = `
     Object {
       "backgroundColor": "#fff",
       "flex": 1,
+      "paddingTop": 0,
     }
   }
 >

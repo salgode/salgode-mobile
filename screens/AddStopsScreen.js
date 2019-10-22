@@ -150,9 +150,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginLeft: 10,
   },
-  whiteText: {
-    color: 'white',
-  },
 })
 
 const mapStateToProps = ({ user, createTrip, spots }) => {

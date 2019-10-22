@@ -6,20 +6,24 @@ import StopsList from '../CurrentTrip/StopsList'
 
 const TripRequest = ({ stops = ['SJ', 'CC', 'MVP'], onSend }) => {
   // console.log(stops)
-  const [state, setState] = React.useState({ selectedStop: "Selecciona la parada en la que te subirás", selected: false })
-  
+  const [state, setState] = React.useState({
+    selectedStop: 'Selecciona la parada en la que te subirás',
+    selected: false,
+  })
 
   return (
     <View style={styles.container}>
       <Text style={styles.stopsTitle}>Paradas:</Text>
       <StopsList stops={stops} />
       {/* <Text style={styles.stopsTitle}>
-        
+
       </Text> */}
       <Picker
         placeholder="Selecciona la parada en la que te subirás"
         selectedValue={state.selectedStop}
-        onValueChange={value => setState({ selectedStop: value, selected: true })}
+        onValueChange={value =>
+          setState({ selectedStop: value, selected: true })
+        }
         mode="dropdown"
         style={styles.picker}
       >
@@ -27,7 +31,11 @@ const TripRequest = ({ stops = ['SJ', 'CC', 'MVP'], onSend }) => {
           <Picker.Item key={`PickerItem${i}`} label={stop} value={stop} />
         ))}
       </Picker>
-      <Button disabled={!state.selected} style={state.selected ? styles.button : styles.unselectedButton} onPress={() => onSend(state.selectedStop)}>
+      <Button
+        disabled={!state.selected}
+        style={state.selected ? styles.button : styles.unselectedButton}
+        onPress={() => onSend(state.selectedStop)}
+      >
         <Text>Confirmar Solicitud</Text>
       </Button>
     </View>
@@ -54,18 +62,13 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   picker: {
+    borderColor: 'black',
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: "black",
   },
   stopsTitle: {
     fontSize: 20,
     fontWeight: '500',
-    marginBottom: '10%',
-  },
-  title: {
-    fontSize: 40,
-    fontWeight: '900',
     marginBottom: '10%',
   },
   unselectedButton: {

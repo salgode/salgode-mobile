@@ -34,11 +34,7 @@ class SignupScreen extends Component {
         return response
       })
     this.setState({ loading: false })
-    if (
-      user.error ||
-      !user.payload.data.user ||
-      !user.payload.data.user.email
-    ) {
+    if (user.error) {
       alert('Hubo un problema registrandote. Por favor intentalo de nuevo.')
     } else {
       this.props.navigation.navigate('ChooseTrips')

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ScrollView, StyleSheet, View, Text } from 'react-native'
-import { Appearance } from 'react-native-appearance';
+import { Appearance } from 'react-native-appearance'
 import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
 import { Button } from 'native-base'
@@ -14,8 +14,9 @@ import {
 } from '../redux/actions/createtrip'
 import { getAllSpots } from '../redux/actions/spots'
 import DateTimePicker from 'react-native-modal-datetime-picker'
+import { spotsFilter } from '../utils/spotsFilter'
 
-const colorScheme = Appearance.getColorScheme();
+const colorScheme = Appearance.getColorScheme()
 
 class CreateTripScreen extends Component {
   state = {
@@ -42,7 +43,7 @@ class CreateTripScreen extends Component {
   }
 
   render() {
-    const { navigation, startStop, endStop, startTime } = this.props
+    const { navigation, startStop, endStop, startTime, spots } = this.props
     const disabled = startStop && endStop && startTime ? false : true
     const { pickedDate } = this.state
     let day
@@ -53,6 +54,7 @@ class CreateTripScreen extends Component {
       hours = pickedDate.getHours()
       minutes = pickedDate.getMinutes()
     }
+    const filteredSlots = spotsFilter(spots, [startStop, endStop])
 
     return (
       <View style={styles.container}>
@@ -66,7 +68,7 @@ class CreateTripScreen extends Component {
               placeHolder="Filtra por Comuna o Parada"
               onSelect={item => this.props.setStartStop(item)}
               onClear={this.props.clearStartStop}
-              data={this.props.spots}
+              data={filteredSlots}
             />
 
             <CardInputSelector
@@ -74,7 +76,7 @@ class CreateTripScreen extends Component {
               placeHolder="Filtra por Comuna o Parada"
               onSelect={item => this.props.setEndStop(item)}
               onClear={this.props.clearEndStop}
-              data={this.props.spots}
+              data={filteredSlots}
             />
           </View>
 

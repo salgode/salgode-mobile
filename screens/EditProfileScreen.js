@@ -312,8 +312,6 @@ const EditProfileScreen = ({ navigation }) => {
   }
 
   const signOut = () => {
-    AsyncStorage.removeItem('@userToken')
-    AsyncStorage.removeItem('@userId')
     navigation.navigate('LoginStack')
   }
 

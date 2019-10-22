@@ -8,6 +8,7 @@ import {
   FlatList,
 } from 'react-native'
 import { Card, Button, Icon } from 'native-base'
+import { normalizeText } from '../utils/normalizeText'
 
 export default class CardInputSelector extends Component {
   constructor(props) {
@@ -49,15 +50,16 @@ export default class CardInputSelector extends Component {
   renderList = () => {
     const { displayList, input } = this.state
     if (displayList) {
-      const lowerCaseInput = input.toLocaleLowerCase()
+      const normalizedInput = normalizeText(input)
+
       const filteredData = this.props.data.filter(item => {
         return (
-          item.name.toLowerCase().includes(lowerCaseInput) ||
-          item.address.toLowerCase().includes(lowerCaseInput)
+          normalizeText(item.name).includes(normalizedInput) ||
+          normalizeText(item.address).includes(normalizedInput)
         )
       })
       return (
-        <View style={{ flex: 1 }}>
+        <View style={{ height: 300 }}>
           <FlatList
             data={filteredData}
             renderItem={({ item }) => (
@@ -118,8 +120,13 @@ const styles = StyleSheet.create({
     marginVertical: 1,
     padding: 10,
   },
-  paper: { borderRadius: 10 },
-  text: { fontWeight: 'bold', margin: 10 },
+  paper: {
+    borderRadius: 10,
+  },
+  text: {
+    fontWeight: 'bold',
+    margin: 10,
+  },
   textView: {
     alignItems: 'center',
     flex: 1,

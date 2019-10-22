@@ -82,9 +82,6 @@ class LoginScreen extends Component {
         'Hubo un problema iniciando sesión. Por favor intentalo de nuevo.'
       )
     } else {
-      AsyncStorage.setItem('@userToken', this.props.user.token)
-      AsyncStorage.setItem('@userId', this.props.user.user_id)
-
       this.props.navigation.navigate('Main')
     }
   }

@@ -17,6 +17,15 @@ const client = axios.create({
   requestType: 'json',
 })
 
+// client.interceptors.request.use(request => {
+//   console.log('Starting Request', request)
+//   return request
+// })
+// client.interceptors.response.use(request => {
+//   console.log('Recieving Response', request)
+//   return request
+// })
+
 const reducer = combineReducers({
   user: userReducer,
   futureTrips: futureTripReducer,

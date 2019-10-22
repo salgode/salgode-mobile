@@ -7,6 +7,7 @@ import {
   Keyboard,
   Alert,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native'
 import {
   Button,
@@ -22,10 +23,11 @@ import {
 } from 'native-base'
 import { withNavigation } from 'react-navigation'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { connect } from 'react-redux'
+import { updateUser, signoutUser } from '../redux/actions/user'
 import Layout from '../constants/Layout'
 import PropTypes from 'prop-types'
 import Colors from '../constants/Colors'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 
 function validateName(str) {
   if (typeof str !== 'string') {
@@ -85,7 +87,7 @@ function validateColor(str) {
   }
 
   // letters, dash, space, parenthesis
-  return /^[- A-Za-z()ÁÉÍÓÚÑÜáéíóúñü]+$/g.test(str)
+  return /^[- A-Za-z()ÁÉÍÓÚÑÜáéíóúñü]+$/g.test(str) || str === ''
 }
 
 function validateBrand(str) {
@@ -102,15 +104,14 @@ function validateBrand(str) {
   }
 
   // letters, numbers, dash, space, parenthesis
-  return /^[- A-Za-z\d()ÁÉÍÓÚÑÜáéíóúñü]+$/g.test(str)
+  return /^[- A-Za-z\d()ÁÉÍÓÚÑÜáéíóúñü]+$/g.test(str) || str === ''
 }
 
 function validateModel(str) {
   return validateBrand(str)
 }
 
-const Field = props => {
-  const { field } = props
+const Field = ({ field }) => {
   const [isEditing, setIsEditing] = React.useState(false)
   const [hasBeenBlurred, setHasBeenBlurred] = React.useState(false)
 
@@ -143,9 +144,11 @@ const Field = props => {
           setHasBeenBlurred(true)
         }}
         value={field.value}
+        secureTextEntry={field.isSecure}
+        keyboardType={field.keyboardType || 'default'}
       />
       {validity === 'valid' ? (
-        <Icon name="checkmark-circle" style={{ color: '#33C534' }} />
+        <Icon name="checkmark-circle" style={styles.checkMark} />
       ) : validity === 'invalid' ? (
         <Icon name="close-circle" />
       ) : null}
@@ -158,22 +161,38 @@ Field.propTypes = {
     value: PropTypes.string.isRequired,
     setValue: PropTypes.func.isRequired,
     validate: PropTypes.func.isRequired,
+    isSecure: PropTypes.bool,
+    keyboardType: PropTypes.oneOf([
+      'default',
+      'number-pad',
+      'decimal-pad',
+      'numeric',
+      'email-address',
+      'phone-pad',
+    ]),
   }).isRequired,
 }
 
-const EditProfileScreen = ({ navigation }) => {
+const EditProfileScreen = props => {
+  const { navigation } = props
+
   const [name, setName] = React.useState('')
   const [lastName, setLastName] = React.useState('')
-  const [hasCar, setHasCar] = React.useState(false)
+  const [phone, setPhone] = React.useState('')
+  // const [password, setPassword] = React.useState('')
+  const [hasCar, setHasCar] = React.useState(!!props.user.car)
   const [carPlate, setCarPlate] = React.useState('BC2019')
   const [carColor, setCarColor] = React.useState('Gris')
   const [carBrand, setCarBrand] = React.useState('Nissan')
   const [carModel, setCarModel] = React.useState('Sportage')
 
   const [isLoading, setIsLoading] = React.useState(true)
+  // eslint-disable-next-line no-unused-vars
   const [loadErr, setLoadErr] = React.useState(null)
 
+  // eslint-disable-next-line no-unused-vars
   const [isSaving, setIsSaving] = React.useState(false)
+  // eslint-disable-next-line no-unused-vars
   const [saveErr, setSaveErr] = React.useState(null)
 
   const commonFields = [
@@ -184,6 +203,20 @@ const EditProfileScreen = ({ navigation }) => {
       setValue: setLastName,
       validate: validateName,
     },
+    {
+      label: 'Teléfono',
+      value: phone,
+      setValue: setPhone,
+      validate: phone => phone.match(/^(\+56)?\d{9}$/),
+      keyboardType: 'phone-pad',
+    },
+    // {
+    //   label: 'Contraseña',
+    //   value: password,
+    //   setValue: setPassword,
+    //   validate: pass => typeof pass === 'string' && pass.length > 3,
+    //   isSecure: true,
+    // },
   ]
   const carFields = [
     {
@@ -215,56 +248,63 @@ const EditProfileScreen = ({ navigation }) => {
   const user = {
     name,
     lastName,
-    car: hasCar
-      ? {
-          plate: carPlate,
-          color: carColor,
-          brand: carBrand,
-          model: carModel,
-        }
-      : null,
+    phone,
+    car: {
+      plate: carPlate,
+      color: carColor,
+      brand: carBrand,
+      model: carModel,
+    },
   }
 
-  const isValidUser = [...commonFields, ...carFields].every(field =>
-    field.validate(field.value)
-  )
+  const isValidUser = () => {
+    const isCarValid =
+      !hasCar ||
+      (validateBrand(user.car.brand) &&
+        validateColor(user.car.color) &&
+        validateModel(user.car.model) &&
+        validatePlate(user.car.plate))
+    const validFields = [...commonFields].every(field =>
+      field.validate(field.value)
+    )
+
+    return isCarValid && validFields
+  }
 
   React.useEffect(() => {
-    const loadUser = async () => {
-      // TODO: remove this and load user from backend
-      return await new Promise(resolve => {
-        const hardcodedUser = {
-          name: 'Juan',
-          lastName: 'Pérez',
-          car: {
-            plate: 'BC2019',
-            color: 'Gris',
-            brand: 'Nissan',
-            model: 'Sportage',
-          },
-        }
-        const hardcodedTimeout = 1000
-        setTimeout(() => resolve(hardcodedUser), hardcodedTimeout)
-      })
+    // console.log(props.user)
+    const stateUser = props.user
+    const user = {
+      name: stateUser.name,
+      lastName: stateUser.lastName,
+      phone: stateUser.phone,
     }
 
-    loadUser()
-      .then(user => {
-        setName(user.name)
-        setLastName(user.lastName)
-        if (user.car != null) {
-          setCarPlate(user.car.plate)
-          setCarColor(user.car.color)
-          setCarBrand(user.car.brand)
-          setCarModel(user.car.model)
-        }
+    if (stateUser.car) {
+      user.car = {
+        plate: stateUser.car.plate,
+        color: stateUser.car.color,
+        brand: stateUser.car.brand,
+        model: stateUser.car.model,
+      }
+    } else {
+      user.car = {
+        plate: '',
+        color: '',
+        brand: '',
+        model: '',
+      }
+    }
 
-        setIsLoading(false)
-      })
-      .catch(err => {
-        setLoadErr(err)
-        setIsLoading(false)
-      })
+    setName(user.name)
+    setLastName(user.lastName)
+    setPhone(user.phone)
+    setCarPlate(user.car.plate)
+    setCarColor(user.car.color)
+    setCarBrand(user.car.brand)
+    setCarModel(user.car.model)
+
+    setIsLoading(false)
   }, [])
 
   React.useEffect(() => {
@@ -276,22 +316,30 @@ const EditProfileScreen = ({ navigation }) => {
     }
   }, [loadErr])
 
-  const onPressSaveProfile = React.useCallback(() => {
-    const saveProfile = async () => {
-      // TODO: remove this and send `user` to backend here
-      Alert.alert(
-        'No implementado',
-        'user = ' + JSON.stringify(user, null, '  ')
+  const saveUser = async () => {
+    setIsLoading(true)
+    const response = await props.updateUser(
+      user.name,
+      user.lastName,
+      // props.user.email,
+      user.phone,
+      user.car,
+      props.user.userId,
+      props.user.token
+    )
+    setIsLoading(false)
+    // console.log(response)
+    if (response.error) {
+      alert(
+        'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
       )
+    } else {
+      alert('Informacion actualizada con exito')
     }
+  }
 
-    setIsSaving(true)
-    saveProfile()
-      .then(() => setIsSaving(false))
-      .catch(err => {
-        setSaveErr(err)
-        setIsSaving(false)
-      })
+  const onPressSaveProfile = React.useCallback(() => {
+    saveUser()
   }, [user])
 
   React.useEffect(() => {
@@ -312,6 +360,7 @@ const EditProfileScreen = ({ navigation }) => {
   }
 
   const signOut = () => {
+    props.signOut()
     navigation.navigate('LoginStack')
   }
 
@@ -333,7 +382,7 @@ const EditProfileScreen = ({ navigation }) => {
                   <Text style={[styles.label, styles.readonlyFieldText]}>
                     Celular
                   </Text>
-                  <Text style={styles.readonlyFieldText}>+56976543210</Text>
+                  <Text style={styles.readonlyFieldText}>{phone}</Text>
                 </View>
                 <Button
                   small
@@ -375,8 +424,9 @@ const EditProfileScreen = ({ navigation }) => {
               <Button
                 block
                 borderRadius={10}
+                color="#0000FF"
                 style={styles.blueButton}
-                disabled={isSaving || !isValidUser}
+                disabled={isSaving || !isValidUser()}
                 onPress={onPressSaveProfile}
               >
                 <Text style={styles.buttonText}> Guardar cambios</Text>
@@ -384,6 +434,7 @@ const EditProfileScreen = ({ navigation }) => {
               <Button
                 block
                 borderRadius={10}
+                color="#FF5242"
                 style={styles.redButton}
                 disabled={isSaving || !isValidUser}
                 onPress={() => signOut()}
@@ -398,17 +449,55 @@ const EditProfileScreen = ({ navigation }) => {
     </KeyboardAvoidingView>
   )
 }
+
 EditProfileScreen.navigationOptions = {
   title: 'Editar perfil',
 }
-export default withNavigation(EditProfileScreen)
+
+EditProfileScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
+  user: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    phone: PropTypes.string.isRequired,
+    userId: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired,
+    car: PropTypes.shape({
+      plate: PropTypes.string,
+      color: PropTypes.string,
+      brand: PropTypes.string,
+      model: PropTypes.string,
+    }),
+  }),
+  updateUser: PropTypes.func.isRequired,
+  signOut: PropTypes.func.isRequired,
+}
+
+const mapPropsToState = state => ({
+  user: state.user,
+})
+
+const mapDispatchToState = dispatch => ({
+  updateUser: (name, lastName, email, phone, password, car, id, authToken) =>
+    dispatch(
+      updateUser(name, lastName, email, phone, password, car, id, authToken)
+    ),
+  signOut: () => dispatch(signoutUser()),
+})
+
+export default connect(
+  mapPropsToState,
+  mapDispatchToState
+)(withNavigation(EditProfileScreen))
 
 const photoSize = 96
 
 const styles = StyleSheet.create({
   artificialKeyboardPadding: { height: 128 },
   blueButton: {
-    backgroundColor: '#0000FF',
+    // backgroundColor: '#0000FF',
     marginTop: 30,
   },
   button: {
@@ -416,6 +505,9 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 14,
+  },
+  checkMark: {
+    color: '#33C534',
   },
   checkboxLabel: {
     color: Colors.textGray,
@@ -477,7 +569,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   redButton: {
-    backgroundColor: '#FF5242',
+    // backgroundColor: '#FF5242',
     marginTop: 20,
   },
   row: {

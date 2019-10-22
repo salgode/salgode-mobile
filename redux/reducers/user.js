@@ -1,6 +1,7 @@
 import { actions as userActions } from '../actions/user'
 
 export default function userReducer(state = {}, action) {
+  // console.log(action)
   switch (action.type) {
     case userActions.USER_LOGIN:
       return { ...state, loading: true }
@@ -22,6 +23,22 @@ export default function userReducer(state = {}, action) {
         loading: false,
         error: 'Error while signup user',
       }
+    case userActions.USER_UPDATE:
+      return { ...state, loading: true }
+    case userActions.USER_UPDATE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        ...action.payload.data.user,
+      }
+    case userActions.USER_UPDATE_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: 'Error while updating user',
+      }
+    case userActions.USER_SIGNOUT:
+      return { ...action.payload.user }
     default:
       return state
   }

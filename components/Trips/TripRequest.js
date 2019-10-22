@@ -6,7 +6,7 @@ import StopsList from '../CurrentTrip/StopsList'
 
 const TripRequest = ({ stops, onSend }) => {
   const [state, setState] = React.useState({
-    selectedStop: 'Selecciona la parada en la que te subirás',
+    selectedStop: 'Selecciona la parada',
     selected: false,
   })
 
@@ -14,8 +14,11 @@ const TripRequest = ({ stops, onSend }) => {
     <View style={styles.container}>
       <Text style={styles.stopsTitle}>Paradas:</Text>
       <StopsList stops={stops.map(s => s.address)} />
+      <Text style={styles.pickerTitle}>
+        Selecciona la parada en la que te subirás
+      </Text>
       <Picker
-        placeholder="Selecciona la parada en la que te subirás"
+        placeholder="Selecciona la parada"
         selectedValue={state.selectedStop}
         onValueChange={value =>
           setState({ selectedStop: value, selected: true })
@@ -23,7 +26,7 @@ const TripRequest = ({ stops, onSend }) => {
         mode="dropdown"
         style={styles.picker}
       >
-        {stops.map((stop, i) => (
+        {stops.slice(0, -1).map((stop, i) => (
           <Picker.Item
             key={`PickerItem${i}`}
             label={stop.address}
@@ -69,6 +72,10 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderRadius: 15,
     borderWidth: 1,
+  },
+  pickerTitle: {
+    fontSize: 17,
+    fontWeight: '500',
   },
   stopsTitle: {
     fontSize: 20,

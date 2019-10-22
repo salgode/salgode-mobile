@@ -7,6 +7,7 @@ import {
   Keyboard,
   Alert,
   ActivityIndicator,
+  AsyncStorage,
 } from 'react-native'
 import {
   Button,
@@ -20,6 +21,7 @@ import {
   Icon,
   CheckBox,
 } from 'native-base'
+import { withNavigation } from 'react-navigation'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Layout from '../constants/Layout'
 import PropTypes from 'prop-types'
@@ -159,7 +161,7 @@ Field.propTypes = {
   }).isRequired,
 }
 
-const EditProfileScreen = () => {
+const EditProfileScreen = ({ navigation }) => {
   const [name, setName] = React.useState('')
   const [lastName, setLastName] = React.useState('')
   const [hasCar, setHasCar] = React.useState(false)
@@ -309,6 +311,12 @@ const EditProfileScreen = () => {
     )
   }
 
+  const signOut = () => {
+    AsyncStorage.removeItem('@userToken')
+    AsyncStorage.removeItem('@userId')
+    navigation.navigate('LoginStack')
+  }
+
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.flex1}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -372,6 +380,15 @@ const EditProfileScreen = () => {
               >
                 <Text style={styles.buttonText}> Guardar cambios</Text>
               </Button>
+              <Button
+                block
+                borderRadius={10}
+                style={styles.blueButton}
+                disabled={isSaving || !isValidUser}
+                onPress={() => signOut()}
+              >
+                <Text>Cerrar Sesión</Text>
+              </Button>
             </Form>
           </View>
           <View style={styles.artificialKeyboardPadding} />
@@ -383,7 +400,7 @@ const EditProfileScreen = () => {
 EditProfileScreen.navigationOptions = {
   title: 'Editar perfil',
 }
-export default EditProfileScreen
+export default withNavigation(EditProfileScreen)
 
 const photoSize = 96
 

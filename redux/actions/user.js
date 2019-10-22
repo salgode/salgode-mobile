@@ -4,7 +4,7 @@ export const actions = {
   USER_LOGIN_SUCCESS: 'USER/LOGIN_SUCCESS',
   USER_SIGNUP: 'USER/SIGNUP',
   USER_SIGNUP_FAIL: 'USER/SIGNUP_FAIL',
-  USER_SIGNUP_SUCESS: 'USER/SIGNUP_SUCCESS',
+  USER_SIGNUP_SUCCESS: 'USER/SIGNUP_SUCCESS',
 }
 
 export function loginUser(email, password) {
@@ -72,6 +72,21 @@ export function signupUser(
         url: `/users`,
         method: 'post',
         data: data,
+      },
+    },
+  }
+}
+
+export function fetchUser(authToken, id) {
+  return {
+    type: actions.USER_LOGIN,
+    payload: {
+      request: {
+        url: `/users/${id}`,
+        method: 'get',
+        headers: {
+          Authorization: authToken,
+        },
       },
     },
   }

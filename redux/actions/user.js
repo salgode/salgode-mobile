@@ -8,6 +8,7 @@ export const actions = {
   USER_UPDATE: 'USER/UPDATE',
   USER_UPDATE_FAIL: 'USER/UPDATE_FAIL',
   USER_UPDATE_SUCCESS: 'USER/UPDATE_SUCCESS',
+  USER_SIGNOUT: 'USER/SIGNOUT',
 }
 
 const mapDataToUser = data => {
@@ -135,6 +136,15 @@ export function updateUser(
         },
         data: data,
       },
+    },
+  }
+}
+
+export function signoutUser() {
+  return {
+    type: actions.USER_SIGNOUT,
+    payload: {
+      user: {},
     },
   }
 }

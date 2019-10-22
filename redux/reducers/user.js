@@ -37,6 +37,8 @@ export default function userReducer(state = {}, action) {
         loading: false,
         error: 'Error while updating user',
       }
+    case userActions.USER_SIGNOUT:
+      return { ...action.payload.user }
     default:
       return state
   }

@@ -24,7 +24,7 @@ import {
 import { withNavigation } from 'react-navigation'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { connect } from 'react-redux'
-import { updateUser } from '../redux/actions/user'
+import { updateUser, signoutUser } from '../redux/actions/user'
 import Layout from '../constants/Layout'
 import PropTypes from 'prop-types'
 import Colors from '../constants/Colors'
@@ -180,7 +180,7 @@ const EditProfileScreen = props => {
   const [lastName, setLastName] = React.useState('')
   const [phone, setPhone] = React.useState('')
   // const [password, setPassword] = React.useState('')
-  const [hasCar, setHasCar] = React.useState(false)
+  const [hasCar, setHasCar] = React.useState(!!props.user.car)
   const [carPlate, setCarPlate] = React.useState('BC2019')
   const [carColor, setCarColor] = React.useState('Gris')
   const [carBrand, setCarBrand] = React.useState('Nissan')
@@ -360,6 +360,7 @@ const EditProfileScreen = props => {
   }
 
   const signOut = () => {
+    props.signOut()
     navigation.navigate('LoginStack')
   }
 
@@ -471,6 +472,7 @@ EditProfileScreen.propTypes = {
     }),
   }),
   updateUser: PropTypes.func.isRequired,
+  signOut: PropTypes.func.isRequired,
 }
 
 const mapPropsToState = state => ({
@@ -482,6 +484,7 @@ const mapDispatchToState = dispatch => ({
     dispatch(
       updateUser(name, lastName, email, phone, password, car, id, authToken)
     ),
+  signOut: () => dispatch(signoutUser()),
 })
 
 export default connect(

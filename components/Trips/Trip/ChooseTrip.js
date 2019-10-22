@@ -25,7 +25,7 @@ const ChooseTrip = ({
   const parseStops = async () => {
     const stps = await getTripInfo(tripId, token)
     _setStops(stps.trip_route_points)
-    setStops(stps.trip_route_points.map(s => s.address))
+    setStops(stps.trip_route_points.map(s => (s || { address: '' }).address))
   }
 
   React.useEffect(() => {

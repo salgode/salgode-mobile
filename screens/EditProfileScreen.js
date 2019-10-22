@@ -22,6 +22,7 @@ import {
 } from 'native-base'
 import { withNavigation } from 'react-navigation'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { connect } from 'react-redux'
 import Layout from '../constants/Layout'
 import PropTypes from 'prop-types'
 import Colors from '../constants/Colors'
@@ -68,7 +69,7 @@ function validatePlate(str) {
     'g'
   )
 
-  return oldFormat.test(str) || newFormat.test(str)
+  return oldFormat.test(str) || newFormat.test(str) || str === ''
 }
 
 function validateColor(str) {
@@ -77,7 +78,7 @@ function validateColor(str) {
   }
   str = str.trim()
 
-  if (str.length < 'azul'.length) {
+  if (str !== '' && str.length < 'azul'.length) {
     return false
   }
   if (str.length >= 256) {
@@ -85,7 +86,7 @@ function validateColor(str) {
   }
 
   // letters, dash, space, parenthesis
-  return /^[- A-Za-z()ÁÉÍÓÚÑÜáéíóúñü]+$/g.test(str)
+  return /^[- A-Za-z()ÁÉÍÓÚÑÜáéíóúñü]+$/g.test(str) || str === ''
 }
 
 function validateBrand(str) {
@@ -94,7 +95,7 @@ function validateBrand(str) {
   }
   str = str.trim()
 
-  if (str.length < 'BMW'.length) {
+  if (str !== '' && str.length < 'BMW'.length) {
     return false
   }
   if (str.length >= 256) {
@@ -102,7 +103,7 @@ function validateBrand(str) {
   }
 
   // letters, numbers, dash, space, parenthesis
-  return /^[- A-Za-z\d()ÁÉÍÓÚÑÜáéíóúñü]+$/g.test(str)
+  return /^[- A-Za-z\d()ÁÉÍÓÚÑÜáéíóúñü]+$/g.test(str) || str === ''
 }
 
 function validateModel(str) {
@@ -145,7 +146,7 @@ const Field = props => {
         value={field.value}
       />
       {validity === 'valid' ? (
-        <Icon name="checkmark-circle" style={{ color: '#33C534' }} />
+        <Icon name="checkmark-circle" style={styles.checkMark} />
       ) : validity === 'invalid' ? (
         <Icon name="close-circle" />
       ) : null}
@@ -161,9 +162,12 @@ Field.propTypes = {
   }).isRequired,
 }
 
-const EditProfileScreen = ({ navigation }) => {
+const EditProfileScreen = props => {
+  const { navigation } = props
+
   const [name, setName] = React.useState('')
   const [lastName, setLastName] = React.useState('')
+  const [phone, setPhone] = React.useState('')
   const [hasCar, setHasCar] = React.useState(false)
   const [carPlate, setCarPlate] = React.useState('BC2019')
   const [carColor, setCarColor] = React.useState('Gris')
@@ -171,6 +175,7 @@ const EditProfileScreen = ({ navigation }) => {
   const [carModel, setCarModel] = React.useState('Sportage')
 
   const [isLoading, setIsLoading] = React.useState(true)
+  // eslint-disable-next-line no-unused-vars
   const [loadErr, setLoadErr] = React.useState(null)
 
   const [isSaving, setIsSaving] = React.useState(false)
@@ -230,41 +235,33 @@ const EditProfileScreen = ({ navigation }) => {
   )
 
   React.useEffect(() => {
-    const loadUser = async () => {
-      // TODO: remove this and load user from backend
-      return await new Promise(resolve => {
-        const hardcodedUser = {
-          name: 'Juan',
-          lastName: 'Pérez',
-          car: {
-            plate: 'BC2019',
-            color: 'Gris',
-            brand: 'Nissan',
-            model: 'Sportage',
-          },
-        }
-        const hardcodedTimeout = 1000
-        setTimeout(() => resolve(hardcodedUser), hardcodedTimeout)
-      })
+    const stateUser = props.user
+    const user = {
+      name: stateUser.name,
+      lastName: stateUser.lastName,
+      phone: stateUser.phone,
     }
 
-    loadUser()
-      .then(user => {
-        setName(user.name)
-        setLastName(user.lastName)
-        if (user.car != null) {
-          setCarPlate(user.car.plate)
-          setCarColor(user.car.color)
-          setCarBrand(user.car.brand)
-          setCarModel(user.car.model)
-        }
+    if (stateUser.car) {
+      user.car = {
+        plate: stateUser.car.plate,
+        color: stateUser.car.color,
+        brand: stateUser.car.brand,
+        model: stateUser.car.model,
+      }
+    }
 
-        setIsLoading(false)
-      })
-      .catch(err => {
-        setLoadErr(err)
-        setIsLoading(false)
-      })
+    setName(user.name)
+    setLastName(user.lastName)
+    setPhone(user.phone)
+    if (user.car != null) {
+      setCarPlate(user.car.plate)
+      setCarColor(user.car.color)
+      setCarBrand(user.car.brand)
+      setCarModel(user.car.model)
+    }
+
+    setIsLoading(false)
   }, [])
 
   React.useEffect(() => {
@@ -333,7 +330,7 @@ const EditProfileScreen = ({ navigation }) => {
                   <Text style={[styles.label, styles.readonlyFieldText]}>
                     Celular
                   </Text>
-                  <Text style={styles.readonlyFieldText}>+56976543210</Text>
+                  <Text style={styles.readonlyFieldText}>{phone}</Text>
                 </View>
                 <Button
                   small
@@ -375,6 +372,7 @@ const EditProfileScreen = ({ navigation }) => {
               <Button
                 block
                 borderRadius={10}
+                color="#0000FF"
                 style={styles.blueButton}
                 disabled={isSaving || !isValidUser}
                 onPress={onPressSaveProfile}
@@ -384,6 +382,7 @@ const EditProfileScreen = ({ navigation }) => {
               <Button
                 block
                 borderRadius={10}
+                color="#FF5242"
                 style={styles.redButton}
                 disabled={isSaving || !isValidUser}
                 onPress={() => signOut()}
@@ -398,17 +397,40 @@ const EditProfileScreen = ({ navigation }) => {
     </KeyboardAvoidingView>
   )
 }
+
 EditProfileScreen.navigationOptions = {
   title: 'Editar perfil',
 }
-export default withNavigation(EditProfileScreen)
+
+EditProfileScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
+  user: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    phone: PropTypes.string.isRequired,
+    car: PropTypes.shape({
+      plate: PropTypes.string,
+      color: PropTypes.string,
+      brand: PropTypes.string,
+      model: PropTypes.string,
+    }),
+  }),
+}
+
+const mapPropsToState = state => ({
+  user: state.user,
+})
+
+export default connect(mapPropsToState)(withNavigation(EditProfileScreen))
 
 const photoSize = 96
 
 const styles = StyleSheet.create({
   artificialKeyboardPadding: { height: 128 },
   blueButton: {
-    backgroundColor: '#0000FF',
+    // backgroundColor: '#0000FF',
     marginTop: 30,
   },
   button: {
@@ -416,6 +438,9 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 14,
+  },
+  checkMark: {
+    color: '#33C534',
   },
   checkboxLabel: {
     color: Colors.textGray,
@@ -477,7 +502,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   redButton: {
-    backgroundColor: '#FF5242',
+    // backgroundColor: '#FF5242',
     marginTop: 20,
   },
   row: {

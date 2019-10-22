@@ -145,7 +145,7 @@ const Field = props => {
         value={field.value}
       />
       {validity === 'valid' ? (
-        <Icon name="checkmark-circle" style={{color:"#33C534"}} />
+        <Icon name="checkmark-circle" style={{ color: '#33C534' }} />
       ) : validity === 'invalid' ? (
         <Icon name="close-circle" />
       ) : null}
@@ -351,7 +351,10 @@ const EditProfileScreen = ({ navigation }) => {
               {commonFields.map(field => (
                 <Field key={field.label} field={field} validity="partial" />
               ))}
-              <TouchableOpacity style={styles.rowCenter} onPress={() => setHasCar(!hasCar)}>
+              <TouchableOpacity
+                style={styles.rowCenter}
+                onPress={() => setHasCar(!hasCar)}
+              >
                 <CheckBox
                   color={Colors.textGray}
                   checked={hasCar}
@@ -441,10 +444,10 @@ const styles = StyleSheet.create({
     width: Layout.window.width * 0.85,
   },
   item: {
+    borderColor: 'black',
     borderRadius: 10,
     marginBottom: 15,
     paddingHorizontal: 10,
-    borderColor: "black",
   },
   label: {
     color: '#8c8c8c',

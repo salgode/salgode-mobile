@@ -50,7 +50,7 @@ class LoginForm extends Component {
             onChangeText={this.onChangePassword}
             secureTextEntry
             value={this.state.password}
-            autoCompleteType="email"
+            autoCompleteType="password"
           />
         </Item>
         <Button

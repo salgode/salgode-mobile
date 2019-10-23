@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
 import { Button } from 'native-base'
 import CardInputSelector from '../components/CardInputSelector'
+import CardInput from '../components/CardInput'
 import {
   setStartStop,
   setEndStop,
@@ -62,6 +63,9 @@ class CreateTripScreen extends Component {
           style={styles.container}
           contentContainerStyle={styles.contentContainer}
         >
+          <Button onPress={() => navigation.navigate('SpotSelectorScreen')}>
+            <Text>SalePal lado</Text>
+          </Button>
           <View style={styles.group}>
             <CardInputSelector
               text="#Desde"
@@ -69,6 +73,8 @@ class CreateTripScreen extends Component {
               onSelect={item => this.props.setStartStop(item)}
               onClear={this.props.clearStartStop}
               data={filteredSlots}
+              editable={false}
+              onPress={() => navigation.navigate('SpotSelectorScreen')}
             />
 
             <CardInputSelector

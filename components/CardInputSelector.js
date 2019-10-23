@@ -13,17 +13,19 @@ import { normalizeText } from '../utils/normalizeText'
 export default class CardInputSelector extends Component {
   constructor(props) {
     super(props)
-    this.textInputRef = React.createRef()
+    // this.textInputRef = React.createRef()
   }
   static defaultProps = {
     data: [],
     placeHolder: '',
     onSelect: () => {},
     onClear: () => {},
+    onPress: () => {},
     fields: [],
     text: '',
     setValue: true,
     textInputRef: null,
+    editable: true,
   }
 
   state = {
@@ -80,19 +82,20 @@ export default class CardInputSelector extends Component {
   }
 
   render() {
-    const { placeHolder } = this.props
+    const { placeHolder, editable } = this.props
     return (
-      <TouchableOpacity onPress={() => this.textInputRef.current.focus()}>
+      <TouchableOpacity onPress={this.props.onPress}>
         <View>
           <Card style={styles.paper}>
             <View style={styles.textView}>
               <Text style={styles.text}>{this.props.text}</Text>
               <TextInput
-                ref={this.textInputRef}
+                // ref={this.textInputRef}
                 id="selectorInput"
                 placeholder={placeHolder}
                 value={this.state.input}
-                onFocus={() => this.setState({ displayList: true })}
+                editable={editable}
+                // onFocus={this.props.onPress}
                 onChangeText={text => this.setState({ input: text })}
               />
 
@@ -101,9 +104,9 @@ export default class CardInputSelector extends Component {
               </Button>
             </View>
           </Card>
-          <Card style={(styles.paper, styles.textView)}>
+          {/* <Card style={(styles.paper, styles.textView)}>
             {this.renderList()}
-          </Card>
+          </Card> */}
         </View>
       </TouchableOpacity>
     )

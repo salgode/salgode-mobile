@@ -9,6 +9,7 @@ import TabBarIcon from '../components/TabBarIcon'
 import SettingsScreen from '../screens/SettingsScreen'
 import CreateTripScreen from '../screens/CreateTripScreen'
 import AddStopsScreen from '../screens/AddStopsScreen'
+import SpotSelectorScreen from '../screens/SpotSelectorScreen'
 import ChooseTripsScreen from '../screens/ChooseTripsScreen'
 import TripsNavigator from './TripsNavigator'
 import EditProfileScreen from '../screens/EditProfileScreen'
@@ -95,6 +96,7 @@ const CreateTripStack = createStackNavigator(
   {
     CreateTripScreen,
     AddStopsScreen,
+    SpotSelectorScreen,
   },
   config
 )

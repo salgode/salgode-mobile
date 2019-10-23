@@ -60,6 +60,8 @@ class CreateTripScreen extends Component {
       spots,
       clearStartStop,
       clearEndStop,
+      setStartStop,
+      setEndStop,
     } = this.props
     const disabled = startStop && endStop && startTime ? false : true
     const { pickedDate } = this.state
@@ -82,10 +84,11 @@ class CreateTripScreen extends Component {
                 title: 'Seleccionar #Desde',
                 text: '#Desde',
                 onClearPress: clearStartStop,
+                onItemPress: setStartStop,
               })
             }
             placeholder="Filtra por Comuna o Parada"
-            value={startStop}
+            value={startStop.name}
             text="#Desde"
             editable={false}
             onClearPress={clearStartStop}
@@ -97,10 +100,11 @@ class CreateTripScreen extends Component {
                 title: 'Seleccionar #A',
                 text: '#A',
                 onClearPress: clearStartStop,
+                onItemPress: setEndStop,
               })
             }
             placeholder="Filtra por Comuna o Parada"
-            value={endStop}
+            value={endStop.name}
             text="#A"
             editable={false}
             onClearPress={clearEndStop}

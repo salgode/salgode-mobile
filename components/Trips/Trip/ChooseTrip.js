@@ -36,34 +36,34 @@ const ChooseTrip = ({
   return loading ? (
     <View></View>
   ) : (
-    <Card style={styles.containerRequested}>
-      <CardItem style={styles.dataContainer}>
-        <View style={styles.user}>
-          <View style={styles.userData}>
-            <Ionicons
-              name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-              size={80}
-            />
-            <Text style={styles.userText}>{user.name}</Text>
-          </View>
-          <View style={styles.iconInfoGroup}>
-            <View style={styles.iconContainer}>
-              <Icon name="like1" style={styles.infoIcon} />
-              <Text style={styles.iconText}>{user.reputation}</Text>
+      <Card style={styles.containerRequested}>
+        <CardItem style={styles.dataContainer}>
+          <View style={styles.user}>
+            <View style={styles.userData}>
+              <Ionicons
+                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                size={80}
+              />
+              <Text style={styles.userText}>{user.name}</Text>
+            </View>
+            <View style={styles.iconInfoGroup}>
+              <View style={styles.iconContainer}>
+                <Icon name="like1" style={styles.infoIcon} />
+                <Text style={styles.iconText}>{user.reputation}</Text>
+              </View>
             </View>
           </View>
-        </View>
-      </CardItem>
-      <CardItem style={styles.locationContainer}>
-        <Location color={'#0000FF'} location={stops[0]} />
-        <Location color={'#33C534'} location={stops[stops.length - 1]} />
-      </CardItem>
-      <CardItem style={styles.bottomSection}>
-        <TimeInfo timestamp={timestamp} />
-        <PedirBoton onSend={() => onSend(_stops, token)} disabled={loading} />
-      </CardItem>
-    </Card>
-  )
+        </CardItem>
+        <CardItem style={styles.locationContainer}>
+          <Location color={'#0000FF'} location={stops[0]} />
+          <Location color={'#33C534'} location={stops[stops.length - 1]} />
+        </CardItem>
+        <CardItem style={styles.bottomSection}>
+          <TimeInfo timestamp={timestamp} />
+          <PedirBoton onSend={() => onSend(_stops, tripId)} disabled={loading} />
+        </CardItem>
+      </Card>
+    )
 }
 
 ChooseTrip.propTypes = {

@@ -11,6 +11,7 @@ export const getTripInfo = async (tripId, token) => {
   )
     .then(resp => resp.json())
     .catch(err => {
+      // eslint-disable-next-line no-console
       console.log(err)
       return null
     })

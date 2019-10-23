@@ -4,7 +4,7 @@ export const actions = {
   SLOTS_CREATE_FAIL: 'SLOTS/CREATE_FAIL',
 }
 
-export function createSlot(authToken, tripId, userId) {
+export function createSlot(authToken, tripId, spotId, userId) {
   return {
     type: actions.SLOTS_CREATE,
     payload: {
@@ -14,8 +14,8 @@ export function createSlot(authToken, tripId, userId) {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
-        body: {
-          trip_id: tripId,
+        data: {
+          spot_id: spotId,
           user_id: userId,
         },
       },

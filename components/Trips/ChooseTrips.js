@@ -1,5 +1,11 @@
 import React, { Component } from 'react'
-import { FlatList, SafeAreaView, View, ActivityIndicator } from 'react-native'
+import {
+  FlatList,
+  SafeAreaView,
+  View,
+  ActivityIndicator,
+  StyleSheet,
+} from 'react-native'
 import PropTypes from 'prop-types'
 import ChooseTrip from './Trip/ChooseTrip'
 
@@ -51,6 +57,7 @@ class ChooseTrips extends Component {
             />
           )}
           keyExtractor={item => item.tripId}
+          style={styles.flatList}
         />
       </SafeAreaView>
     )
@@ -68,5 +75,9 @@ ChooseTrips.defaultProps = {
   trips: [],
   isRequestedTrips: false,
 }
+
+const styles = StyleSheet.create({
+  flatList: { height: '100%', width: '100%' },
+})
 
 export default ChooseTrips

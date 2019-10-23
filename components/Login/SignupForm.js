@@ -193,16 +193,20 @@ class SignupForm extends Component {
                   }}
                 >
                   <Button borderRadius={10} style={styles.icon}>
-                    <Ionicons name="md-reverse-camera" color="white" size={24} />
+                    <Ionicons
+                      name="md-reverse-camera"
+                      color="white"
+                      size={24}
+                    />
                   </Button>
                 </TouchableOpacity>
               </View>
             </Camera>
             <Button
-                  borderRadius={10}
-                  style={styles.buttonCamera}
-                  onPress={this.getselfie}
-                >
+              borderRadius={10}
+              style={styles.buttonCamera}
+              onPress={this.getselfie}
+            >
               <Text>Tomar foto </Text>
             </Button>
           </Modal>
@@ -344,35 +348,33 @@ class SignupForm extends Component {
 SignupForm.propTypes = {
   onSend: PropTypes.func.isRequired,
 }
-const {height, width} = Dimensions.get('window')
+const {height} = Dimensions.get('window')
 const styles = StyleSheet.create({
   button: {
     marginTop: 20,
+  },
+  buttonCamera: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    marginBottom: 5,
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: height - 70,
   },
   form: {
     alignItems: 'center',
     margin: 15,
   },
+  icon: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 15,
+    marginTop: 20,
+    width: 40,
+  },
   input: {
     width: Layout.window.width * 0.85,
-  },
-  buttonCamera: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    marginTop: height-70,
-    alignItems: 'center',
-    justifyContent: 'center', 
-    alignItems: 'center',
-    marginLeft: 20,
-    marginRight: 20,
-    marginBottom: 5,
-  },
-  icon: {
-    marginTop: 20,
-    marginLeft: 15,
-    justifyContent: 'center', 
-    alignItems: 'center',
-    width: 40,
   },
   item: {
     borderRadius: 10,

@@ -26,21 +26,22 @@ module.exports = {
     "React": "readonly"
   },
   rules: {
-		"prettier/prettier": ["error", {
+    "prettier/prettier": ["error", {
       trailingComma: "es5",
       semi: false,
       singleQuote: true,
     }],
-		"prefer-const": ["error", {
-        "destructuring": "any",
-        "ignoreReadBeforeAssign": false
+    "prefer-const": ["error", {
+      "destructuring": "any",
+      "ignoreReadBeforeAssign": false
     }],
-		"no-var": "error",
+    "no-var": "error",
     "eqeqeq": ["error", "smart"],
     "react-native/no-color-literals": "off",
     "no-console": 1,
     "react/display-name": 1,
     "react/prop-types": 1,
-    "react-native/no-inline-styles": 1
-	}
+    "react-native/no-inline-styles": 1,
+    "react-native/no-raw-text": "off"
+  }
 };

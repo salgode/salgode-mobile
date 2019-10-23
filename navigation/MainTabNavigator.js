@@ -6,56 +6,71 @@ import {
 } from 'react-navigation'
 
 import TabBarIcon from '../components/TabBarIcon'
-import HomeScreen from '../screens/HomeScreen'
-import LinksScreen from '../screens/LinksScreen'
 import SettingsScreen from '../screens/SettingsScreen'
+import CreateTripScreen from '../screens/CreateTripScreen'
+import AddStopsScreen from '../screens/AddStopsScreen'
+import ChooseTripsScreen from '../screens/ChooseTripsScreen'
+import TripsNavigator from './TripsNavigator'
+import EditProfileScreen from '../screens/EditProfileScreen'
+import DetailedTripScreen from '../screens/DetailedTripScreen'
+import TripRequestScreen from '../screens/TripRequestScreen'
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
   default: {},
 })
 
-const HomeStack = createStackNavigator(
+const TripsStack = createStackNavigator(
   {
-    Home: HomeScreen,
+    Trips: TripsNavigator,
+    DetailedTrip: DetailedTripScreen,
   },
   config
 )
 
-HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
+TripsStack.navigationOptions = {
+  tabBarLabel: 'Viajes',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
+      name={Platform.OS === 'ios' ? 'ios-car' : 'md-car'}
     />
   ),
 }
 
-HomeStack.path = ''
+TripsStack.path = ''
 
-const LinksStack = createStackNavigator(
+const ChooseTripsStack = createStackNavigator({
+  ChooseTrips: ChooseTripsScreen,
+  RequestTrip: TripRequestScreen,
+})
+const EditProfileStack = createStackNavigator(
   {
-    Links: LinksScreen,
+    EditProfile: EditProfileScreen,
   },
   config
 )
 
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Links',
+ChooseTripsStack.navigationOptions = {
+  tabBarLabel: 'Pedir Viaje',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
+      name={Platform.OS === 'ios' ? 'ios-car' : 'md-car'}
     />
   ),
 }
 
-LinksStack.path = ''
+ChooseTripsStack.path = ''
+
+EditProfileStack.navigationOptions = {
+  tabBarLabel: 'Perfil',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon focused={focused} name="md-person" />
+  ),
+}
+
+EditProfileStack.path = ''
 
 const SettingsStack = createStackNavigator(
   {
@@ -69,17 +84,43 @@ SettingsStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+      name={Platform.OS === 'ios' ? 'ios-settings' : 'md-options'}
     />
   ),
 }
 
 SettingsStack.path = ''
 
+const CreateTripStack = createStackNavigator(
+  {
+    CreateTripScreen,
+    AddStopsScreen,
+  },
+  config
+)
+
+CreateTripStack.navigationOptions = {
+  tabBarLabel: 'Crear Viaje',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={
+        Platform.OS === 'ios'
+          ? `ios-add-circle${focused ? '' : '-outline'}`
+          : 'md-add-circle'
+      }
+    />
+  ),
+}
+
+CreateTripStack.path = ''
+
 const tabNavigator = createBottomTabNavigator({
-  HomeStack,
-  LinksStack,
-  SettingsStack,
+  ChooseTripsStack,
+  TripsStack,
+  CreateTripStack,
+  EditProfileStack,
+  // SettingsStack,
 })
 
 tabNavigator.path = ''

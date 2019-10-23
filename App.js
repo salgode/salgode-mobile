@@ -37,6 +37,8 @@ async function loadResourcesAsync() {
     Asset.loadAsync([
       require('./assets/images/robot-dev.png'),
       require('./assets/images/robot-prod.png'),
+      require('./assets/images/icon.png'),
+      require('./assets/images/login_icon.png'),
     ]),
     Font.loadAsync({
       // This is the font that we are using for our tab bar
@@ -44,6 +46,8 @@ async function loadResourcesAsync() {
       // We include SpaceMono because we use it in HomeScreen.js. Feel free to
       // remove this if you are not using it in your app
       'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
+      Roboto: require('native-base/Fonts/Roboto.ttf'),
+      Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
     }),
   ])
 }
@@ -62,5 +66,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     flex: 1,
+    paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight,
   },
 })

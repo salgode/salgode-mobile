@@ -5,17 +5,20 @@
 
 # Salgode
 
-Aplicación móvil para compartir viajes construida con [React Native](https://facebook.github.io/react-native/) para iOS y Android.
+Aplicación móvil para compartir viajes construida con [Expo](https://expo.io/) para web, iOS y Android. Backend se encuentra [aquí](https://github.com/Varuscl/salgode-api)
 
 Sigue el desarrollo en [nuestro Trello](https://trello.com/b/GCTJ1iMU/salgode).
 
 ## Indice
 
-- [Scripts](#scripts)
-- [Workflow](#workflow)
-  - [Gitflow](#gitflow)
-  - [Release](#release)
-- [Motores](#motores)
+- [Salgode](#salgode)
+  - [Indice](#indice)
+  - [Scripts](#scripts)
+  - [Workflow](#workflow)
+    - [Development](#development)
+    - [Release](#release)
+  - [Motores](#motores)
+  - [Agradecimientos](#agradecimientos)
 
 ## Scripts
 
@@ -56,6 +59,26 @@ Sigue el desarrollo en [nuestro Trello](https://trello.com/b/GCTJ1iMU/salgode).
 
   - node ^12.9.1
   - yarn ^1.17.3
+
+## Agradecimientos
+
+Se aprecia el aporte al frontend de:
+
+- [Matías Andrade](https://github.com/mandrade2)
+- [Franco Méndez Z.](https://github.com/fnmendez)
+- [José Morales Lira](https://github.com/josemlira)
+- [Martín Álamos](https://github.com/wayoalamos)
+- [Joaquín Ricci](https://github.com/jricci1)
+- [Benjamín Earle](https://github.com/MrEarle)
+- [Sebastián Cruz](https://github.com/sebacruzd)
+- [Daniel Leal](https://github.com/daleal)
+- [Carlos Knopel](https://github.com/buskerone)
+- [Robinson Castro](https://github.com/Robin40)
+- [Camila Olguín](https://github.com/camiolguin)
+- [Dante Mardones](https://github.com/DanteMa)
+- [Tomás Rivera](https://github.com/tomasrivera)
+- [Diego Silva](https://github.com/DiegoSilvaS)
+- [Gonzalo Caballero](https://github.com/Gonzalo9823)
 
 <!-- BADGES -->
 

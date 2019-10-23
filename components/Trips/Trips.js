@@ -13,7 +13,6 @@ class MyTrips extends Component {
 
   render() {
     const Trip = this.Trip
-
     return (
       <SafeAreaView>
         <FlatList
@@ -24,7 +23,7 @@ class MyTrips extends Component {
               spacesUsed={item.spacesUsed}
               user={item.driver}
               status={item.trip_status}
-              asDriver={this.trip_role}
+              asDriver={this.asDriver}
               onPressTrip={this.props.onPressTrip}
               tripId={item.trip_id}
               startLocation={item.trip_route.start}

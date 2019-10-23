@@ -43,8 +43,6 @@ class ChooseTripsScreen extends Component {
 
   async getTrips() {
     const response = await this.props.fetchFutureTrips(this.props.user.token)
-    console.log(response)
-
     if (response.error) {
       Alert.alert(
         'Error obteniendo viajes',
@@ -108,7 +106,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     user: state.user,
-    trips: state.futureTrips.trips || [],
+    trips: state.trips.open || [],
   }
 }
 

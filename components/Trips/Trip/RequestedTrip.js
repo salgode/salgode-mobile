@@ -87,14 +87,14 @@ const RequestedTrip = ({
 }
 
 RequestedTrip.propTypes = {
-  timestamp: PropTypes.number.isRequired,
+  timestamp: PropTypes.object.isRequired,
   user: PropTypes.shape({
-    name: PropTypes.string.isRequired,
+    driver_name: PropTypes.string.isRequired,
     selfieLink: PropTypes.string,
   }).isRequired,
-  status: PropTypes.oneOf(['accepted', 'pending', 'rejected']),
-  startLocation: PropTypes.string,
-  endLocation: PropTypes.string,
+  status: PropTypes.oneOf(['accepted', 'pending', 'rejected', 'completed']),
+  startLocation: PropTypes.object.isRequired,
+  endLocation: PropTypes.object.isRequired,
   onSend: PropTypes.func,
   tripId: PropTypes.string.isRequired,
 }

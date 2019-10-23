@@ -35,7 +35,7 @@ function validateName(str) {
   }
   str = str.trim()
 
-  if (str.length < 'Ana'.length) {
+  if (str.length < 'Al'.length) {
     return false
   }
   if (str.length >= 256) {
@@ -43,7 +43,7 @@ function validateName(str) {
   }
 
   // letters, dash, space
-  return /^[- A-Za-zÁÉÍÓÚÑÜáéíóúñü]+$/g.test(str)
+  return /^[ A-Za-zÁÉÍÓÚÑÜáéíóúñü]+$/g.test(str)
 }
 
 function validatePlate(str) {

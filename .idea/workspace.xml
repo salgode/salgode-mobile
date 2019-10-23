@@ -6,7 +6,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d3c4de63-eb45-4514-a408-0428bccad5ca" name="Default" comment="" />
+    <list default="true" id="d3c4de63-eb45-4514-a408-0428bccad5ca" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/screens/SpotSelectorScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/SpotSelectorScreen.js" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -29,9 +31,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="ProjectPane" />
       <pane id="AndroidView" />
       <pane id="Scope" />
-      <pane id="ProjectPane" />
       <pane id="PackagesPane" />
     </panes>
   </component>

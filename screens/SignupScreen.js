@@ -8,7 +8,7 @@ import {
 import { connect } from 'react-redux'
 import { View } from 'native-base'
 import PropTypes from 'prop-types'
-import { signupUser } from '../redux/actions/user'
+import { signupUser, uploadImageUser } from '../redux/actions/user'
 import SignupForm from '../components/Login/SignupForm'
 
 class SignupScreen extends Component {
@@ -26,6 +26,7 @@ class SignupScreen extends Component {
 
   async onSend(userInfo) {
     this.setState({ loading: true })
+    const selfieUrl = await this.props.uploadImage(userInfo.selfieLink)
     const user = await this.props
       .signup(
         userInfo.name,
@@ -33,7 +34,8 @@ class SignupScreen extends Component {
         userInfo.email,
         userInfo.phone,
         userInfo.password,
-        userInfo.passwordRepeat
+        userInfo.passwordRepeat,
+        selfieUrl
       )
       .then(response => {
         return response
@@ -64,6 +66,7 @@ class SignupScreen extends Component {
 }
 
 SignupScreen.propTypes = {
+  uploadImage: PropTypes.func.isRequired,
   signup: PropTypes.func.isRequired,
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
@@ -85,14 +88,15 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
+  uploadImage: img => dispatch(uploadImageUser(img)),
   signup: (
     name,
     lastName,
     email,
     phone,
     password,
-    passwordRepeat
-    // selfieLink,
+    passwordRepeat,
+    selfieLink
     // driverLicenseLink,
     // dniLink,
     // carPlate,
@@ -107,8 +111,8 @@ const mapDispatchToProps = dispatch => ({
         email,
         phone,
         password,
-        passwordRepeat
-        // selfieLink,
+        passwordRepeat,
+        selfieLink
         // driverLicenseLink,
         // dniLink,
         // carPlate,

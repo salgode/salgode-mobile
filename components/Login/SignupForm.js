@@ -1,10 +1,19 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Modal,
+  Dimensions,
+} from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
 import { Text, Form, Item, Input, Label, Button, Spinner } from 'native-base'
 import Layout from '../../constants/Layout'
 import PropTypes from 'prop-types'
 import Colors from '../../constants/Colors'
+import * as Permissions from 'expo-permissions'
+import { Camera } from 'expo-camera'
 
 class SignupForm extends Component {
   constructor(props) {
@@ -12,10 +21,15 @@ class SignupForm extends Component {
     this.state = {
       name: '',
       lastname: '',
+      modalVisible: false,
       email: '',
       phoneNumber: '',
       password: '',
       passwordRepeat: '',
+      selfieLink: '',
+      hasCameraPermission: null,
+      type: Camera.Constants.Type.front,
+      onCamera: false,
       validity: {
         name: false,
         lastname: false,
@@ -23,6 +37,7 @@ class SignupForm extends Component {
         phoneNumber: false,
         password: false,
         passwordRepeat: false,
+        selfieLink: false,
       },
     }
 
@@ -35,6 +50,9 @@ class SignupForm extends Component {
 
     this.getValidity = this.getValidity.bind(this)
     this.onPress = this.onPress.bind(this)
+    this.getselfie = this.getselfie.bind(this)
+    this.openCamera = this.openCamera.bind(this)
+    this.closeCamera = this.closeCamera.bind(this)
   }
 
   onChangeName(name) {
@@ -91,7 +109,8 @@ class SignupForm extends Component {
       this.state.validity.email &&
       this.state.validity.phoneNumber &&
       this.state.validity.password &&
-      this.state.validity.passwordRepeat
+      this.state.validity.passwordRepeat &&
+      this.state.validity.selfieLink
     return validity && this.state.password === this.state.passwordRepeat
   }
 
@@ -103,13 +122,96 @@ class SignupForm extends Component {
       phone: this.state.phoneNumber,
       password: this.state.password,
       passwordRepeat: this.state.passwordRepeat,
+      selfieLink: this.state.selfieLink,
     })
   }
 
+  async getselfie() {
+    if (this.camera) {
+      const photo = await this.camera.takePictureAsync({
+        quality: 0.5,
+        base64: true,
+      })
+      this.setState(oldState => ({
+        selfieLink: photo.base64,
+        validity: {
+          ...oldState.validity,
+          selfieLink: photo.base64 ? true : false,
+        },
+      }))
+    }
+    this.closeCamera()
+  }
+
+  openCamera() {
+    this.setState({ onCamera: true })
+  }
+
+  closeCamera() {
+    this.setState({ onCamera: false })
+  }
+
+  async componentDidMount() {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA)
+    this.setState({ hasCameraPermission: status === 'granted' })
+  }
+
   render() {
+    const { height, width } = Dimensions.get('window')
     const { loading } = this.props
     return (
       <Form style={styles.form}>
+        {this.state.hasCameraPermission && (
+          <Modal
+            animationType="slide"
+            transparent={false}
+            presentationStyle="fullScreen"
+            visible={this.state.onCamera}
+            onRequestClose={this.closeCamera}
+          >
+            <Camera
+              style={{ width: width, height: height, position: 'absolute' }}
+              type={this.state.type}
+              ref={ref => {
+                this.camera = ref
+              }}
+            >
+              <View
+                style={{
+                  flex: 0.1,
+                  backgroundColor: 'transparent',
+                  flexDirection: 'row',
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    this.setState({
+                      type:
+                        this.state.type === Camera.Constants.Type.back
+                          ? Camera.Constants.Type.front
+                          : Camera.Constants.Type.back,
+                    })
+                  }}
+                >
+                  <Button borderRadius={10} style={styles.icon}>
+                    <Ionicons
+                      name="md-reverse-camera"
+                      color="white"
+                      size={24}
+                    />
+                  </Button>
+                </TouchableOpacity>
+              </View>
+            </Camera>
+            <Button
+              borderRadius={10}
+              style={styles.buttonCamera}
+              onPress={this.getselfie}
+            >
+              <Text>Tomar foto </Text>
+            </Button>
+          </Modal>
+        )}
         <Item floatingLabel style={styles.item}>
           <Label
             style={{
@@ -220,6 +322,16 @@ class SignupForm extends Component {
             value={this.state.passwordRepeat}
           />
         </Item>
+
+        <Button
+          block
+          borderRadius={10}
+          style={styles.button}
+          onPress={this.openCamera}
+        >
+          <Text>Tomar selfie</Text>
+        </Button>
+
         {loading && <Spinner color={'#0000FF'} />}
         {!loading && (
           <Button
@@ -241,14 +353,30 @@ SignupForm.propTypes = {
   onSend: PropTypes.func.isRequired,
   loading: PropTypes.bool,
 }
-
+const { height } = Dimensions.get('window')
 const styles = StyleSheet.create({
   button: {
     marginTop: 20,
   },
+  buttonCamera: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    marginBottom: 5,
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: height - 70,
+  },
   form: {
     alignItems: 'center',
     margin: 15,
+  },
+  icon: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 15,
+    marginTop: 20,
+    width: 40,
   },
   input: {
     width: Layout.window.width * 0.85,

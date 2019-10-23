@@ -26,7 +26,7 @@ export default function CardInput(props) {
         style={{ flex: 0.7, fontSize: 15 }}
       />
 
-      <Button icon transparent onPress={onClearPress} style={{ flex: 0.2 }}>
+      <Button icon transparent onPress={onClearPress} style={{ flex: 0.18 }}>
         <Icon name="close" color="#0000FF" />
       </Button>
     </TouchableOpacity>
@@ -46,7 +46,7 @@ CardInput.defaultProps = {
 
 const styles = StyleSheet.create({
   text: {
-    flex: 0.2,
+    flex: 0.22,
     fontSize: 15,
     fontWeight: 'bold',
     margin: 10,
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     margin: 8,
-    padding: 8,
+    padding: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,

@@ -12,7 +12,7 @@ export function fetchFutureTrips(authToken) {
         url: `/trips`,
         method: 'get',
         headers: {
-          Authorization: authToken,
+          Authorization: `Bearer ${authToken}`,
         },
       },
     },

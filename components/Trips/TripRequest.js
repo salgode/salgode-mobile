@@ -31,7 +31,7 @@ const TripRequest = ({ stops, onSend, loading }) => {
           <Picker.Item
             key={`PickerItem${i}`}
             label={stop.address}
-            value={stop.address}
+            value={stop}
           />
         ))}
       </Picker>

@@ -4,13 +4,16 @@ export const actions = {
   RETRIEVE_ALL_SPOTS_FAIL: 'RETRIEVE_ALL_SPOTS_FAIL',
 }
 
-export function getAllSpots() {
+export function getAllSpots(token) {
   return {
     type: actions.RETRIEVE_ALL_SPOTS,
     payload: {
       request: {
         url: `/spots`,
         method: 'get',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
     },
   }

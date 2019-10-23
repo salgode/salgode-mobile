@@ -16,6 +16,7 @@ import { getAllSpots } from '../redux/actions/spots'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import { spotsFilter } from '../utils/spotsFilter'
 import Colors from '../constants/Colors'
+import PropTypes from 'prop-types'
 
 const colorScheme = Appearance.getColorScheme()
 
@@ -26,7 +27,7 @@ class CreateTripScreen extends Component {
   }
 
   componentDidMount = () => {
-    this.props.getAllSpots()
+    this.props.getAllSpots(this.props.user.token)
   }
 
   showDateTimePicker = () => {
@@ -128,6 +129,19 @@ class CreateTripScreen extends Component {
 
 CreateTripScreen.navigationOptions = {
   header: null,
+}
+
+CreateTripScreen.propTypes = {
+  getAllSpots: PropTypes.func.isRequired,
+  setStartTime: PropTypes.func.isRequired,
+  setStartStop: PropTypes.func.isRequired,
+  setEndStop: PropTypes.func.isRequired,
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
+  clearStartStop: PropTypes.func.isRequired,
+  clearEndStop: PropTypes.func.isRequired,
+  spots: PropTypes.arrayOf(PropTypes.object).isRequired,
 }
 
 const styles = StyleSheet.create({

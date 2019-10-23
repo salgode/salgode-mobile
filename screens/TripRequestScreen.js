@@ -29,26 +29,26 @@ class TripRequestScreen extends Component {
     this.setState({ stops, tripId, loading: false })
   }
 
-  async onRequestSlot() {
+  async onRequestSlot(selectedStop) {
     const { user, createSlot } = this.props
-    // console.log(user)
 
     this.setState({ loading: true })
     const response = await createSlot(
       user.token,
       this.state.tripId,
+      selectedStop.id,
       user.userId
     )
     this.setState({ loading: false })
 
-    if (!response || response.error) {
+    if (!response || response.error || response.errorMessage) {
       Alert.alert(
         'Error de reserva',
         'Hubo un error al reservar el puesto. Por favor inentelo de nuevo.'
       )
     } else {
       Alert.alert(
-        'Puesto reservado correctamente!',
+        'Solicitud enviada correctamente!',
         'Tu pedido está siendo revisado por el conductor.'
       )
       this.props.navigation.popToTop()
@@ -88,8 +88,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  createSlot: (token, tripId, userId) =>
-    dispatch(createSlot(token, tripId, userId)),
+  createSlot: (token, tripId, stopId, userId) =>
+    dispatch(createSlot(token, tripId, stopId, userId)),
 })
 
 export default connect(

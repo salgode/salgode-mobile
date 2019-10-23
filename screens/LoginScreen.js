@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, Button } from 'native-base'
+import { Text, Button, View } from 'native-base'
 import {
   StyleSheet,
   KeyboardAvoidingView,
@@ -32,6 +32,7 @@ class LoginScreen extends Component {
     }
     this.onSend = this.onSend.bind(this)
     this.onCreateAccountPress = this.onCreateAccountPress.bind(this)
+    this.onRecoverPasswordPress = this.onRecoverPasswordPress.bind(this)
     this.imageHeight = new Animated.Value(IMAGE_HEIGHT)
   }
 
@@ -82,6 +83,10 @@ class LoginScreen extends Component {
     }
   }
 
+  onRecoverPasswordPress() {
+    this.props.navigation.navigate('RecoverPassword');
+  }
+
   onCreateAccountPress() {
     this.props.navigation.navigate('Signup')
   }
@@ -96,9 +101,14 @@ class LoginScreen extends Component {
         {!this.state.loading && <LoginForm onSend={this.onSend} />}
         {this.state.loading && <Spinner color="blue" />}
         {!this.state.loading && (
-          <Button transparent onPress={this.onCreateAccountPress}>
-            <Text>No tienes una cuenta? Crea una aquí</Text>
-          </Button>
+          <View>
+            <Button transparent onPress={this.onCreateAccountPress}>
+              <Text>¿No tienes una cuenta? Crea una aquí</Text>
+            </Button>
+            <Button transparent onPress={this.onRecoverPasswordPress}>
+              <Text>¿Olvidaste tu contraseña? Recupérala aquí</Text>
+            </Button>
+          </View>
         )}
         {this.state.loading && <Text>Comprobando datos</Text>}
       </KeyboardAvoidingView>

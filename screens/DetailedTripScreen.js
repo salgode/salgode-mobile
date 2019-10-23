@@ -262,9 +262,7 @@ class DetailedTripScreen extends Component {
             driver={this.state.driver}
           />
         )}
-        {this.state.asDriver &&
-
-        !this.state.loading
+        {this.state.asDriver && !this.state.loading
           ? this.renderPassengers(this.state.passengers)
           : null}
       </ScrollView>

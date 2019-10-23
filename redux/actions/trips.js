@@ -1,13 +1,15 @@
+import { getBaseHeaders } from '../../config/api/headers'
+
 export const actions = {
-  TRIPS_FETCH_FUTURE_TRIPS: 'TRIPS/FETCH',
-  TRIPS_FETCH_FUTURE_TRIPS_SUCCESS: 'TRIPS/FETCH_SUCCESS',
-  TRIPS_FETCH_FUTURE_TRIPS_FAIL: 'TRIP/FETCH_FAIL',
-  TRIPS_FETCH_DRIVER_TRIPS: 'TRIPS/FETCH/DRIVER', //TODO: add real endpoint
-  TRIPS_FETCH_PAX_TRIPS: 'TRIPS/FETCH/PAX', //TODO: add real endpoint
-  TRIPS_FETCH_TRIP: 'TRIP/FETCH',
-  TRIPS_START_JOURNEY: 'TRIP/FETCH',
-  TRIPS_FETCH_PASSENGERS: 'TRIP/PASSENGERS',
-  TRIPS_GET_TRIP: 'TRIP/GET',
+  TRIPS_FETCH_FUTURE_TRIPS: 'TRIPS_FETCH',
+  TRIPS_FETCH_FUTURE_TRIPS_SUCCESS: 'TRIPS_FETCH_SUCCESS',
+  TRIPS_FETCH_FUTURE_TRIPS_FAIL: 'TRIP_FETCH_FAIL',
+  TRIPS_FETCH_DRIVER_TRIPS: 'TRIPS_FETCH_DRIVER', //TODO: add real endpoint
+  TRIPS_FETCH_PAX_TRIPS: 'TRIPS_FETCH/PAX', //TODO: add real endpoint
+  TRIPS_FETCH_TRIP: 'TRIP_FETCH',
+  TRIPS_START_JOURNEY: 'TRIP_FETCH',
+  TRIPS_FETCH_PASSENGERS: 'TRIP_PASSENGERS',
+  TRIPS_GET_TRIP: 'TRIP_GET',
 }
 
 export function fetchFutureTripsByDriverId(authToken, driverId) {
@@ -17,9 +19,7 @@ export function fetchFutureTripsByDriverId(authToken, driverId) {
       request: {
         url: `/drivers/${driverId}/trips`, // TODO: add real url
         method: 'get',
-        headers: {
-          Authorization: authToken,
-        },
+        headers: getBaseHeaders(authToken),
       },
     },
   }
@@ -32,9 +32,7 @@ export function fetchFutureTripsByPaxId(authToken, paxId) {
       request: {
         url: `/paxs/${paxId}/trips`, // TODO: add real url
         method: 'get',
-        headers: {
-          Authorization: authToken,
-        },
+        headers: getBaseHeaders(authToken),
       },
     },
   }
@@ -47,9 +45,7 @@ export function fetchFutureTrips(authToken) {
       request: {
         url: `/trips/open`,
         method: 'get',
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
+        headers: getBaseHeaders(authToken),
       },
     },
   }
@@ -62,9 +58,7 @@ export function startJourney(authToken, tripId, users) {
       request: {
         url: `/trips/${tripId}/start`,
         method: 'post',
-        headers: {
-          Authorization: authToken,
-        },
+        headers: getBaseHeaders(authToken),
         body: {
           users: users,
         },
@@ -80,9 +74,7 @@ export function fetchPassengers(authToken, tripId) {
       request: {
         url: `/trips/${tripId}/slots`,
         method: 'get',
-        headers: {
-          Authorization: authToken,
-        },
+        headers: getBaseHeaders(authToken),
       },
     },
   }
@@ -95,9 +87,7 @@ export function getTrip(authToken, tripId) {
       request: {
         url: `/trips/${tripId}`,
         method: 'get',
-        headers: {
-          Authorization: authToken,
-        },
+        headers: getBaseHeaders(authToken),
       },
     },
   }

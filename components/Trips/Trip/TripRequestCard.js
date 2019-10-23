@@ -48,16 +48,14 @@ export default class TripRequestCard extends Component {
 
   render() {
     const { finalLocation } = this.state
-    return this.state.passenger != null &&
-      this.state.passenger.status !== 'rejected' ? (
-    const start =
-      this.state.slot != null ? this.state.slot.route_point.name : null
     const selfieImage =
       this.state.passenger != null
         ? this.state.passenger.user_identifications.selfie_image
         : null
 
-    return this.state.passenger != null && this.state.slot ? (
+    return this.state.passenger !== null &&
+      this.state.slot &&
+      this.state.passenger.status !== 'rejected' ? (
       <Card style={styles.container}>
         <CardItem>
           <View style={styles.user}>
@@ -85,8 +83,6 @@ export default class TripRequestCard extends Component {
             }
             location={this.state.passenger.finish}
           />
-          <Location color={'red'} location={start} />
-          <Location color={Colors.tintColor} location={this.props.finishStop} />
         </CardItem>
 
         {this.state.slot.slot_status === 'pending' && (
@@ -135,18 +131,17 @@ export default class TripRequestCard extends Component {
             <View style={styles.buttonsContainerSpacer}></View>
             <View style={styles.buttonsContainer}>
               <Button
-            <Button
-              style={{ ...styles.buttonTrip, backgroundColor: 'green' }}
-              onPress={() => this.dialCall(this.state.passenger.phone)}
-            >
-              <Text
-                style={{
-                  ...styles.buttonTrip,
-                  backgroundColor: 'green',
-                  alignSelf: 'flexEnd',
-                }}
-                onPress={() => this.dialCall(this.state.passenger.phoneNumber)}
+                style={{ ...styles.buttonTrip, backgroundColor: 'green' }}
+                onPress={() => this.dialCall(this.state.passenger.phone)}
               >
+                {/*<Text
+                  style={{
+                    ...styles.buttonTrip,
+                    backgroundColor: 'green',
+                    alignSelf: 'flexEnd',
+                  }}
+                  onPress={() => this.dialCall(this.state.passenger.phoneNumber)}
+                >*/}
                 <Text
                   style={{
                     color: 'white',

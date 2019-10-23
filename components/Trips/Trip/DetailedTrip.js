@@ -7,7 +7,7 @@ import Colors from '../../../constants/Colors'
 import TimeInfo from './TimeInfo'
 import { Ionicons } from '@expo/vector-icons'
 
-export const DetailedTrip = ({ trip, asDriver, driver }) => {
+export const DetailedTrip = ({ trip, asDriver, driver, token }) => {
   function renderLocation(locations) {
     return locations.map((location, index) => {
       let color
@@ -28,13 +28,12 @@ export const DetailedTrip = ({ trip, asDriver, driver }) => {
     })
   }
 
-  function startTrip() {
+  function startTrip(token) {
     // TODO: connect to server
     // TODO: navigate to current trip screen
-    // console.log('trip!')
+    // eslint-disable-next-line no-console
+    console.log('trip!', token)
   }
-
-  const token = 123 //TODO: get from redux
 
   const selfieImage = driver != null ? driver.avatar : 'placeholder'
 
@@ -49,6 +48,7 @@ export const DetailedTrip = ({ trip, asDriver, driver }) => {
         <Text style={styles.userText}>Resumen Viaje</Text>
       </View>
       <CardItem>
+        {/* TODO: if  as driver, don't show name and thumbnail*/}
         <View style={styles.user}>
           {selfieImage && selfieImage !== 'placeholder' ? (
             <Thumbnail source={{ uri: selfieImage }} />

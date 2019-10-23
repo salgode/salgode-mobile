@@ -34,7 +34,7 @@ class DetailedTripScreen extends Component {
   }
 
   componentDidMount() {
-    // // this.setState({ token: '' }) // TODO: get token from redux store
+    // TODO: get token from redux store
     const asDriver = this.props.navigation.getParam('asDriver', null)
     const tripId = this.props.navigation.getParam('tripId', null)
     this.getTrip(tripId, asDriver, 'Bearer 12345')
@@ -245,6 +245,42 @@ class DetailedTripScreen extends Component {
           type: "['shopping_mall', 'point_of_interest', 'establishment']",
         },
       },
+      {
+        slot_id: 'slo_27f78378-6cb0-4558-994b-62ba005e9a74',
+        slot_status: 'pending',
+        user_id: 'usr_12345',
+        created_at: '2019-10-21T10:30:20-04:00',
+        route_point: {
+          city: 'SANTIAGO',
+          icon:
+            'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png',
+          commune: 'PROVIDENCIA',
+          lon: '-33,4202039',
+          address:
+            'San Pío X 5255, Vitacura, Providencia, Región Metropolitana',
+          lat: '-70,6008346',
+          name: 'Centro comercial Plaza San Pío, Vitacura 5255',
+          type: "['shopping_mall', 'point_of_interest', 'establishment']",
+        },
+      },
+      {
+        slot_id: 'slo_27f78378-6cb0-4558-994b-62ba005e9a74',
+        slot_status: 'rejected',
+        user_id: 'usr_12345',
+        created_at: '2019-10-21T10:30:20-04:00',
+        route_point: {
+          city: 'SANTIAGO',
+          icon:
+            'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png',
+          commune: 'PROVIDENCIA',
+          lon: '-33,4202039',
+          address:
+            'San Pío X 5255, Vitacura, Providencia, Región Metropolitana',
+          lat: '-70,6008346',
+          name: 'Centro comercial Plaza San Pío, Vitacura 5255',
+          type: "['shopping_mall', 'point_of_interest', 'establishment']",
+        },
+      },
     ]
   }
 
@@ -278,10 +314,15 @@ class DetailedTripScreen extends Component {
     await this.fetchSlots(tripId, token)
       .then(slots => {
         this.setState({ slots })
-        const passengerIds = slots.map(slot => slot.user_id)
-        this.fetchPassengers(passengerIds, token).then(passengers =>
-          this.setState({ passengers })
-        )
+      })
+      .catch(err => {
+        Alert.alert('Hubo un error, intenta de nuevo más tarde', err)
+      })
+
+    const passengerIds = this.state.slots.map(slot => slot.user_id)
+    await this.fetchPassengers(passengerIds, token)
+      .then(passengers => {
+        this.setState({ passengers })
       })
       .catch(err => {
         Alert.alert('Hubo un error, intenta de nuevo más tarde', err)
@@ -318,7 +359,7 @@ class DetailedTripScreen extends Component {
     ]
   }
 
-  renderPassengers(passengers) {
+  renderPassengers(passengers, token) {
     const finishStop = this.state.trip
       ? this.state.trip.trip_route_points[
           this.state.trip.trip_route_points.length - 1
@@ -331,6 +372,7 @@ class DetailedTripScreen extends Component {
             passenger={passenger}
             finishStop={finishStop}
             slot={this.state.slots[index]}
+            token={token}
           />
         ))
       : null
@@ -345,10 +387,11 @@ class DetailedTripScreen extends Component {
             asDriver={this.state.asDriver}
             trip={this.state.trip}
             driver={this.state.driver}
+            token={this.state.token}
           />
         )}
         {this.state.asDriver && !this.state.loading
-          ? this.renderPassengers(this.state.passengers)
+          ? this.renderPassengers(this.state.passengers, this.state.token)
           : null}
       </ScrollView>
     )

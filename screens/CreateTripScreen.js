@@ -80,6 +80,8 @@ class CreateTripScreen extends Component {
             onTouchablePress={() =>
               navigation.navigate('SpotSelectorScreen', {
                 title: 'Seleccionar #Desde',
+                text: '#Desde',
+                onClearPress: clearStartStop,
               })
             }
             placeholder="Filtra por Comuna o Parada"
@@ -93,6 +95,8 @@ class CreateTripScreen extends Component {
             onTouchablePress={() =>
               navigation.navigate('SpotSelectorScreen', {
                 title: 'Seleccionar #A',
+                text: '#A',
+                onClearPress: clearStartStop,
               })
             }
             placeholder="Filtra por Comuna o Parada"

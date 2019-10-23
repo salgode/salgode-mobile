@@ -17,6 +17,7 @@ export default function CardInput(props) {
     onClearPress,
     placeholder,
     text,
+    onChangeText,
   } = props
   return (
     <TouchableOpacity
@@ -28,6 +29,7 @@ export default function CardInput(props) {
         placeholder={placeholder}
         value={value}
         editable={editable}
+        onChangeText={onChangeText}
         style={{ flex: 0.7 }}
       />
 
@@ -42,8 +44,11 @@ CardInput.defaultProps = {
   onTouchablePress: () => {},
   value: '',
   editable: true,
-  onClearPress: () => {},
+  onClearPress: () => {
+    this.props.value = ''
+  },
   text: '',
+  onChangeText: () => {},
 }
 
 const styles = StyleSheet.create({

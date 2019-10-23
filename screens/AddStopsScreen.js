@@ -15,6 +15,7 @@ import { createTrip } from '../redux/actions/createtrip'
 import { Button, Icon } from 'native-base'
 import { spotsFilter } from '../utils/spotsFilter'
 import Colors from '../constants/Colors'
+import CardInput from '../components/CardInput'
 
 class AddStopsScreen extends Component {
   state = {

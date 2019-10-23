@@ -23,7 +23,7 @@ export default function CardInput(props) {
         value={value}
         editable={editable}
         onChangeText={onChangeText}
-        style={{ flex: 0.7, fontSize: 17 }}
+        style={{ flex: 0.7, fontSize: 15 }}
       />
 
       <Button icon transparent onPress={onClearPress} style={{ flex: 0.2 }}>
@@ -47,7 +47,7 @@ CardInput.defaultProps = {
 const styles = StyleSheet.create({
   text: {
     flex: 0.2,
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: 'bold',
     margin: 10,
   },

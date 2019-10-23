@@ -61,9 +61,8 @@ class SpotSelectorScreen extends Component {
                     name="navigate"
                     style={{ marginRight: 10, color: '#8698ab' }}
                   />
-                  <Text style={styles.itemText}>
-                    {item.name}, {item.address}
-                  </Text>
+                  <Text style={styles.itemText}>{item.name}</Text>
+                  <Text style={styles.itemText}>{item.address}</Text>
                 </TouchableOpacity>
               </View>
             )}

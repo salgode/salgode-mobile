@@ -53,7 +53,7 @@ class ChooseTrips extends Component {
               stops={item.stops}
               onSend={this.props.onSend}
               token={item.token}
-              tripId={item.tripId}
+              tripId={item.trip_id}
               userId={item.userId}
             />
           )}

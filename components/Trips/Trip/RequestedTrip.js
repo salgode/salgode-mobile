@@ -4,7 +4,7 @@ import Location from './Location'
 import Colors from '../../../constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
 import TimeInfo from './TimeInfo'
-import { Card, View, Text, CardItem, Thumbnail, Button } from 'native-base'
+import { Card, View, Text, CardItem, Button } from 'native-base'
 import PropTypes from 'prop-types'
 
 const RequestedTrip = ({
@@ -86,14 +86,14 @@ const RequestedTrip = ({
 }
 
 RequestedTrip.propTypes = {
-  timestamp: PropTypes.number.isRequired,
+  timestamp: PropTypes.object.isRequired,
   user: PropTypes.shape({
-    name: PropTypes.string.isRequired,
+    driver_name: PropTypes.string.isRequired,
     selfieLink: PropTypes.string,
   }).isRequired,
-  status: PropTypes.oneOf(['accepted', 'pending', 'rejected']),
-  startLocation: PropTypes.string,
-  endLocation: PropTypes.string,
+  status: PropTypes.oneOf(['accepted', 'pending', 'rejected', 'completed']),
+  startLocation: PropTypes.object.isRequired,
+  endLocation: PropTypes.object.isRequired,
   onSend: PropTypes.func,
   tripId: PropTypes.string,
 }
@@ -158,12 +158,3 @@ const styles = StyleSheet.create({
 })
 
 export default RequestedTrip
-
-RequestedTrip.propTypes = {
-  timestamp: PropTypes.number.isRequired,
-  spacesUsed: PropTypes.number.isRequired,
-  user: PropTypes.object.isRequired,
-  status: PropTypes.string.isRequired,
-  onPressTrip: PropTypes.func.isRequired,
-  asDriver: PropTypes.bool.isRequired,
-}

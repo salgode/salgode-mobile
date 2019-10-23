@@ -1,10 +1,16 @@
 import React, { Component } from 'react'
-import { ScrollView, StyleSheet, View, Text } from 'react-native'
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native'
 import { Appearance } from 'react-native-appearance'
 import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
-import { Button } from 'native-base'
-import CardInputSelector from '../components/CardInputSelector'
+import { Button, Item, Icon, Card } from 'native-base'
 import {
   setStartStop,
   setEndStop,
@@ -17,6 +23,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker'
 import { spotsFilter } from '../utils/spotsFilter'
 import Colors from '../constants/Colors'
 import PropTypes from 'prop-types'
+import CardInput from '../components/CardInput'
 
 const colorScheme = Appearance.getColorScheme()
 
@@ -45,7 +52,15 @@ class CreateTripScreen extends Component {
   }
 
   render() {
-    const { navigation, startStop, endStop, startTime, spots } = this.props
+    const {
+      navigation,
+      startStop,
+      endStop,
+      startTime,
+      spots,
+      clearStartStop,
+      clearEndStop,
+    } = this.props
     const disabled = startStop && endStop && startTime ? false : true
     const { pickedDate } = this.state
     let day
@@ -60,58 +75,50 @@ class CreateTripScreen extends Component {
 
     return (
       <View style={styles.container}>
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}
-        >
-          <View style={styles.group}>
-            <CardInputSelector
-              text="#Desde"
-              placeHolder="Filtra por Comuna o Parada"
-              onSelect={item => this.props.setStartStop(item)}
-              onClear={this.props.clearStartStop}
-              // data={filteredSlots}
-              editable={false}
-              onPress={() =>
-                navigation.navigate('SpotSelectorScreen', {
-                  title: 'Seleccionar #Desde',
-                })
-              }
-            />
+        <View style={styles.group}>
+          <CardInput
+            onTouchablePress={() =>
+              navigation.navigate('SpotSelectorScreen', {
+                title: 'Seleccionar #Desde',
+              })
+            }
+            placeholder="Filtra por Comuna o Parada"
+            value={startStop}
+            text="#Desde"
+            editable={false}
+            onClearPress={clearStartStop}
+          />
 
-            <CardInputSelector
-              text="#A"
-              placeHolder="Filtra por Comuna o Parada"
-              onSelect={item => this.props.setEndStop(item)}
-              onClear={this.props.clearEndStop}
-              data={filteredSlots}
-              editable={false}
-              onPress={() =>
-                navigation.navigate('SpotSelectorScreen', {
-                  title: 'Seleccionar #A',
-                })
-              }
-            />
-          </View>
+          <CardInput
+            onTouchablePress={() =>
+              navigation.navigate('SpotSelectorScreen', {
+                title: 'Seleccionar #A',
+              })
+            }
+            placeholder="Filtra por Comuna o Parada"
+            value={endStop}
+            text="#A"
+            editable={false}
+            onClearPress={clearEndStop}
+          />
+        </View>
 
-          <View style={styles.group}>
-            <Button style={styles.dateButton} onPress={this.showDateTimePicker}>
-              <Text>
-                {pickedDate
-                  ? `${day} - ${hours}:${minutes < 10 ? '0' : ''}${minutes}`
-                  : 'Selecciona Hora/Fecha de Salida'}
-              </Text>
-            </Button>
-            <DateTimePicker
-              isDarkModeEnabled={colorScheme === 'dark'}
-              mode="datetime"
-              isVisible={this.state.isDateTimePickerVisible}
-              onConfirm={this.handleDatePicked}
-              onCancel={this.hideDateTimePicker}
-            />
-          </View>
-        </ScrollView>
-
+        <View style={styles.group}>
+          <Button style={styles.dateButton} onPress={this.showDateTimePicker}>
+            <Text>
+              {pickedDate
+                ? `${day} - ${hours}:${minutes < 10 ? '0' : ''}${minutes}`
+                : 'Selecciona Hora/Fecha de Salida'}
+            </Text>
+          </Button>
+          <DateTimePicker
+            isDarkModeEnabled={colorScheme === 'dark'}
+            mode="datetime"
+            isVisible={this.state.isDateTimePickerVisible}
+            onConfirm={this.handleDatePicked}
+            onCancel={this.hideDateTimePicker}
+          />
+        </View>
         <View>
           <Button
             block
@@ -160,13 +167,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.lightBackground,
     flex: 1,
-  },
-  contentContainer: {
     paddingTop: 30,
   },
-
   dateButton: {
     backgroundColor: 'white',
     borderColor: Colors.mainGrey,
@@ -178,6 +182,25 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     marginLeft: 20,
     marginRight: 20,
+  },
+  text: {
+    flex: 0.2,
+    fontWeight: 'bold',
+    margin: 10,
+  },
+  touchableContainer: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    elevation: 2,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 10,
+    margin: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
   },
   whiteText: {
     color: 'white',

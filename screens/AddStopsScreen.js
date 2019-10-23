@@ -1,10 +1,18 @@
 import React, { Component } from 'react'
-import { ScrollView, StyleSheet, View, Text, Alert, ActivityIndicator } from 'react-native'
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  Text,
+  Alert,
+  ActivityIndicator,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native'
 import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
 import { createTrip } from '../redux/actions/createtrip'
 import { Button, Icon } from 'native-base'
-import CardInputSelector from '../components/CardInputSelector'
 import { spotsFilter } from '../utils/spotsFilter'
 import Colors from '../constants/Colors'
 
@@ -58,12 +66,18 @@ class AddStopsScreen extends Component {
       return (
         <View key={index} style={styles.textView}>
           <View
-            style={{ ...styles.stopContainer, justifyContent: 'flex-start', width: '85%' }}
+            style={{
+              ...styles.stopContainer,
+              justifyContent: 'flex-start',
+              width: '85%',
+            }}
           >
             <Text style={{ fontWeight: 'bold', marginRight: 10 }}>
               #Parada {index + 1}{' '}
             </Text>
-            <Text numberOfLines={1} style={{ width: '75%' }}>{stop.name}</Text>
+            <Text numberOfLines={1} style={{ width: '75%' }}>
+              {stop.name}
+            </Text>
           </View>
           <Button icon transparent onPress={() => this.cleanInput(index)}>
             <Icon name="close" />
@@ -74,7 +88,7 @@ class AddStopsScreen extends Component {
   }
 
   render() {
-    const { startStop, endStop } = this.props
+    const { startStop, endStop, navigation } = this.props
     return (
       <View style={styles.container}>
         <ScrollView
@@ -101,18 +115,31 @@ class AddStopsScreen extends Component {
               Agrega paradas extra (opcional)
             </Text>
             {this.renderStops()}
-            <CardInputSelector
-              text="+"
-              placeHolder="Filtra por Comuna o Parada"
-              setValue={false}
-              data={spotsFilter(
-                this.props.spots,
-                [startStop, endStop].concat(this.state.stops)
-              )}
-              onSelect={item =>
-                this.setState({ stops: this.state.stops.concat([item]) })
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('SpotSelectorScreen', {
+                  title: 'Seleccionar #A',
+                })
               }
-            />
+              style={styles.touchableContainer}
+            >
+              <Text style={styles.text}>#A</Text>
+              <TextInput
+                placeholder="Filtra por Comuna o Parada"
+                value={startStop}
+                editable={false}
+                style={{ flex: 0.7 }}
+              />
+
+              <Button
+                icon
+                transparent
+                onPress={this.props.clearEndStop}
+                style={{ flex: 0.2 }}
+              >
+                <Icon name="close" color="#0000FF" />
+              </Button>
+            </TouchableOpacity>
           </View>
         </ScrollView>
 
@@ -171,7 +198,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   whiteText: {
-    color: 'white'
+    color: 'white',
   },
 })
 

@@ -2,21 +2,21 @@ import React, { Component } from 'react'
 import { ScrollView, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 
-import CardInputSelector from '../components/CardInputSelector'
+// import CardInputSelector from '../components/CardInputSelector'
 
 class SpotSelectorScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <CardInputSelector
+        {/* <CardInputSelector
           text="#Desde"
           placeHolder="Filtra por Comuna o Parada"
           onSelect={() => {}}
           onClear={() => {}}
           data={[]}
-          editable={false}
+          // editable={false}
           onPress={() => {}}
-        />
+        /> */}
         {/* <ScrollView>
           <Text>Hola Wayo</Text>
         </ScrollView> */}

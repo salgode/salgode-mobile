@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {
-  ScrollView,
   Text,
   View,
   FlatList,
@@ -13,6 +12,8 @@ import { Icon } from 'native-base'
 import Colors from '../constants/Colors'
 import CardInput from '../components/CardInput'
 
+import { normalizeText } from '../utils/normalizeText'
+
 class SpotSelectorScreen extends Component {
   state = {
     filter: '',
@@ -20,6 +21,12 @@ class SpotSelectorScreen extends Component {
   render() {
     const { navigation } = this.props
     const { filter } = this.state
+    const normalizedInput = normalizeText(filter)
+    const filteredSpots = this.props.spots.filter(
+      item =>
+        normalizeText(item.name).includes(normalizedInput) ||
+        normalizeText(item.address).includes(normalizedInput)
+    )
     return (
       <View style={{ flex: 1, backgroundColor: Colors.lightBackground }}>
         <View>
@@ -29,12 +36,12 @@ class SpotSelectorScreen extends Component {
             text={navigation.getParam('text', '')}
             onChangeText={text => this.setState({ filter: text })}
             editable={true}
-            onClearPress={navigation.getParam('onClearPress', () => {})}
+            onClearPress={() => this.setState({ filter: '' })}
           />
         </View>
         <View style={styles.container}>
           <FlatList
-            data={this.props.spots}
+            data={filteredSpots}
             style={styles.flatList}
             renderItem={({ item }) => (
               <View style={styles.listItem}>

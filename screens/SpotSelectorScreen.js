@@ -46,7 +46,14 @@ class SpotSelectorScreen extends Component {
             renderItem={({ item }) => (
               <View style={styles.listItem}>
                 <TouchableOpacity
-                  onPress={() => {}}
+                  onPress={() => {
+                    // console.log(
+                    //   'Holaa',
+                    //   navigation.getParam('onItemPress', '')()
+                    // )
+                    navigation.getParam('onItemPress', '')(item)
+                    navigation.goBack()
+                  }}
                   style={{ flexDirection: 'row' }}
                 >
                   <Icon

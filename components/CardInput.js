@@ -1,13 +1,6 @@
 import React from 'react'
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-} from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, TextInput } from 'react-native'
 import { Button, Icon } from 'native-base'
-import Colors from '../constants/Colors'
 
 export default function CardInput(props) {
   const {

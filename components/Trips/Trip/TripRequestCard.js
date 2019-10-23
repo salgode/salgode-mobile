@@ -45,7 +45,8 @@ export default class TripRequestCard extends Component {
 
   render() {
     const { finalLocation } = this.state
-    return this.state.passenger != null ? (
+    return this.state.passenger != null &&
+      this.state.passenger.status !== 'rejected' ? (
       <Card style={styles.container}>
         <CardItem>
           <View style={styles.user}>
@@ -72,12 +73,17 @@ export default class TripRequestCard extends Component {
         {this.state.passenger.status === 'pending' && (
           <CardItem style={styles.buttonsContainer}>
             <Button
-              style={{ ...styles.buttonTrip, backgroundColor: '#0000FF' }}
+              style={{
+                ...styles.buttonTrip,
+                backgroundColor: '#white',
+                borderColor: '#0000FF',
+                borderWidth: 1,
+              }}
               onPress={() => this.handleChangeStatus('accepted')}
             >
               <Text
                 style={{
-                  color: 'white',
+                  color: '#0000FF',
                   fontSize: 15,
                   fontWeight: '700',
                   alignSelf: 'center',
@@ -88,12 +94,12 @@ export default class TripRequestCard extends Component {
             </Button>
             <Button
               bordered
-              style={{ ...styles.buttonTrip, borderColor: '#0000FF' }}
+              style={{ ...styles.buttonTrip, borderColor: '#FF5242' }}
               onPress={() => this.handleChangeStatus('rejected')}
             >
               <Text
                 style={{
-                  color: '#0000FF',
+                  color: '#FF5242',
                   fontSize: 15,
                   fontWeight: '700',
                   alignSelf: 'center',
@@ -107,40 +113,32 @@ export default class TripRequestCard extends Component {
 
         {this.state.passenger.status === 'accepted' && (
           <View style={styles.buttonsContainer}>
-            <Button
-              style={{ ...styles.buttonTrip, backgroundColor: 'green' }}
-              onPress={() => this.dialCall(this.state.passenger.phoneNumber)}
-            >
-              <Text
+            <View style={styles.buttonsContainerSpacer}></View>
+            <View style={styles.buttonsContainer}>
+              <Button
                 style={{
-                  color: 'white',
-                  fontSize: 15,
-                  fontWeight: '700',
-                  alignSelf: 'center',
+                  ...styles.buttonTrip,
+                  backgroundColor: 'green',
+                  alignSelf: 'flexEnd',
                 }}
+                onPress={() => this.dialCall(this.state.passenger.phoneNumber)}
               >
-                Contactar
-              </Text>
-            </Button>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 15,
+                    fontWeight: '700',
+                    alignSelf: 'center',
+                  }}
+                >
+                  Contactar
+                </Text>
+              </Button>
+            </View>
           </View>
         )}
 
-        {this.state.passenger.status === 'rejected' && (
-          <View style={styles.buttonsContainer}>
-            <Button style={{ ...styles.buttonTrip, backgroundColor: 'red' }}>
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 15,
-                  fontWeight: '700',
-                  alignSelf: 'center',
-                }}
-              >
-                Rechazado
-              </Text>
-            </Button>
-          </View>
-        )}
+        {this.state.passenger.status === 'rejected' && null}
       </Card>
     ) : null
   }
@@ -159,13 +157,18 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     alignItems: 'center',
     alignSelf: 'center',
+    flex: 2,
     flexDirection: 'row',
+  },
+  buttonsContainerSpacer: {
+    flex: 3,
   },
   container: {
     alignItems: 'flex-start',
     borderRadius: 20,
     flexDirection: 'column',
     padding: 15,
+    paddingRight: 0,
   },
   locationContainer: {
     alignItems: 'flex-start',

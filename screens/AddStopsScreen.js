@@ -6,6 +6,7 @@ import { createTrip } from '../redux/actions/createtrip'
 import { Button, Icon } from 'native-base'
 import CardInputSelector from '../components/CardInputSelector'
 import { spotsFilter } from '../utils/spotsFilter'
+import Colors from '../constants/Colors'
 
 class AddStopsScreen extends Component {
   state = {
@@ -98,7 +99,7 @@ class AddStopsScreen extends Component {
 
         <View>
           <Button block style={styles.addButton} onPress={this.createTrip}>
-            <Text>Crear Viaje</Text>
+            <Text style={styles.whiteText}>Crear Viaje</Text>
           </Button>
         </View>
       </View>
@@ -112,7 +113,7 @@ AddStopsScreen.navigationOptions = {
 
 const styles = StyleSheet.create({
   addButton: {
-    backgroundColor: '#33C534',
+    backgroundColor: Colors.mainBlue,
     marginBottom: 25,
     marginLeft: 15,
     marginRight: 15,
@@ -149,6 +150,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginLeft: 10,
+  },
+  whiteText: {
+    color: 'white'
   },
 })
 

@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import ChooseTrips from '../components/Trips/ChooseTrips'
 import { fetchFutureTrips } from '../redux/actions/trips'
+import Colors from '../constants/Colors'
 
 class ChooseTripsScreen extends Component {
   static navigationOptions = {
@@ -92,7 +93,7 @@ ChooseTripsScreen.defaultProps = {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#f4f7fc',
+    backgroundColor: Colors.lightBackground,
     padding: 15,
     ...StyleSheet.absoluteFill,
   },

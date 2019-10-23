@@ -38,7 +38,6 @@ export const Trip = ({ timestamp, spacesUsed, onPressTrip, asDriver }) => {
               <Text style={styles.spacesUsed}>{spacesUsed}</Text>
               <CardIcon
                 name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'}
-                bottom
               />
             </View>
           </View>

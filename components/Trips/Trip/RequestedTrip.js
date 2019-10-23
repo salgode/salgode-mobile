@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Platform, TouchableOpacity } from 'react-native'
+import { StyleSheet, Platform } from 'react-native'
 import Location from './Location'
 import Colors from '../../../constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
@@ -32,47 +32,45 @@ const RequestedTrip = ({
   }
 
   return (
-    <TouchableOpacity
-      onPress={() => {
-        onPressTrip(asDriver)
-      }}
-    >
-      <Card style={styles.containerRequested}>
-        <View style={{ ...styles.status, backgroundColor: statusColor }}>
-          <Text style={styles.statusText}>{statusText}</Text>
-        </View>
-        <CardItem>
-          <View style={styles.user}>
-            <View style={styles.userData}>
-              {user.selfieLink ? (
-                <Thumbnail source={{ uri: user.selfieLink }} />
-              ) : (
-                <Ionicons
-                  name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-                  size={40}
-                />
-              )}
-              <Text style={styles.userText}>{user.name}</Text>
-            </View>
+    <Card style={styles.containerRequested} borderWidth={5}>
+      <View style={{ ...styles.status, backgroundColor: statusColor }}>
+        <Text style={styles.statusText}>{statusText}</Text>
+      </View>
+      <CardItem>
+        <View style={styles.user}>
+          <View style={styles.userData}>
+            {user.selfieLink ? (
+              <Thumbnail source={{ uri: user.selfieLink }} />
+            ) : (
+              <Ionicons
+                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                size={40}
+              />
+            )}
+            <Text style={styles.userText}>{user.name}</Text>
           </View>
-        </CardItem>
-        <CardItem style={styles.locationContainer}>
-          <Location color={'#0000FF'} location={startLocation} />
-          <Location color={'#33C534'} location={endLocation} />
-        </CardItem>
-        <CardItem>
-          <TimeInfo timestamp={timestamp} />
-        </CardItem>
-        <CardItem style={styles.containerBottom}>
-          <Button borderRadius={10} style={styles.button} onPress={onSend}>
-            <Text>Ver Viaje</Text>
-          </Button>
-          <Button borderRadius={10} style={styles.button} onPress={onSend}>
-            <Text>Cancelar</Text>
-          </Button>
-        </CardItem>
-      </Card>
-    </TouchableOpacity>
+        </View>
+      </CardItem>
+      <CardItem style={styles.locationContainer}>
+        <Location color={'#0000FF'} location={startLocation} />
+        <Location color={'#33C534'} location={endLocation} />
+      </CardItem>
+      <CardItem>
+        <TimeInfo timestamp={timestamp} />
+      </CardItem>
+      <CardItem style={styles.containerBottom}>
+        <Button
+          borderRadius={10}
+          style={styles.button}
+          onPress={() => onPressTrip(asDriver)}
+        >
+          <Text style={styles.blueText}>Ver Viaje</Text>
+        </Button>
+        <Button borderRadius={10} style={styles.cancelButton} onPress={onSend}>
+          <Text style={styles.cancelText}>Cancelar</Text>
+        </Button>
+      </CardItem>
+    </Card>
   )
 }
 
@@ -90,8 +88,21 @@ RequestedTrip.propTypes = {
 }
 
 const styles = StyleSheet.create({
+  blueText: {
+    color: '#0000FF',
+  },
   button: {
-    backgroundColor: '#0000FF',
+    backgroundColor: 'white',
+    borderColor: '#0000FF',
+    borderWidth: 1,
+  },
+  cancelButton: {
+    backgroundColor: 'white',
+    borderColor: '#FF5242',
+    borderWidth: 1,
+  },
+  cancelText: {
+    color: '#FF5242',
   },
   containerBottom: {
     justifyContent: 'space-evenly',
@@ -99,9 +110,17 @@ const styles = StyleSheet.create({
   },
   containerRequested: {
     alignItems: 'flex-start',
-    borderColor: 'white',
+    // borderColor: Colors.lightBackground,
     borderRadius: 20,
+    // borderWidth: 10,
     padding: 15,
+    shadowColor: '#b3b3b3',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
   },
   locationContainer: {
     alignItems: 'flex-start',

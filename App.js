@@ -5,9 +5,16 @@ import React, { useState } from 'react'
 import { Platform, StatusBar, StyleSheet, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Provider } from 'react-redux'
+import { SafeAreaView } from 'react-navigation'
 
 import AppNavigator from './navigation/AppNavigator'
 import { store } from './redux/store'
+
+// Esto es para arreglar el ancho del header de react navigation
+// No es un bug, solución aca https://github.com/react-navigation/react-navigation/releases/tag/v1.0.0-beta.26
+if (Platform.OS === 'android') {
+  SafeAreaView.setStatusBarHeight(0)
+}
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false)

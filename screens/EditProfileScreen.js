@@ -8,6 +8,7 @@ import {
   Alert,
   ActivityIndicator,
   TouchableOpacity,
+  Platform,
 } from 'react-native'
 import {
   Button,
@@ -25,6 +26,7 @@ import { withNavigation } from 'react-navigation'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { connect } from 'react-redux'
 import { updateUser, signoutUser } from '../redux/actions/user'
+import { Ionicons } from '@expo/vector-icons'
 import Layout from '../constants/Layout'
 import PropTypes from 'prop-types'
 import Colors from '../constants/Colors'
@@ -35,7 +37,7 @@ function validateName(str) {
   }
   str = str.trim()
 
-  if (str.length < 'Ana'.length) {
+  if (str.length < 'Al'.length) {
     return false
   }
   if (str.length >= 256) {
@@ -43,7 +45,7 @@ function validateName(str) {
   }
 
   // letters, dash, space
-  return /^[- A-Za-zÁÉÍÓÚÑÜáéíóúñü]+$/g.test(str)
+  return /^[ A-Za-zÁÉÍÓÚÑÜáéíóúñü]+$/g.test(str)
 }
 
 function validatePlate(str) {
@@ -174,7 +176,7 @@ Field.propTypes = {
 }
 
 const EditProfileScreen = props => {
-  const { navigation } = props
+  // const { navigation } = props
 
   const [name, setName] = React.useState('')
   const [lastName, setLastName] = React.useState('')
@@ -359,11 +361,6 @@ const EditProfileScreen = props => {
     )
   }
 
-  const signOut = () => {
-    props.signOut()
-    navigation.navigate('LoginStack')
-  }
-
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.flex1}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -424,22 +421,11 @@ const EditProfileScreen = props => {
               <Button
                 block
                 borderRadius={10}
-                color="#0000FF"
                 style={styles.blueButton}
                 disabled={isSaving || !isValidUser()}
                 onPress={onPressSaveProfile}
               >
                 <Text style={styles.buttonText}> Guardar cambios</Text>
-              </Button>
-              <Button
-                block
-                borderRadius={10}
-                color="#FF5242"
-                style={styles.redButton}
-                disabled={isSaving || !isValidUser}
-                onPress={() => signOut()}
-              >
-                <Text>Cerrar Sesión</Text>
               </Button>
             </Form>
           </View>
@@ -448,10 +434,6 @@ const EditProfileScreen = props => {
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   )
-}
-
-EditProfileScreen.navigationOptions = {
-  title: 'Editar perfil',
 }
 
 EditProfileScreen.propTypes = {
@@ -475,11 +457,11 @@ EditProfileScreen.propTypes = {
   signOut: PropTypes.func.isRequired,
 }
 
-const mapPropsToState = state => ({
+const mapStateToProps = state => ({
   user: state.user,
 })
 
-const mapDispatchToState = dispatch => ({
+const mapDispatchToProps = dispatch => ({
   updateUser: (name, lastName, email, phone, password, car, id, authToken) =>
     dispatch(
       updateUser(name, lastName, email, phone, password, car, id, authToken)
@@ -487,17 +469,12 @@ const mapDispatchToState = dispatch => ({
   signOut: () => dispatch(signoutUser()),
 })
 
-export default connect(
-  mapPropsToState,
-  mapDispatchToState
-)(withNavigation(EditProfileScreen))
-
 const photoSize = 96
 
 const styles = StyleSheet.create({
   artificialKeyboardPadding: { height: 128 },
   blueButton: {
-    // backgroundColor: '#0000FF',
+    backgroundColor: '#0000FF',
     marginTop: 30,
   },
   button: {
@@ -545,6 +522,9 @@ const styles = StyleSheet.create({
     color: '#8c8c8c',
     fontSize: 14,
   },
+  logout: {
+    marginRight: 8,
+  },
   profilePhoto: {
     alignItems: 'center',
     borderColor: 'gray',
@@ -568,10 +548,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingHorizontal: 12,
   },
-  redButton: {
-    // backgroundColor: '#FF5242',
-    marginTop: 20,
-  },
   row: {
     flexDirection: 'row',
   },
@@ -580,3 +556,44 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
 })
+
+const _SignOutC = props => (
+  <TouchableOpacity
+    onPress={() =>
+      Alert.alert('Salir', '¿Deseas cerrar sesión?', [
+        {
+          text: 'Si',
+          onPress: () => {
+            // eslint-disable-next-line react/prop-types
+            props.navigation.navigate('LoginStack')
+            // eslint-disable-next-line react/prop-types
+            props.signOut()
+          },
+        },
+        { text: 'No', style: 'cancel' },
+      ])
+    }
+  >
+    <View style={styles.logout}>
+      <Ionicons
+        name={Platform.OS === 'ios' ? 'ios-log-out' : 'md-log-out'}
+        size={25}
+      />
+    </View>
+  </TouchableOpacity>
+)
+
+const SignOutC = connect(
+  null,
+  mapDispatchToProps
+)(_SignOutC)
+
+EditProfileScreen.navigationOptions = ({ navigation }) => ({
+  title: 'Editar perfil',
+  headerRight: <SignOutC navigation={navigation} />,
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withNavigation(EditProfileScreen))

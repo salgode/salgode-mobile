@@ -43,6 +43,10 @@ export default function userReducer(state = {}, action) {
       return { ...state, loading: true }
     case userActions.USER_UPLOAD_IMAGE_SUCCESS:
       return { ...state, loading: false }
+    case userActions.USER_GET_TRIPS:
+      return { ...state, loading: true }
+    case userActions.USER_GET_TRIPS_SUCCESS:
+      return { ...state, loading: false, trips: action.payload.data }
     default:
       return state
   }

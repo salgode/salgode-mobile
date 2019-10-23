@@ -23,7 +23,7 @@ class AddStopsScreen extends Component {
   }
 
   createTrip = () => {
-    const { startStop, endStop, startTime } = this.props
+    const { startStop, endStop, startTime, user } = this.props
     const { stops } = this.state
     const stops_ids = stops.map(stop => {
       return stop.id
@@ -31,7 +31,7 @@ class AddStopsScreen extends Component {
 
     const route_points = [startStop.id].concat(stops_ids, endStop.id)
 
-    this.props.createTrip(route_points, startTime)
+    this.props.createTrip(route_points, startTime, user.token)
   }
 
   renderStops = () => {

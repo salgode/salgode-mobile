@@ -26,7 +26,7 @@ class CreateTripScreen extends Component {
   }
 
   componentDidMount = () => {
-    this.props.getAllSpots()
+    this.props.getAllSpots(this.props.user.token)
   }
 
   showDateTimePicker = () => {

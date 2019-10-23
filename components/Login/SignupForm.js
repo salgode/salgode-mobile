@@ -201,7 +201,7 @@ class SignupForm extends Component {
             value={this.state.password}
           />
         </Item>
-        <Item floatingLabel last style={styles.item}>
+        <Item floatingLabel style={styles.item}>
           <Label
             style={{
               color:

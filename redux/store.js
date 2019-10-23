@@ -2,7 +2,7 @@ import { applyMiddleware, combineReducers, createStore } from 'redux'
 import axiosMiddleware from 'redux-axios-middleware'
 import axios from 'axios'
 import userReducer from './reducers/user'
-import futureTripReducer from './reducers/trips'
+import tripReducer from './reducers/trips'
 import { userModel } from './models/user'
 import { futureTripsModel } from './models/trips'
 import createTripReducer from './reducers/createTrip'
@@ -29,7 +29,7 @@ const client = axios.create({
 
 const reducer = combineReducers({
   user: userReducer,
-  futureTrips: futureTripReducer,
+  trips: tripReducer,
   createTrip: createTripReducer,
   spots: spotsReducer,
   slots: slotsReducer,
@@ -42,7 +42,7 @@ export const store = createStore(
     user: userModel,
     createTrip: createTripModel,
     spots: spotsModel,
-    futureTrips: futureTripsModel,
+    trips: futureTripsModel,
   },
   applyMiddleware(axiosMiddleware(client))
 )

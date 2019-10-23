@@ -12,7 +12,7 @@ export function createSlot(authToken, tripId, userId) {
         url: `/trips/${tripId}/slots`,
         method: 'post',
         headers: {
-          Authorization: authToken,
+          Authorization: `Bearer ${authToken}`,
         },
         body: {
           trip_id: tripId,

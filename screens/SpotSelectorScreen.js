@@ -6,7 +6,7 @@ import CardInputSelector from '../components/CardInputSelector'
 class SpotSelectorScreen extends Component {
   render() {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <CardInputSelector
           text="#Desde"
           placeHolder="Filtra por Comuna o Parada"
@@ -16,9 +16,9 @@ class SpotSelectorScreen extends Component {
           editable={false}
           onPress={() => {}}
         />
-        <ScrollView>
+        {/* <ScrollView>
           <Text>Hola Wayo</Text>
-        </ScrollView>
+        </ScrollView> */}
       </View>
     )
   }

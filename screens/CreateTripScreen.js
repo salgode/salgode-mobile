@@ -69,7 +69,7 @@ class CreateTripScreen extends Component {
               placeHolder="Filtra por Comuna o Parada"
               onSelect={item => this.props.setStartStop(item)}
               onClear={this.props.clearStartStop}
-              data={filteredSlots}
+              // data={filteredSlots}
               editable={false}
               onPress={() =>
                 navigation.navigate('SpotSelectorScreen', {

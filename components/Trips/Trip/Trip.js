@@ -8,11 +8,17 @@ import CardIcon from './CardIcon'
 import TimeInfo from './TimeInfo'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
-export const Trip = ({ timestamp, spacesUsed, onPressTrip, asDriver }) => {
+export const Trip = ({
+  timestamp,
+  spacesUsed,
+  onPressTrip,
+  asDriver,
+  tripId,
+}) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        onPressTrip(asDriver)
+        onPressTrip(asDriver, tripId)
       }}
     >
       <Card style={[styles.container, styles.shadow]}>
@@ -52,6 +58,7 @@ Trip.propTypes = {
   spacesUsed: PropTypes.number.isRequired,
   onPressTrip: PropTypes.func.isRequired,
   asDriver: PropTypes.bool.isRequired,
+  tripId: PropTypes.string.isRequired,
 }
 
 const styles = StyleSheet.create({

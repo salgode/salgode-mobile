@@ -31,7 +31,7 @@ class MyTrips extends Component {
               endLocation={item.trip_route.end}
             />
           )}
-          keyExtractor={item => item.tripId}
+          keyExtractor={item => item.trip_id}
         />
       </SafeAreaView>
     )

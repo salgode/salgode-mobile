@@ -1,3 +1,5 @@
+import { getBaseHeaders } from '../../config/api/headers'
+
 export const actions = {
   RETRIEVE_ALL_SPOTS: 'RETRIEVE_ALL_SPOTS',
   RETRIEVE_ALL_SPOTS_SUCCESS: 'RETRIEVE_ALL_SPOTS_SUCCESS',
@@ -11,9 +13,7 @@ export function getAllSpots(token) {
       request: {
         url: `/spots`,
         method: 'get',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: getBaseHeaders(authToken),
       },
     },
   }

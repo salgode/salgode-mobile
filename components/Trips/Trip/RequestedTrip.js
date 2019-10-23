@@ -16,6 +16,7 @@ const RequestedTrip = ({
   onSend,
   onPressTrip,
   asDriver,
+  tripId,
 }) => {
   let statusColor
   let statusText
@@ -73,7 +74,7 @@ const RequestedTrip = ({
         <Button
           borderRadius={10}
           style={styles.button}
-          onPress={() => onPressTrip(asDriver)}
+          onPress={() => onPressTrip(asDriver, tripId)}
         >
           <Text style={styles.blueText}>Ver Viaje</Text>
         </Button>
@@ -95,7 +96,7 @@ RequestedTrip.propTypes = {
   startLocation: PropTypes.string,
   endLocation: PropTypes.string,
   onSend: PropTypes.func,
-  tripId: PropTypes.string,
+  tripId: PropTypes.string.isRequired,
 }
 
 const styles = StyleSheet.create({
@@ -166,4 +167,5 @@ RequestedTrip.propTypes = {
   status: PropTypes.string.isRequired,
   onPressTrip: PropTypes.func.isRequired,
   asDriver: PropTypes.bool.isRequired,
+  tripId: PropTypes.string.isRequired,
 }

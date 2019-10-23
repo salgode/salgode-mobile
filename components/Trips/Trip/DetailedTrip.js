@@ -1,14 +1,13 @@
 import React from 'react'
-import { StyleSheet } from 'react-native'
-import { Card, View, Text, CardItem, Button } from 'native-base'
+import { StyleSheet, Platform } from 'react-native'
+import { Card, View, Text, CardItem, Button, Thumbnail } from 'native-base'
 import Location from './Location'
 import PropTypes from 'prop-types'
 import Colors from '../../../constants/Colors'
 import TimeInfo from './TimeInfo'
+import { Ionicons } from '@expo/vector-icons'
 
-export const DetailedTrip = ({ trip, asDriver }) => {
-  // const driver = trip ? trip.driver : null
-
+export const DetailedTrip = ({ trip, asDriver, driver, token }) => {
   function renderLocation(locations) {
     return locations.map((location, index) => {
       let color
@@ -29,11 +28,14 @@ export const DetailedTrip = ({ trip, asDriver }) => {
     })
   }
 
-  function startTrip() {
+  function startTrip(token) {
     // TODO: connect to server
     // TODO: navigate to current trip screen
-    // console.log('trip!')
+    // eslint-disable-next-line no-console
+    // console.log('trip!', token)
   }
+
+  const selfieImage = driver != null ? driver.avatar : 'placeholder'
 
   return trip != null ? (
     <Card
@@ -46,38 +48,31 @@ export const DetailedTrip = ({ trip, asDriver }) => {
         <Text style={styles.userText}>Resumen Viaje</Text>
       </View>
       <CardItem>
+        {/* TODO: if  as driver, don't show name and thumbnail*/}
         <View style={styles.user}>
-          {/* <View> */}
-          {/* TODO: thumbs <View style={styles.iconContainer}>
-                <Ionicons
-                name={Platform.OS === 'ios' ? 'ios-thumbs-up' : 'md-thumbs-up'}
-                size={30}
-                color={Colors.textGray}
-                />
-                <Text style={styles.iconText}>{driver.reputation}</Text>
-            </View>*/}
-          {/* <View style={styles.iconContainer}>
-                <Ionicons
-                name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'}
-                size={30}
-                color={Colors.textGray}
-                /> */}
-          {/* TODO: spacesUsed */}
-          {/* <Text style={styles.iconText}>{spacesUsed}</Text> */}
-          {/* </View> */}
-          {/* </View> */}
+          {selfieImage && selfieImage !== 'placeholder' ? (
+            <Thumbnail source={{ uri: selfieImage }} />
+          ) : (
+            <Ionicons
+              name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+              size={40}
+            />
+          )}
+          <Text style={styles.userText}>
+            {driver.first_name} {driver.last_name}
+          </Text>
         </View>
       </CardItem>
       <CardItem style={styles.locationContainer}>
-        {renderLocation(trip.route_points)}
+        {renderLocation(trip.trip_route_points)}
       </CardItem>
       <CardItem>
-        <TimeInfo timestamp={trip.etd} isDate />
+        <TimeInfo timestamp={Date.parse(trip.etd)} isDate />
       </CardItem>
       {asDriver ? (
         <Button
           style={{ alignSelf: 'center', backgroundColor: '#0000FF' }}
-          onPress={() => startTrip()}
+          onPress={() => startTrip(token)}
         >
           <Text style={{ color: 'white', fontSize: 18, fontWeight: '800' }}>
             Iniciar Viaje
@@ -91,6 +86,7 @@ export const DetailedTrip = ({ trip, asDriver }) => {
 DetailedTrip.propTypes = {
   trip: PropTypes.object,
   asDriver: PropTypes.bool,
+  driver: PropTypes.object,
 }
 
 const styles = StyleSheet.create({
@@ -117,17 +113,16 @@ const styles = StyleSheet.create({
   user: {
     alignItems: 'center',
     flexDirection: 'row',
-    width: '80%',
   },
   userData: {
     alignSelf: 'center',
-    flexDirection: 'column',
+    flexDirection: 'row',
     justifyContent: 'center',
   },
   userText: {
     fontSize: 17,
     fontWeight: 'bold',
-    textAlign: 'center',
+    marginLeft: 15,
   },
 })
 

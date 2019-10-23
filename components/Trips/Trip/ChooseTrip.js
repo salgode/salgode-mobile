@@ -41,10 +41,9 @@ const ChooseTrip = ({
     Promise.all([stopsPromise, userPromise]).then(() => setLoading(false))
   }, [])
 
-  if (loading) {
-    return <View></View>
-  }
-  return (
+  return loading ? (
+    <View></View>
+  ) : (
     <Card style={styles.containerRequested}>
       <CardItem style={styles.dataContainer}>
         <View style={styles.user}>
@@ -57,12 +56,12 @@ const ChooseTrip = ({
               {`${user.first_name} ${user.last_name}`}
             </Text>
           </View>
-          {/* <View style={styles.iconInfoGroup}>
-              <View style={styles.iconContainer}>
-                <Icon name="like1" style={styles.infoIcon} />
-                <Text style={styles.iconText}>{user.reputation}</Text>
-              </View>
-            </View> */}
+          <View style={styles.iconInfoGroup}>
+            <View style={styles.iconContainer}>
+              <Icon name="like1" style={styles.infoIcon} />
+              <Text style={styles.iconText}>{user.reputation}</Text>
+            </View>
+          </View>
         </View>
       </CardItem>
       <CardItem style={styles.locationContainer}>

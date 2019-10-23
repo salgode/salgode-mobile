@@ -1,3 +1,6 @@
+import { getDefaultHeaders, getBaseHeaders } from '../../config/api/headers'
+import { signin_url } from '../../config/api/endpoints'
+
 export const actions = {
   USER_LOGIN: 'USER/LOGIN',
   USER_LOGIN_FAIL: 'USER/LOGIN_FAIL',
@@ -21,12 +24,13 @@ const mapDataToUser = data => {
   // console.log(data)
   let user = {
     token: data.bearer_token,
-    email: data.email,
+    //email: data.email,
     name: data.first_name,
-    lastName: data.last_name,
-    phone: data.phone,
+    //lastName: data.last_name,
+    //phone: data.phone,
     userId: data.user_id,
-    car: data.car,
+    selfie: data.avatar,
+    //car: data.car,
   }
 
   if (data.user_identifications) {
@@ -46,18 +50,21 @@ export function loginUser(email, password) {
     type: actions.USER_LOGIN,
     payload: {
       request: {
-        url: `/sign_in`,
+        url: signin_url,
         method: 'post',
+        headers: getDefaultHeaders(),
         data: {
           email,
           password,
         },
-        transformResponse: data => ({
-          token: data.bearer_token,
-          userId: data.user_id,
-          name: data.first_name,
-          avatar: data.avatar,
-        }),
+        transformResponse: data => {
+          return ({
+            token: data.bearer_token,
+            userId: data.user_id,
+            name: data.first_name,
+            avatar: data.avatar,
+          })
+        },
       },
     },
   }
@@ -98,6 +105,7 @@ export function signupUser(
       request: {
         url: `/sign_up`,
         method: 'post',
+        headers: getDefaultHeaders(),
         data: data,
         transformResponse: data => mapDataToUser(data),
       },
@@ -143,9 +151,7 @@ export function updateUser(
       request: {
         url: `/users/${id}`,
         method: 'patch',
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
+        headers: getBaseHeaders(authToken),
         data: data,
       },
     },
@@ -168,9 +174,7 @@ export function fetchUser(authToken, id) {
       request: {
         url: `/users/${id}`,
         method: 'get',
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
+        headers: getBaseHeaders(authToken),
       },
     },
   }

@@ -1,14 +1,13 @@
 import React from 'react'
-import { StyleSheet, Platform } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { Card, View, Text, CardItem, Button } from 'native-base'
 import Location from './Location'
 import PropTypes from 'prop-types'
 import Colors from '../../../constants/Colors'
 import TimeInfo from './TimeInfo'
-import { Ionicons } from '@expo/vector-icons'
 
 export const DetailedTrip = ({ trip, asDriver }) => {
-  const driver = trip ? trip.driver : null
+  // const driver = trip ? trip.driver : null
 
   function renderLocation(locations) {
     return locations.map((location, index) => {
@@ -43,19 +42,13 @@ export const DetailedTrip = ({ trip, asDriver }) => {
         ...styles.shadow,
       }}
     >
+      <View style={styles.userData}>
+        <Text style={styles.userText}>Resumen Viaje</Text>
+      </View>
       <CardItem>
         <View style={styles.user}>
-          <View style={styles.userData}>
-            <Ionicons
-              name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-              size={40}
-            />
-            <Text style={styles.userText}>
-              {driver.name} {driver.lastName}
-            </Text>
-          </View>
-          <View>
-            {/* TODO: thumbs <View style={styles.iconContainer}>
+          {/* <View> */}
+          {/* TODO: thumbs <View style={styles.iconContainer}>
                 <Ionicons
                 name={Platform.OS === 'ios' ? 'ios-thumbs-up' : 'md-thumbs-up'}
                 size={30}
@@ -63,16 +56,16 @@ export const DetailedTrip = ({ trip, asDriver }) => {
                 />
                 <Text style={styles.iconText}>{driver.reputation}</Text>
             </View>*/}
-            {/* <View style={styles.iconContainer}>
+          {/* <View style={styles.iconContainer}>
                 <Ionicons
                 name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'}
                 size={30}
                 color={Colors.textGray}
                 /> */}
-            {/* TODO: spacesUsed */}
-            {/* <Text style={styles.iconText}>{spacesUsed}</Text> */}
-            {/* </View> */}
-          </View>
+          {/* TODO: spacesUsed */}
+          {/* <Text style={styles.iconText}>{spacesUsed}</Text> */}
+          {/* </View> */}
+          {/* </View> */}
         </View>
       </CardItem>
       <CardItem style={styles.locationContainer}>
@@ -105,15 +98,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     borderColor: 'white',
     borderRadius: 20,
-    // flexDirection: 'row',
-    // justifyContent: 'space-between',
+    marginBottom: 25,
     padding: 15,
   },
   locationContainer: {
     alignItems: 'flex-start',
     flexDirection: 'column',
-    // height: 150,
-    // justifyContent: 'space-evenly',
   },
   shadow: {
     shadowColor: '#b3b3b3',
@@ -121,22 +111,23 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.5,
+    shadowOpacity: 0.8,
     shadowRadius: 5,
   },
   user: {
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 300,
+    width: '80%',
   },
   userData: {
-    alignItems: 'center',
-    flexDirection: 'row',
+    alignSelf: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
   userText: {
     fontSize: 17,
-    marginLeft: 15,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 })
 

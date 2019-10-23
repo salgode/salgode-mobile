@@ -94,6 +94,7 @@ class TripsScreen extends Component {
         {this.state.loading && <Spinner color="blue" />}
         {!this.state.loading && (
           <Trips
+            key={`trips-${this.props.isRequestedTrips ? 'requested' : ''}`}
             isRequestedTrips={this.props.isRequestedTrips}
             trips={this.props.trips}
             onPressTrip={this.onPressTrip}

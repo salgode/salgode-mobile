@@ -49,9 +49,7 @@ export default class TripRequestCard extends Component {
   render() {
     /*const { finalLocation } = this.state*/
     const selfieImage =
-      this.state.passenger != null
-        ? this.state.passenger.user_identifications.selfie_image
-        : null
+      this.state.passenger != null ? this.state.passenger.avatar : 'placeholder'
 
     return this.state.passenger !== null &&
       this.state.slot &&

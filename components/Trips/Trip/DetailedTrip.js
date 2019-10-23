@@ -36,8 +36,7 @@ export const DetailedTrip = ({ trip, asDriver, driver }) => {
 
   const token = 123 //TODO: get from redux
 
-  const selfieImage =
-    driver != null ? driver.user_identifications.selfie_image : null
+  const selfieImage = driver != null ? driver.avatar : 'placeholder'
 
   return trip != null ? (
     <Card

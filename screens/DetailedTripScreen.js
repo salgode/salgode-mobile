@@ -5,6 +5,9 @@ import DetailedTrip from '../components/Trips/Trip/DetailedTrip'
 import { Spinner } from 'native-base'
 import TripRequestCard from '../components/Trips/Trip/TripRequestCard'
 import { ScrollView } from 'react-native-gesture-handler'
+import { connect } from 'react-redux'
+import { withNavigation } from 'react-navigation'
+import { client } from '../redux/store'
 
 class DetailedTripScreen extends Component {
   static navigationOptions = {
@@ -18,7 +21,7 @@ class DetailedTripScreen extends Component {
       trip: null,
       asDriver: false,
       tripId: '',
-      token: '',
+      token: 'Bearer 12345',
       driver: null,
       slots: [],
     }
@@ -31,15 +34,10 @@ class DetailedTripScreen extends Component {
   }
 
   componentDidMount() {
-    // this.setState({
-    //   // asDriver: this.props.navigation.getParam('asDriver', false),
-    //   asDriver: true,
-    // })
-    // // this.setState({ tripId: this.props.navigation.getParam('tripId', '') })
     // // this.setState({ token: '' }) // TODO: get token from redux store
     const asDriver = this.props.navigation.getParam('asDriver', null)
     const tripId = this.props.navigation.getParam('tripId', null)
-    this.getTrip(tripId, asDriver, '')
+    this.getTrip(tripId, asDriver, 'Bearer 12345')
   }
 
   async fetchDriver(driverId, token) {
@@ -86,61 +84,141 @@ class DetailedTripScreen extends Component {
         phone: '999999999',
         first_name: 'Test',
       },
-      {
-        user_id: 'usr_fe4e267f-c29d-468f-855a-4b592cbdff1f',
-        user_identifications: {
-          identification_image_front: 'placeholder',
-          identification_image_back: 'placeholder',
-          selfie_image: 'placeholder',
-        },
-        email: 'test3@example.com',
-        last_name: 'Test',
-        phone: '999999999',
-        first_name: 'Test',
-      },
     ]
   }
 
+  async getUser(userId, token) {
+    return await client
+      .request({
+        method: 'get',
+        url: `/users/${userId}`,
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then(resp => {
+        resp.data.phone = '999999999' // TODO: ask backend o add phone number
+        // eslint-disable-next-line no-console
+        console.log('PHONE', resp.data)
+        return resp.data
+      })
+    /*
+      {
+      "avatar": "https://www.placecage.com/512/512",
+      "first_name": "Another",
+      "last_name": "User",
+      "user_id": "usr_23456",
+      "verifications": Object {
+        "drivers_license": true,
+        "identity": true,
+        "phone": true,
+      },
+    */
+  }
+
+  async fetchDriver(driverId, token) {
+    return this.getUser(driverId, token)
+  }
+
+  async fetchPassengers(userIds, token) {
+    return await Promise.all(userIds.map(userId => this.getUser(userId, token)))
+  }
+
   async fetchTrip(tripId, token) {
-    // eslint-disable-next-line no-console
-    console.log(tripId, token)
-    // TODO: fetch from server
-    return {
-      trip_status: 'open',
-      created_at: '2019-10-22T16:41:55-04:00',
-      route_points: [
-        'spt_d1cd6d79-6fad-4b37-9f87-48e169c9d530',
-        'spt_d5eb212a-ab53-4f0e-9e49-15f288ee2cbf',
-      ],
-      trip_id: 'tri_112b05c8-0973-4160-a40b-f0d588ec2503',
-      etd: '2019-10-22T17:10:00.000Z',
-      trip_route_points: [
-        {
-          city: 'SANTIAGO',
-          icon:
-            'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png',
-          commune: 'PROVIDENCIA',
-          lon: '-33,4202039',
-          address:
-            'San Pío X 5255, Vitacura, Providencia, Región Metropolitana',
-          lat: '-70,6008346',
-          name: 'Centro comercial Plaza San Pío, Vitacura 5255',
-          type: "['shopping_mall', 'point_of_interest', 'establishment']",
+    return await client
+      .request({
+        method: 'get',
+        url: `/trips/${tripId}`,
+        headers: {
+          Authorization: token,
         },
-        {
-          city: 'SANTIAGO',
-          icon:
-            'https://maps.gstatic.com/mapfiles/place_api/icons/train-71.png',
-          commune: 'MAIPU',
-          lon: '-70.74149089',
-          address: 'Avda. Pajaritos 5090',
-          lat: '-33.47735571',
-          name: 'LAS PARCELAS',
-          type: "['subway_station']",
+      })
+      .then(resp => resp.data)
+    /*
+      {
+        "available_seats": 3,
+        "driver_id": "usr_12345",
+        "etd": "2019-10-23T05:40:00.000Z",
+        "route": Object {
+          "end": "pnt_4",
+          "start": "pnt_1",
         },
-      ],
-      driver_id: 'usr_fe4e267f-c29d-468f-855a-4b592cbdff1f',
-    }
+        "route_points": Array [
+          "pnt_1",
+          "pnt_2",
+          "pnt_3",
+          "pnt_4",
+        ],
+        "seats": 4,
+        "trip_id": "tri_12345",
+        "trip_route": Object {
+          "end": Object {
+            "id": "pnt_4",
+            "name": "TOBALABA L1",
+          },
+          "start": Object {
+            "id": "pnt_1",
+            "name": "Centro Artesanal Pueblito Los Dominicos",
+          },
+        },
+        "trip_route_points": Array [
+          Object {
+            "id": "pnt_1",
+            "name": "Centro Artesanal Pueblito Los Dominicos",
+          },
+          Object {
+            "id": "pnt_2",
+            "name": "METRO MANQUEHUE",
+          },
+          Object {
+            "id": "pnt_3",
+            "name": "METRO ESCUELA MILITAR",
+          },
+          Object {
+            "id": "pnt_4",
+            "name": "TOBALABA L1",
+          },
+        ],
+        "trip_status": "open",
+        "vehicle_id": "veh_12345",
+      }
+    */
+    // return {
+    //   trip_status: 'open',
+    //   created_at: '2019-10-22T16:41:55-04:00',
+    //   route_points: [
+    //     'spt_d1cd6d79-6fad-4b37-9f87-48e169c9d530',
+    //     'spt_d5eb212a-ab53-4f0e-9e49-15f288ee2cbf',
+    //   ],
+    //   trip_id: 'tri_112b05c8-0973-4160-a40b-f0d588ec2503',
+    //   etd: '2019-10-22T17:10:00.000Z',
+    //   trip_route_points: [
+    //     {
+    //       city: 'SANTIAGO',
+    //       icon:
+    //         'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png',
+    //       commune: 'PROVIDENCIA',
+    //       lon: '-33,4202039',
+    //       address:
+    //         'San Pío X 5255, Vitacura, Providencia, Región Metropolitana',
+    //       lat: '-70,6008346',
+    //       name: 'Centro comercial Plaza San Pío, Vitacura 5255',
+    //       type: "['shopping_mall', 'point_of_interest', 'establishment']",
+    //     },
+    //     {
+    //       city: 'SANTIAGO',
+    //       icon:
+    //         'https://maps.gstatic.com/mapfiles/place_api/icons/train-71.png',
+    //       commune: 'MAIPU',
+    //       lon: '-70.74149089',
+    //       address: 'Avda. Pajaritos 5090',
+    //       lat: '-33.47735571',
+    //       name: 'LAS PARCELAS',
+    //       type: "['subway_station']",
+    //     },
+    //   ],
+    //   driver_id: 'usr_fe4e267f-c29d-468f-855a-4b592cbdff1f',
+    // }
   }
 
   async fetchSlots(tripId, token) {
@@ -183,7 +261,7 @@ class DetailedTripScreen extends Component {
       .catch(err => {
         // eslint-disable-next-line no-console
         console.log(err)
-        Alert.alert('0. Hubo un error, intenta de nuevo más tarde', err)
+        Alert.alert('Hubo un error, intenta de nuevo más tarde', err)
       })
 
     await this.fetchDriver(this.state.trip.driver_id, this.state.token)
@@ -192,7 +270,7 @@ class DetailedTripScreen extends Component {
         // eslint-disable-next-line no-console
         console.log(err)
         Alert.alert(
-          '1. Error obtiendo la información del conductor, inténtalo más tarde',
+          'Error obtiendo la información del conductor, inténtalo más tarde',
           err
         )
       })
@@ -201,12 +279,12 @@ class DetailedTripScreen extends Component {
       .then(slots => {
         this.setState({ slots })
         const passengerIds = slots.map(slot => slot.user_id)
-        this.fetchPassengers(passengerIds).then(passengers =>
+        this.fetchPassengers(passengerIds, token).then(passengers =>
           this.setState({ passengers })
         )
       })
       .catch(err => {
-        Alert.alert('1. Hubo un error, intenta de nuevo más tarde', err)
+        Alert.alert('Hubo un error, intenta de nuevo más tarde', err)
       })
 
     this.setState({ loading: false })
@@ -298,4 +376,13 @@ const styles = StyleSheet.create({
   },
 })
 
-export default DetailedTripScreen
+const mapPropsToState = state => ({
+  user: state.user,
+})
+
+const mapDispatchToState = () => ({})
+
+export default connect(
+  mapPropsToState,
+  mapDispatchToState
+)(withNavigation(DetailedTripScreen))

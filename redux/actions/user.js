@@ -12,9 +12,13 @@ export const actions = {
   USER_UPLOAD_IMAGE: 'USER/UPLOAD_IMAGE',
   USER_UPLOAD_IMAGE_FAIL: 'USER/UPLOAD_IMAGE_FAIL',
   USER_UPLOAD_IMAGE_SUCCESS: 'USER/UPLOAD_IMAGE_SUCCESS',
+  USER_GET_TRIPS: 'USER/GET_TRIPS',
+  USER_GET_TRIPS_FAIL: 'USER/GET_TRIPS_FAIL',
+  USER_GET_TRIPS_SUCCESS: 'USER/GET_TRIPS_SUCCESS',
 }
 
 const mapDataToUser = data => {
+  // console.log(data)
   let user = {
     token: data.bearer_token,
     email: data.email,
@@ -42,13 +46,18 @@ export function loginUser(email, password) {
     type: actions.USER_LOGIN,
     payload: {
       request: {
-        url: `/users/login`,
+        url: `/sign_in`,
         method: 'post',
         data: {
           email,
           password,
         },
-        transformResponse: mapDataToUser,
+        transformResponse: data => ({
+          token: data.bearer_token,
+          userId: data.user_id,
+          name: data.first_name,
+          avatar: data.avatar,
+        }),
       },
     },
   }
@@ -87,10 +96,10 @@ export function signupUser(
     type: actions.USER_SIGNUP,
     payload: {
       request: {
-        url: `/users`,
+        url: `/sign_up`,
         method: 'post',
         data: data,
-        transformResponse: data => mapDataToUser(data.user),
+        transformResponse: data => mapDataToUser(data),
       },
     },
   }
@@ -172,7 +181,7 @@ export function uploadImageUser(base64string) {
     type: actions.USER_UPLOAD_IMAGE,
     payload: {
       request: {
-        url: `/images`,
+        url: `/upload/image`,
         method: 'post',
         data: {
           base64string: `data:image/jpeg;base64,${base64string}`,
@@ -181,6 +190,21 @@ export function uploadImageUser(base64string) {
           return {
             img_id: data.img_id,
           }
+        },
+      },
+    },
+  }
+}
+
+export function userTrips(authToken) {
+  return {
+    type: actions.USER_GET_TRIPS,
+    payload: {
+      request: {
+        url: `/user/trips`,
+        method: 'get',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
         },
       },
     },

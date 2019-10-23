@@ -35,7 +35,6 @@ class DetailedTripScreen extends Component {
 
   async fetchTrip(token) {
     // eslint-disable-next-line no-console
-    console.log(token)
     // fetch from server
     return {
       trip_id: 'id',
@@ -109,7 +108,6 @@ class DetailedTripScreen extends Component {
 
   async fetchPassengers(tripId) {
     // eslint-disable-next-line no-console
-    console.log(tripId)
     // fetch from server
     return [
       {

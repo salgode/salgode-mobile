@@ -9,7 +9,7 @@ export function fetchFutureTrips(authToken) {
     type: actions.TRIPS_FETCH_FUTURE_TRIPS,
     payload: {
       request: {
-        url: `/trips`,
+        url: `/trips/open`,
         method: 'get',
         headers: {
           Authorization: `Bearer ${authToken}`,

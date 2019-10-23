@@ -16,7 +16,6 @@ export const getTripInfo = async (tripId, token) => {
       console.log(err)
       return null
     })
-  console.log(response)
   return response
 }
 

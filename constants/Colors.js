@@ -12,4 +12,9 @@ export default {
   noticeBackground: tintColor,
   noticeText: '#fff',
   textGray: '#8c8c8c',
+  mainBlue: '#0000FF',
+  mainRed: '#FF5242',
+  mainGreen: '#33C534',
+  mainGrey: '#818E94',
+  lightBackground: '#f4f7fc',
 }

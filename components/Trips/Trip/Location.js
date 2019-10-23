@@ -33,13 +33,13 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'flex-start',
     flexDirection: 'row',
+    marginBottom: 3,
     marginLeft: 9,
   },
   location: {
     color: 'grey',
     fontSize: 14,
     fontWeight: '600',
-    marginTop: 3,
   },
 })
 

@@ -56,11 +56,13 @@ class TripRequestScreen extends Component {
   }
 
   render() {
+    const { loading, stops } = this.state
     return (
       <View>
-        {this.state.loading && <Spinner style={styles.loading} />}
+        {/* {loading && <Spinner style={styles.loading} />} */}
         <TripRequest
-          stops={this.state.stops || []}
+          loading={loading}
+          stops={stops || []}
           onSend={this.onRequestSlot}
         />
       </View>
@@ -80,12 +82,6 @@ TripRequestScreen.propTypes = {
   }).isRequired,
   createSlot: PropTypes.func.isRequired,
 }
-
-const styles = StyleSheet.create({
-  loading: {
-    ...StyleSheet.absoluteFillObject,
-  },
-})
 
 const mapStateToProps = state => ({
   user: state.user,

@@ -1,6 +1,7 @@
 import React from 'react'
 import { createMaterialTopTabNavigator } from 'react-navigation'
 import TripsScreen from '../screens/TripsScreen'
+import Colors from '../constants/Colors'
 
 export default createMaterialTopTabNavigator(
   {
@@ -8,10 +9,13 @@ export default createMaterialTopTabNavigator(
       screen: props => <TripsScreen isRequestedTrips={false} {...props} />,
       navigationOptions: () => ({
         tabBarOptions: {
+          labelStyle: {
+            fontWeight: 'bold',
+          },
           activeTintColor: 'white',
           indicatorStyle: { backgroundColor: 'white' },
           style: {
-            backgroundColor: 'black',
+            backgroundColor: Colors.mainGrey,
           },
         },
         title: 'Mis Viajes',
@@ -21,10 +25,13 @@ export default createMaterialTopTabNavigator(
       screen: props => <TripsScreen isRequestedTrips {...props} />,
       navigationOptions: () => ({
         tabBarOptions: {
+          labelStyle: {
+            fontWeight: 'bold',
+          },
           activeTintColor: 'white',
           indicatorStyle: { backgroundColor: 'white' },
           style: {
-            backgroundColor: 'black',
+            backgroundColor: Colors.mainGrey,
           },
         },
         title: 'Pedidos',

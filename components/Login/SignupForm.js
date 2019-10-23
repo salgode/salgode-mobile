@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { Component } from 'react'
 import { StyleSheet } from 'react-native'
-import { Text, Form, Item, Input, Label, Button } from 'native-base'
+import { Text, Form, Item, Input, Label, Button, Spinner } from 'native-base'
 import Layout from '../../constants/Layout'
 import PropTypes from 'prop-types'
 import Colors from '../../constants/Colors'
@@ -107,6 +107,7 @@ class SignupForm extends Component {
   }
 
   render() {
+    const { loading } = this.props
     return (
       <Form style={styles.form}>
         <Item floatingLabel style={styles.item}>
@@ -219,15 +220,18 @@ class SignupForm extends Component {
             value={this.state.passwordRepeat}
           />
         </Item>
-        <Button
-          block
-          borderRadius={10}
-          style={styles.button}
-          disabled={!this.getValidity()}
-          onPress={this.onPress}
-        >
-          <Text>Siguiente</Text>
-        </Button>
+        {loading && <Spinner color={'#0000FF'} />}
+        {!loading && (
+          <Button
+            block
+            borderRadius={10}
+            style={styles.button}
+            disabled={!this.getValidity()}
+            onPress={this.onPress}
+          >
+            <Text>Siguiente</Text>
+          </Button>
+        )}
       </Form>
     )
   }
@@ -235,6 +239,7 @@ class SignupForm extends Component {
 
 SignupForm.propTypes = {
   onSend: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

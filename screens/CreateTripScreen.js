@@ -16,6 +16,7 @@ import {
 import { getAllSpots } from '../redux/actions/spots'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import { spotsFilter } from '../utils/spotsFilter'
+import Colors from '../constants/Colors'
 
 const colorScheme = Appearance.getColorScheme()
 
@@ -88,10 +89,10 @@ class CreateTripScreen extends Component {
 
           <View style={styles.group}>
             <Button style={styles.dateButton} onPress={this.showDateTimePicker}>
-              <Text style={styles.whiteText}>
+              <Text>
                 {pickedDate
                   ? `${day} - ${hours}:${minutes < 10 ? '0' : ''}${minutes}`
-                  : 'Hora/Fecha de Salida'}
+                  : 'Selecciona Hora/Fecha de Salida'}
               </Text>
             </Button>
             <DateTimePicker
@@ -125,7 +126,7 @@ CreateTripScreen.navigationOptions = {
 
 const styles = StyleSheet.create({
   addButton: {
-    backgroundColor: '#33C534',
+    backgroundColor: Colors.mainBlue,
     marginBottom: 25,
     marginLeft: 15,
     marginRight: 15,
@@ -147,7 +148,9 @@ const styles = StyleSheet.create({
   },
 
   dateButton: {
-    backgroundColor: '#0000FF',
+    backgroundColor: 'white',
+    borderColor: Colors.mainGrey,
+    borderWidth: 1,
     justifyContent: 'center',
     marginTop: 20,
   },

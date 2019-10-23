@@ -5,6 +5,7 @@ import Location from './Location'
 import PropTypes from 'prop-types'
 import Colors from '../../../constants/Colors'
 import TimeInfo from './TimeInfo'
+import { Ionicons } from '@expo/vector-icons'
 
 export const DetailedTrip = ({ trip, asDriver, driver }) => {
   function renderLocation(locations) {
@@ -50,19 +51,17 @@ export const DetailedTrip = ({ trip, asDriver, driver }) => {
       </View>
       <CardItem>
         <View style={styles.user}>
-          <View style={styles.userData}>
-            {selfieImage && selfieImage !== 'placeholder' ? (
-              <Thumbnail source={{ uri: selfieImage }} />
-            ) : (
-              <Ionicons
-                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-                size={40}
-              />
-            )}
-            <Text style={styles.userText}>
-              {driver.first_name} {driver.last_name}
-            </Text>
-          </View>
+          {selfieImage && selfieImage !== 'placeholder' ? (
+            <Thumbnail source={{ uri: selfieImage }} />
+          ) : (
+            <Ionicons
+              name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+              size={40}
+            />
+          )}
+          <Text style={styles.userText}>
+            {driver.first_name} {driver.last_name}
+          </Text>
         </View>
       </CardItem>
       <CardItem style={styles.locationContainer}>
@@ -115,17 +114,16 @@ const styles = StyleSheet.create({
   user: {
     alignItems: 'center',
     flexDirection: 'row',
-    width: '80%',
   },
   userData: {
     alignSelf: 'center',
-    flexDirection: 'column',
+    flexDirection: 'row',
     justifyContent: 'center',
   },
   userText: {
     fontSize: 17,
     fontWeight: 'bold',
-    textAlign: 'center',
+    marginLeft: 15,
   },
 })
 

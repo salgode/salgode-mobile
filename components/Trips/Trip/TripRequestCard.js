@@ -4,7 +4,7 @@ import { StyleSheet, Platform, Linking } from 'react-native'
 import { Card, View, Text, Button, CardItem, Thumbnail } from 'native-base'
 import Location from './Location'
 import PropTypes from 'prop-types'
-import Colors from '../../../constants/Colors'
+/*import Colors from '../../../constants/Colors'*/
 import { Ionicons } from '@expo/vector-icons'
 
 export default class TripRequestCard extends Component {
@@ -47,7 +47,7 @@ export default class TripRequestCard extends Component {
   }
 
   render() {
-    const { finalLocation } = this.state
+    /*const { finalLocation } = this.state*/
     const selfieImage =
       this.state.passenger != null
         ? this.state.passenger.user_identifications.selfie_image
@@ -74,14 +74,20 @@ export default class TripRequestCard extends Component {
         </CardItem>
 
         <CardItem style={styles.locationContainer}>
-          <Location color={'#0000FF'} location={this.state.passenger.start} />
+          <Location
+            color={'#0000FF'}
+            location={
+              this.state.slot ? this.state.slot.route_point.name : 'cargando..'
+            }
+          />
           <Location
             color={
-              finalLocation === this.state.passenger.finish
+              /*finalLocation === this.state.passenger.finish
                 ? '#33C534'
-                : Colors.textGray
+                : Colors.textGray*/
+              '#33C534'
             }
-            location={this.state.passenger.finish}
+            location={this.state.finishStop}
           />
         </CardItem>
 

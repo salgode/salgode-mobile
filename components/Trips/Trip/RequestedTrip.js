@@ -16,6 +16,7 @@ const RequestedTrip = ({
   onSend,
   onPressTrip,
   asDriver,
+  tripId,
 }) => {
   let statusColor
   let statusText

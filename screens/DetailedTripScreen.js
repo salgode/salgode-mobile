@@ -37,11 +37,8 @@ class DetailedTripScreen extends Component {
     // })
     // // this.setState({ tripId: this.props.navigation.getParam('tripId', '') })
     // // this.setState({ token: '' }) // TODO: get token from redux store
-    console.log(this.props.navigation)
     const asDriver = this.props.navigation.getParam('asDriver', null)
     const tripId = this.props.navigation.getParam('tripId', null)
-    console.log('DidMount')
-    console.log(asDriver, tripId)
     this.getTrip(tripId, asDriver, '')
   }
 
@@ -109,7 +106,7 @@ class DetailedTripScreen extends Component {
     console.log(tripId, token)
     // TODO: fetch from server
     return {
-      trip_status: open,
+      trip_status: 'open',
       created_at: '2019-10-22T16:41:55-04:00',
       route_points: [
         'spt_d1cd6d79-6fad-4b37-9f87-48e169c9d530',
@@ -179,21 +176,27 @@ class DetailedTripScreen extends Component {
       loading: true,
       tripId,
       asDriver,
+      token,
     }))
-    console.log(tripId, asDriver)
     await this.fetchTrip(tripId, token)
-      .then(trip => {
-        this.setState({ trip })
-        console.log('FETCH TRIP')
-        console.log(trip)
-        this.fetchDriver(trip.driver_id, token).then(driver =>
-          this.setState({ driver }).catch(err => Alert.alert('0!', err))
+      .then(trip => this.setState({ trip }))
+      .catch(err => {
+        // eslint-disable-next-line no-console
+        console.log(err)
+        Alert.alert('0. Hubo un error, intenta de nuevo más tarde', err)
+      })
+
+    await this.fetchDriver(this.state.trip.driver_id, this.state.token)
+      .then(driver => this.setState({ driver }))
+      .catch(err => {
+        // eslint-disable-next-line no-console
+        console.log(err)
+        Alert.alert(
+          '1. Error obtiendo la información del conductor, inténtalo más tarde',
+          err
         )
       })
-      .catch(err => {
-        this.setState({ loading: false })
-        Alert.alert('1. Hubo un error, intenta de nuevo más tarde', err)
-      })
+
     await this.fetchSlots(tripId, token)
       .then(slots => {
         this.setState({ slots })
@@ -203,12 +206,10 @@ class DetailedTripScreen extends Component {
         )
       })
       .catch(err => {
-        Alert.alert('2. Hubo un error, intenta de nuevo más tarde', err)
+        Alert.alert('1. Hubo un error, intenta de nuevo más tarde', err)
       })
 
     this.setState({ loading: false })
-    console.log('STATE')
-    console.log(this.state)
   }
 
   async fetchPassengers(tripId) {
@@ -239,16 +240,22 @@ class DetailedTripScreen extends Component {
     ]
   }
 
-  renderPassengers(passengers, trip) {
-    const locationsLength = trip.route_points.length
-    const finalLocation = trip.route_points[locationsLength - 1].name
-    return passengers.map((passenger, index) => (
-      <TripRequestCard
-        key={`passenger-${index}`}
-        passenger={passenger}
-        finalLocation={finalLocation}
-      />
-    ))
+  renderPassengers(passengers) {
+    const finishStop = this.state.trip
+      ? this.state.trip.trip_route_points[
+          this.state.trip.trip_route_points.length - 1
+        ].name
+      : 'cargando..'
+    return passengers
+      ? passengers.map((passenger, index) => (
+          <TripRequestCard
+            key={`passenger-${index}`}
+            passenger={passenger}
+            finishStop={finishStop}
+            slot={this.state.slots[index]}
+          />
+        ))
+      : null
   }
 
   render() {

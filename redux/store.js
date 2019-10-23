@@ -12,8 +12,8 @@ import { spotsModel } from './models/spots'
 import slotsReducer from './reducers/slots'
 
 const client = axios.create({
-  // baseURL: 'https://7wsx5vxfbi.execute-api.us-east-1.amazonaws.com/staging',
-  baseURL: 'https://playground-api.salgode.com',
+  //baseURL: 'https://7wsx5vxfbi.execute-api.us-east-1.amazonaws.com/staging',
+  baseURL: 'https://playground-api.salgode.com', //TODO: get out of playground
   responseType: 'json',
   requestType: 'json',
 })

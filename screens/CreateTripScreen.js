@@ -77,7 +77,7 @@ class CreateTripScreen extends Component {
 
     return (
       <View style={styles.container}>
-        <View style={styles.group}>
+        <View>
           <CardInput
             onTouchablePress={() =>
               navigation.navigate('SpotSelectorScreen', {
@@ -189,28 +189,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   group: {
-    // marginBottom: 40,
-    // marginLeft: 20,
-    // marginRight: 20,
-  },
-  text: {
-    flex: 0.2,
-    fontWeight: 'bold',
     margin: 10,
-  },
-  touchableContainer: {
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    elevation: 2,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginHorizontal: 10,
-    margin: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
   },
   whiteText: {
     color: 'white',

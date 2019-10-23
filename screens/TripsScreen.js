@@ -36,10 +36,10 @@ class TripsScreen extends Component {
 
   async fetchTrips(token) {
     // eslint-disable-next-line no-console
-    console.log(
-      `TODO: get trips corresponding to the token ${token}`,
-      'pax or driver depending on this.props.isRequestedTrips'
-    )
+    // console.log(
+    //   `TODO: get trips corresponding to the token ${token}`,
+    //   'pax or driver depending on this.props.isRequestedTrips'
+    // )
 
     const fetcher = this.props.isRequestedTrips
       ? fetchFutureTripsByPaxId

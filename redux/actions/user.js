@@ -46,8 +46,6 @@ const mapDataToUser = data => {
 }
 
 export function loginUser(email, password) {
-  console.log(getDefaultHeaders())
-  console.log(signin_url)
   return {
     type: actions.USER_LOGIN,
     payload: {
@@ -60,7 +58,6 @@ export function loginUser(email, password) {
           password,
         },
         transformResponse: data => {
-          console.log(data)
           return ({
             token: data.bearer_token,
             userId: data.user_id,

@@ -32,7 +32,7 @@ export const DetailedTrip = ({ trip, asDriver, driver, token }) => {
     // TODO: connect to server
     // TODO: navigate to current trip screen
     // eslint-disable-next-line no-console
-    console.log('trip!', token)
+    // console.log('trip!', token)
   }
 
   const selfieImage = driver != null ? driver.avatar : 'placeholder'

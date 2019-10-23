@@ -1,14 +1,21 @@
 import React from 'react'
-import { StyleSheet, Platform } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { Card, View, Text } from 'native-base'
 import Location from './Location'
 import PropTypes from 'prop-types'
-import Colors from '../../../constants/Colors'
-import CardIcon from './CardIcon'
+// import Colors from '../../../constants/Colors'
+// import CardIcon from './CardIcon'
 import TimeInfo from './TimeInfo'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
-export const Trip = ({ timestamp, spacesUsed, onPressTrip, asDriver }) => {
+export const Trip = ({
+  timestamp,
+  onPressTrip,
+  asDriver = false,
+  user,
+  startLocation,
+  endLocation,
+}) => {
   return (
     <TouchableOpacity
       onPress={() => {
@@ -17,10 +24,11 @@ export const Trip = ({ timestamp, spacesUsed, onPressTrip, asDriver }) => {
     >
       <Card style={[styles.container, styles.shadow]}>
         <View style={styles.locationContainer}>
-          <Location color={'#0000FF'} location="Campus San Joaquin" />
-          <Location color={'#33C534'} location="Campus San Joaquin" />
-          <TimeInfo timestamp={timestamp} isDate />
-          <TimeInfo timestamp={timestamp} />
+          <Text>{user.driver_name}</Text>
+          <Location color={'#0000FF'} location={startLocation.name} />
+          <Location color={'#33C534'} location={endLocation.name} />
+          <TimeInfo timestamp={timestamp.start} />
+          <TimeInfo timestamp={timestamp.end} />
         </View>
         <View style={styles.iconContainer}>
           {/* <CardIcon
@@ -28,7 +36,7 @@ export const Trip = ({ timestamp, spacesUsed, onPressTrip, asDriver }) => {
           name={Platform.OS === 'ios' ? 'ios-person-add' : 'md-person-add'}
           onPress={() => null}
         /> */}
-          <View style={styles.spacesUsedContainer}>
+          {/* <View style={styles.spacesUsedContainer}>
             <Text style={styles.spacesUsed}>{spacesUsed}</Text>
             <CardIcon
               name={Platform.OS === 'ios' ? 'ios-person-add' : 'md-person-add'}
@@ -40,7 +48,7 @@ export const Trip = ({ timestamp, spacesUsed, onPressTrip, asDriver }) => {
                 name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'}
               />
             </View>
-          </View>
+          </View> */}
         </View>
       </Card>
     </TouchableOpacity>
@@ -48,10 +56,12 @@ export const Trip = ({ timestamp, spacesUsed, onPressTrip, asDriver }) => {
 }
 
 Trip.propTypes = {
-  timestamp: PropTypes.number.isRequired,
-  spacesUsed: PropTypes.number.isRequired,
+  timestamp: PropTypes.object.isRequired,
   onPressTrip: PropTypes.func.isRequired,
-  asDriver: PropTypes.bool.isRequired,
+  asDriver: PropTypes.bool,
+  user: PropTypes.object.isRequired,
+  startLocation: PropTypes.object.isRequired,
+  endLocation: PropTypes.object.isRequired,
 }
 
 const styles = StyleSheet.create({
@@ -82,14 +92,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 5,
   },
-  spacesUsed: {
-    alignSelf: 'center',
-    color: Colors.textGray,
-    fontSize: 13,
-    fontWeight: '700',
-    marginRight: 5,
-  },
-  spacesUsedContainer: { alignItems: 'center', flexDirection: 'row' },
+  // spacesUsed: {
+  //   alignSelf: 'center',
+  //   color: Colors.textGray,
+  //   fontSize: 13,
+  //   fontWeight: '700',
+  //   marginRight: 5,
+  // },
+  // spacesUsedContainer: { alignItems: 'center', flexDirection: 'row' },
 })
 
 export default Trip

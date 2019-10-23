@@ -43,12 +43,6 @@ export default function userReducer(state = {}, action) {
       return { ...state, loading: true }
     case userActions.USER_UPLOAD_IMAGE_SUCCESS:
       return { ...state, loading: false, ...action.payload.data }
-    case userActions.USER_SIGNUP_FAIL:
-      return {
-        ...state,
-        loading: false,
-        error: 'Error while uploading image',
-      }
     default:
       return state
   }

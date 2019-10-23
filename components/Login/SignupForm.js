@@ -1,13 +1,18 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { Component } from 'react'
-import { StyleSheet, View, TouchableOpacity, Modal, Dimensions } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Modal,
+  Dimensions,
+} from 'react-native'
 import { Text, Form, Item, Input, Label, Button } from 'native-base'
 import Layout from '../../constants/Layout'
 import PropTypes from 'prop-types'
 import Colors from '../../constants/Colors'
 import * as Permissions from 'expo-permissions'
 import { Camera } from 'expo-camera'
-
 
 class SignupForm extends Component {
   constructor(props) {
@@ -22,8 +27,8 @@ class SignupForm extends Component {
       passwordRepeat: '',
       selfieLink: '',
       hasCameraPermission: null,
-      type: Camera.Constants.Type.back,
-      onCamera:false,
+      type: Camera.Constants.Type.front,
+      onCamera: false,
       validity: {
         name: false,
         lastname: false,
@@ -122,17 +127,23 @@ class SignupForm extends Component {
 
   async getselfie() {
     if (this.camera) {
-      const photo = await this.camera.takePictureAsync({quality: 0.5, base64: true})
+      const photo = await this.camera.takePictureAsync({
+        quality: 0.5,
+        base64: true,
+      })
       this.setState(oldState => ({
         selfieLink: photo.base64,
-        validity: { ...oldState.validity, selfieLink: photo.base64 ? true : false},
+        validity: {
+          ...oldState.validity,
+          selfieLink: photo.base64 ? true : false,
+        },
       }))
     }
     this.closeCamera()
   }
 
   openCamera() {
-    this.setState({onCamera: true})
+    this.setState({ onCamera: true })
   }
 
   closeCamera() {
@@ -140,39 +151,47 @@ class SignupForm extends Component {
   }
 
   async componentDidMount() {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    this.setState({ hasCameraPermission: status === 'granted' });
+    const { status } = await Permissions.askAsync(Permissions.CAMERA)
+    this.setState({ hasCameraPermission: status === 'granted' })
   }
 
   render() {
-    const {height,width} = Dimensions.get('window');
+    const { height, width } = Dimensions.get('window')
     return (
       <Form style={styles.form}>
-        {this.state.hasCameraPermission &&
+        {this.state.hasCameraPermission && (
           <Modal
             animationType="slide"
             transparent={false}
-            presentationStyle='fullScreen'
+            presentationStyle="fullScreen"
             visible={this.state.onCamera}
             onRequestClose={this.closeCamera}
           >
-            <Camera 
-              style={{ width: width, height:height, position: 'absolute' }} 
-              type={this.state.type} 
-              ref = {(ref) => {this.camera = ref}}
+            <Camera
+              style={{ width: width, height: height, position: 'absolute' }}
+              type={this.state.type}
+              ref={ref => {
+                this.camera = ref
+              }}
             >
-              <View style={{flex: 0.1, backgroundColor: 'transparent', flexDirection: 'row'}}>
+              <View
+                style={{
+                  flex: 0.1,
+                  backgroundColor: 'transparent',
+                  flexDirection: 'row',
+                }}
+              >
                 <TouchableOpacity
                   onPress={() => {
                     this.setState({
-                      type: this.state.type === Camera.Constants.Type.back
-                        ? Camera.Constants.Type.front
-                        : Camera.Constants.Type.back,
-                    });
-                  }}>
-                  <Text>
-                    Flip
-                  </Text>
+                      type:
+                        this.state.type === Camera.Constants.Type.back
+                          ? Camera.Constants.Type.front
+                          : Camera.Constants.Type.back,
+                    })
+                  }}
+                >
+                  <Text>Flip</Text>
                 </TouchableOpacity>
                 <Button
                   borderRadius={10}
@@ -181,11 +200,10 @@ class SignupForm extends Component {
                 >
                   <Text>Tomar selfie</Text>
                 </Button>
-
               </View>
             </Camera>
           </Modal>
-        }
+        )}
         <Item floatingLabel style={styles.item}>
           <Label
             style={{

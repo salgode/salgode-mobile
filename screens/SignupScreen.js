@@ -35,7 +35,7 @@ class SignupScreen extends Component {
         userInfo.phone,
         userInfo.password,
         userInfo.passwordRepeat,
-        selfieUrl,
+        selfieUrl
       )
       .then(response => {
         return response
@@ -66,6 +66,7 @@ class SignupScreen extends Component {
 }
 
 SignupScreen.propTypes = {
+  uploadImage: PropTypes.func.isRequired,
   signup: PropTypes.func.isRequired,
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
@@ -87,7 +88,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  uploadImage: (img) => dispatch(uploadImageUser(img)),
+  uploadImage: img => dispatch(uploadImageUser(img)),
   signup: (
     name,
     lastName,
@@ -95,7 +96,7 @@ const mapDispatchToProps = dispatch => ({
     phone,
     password,
     passwordRepeat,
-    selfieLink,
+    selfieLink
     // driverLicenseLink,
     // dniLink,
     // carPlate,
@@ -111,7 +112,7 @@ const mapDispatchToProps = dispatch => ({
         phone,
         password,
         passwordRepeat,
-        selfieLink,
+        selfieLink
         // driverLicenseLink,
         // dniLink,
         // carPlate,

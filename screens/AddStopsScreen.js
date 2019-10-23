@@ -90,6 +90,12 @@ class AddStopsScreen extends Component {
 
   render() {
     const { startStop, endStop, navigation } = this.props
+    const { stops } = this.state
+    const filteredSpots = spotsFilter(this.props.spots, [
+      startStop,
+      endStop,
+      ...stops,
+    ])
     return (
       <View style={styles.container}>
         <ScrollView
@@ -116,31 +122,20 @@ class AddStopsScreen extends Component {
               Agrega paradas extra (opcional)
             </Text>
             {this.renderStops()}
-            <TouchableOpacity
-              onPress={() =>
+            <CardInput
+              onTouchablePress={() =>
                 navigation.navigate('SpotSelectorScreen', {
-                  title: 'Seleccionar #A',
+                  title: 'Seleccionar #Parada',
+                  text: '#Parada',
+                  data: filteredSpots,
+                  onItemPress: item =>
+                    this.setState({ stops: stops.concat(item) }),
                 })
               }
-              style={styles.touchableContainer}
-            >
-              <Text style={styles.text}>#A</Text>
-              <TextInput
-                placeholder="Filtra por Comuna o Parada"
-                value={startStop}
-                editable={false}
-                style={{ flex: 0.7 }}
-              />
-
-              <Button
-                icon
-                transparent
-                onPress={this.props.clearEndStop}
-                style={{ flex: 0.2 }}
-              >
-                <Icon name="close" color="#0000FF" />
-              </Button>
-            </TouchableOpacity>
+              placeholder="Filtra por Comuna o Parada"
+              text="#Desde"
+              editable={false}
+            />
           </View>
         </ScrollView>
 

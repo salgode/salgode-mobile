@@ -19,10 +19,13 @@ class SpotSelectorScreen extends Component {
     filter: '',
   }
   render() {
-    const { navigation } = this.props
+    const { navigation, spots } = this.props
     const { filter } = this.state
     const normalizedInput = normalizeText(filter)
-    const filteredSpots = this.props.spots.filter(
+    console.log('Spots1:', spots[0])
+    const data = navigation.getParam('data', spots)
+    console.log(data)
+    const filteredData = data.filter(
       item =>
         normalizeText(item.name).includes(normalizedInput) ||
         normalizeText(item.address).includes(normalizedInput)
@@ -41,16 +44,12 @@ class SpotSelectorScreen extends Component {
         </View>
         <View style={styles.container}>
           <FlatList
-            data={filteredSpots}
+            data={filteredData}
             style={styles.flatList}
             renderItem={({ item }) => (
               <View style={styles.listItem}>
                 <TouchableOpacity
                   onPress={() => {
-                    // console.log(
-                    //   'Holaa',
-                    //   navigation.getParam('onItemPress', '')()
-                    // )
                     navigation.getParam('onItemPress', '')(item)
                     navigation.goBack()
                   }}

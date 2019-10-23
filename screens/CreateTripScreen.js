@@ -73,7 +73,7 @@ class CreateTripScreen extends Component {
       hours = pickedDate.getHours()
       minutes = pickedDate.getMinutes()
     }
-    const filteredSlots = spotsFilter(spots, [startStop, endStop])
+    const filteredSpots = spotsFilter(spots, [startStop, endStop])
 
     return (
       <View style={styles.container}>
@@ -85,6 +85,7 @@ class CreateTripScreen extends Component {
                 text: '#Desde',
                 onClearPress: clearStartStop,
                 onItemPress: setStartStop,
+                data: filteredSpots,
               })
             }
             placeholder="Filtra por Comuna o Parada"
@@ -101,6 +102,7 @@ class CreateTripScreen extends Component {
                 text: '#A',
                 onClearPress: clearStartStop,
                 onItemPress: setEndStop,
+                data: filteredSpots,
               })
             }
             placeholder="Filtra por Comuna o Parada"

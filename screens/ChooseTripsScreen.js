@@ -35,7 +35,10 @@ class ChooseTripsScreen extends Component {
   }
 
   onRequestTrip(stops, tripId) {
-    this.props.navigation.navigate('RequestTrip', { stops, tripId })
+    this.props.navigation.navigate('RequestTrip', {
+      stops: stops,
+      tripId,
+    })
   }
 
   async getTrips() {

@@ -26,6 +26,8 @@ class TripRequestScreen extends Component {
   componentDidMount() {
     const stops = this.props.navigation.getParam('stops', null)
     const tripId = this.props.navigation.getParam('tripId', null)
+    console.log(stops)
+    console.log(tripId)
     this.setState({ stops, tripId, loading: false })
   }
 

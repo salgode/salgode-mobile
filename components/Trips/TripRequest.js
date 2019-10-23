@@ -14,7 +14,7 @@ const TripRequest = ({ stops, onSend, loading }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.stopsTitle}>Paradas:</Text>
-      <StopsList stops={stops.map(s => s.address)} />
+      <StopsList stops={stops.map(s => s.name)} />
       <Text style={styles.pickerTitle}>
         Selecciona la parada en la que te subirás
       </Text>
@@ -28,11 +28,7 @@ const TripRequest = ({ stops, onSend, loading }) => {
         style={styles.picker}
       >
         {stops.slice(0, -1).map((stop, i) => (
-          <Picker.Item
-            key={`PickerItem${i}`}
-            label={stop.address}
-            value={stop}
-          />
+          <Picker.Item key={`PickerItem${i}`} label={stop.name} value={stop} />
         ))}
       </Picker>
       {loading && <Spinner color={Colors.mainBlue} />}
@@ -52,7 +48,7 @@ const TripRequest = ({ stops, onSend, loading }) => {
 TripRequest.propTypes = {
   stops: PropTypes.arrayOf(
     PropTypes.shape({
-      address: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
     }).isRequired
   ),
   onSend: PropTypes.func.isRequired,

@@ -40,6 +40,7 @@ class ChooseTripsScreen extends Component {
 
   async getTrips() {
     const response = await this.props.fetchFutureTrips(this.props.user.token)
+    console.log(response)
 
     if (response.error) {
       Alert.alert(
@@ -64,7 +65,7 @@ class ChooseTripsScreen extends Component {
                 name: 'Temp',
                 reputation: 0,
               },
-              stops: trip.route_points,
+              stops: trip.trip_route_points,
               tripId: trip.trip_id,
               userId: trip.driver_id,
               token: this.props.user.token,

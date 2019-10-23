@@ -13,21 +13,22 @@ const ChooseTrip = ({
   timestamp,
   // spacesUsed,
   // user,
-  // stops,
+  stops,
   onSend,
   token,
   tripId,
   userId,
 }) => {
   const [loading, setLoading] = React.useState(true)
-  const [_stops, _setStops] = React.useState(['', ''])
-  const [stops, setStops] = React.useState(['', ''])
+  // const [_stops, _setStops] = React.useState(['', ''])
+  // const [stops, setStops] = React.useState(['', ''])
   const [user, setUser] = React.useState({ name: '' })
+  console.log(stops)
 
   const parseStops = async () => {
-    const stps = await getTripInfo(tripId, token)
-    _setStops(stps.trip_route_points)
-    setStops(stps.trip_route_points.map(s => (s || { address: '' }).address))
+    // const stps = await getTripInfo(tripId, token)
+    // _setStops(stps.trip_route_points)
+    // setStops(stps.trip_route_points.map(s => (s || { address: '' }).address))
   }
 
   const loadUserInfo = async () => {
@@ -66,12 +67,12 @@ const ChooseTrip = ({
         </View>
       </CardItem>
       <CardItem style={styles.locationContainer}>
-        <Location color={'#0000FF'} location={stops[0]} />
-        <Location color={'#33C534'} location={stops[stops.length - 1]} />
+        <Location color={'#0000FF'} location={stops[0].name} />
+        <Location color={'#33C534'} location={stops[stops.length - 1].name} />
       </CardItem>
       <CardItem style={styles.bottomSection}>
         <TimeInfo timestamp={timestamp} />
-        <PedirBoton onSend={() => onSend(_stops, tripId)} disabled={loading} />
+        <PedirBoton onSend={() => onSend(stops, tripId)} disabled={loading} />
       </CardItem>
     </Card>
   )
@@ -87,6 +88,7 @@ ChooseTrip.propTypes = {
   tripId: PropTypes.string.isRequired,
   onSend: PropTypes.func,
   userId: PropTypes.string.isRequired,
+  stops: PropTypes.array,
 }
 
 const styles = StyleSheet.create({

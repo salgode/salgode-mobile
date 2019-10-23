@@ -1,6 +1,7 @@
 export const getTripInfo = async (tripId, token) => {
   const response = await fetch(
-    `https://7wsx5vxfbi.execute-api.us-east-1.amazonaws.com/staging/trips/${tripId}`,
+    // `https://7wsx5vxfbi.execute-api.us-east-1.amazonaws.com/staging/trips/${tripId}`,
+    `https://playground-api.salgode.com/trips/${tripId}`,
     {
       method: 'GET',
       headers: {
@@ -15,12 +16,14 @@ export const getTripInfo = async (tripId, token) => {
       console.log(err)
       return null
     })
+  console.log(response)
   return response
 }
 
 export const getUserInfo = async (userId, token) => {
   const response = await fetch(
-    `https://7wsx5vxfbi.execute-api.us-east-1.amazonaws.com/staging/users/${userId}`,
+    // `https://7wsx5vxfbi.execute-api.us-east-1.amazonaws.com/staging/users/${userId}`,
+    `https://playground-api.salgode.com/users/${userId}`,
     {
       method: 'GET',
       headers: {

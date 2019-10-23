@@ -15,6 +15,7 @@ export const actions = {
 }
 
 const mapDataToUser = data => {
+  // console.log(data)
   let user = {
     token: data.bearer_token,
     email: data.email,
@@ -42,13 +43,18 @@ export function loginUser(email, password) {
     type: actions.USER_LOGIN,
     payload: {
       request: {
-        url: `/users/login`,
+        url: `/login`,
         method: 'post',
         data: {
           email,
           password,
         },
-        transformResponse: mapDataToUser,
+        transformResponse: data => ({
+          token: data.bearer_token,
+          userId: data.user_id,
+          name: data.first_name,
+          avatar: data.avatar,
+        }),
       },
     },
   }
@@ -87,10 +93,10 @@ export function signupUser(
     type: actions.USER_SIGNUP,
     payload: {
       request: {
-        url: `/users`,
+        url: `/create_user`,
         method: 'post',
         data: data,
-        transformResponse: data => mapDataToUser(data.user),
+        transformResponse: data => mapDataToUser(data),
       },
     },
   }

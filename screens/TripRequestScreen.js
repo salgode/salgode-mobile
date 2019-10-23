@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { StyleSheet, Alert } from 'react-native'
-import { Spinner, View } from 'native-base'
+import { Alert } from 'react-native'
+import { View } from 'native-base'
 import PropTypes from 'prop-types'
 import TripRequest from '../components/Trips/TripRequest'
 import { createSlot } from '../redux/actions/slots'
@@ -29,16 +29,17 @@ class TripRequestScreen extends Component {
     this.setState({ stops, tripId, loading: false })
   }
 
-  async onRequestSlot(selectedStop) {
+  async onRequestSlot(startStop, endStop) {
     const { user, createSlot } = this.props
 
     this.setState({ loading: true })
     const response = await createSlot(
       user.token,
       this.state.tripId,
-      selectedStop.id,
-      user.userId
+      startStop.id,
+      endStop.id
     )
+
     this.setState({ loading: false })
 
     if (!response || response.error || response.errorMessage) {

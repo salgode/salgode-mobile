@@ -10,9 +10,9 @@ import PropTypes from 'prop-types'
 const RequestedTrip = ({
   timestamp,
   user,
-  status = 'pending',
-  startLocation = 'Desde',
-  endLocation = 'Hasta',
+  status,
+  startLocation,
+  endLocation,
   onSend,
   onPressTrip,
   asDriver,
@@ -20,7 +20,7 @@ const RequestedTrip = ({
   let statusColor
   let statusText
 
-  if (status === 'accepted') {
+  if (status === 'accepted' || status === 'completed') {
     statusColor = 'green'
     statusText = 'Aceptado'
   } else if (status === 'pending') {
@@ -39,24 +39,35 @@ const RequestedTrip = ({
       <CardItem>
         <View style={styles.user}>
           <View style={styles.userData}>
-            {user.selfieLink ? (
-              <Thumbnail source={{ uri: user.selfieLink }} />
-            ) : (
-              <Ionicons
-                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-                size={40}
-              />
-            )}
-            <Text style={styles.userText}>{user.name}</Text>
+            {
+              //user.selfieLink ? (
+              // FIX: must recieve selfie link from user/trips in driver object
+              // <Thumbnail source={{ uri: user.selfieLink }} />
+              //) : (
+              // <Ionicons
+              // name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+              // size={40}
+              // />
+              //)
+              null
+            }
+            <Ionicons
+              name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+              size={40}
+            />
+            <Text style={styles.userText}>{user.driver_name}</Text>
           </View>
         </View>
       </CardItem>
       <CardItem style={styles.locationContainer}>
-        <Location color={'#0000FF'} location={startLocation} />
-        <Location color={'#33C534'} location={endLocation} />
+        <Location color={'#0000FF'} location={startLocation.name} />
+        <Location color={'#33C534'} location={endLocation.name} />
       </CardItem>
       <CardItem>
-        <TimeInfo timestamp={timestamp} />
+        <TimeInfo timestamp={timestamp.start} />
+      </CardItem>
+      <CardItem>
+        <TimeInfo timestamp={timestamp.end} />
       </CardItem>
       <CardItem style={styles.containerBottom}>
         <Button

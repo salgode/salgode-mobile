@@ -13,19 +13,22 @@ class MyTrips extends Component {
 
   render() {
     const Trip = this.Trip
+
     return (
       <SafeAreaView>
         <FlatList
           data={this.props.trips}
           renderItem={({ item }) => (
             <Trip
-              timestamp={item.timestamp}
+              timestamp={item.trip_times}
               spacesUsed={item.spacesUsed}
-              user={item.user}
-              status={item.status}
-              asDriver={this.asDriver}
+              user={item.driver}
+              status={item.trip_status}
+              asDriver={this.trip_role}
               onPressTrip={this.props.onPressTrip}
-              tripId={item.tripId}
+              tripId={item.trip_id}
+              startLocation={item.trip_route.start}
+              endLocation={item.trip_route.end}
             />
           )}
           keyExtractor={item => item.tripId}

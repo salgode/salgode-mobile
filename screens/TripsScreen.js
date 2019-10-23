@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Alert } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import PropTypes from 'prop-types'
 import Trips from '../components/Trips/Trips'
 import { Spinner, Text } from 'native-base'
+import { connect } from 'react-redux'
+import { userTrips } from '../redux/actions/user'
 
 class TripsScreen extends Component {
   static navigationOptions = {
@@ -17,7 +19,6 @@ class TripsScreen extends Component {
     }
 
     this.getTrips = this.getTrips.bind(this)
-    this.fetchTrips = this.fetchTrips.bind(this)
     this.onPressTrip = this.onPressTrip.bind(this)
   }
 
@@ -26,87 +27,12 @@ class TripsScreen extends Component {
   }
 
   componentDidMount() {
-    this.getTrips(123)
+    this.getTrips()
   }
 
-  async fetchTrips(token) {
-    // eslint-disable-next-line no-console
-    console.log(token)
-    // fetch from server
-    return [
-      {
-        timestamp: 1571590002,
-        spacesUsed: 3,
-        tripId: '0',
-        user: {
-          name: 'Benjamin',
-          reputation: 17,
-        },
-        status: 'accepted',
-      },
-      {
-        timestamp: 1571503602,
-        spacesUsed: 3,
-        tripId: '1',
-        user: {
-          name: 'Benjamin',
-          reputation: 17,
-        },
-        status: 'pending',
-      },
-      {
-        timestamp: 1571586402,
-        spacesUsed: 3,
-        tripId: '2',
-        user: {
-          name: 'Benjamin',
-          reputation: 17,
-        },
-        status: 'rejected',
-      },
-      {
-        timestamp: 1570985202,
-        spacesUsed: 3,
-        tripId: '3',
-        user: {
-          name: 'Benjamin',
-          reputation: 17,
-        },
-        status: 'accepted',
-      },
-      {
-        timestamp: 1571593602,
-        spacesUsed: 3,
-        tripId: '4',
-        user: {
-          name: 'Benjamin',
-          reputation: 17,
-        },
-        status: 'accepted',
-      },
-      {
-        timestamp: 1571676402,
-        spacesUsed: 3,
-        tripId: '5',
-        user: {
-          name: 'Benjamin',
-          reputation: 17,
-        },
-        status: 'accepted',
-      },
-    ]
-  }
-
-  async getTrips(token) {
+  async getTrips() {
     this.setState({ loading: true })
-
-    await this.fetchTrips(token)
-      .then(trips => this.setState({ trips }))
-      .catch(err => {
-        this.setState({ loading: false })
-        Alert.alert('Hubo un error, intenta de nuevo más tarde', err)
-      })
-
+    await this.props.fetchTrips(this.props.user.token)
     this.setState({ loading: false })
   }
 
@@ -118,7 +44,7 @@ class TripsScreen extends Component {
         {!this.state.loading && (
           <Trips
             isRequestedTrips={this.props.isRequestedTrips}
-            trips={this.state.trips}
+            trips={this.props.trips}
             onPressTrip={this.onPressTrip}
           />
         )}
@@ -131,6 +57,12 @@ TripsScreen.propTypes = {
   isRequestedTrips: PropTypes.bool,
   navigation: PropTypes.shape({ navigate: PropTypes.func.isRequired })
     .isRequired,
+  user: PropTypes.shape({
+    token: PropTypes.string.isRequired,
+    userId: PropTypes.string.isRequired,
+  }).isRequired,
+  fetchTrips: PropTypes.func.isRequired,
+  trips: PropTypes.array,
 }
 
 TripsScreen.defaultProps = {
@@ -144,4 +76,16 @@ const styles = StyleSheet.create({
   },
 })
 
-export default TripsScreen
+const mapStateToProps = state => ({
+  user: state.user,
+  trips: state.user.trips,
+})
+
+const mapDispatchToProps = dispatch => ({
+  fetchTrips: token => dispatch(userTrips(token)),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TripsScreen)

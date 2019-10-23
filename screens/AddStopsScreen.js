@@ -57,14 +57,14 @@ class AddStopsScreen extends Component {
       return (
         <View key={index} style={styles.textView}>
           <View
-            style={{ ...styles.stopContainer, justifyContent: 'space-evenly' }}
+            style={{ ...styles.stopContainer, justifyContent: 'flex-start', width: '85%' }}
           >
             <Text style={{ fontWeight: 'bold', marginRight: 10 }}>
               #Parada {index + 1}{' '}
             </Text>
-            <Text>{stop.name}</Text>
+            <Text numberOfLines={1} style={{width: '75%'}}>{stop.name}</Text>
           </View>
-          <Button icon transparen onPress={() => this.cleanInput(index)}>
+          <Button icon transparent onPress={() => this.cleanInput(index)}>
             <Icon name="close" />
           </Button>
         </View>

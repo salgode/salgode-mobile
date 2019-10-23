@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {
-  ScrollView,
   Text,
   View,
   FlatList,
@@ -8,18 +7,25 @@ import {
   StyleSheet,
 } from 'react-native'
 import { connect } from 'react-redux'
-import { black } from 'ansi-colors'
 import { Icon } from 'native-base'
 
 import Colors from '../constants/Colors'
+import { normalizeText } from '../utils/normalizeText'
 
 // import CardInputSelector from '../components/CardInputSelector'
 
 class SpotSelectorScreen extends Component {
   state = {
-    text: 'Fanta',
+    input: '',
   }
   render() {
+    const { input } = this.state
+    const normalizedInput = normalizeText(input)
+    const filteredSpots = this.props.spots.filter(
+      item =>
+        normalizeText(item.name).includes(normalizedInput) ||
+        normalizeText(item.address).includes(normalizedInput)
+    )
     return (
       <View style={{ flex: 1, backgroundColor: Colors.lightBackground }}>
         <View>
@@ -27,7 +33,7 @@ class SpotSelectorScreen extends Component {
         </View>
         <View style={styles.container}>
           <FlatList
-            data={this.props.spots}
+            data={filteredSpots}
             style={styles.flatList}
             renderItem={({ item }) => (
               <View style={styles.listItem}>

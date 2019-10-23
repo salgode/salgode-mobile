@@ -15,7 +15,6 @@ export function createSlot(authToken, tripId, spotId, userId) {
           Authorization: `Bearer ${authToken}`,
         },
         data: {
-          trip_id: tripId,
           spot_id: spotId,
           user_id: userId,
         },

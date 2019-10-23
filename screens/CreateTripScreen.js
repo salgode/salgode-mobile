@@ -183,9 +183,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   group: {
-    marginBottom: 40,
-    marginLeft: 20,
-    marginRight: 20,
+    // marginBottom: 40,
+    // marginLeft: 20,
+    // marginRight: 20,
   },
   text: {
     flex: 0.2,

@@ -30,7 +30,7 @@ export default function CardInput(props) {
         value={value}
         editable={editable}
         onChangeText={onChangeText}
-        style={{ flex: 0.7 }}
+        style={{ flex: 0.7, fontSize: 17 }}
       />
 
       <Button icon transparent onPress={onClearPress} style={{ flex: 0.2 }}>
@@ -54,6 +54,7 @@ CardInput.defaultProps = {
 const styles = StyleSheet.create({
   text: {
     flex: 0.2,
+    fontSize: 17,
     fontWeight: 'bold',
     margin: 10,
   },
@@ -64,8 +65,8 @@ const styles = StyleSheet.create({
     elevation: 2,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: 10,
-    margin: 10,
+    margin: 8,
+    padding: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,

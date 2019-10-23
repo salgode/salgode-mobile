@@ -64,9 +64,6 @@ class CreateTripScreen extends Component {
           style={styles.container}
           contentContainerStyle={styles.contentContainer}
         >
-          <Button onPress={() => navigation.navigate('SpotSelectorScreen')}>
-            <Text>SalePal lado</Text>
-          </Button>
           <View style={styles.group}>
             <CardInputSelector
               text="#Desde"

@@ -36,6 +36,7 @@ class AddStopsScreen extends Component {
     const response = await this.props.createTrip(
       route_points,
       startTime,
+      user.userId,
       user.token
     )
 
@@ -62,7 +63,7 @@ class AddStopsScreen extends Component {
             <Text style={{ fontWeight: 'bold', marginRight: 10 }}>
               #Parada {index + 1}{' '}
             </Text>
-            <Text numberOfLines={1} style={{width: '75%'}}>{stop.name}</Text>
+            <Text numberOfLines={1} style={{ width: '75%' }}>{stop.name}</Text>
           </View>
           <Button icon transparent onPress={() => this.cleanInput(index)}>
             <Icon name="close" />

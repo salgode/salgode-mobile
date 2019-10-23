@@ -54,6 +54,7 @@ class ChooseTrips extends Component {
               onSend={this.props.onSend}
               token={item.token}
               tripId={item.tripId}
+              userId={item.userId}
             />
           )}
           keyExtractor={item => item.tripId}

@@ -66,6 +66,7 @@ class ChooseTripsScreen extends Component {
               },
               stops: trip.route_points,
               tripId: trip.trip_id,
+              userId: trip.driver_id,
               token: this.props.user.token,
             }))}
           />

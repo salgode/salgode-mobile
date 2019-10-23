@@ -209,7 +209,7 @@ const EditProfileScreen = props => {
       label: 'Teléfono',
       value: phone,
       setValue: setPhone,
-      validate: phone => phone.match(/^(\+56)?\d{9}$/),
+      validate: phone => phone ? phone.match(/^(\+56)?\d{9}$/) : '',
       keyboardType: 'phone-pad',
     },
     // {

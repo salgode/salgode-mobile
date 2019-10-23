@@ -1,5 +1,5 @@
 export { default as createTripReducer } from './createTrip'
 export { default as slotsReducer } from './slots'
 export { default as spotsReducer } from './spots'
-export { default as futureTripsReducer } from './trips'
+export { default as tripReducer } from './trips'
 export { default as userReducer } from './user'

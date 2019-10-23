@@ -8,6 +8,7 @@ import {
   Dimensions,
 } from 'react-native'
 import { Text, Form, Item, Input, Label, Button } from 'native-base'
+import { Ionicons } from '@expo/vector-icons'
 import Layout from '../../constants/Layout'
 import PropTypes from 'prop-types'
 import Colors from '../../constants/Colors'
@@ -191,17 +192,19 @@ class SignupForm extends Component {
                     })
                   }}
                 >
-                  <Text>Flip</Text>
+                  <Button borderRadius={10} style={styles.icon}>
+                    <Ionicons name="md-reverse-camera" color="white" size={24} />
+                  </Button>
                 </TouchableOpacity>
-                <Button
-                  borderRadius={10}
-                  style={styles.button}
-                  onPress={this.getselfie}
-                >
-                  <Text>Tomar selfie</Text>
-                </Button>
               </View>
             </Camera>
+            <Button
+                  borderRadius={10}
+                  style={styles.buttonCamera}
+                  onPress={this.getselfie}
+                >
+              <Text>Tomar foto </Text>
+            </Button>
           </Modal>
         )}
         <Item floatingLabel style={styles.item}>
@@ -341,7 +344,7 @@ class SignupForm extends Component {
 SignupForm.propTypes = {
   onSend: PropTypes.func.isRequired,
 }
-
+const {height, width} = Dimensions.get('window')
 const styles = StyleSheet.create({
   button: {
     marginTop: 20,
@@ -352,6 +355,24 @@ const styles = StyleSheet.create({
   },
   input: {
     width: Layout.window.width * 0.85,
+  },
+  buttonCamera: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    marginTop: height-70,
+    alignItems: 'center',
+    justifyContent: 'center', 
+    alignItems: 'center',
+    marginLeft: 20,
+    marginRight: 20,
+    marginBottom: 5,
+  },
+  icon: {
+    marginTop: 20,
+    marginLeft: 15,
+    justifyContent: 'center', 
+    alignItems: 'center',
+    width: 40,
   },
   item: {
     borderRadius: 10,

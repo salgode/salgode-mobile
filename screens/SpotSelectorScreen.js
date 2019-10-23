@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { ScrollView, Text, View } from 'react-native'
+import { connect } from 'react-redux'
 
 import CardInputSelector from '../components/CardInputSelector'
 
@@ -33,4 +34,11 @@ SpotSelectorScreen.navigationOptions = ({ navigation }) => ({
 
   // headerStyle: { backgroundColor: color.theme },
 })
-export default SpotSelectorScreen
+
+const mapStateToProps = ({ spots }) => {
+  return {
+    spots: spots.spots,
+  }
+}
+
+export default connect(mapStateToProps)(SpotSelectorScreen)

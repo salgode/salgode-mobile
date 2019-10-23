@@ -13,7 +13,7 @@ import slotsReducer from './reducers/slots'
 
 export const client = axios.create({
   //baseURL: 'https://7wsx5vxfbi.execute-api.us-east-1.amazonaws.com/staging',
-  baseURL: 'https://1gcqbk02ib.execute-api.us-east-1.amazonaws.com/playground', //TODO: get out of playground
+  baseURL: 'https://playground-api.salgode.com', //TODO: get out of playground
   responseType: 'json',
   requestType: 'json',
 })

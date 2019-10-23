@@ -1,4 +1,5 @@
 import { getDefaultHeaders, getBaseHeaders } from '../../config/api/headers'
+import { signin_url } from '../../config/api/endpoints'
 
 export const actions = {
   USER_LOGIN: 'USER/LOGIN',
@@ -45,23 +46,28 @@ const mapDataToUser = data => {
 }
 
 export function loginUser(email, password) {
+  console.log(getDefaultHeaders())
+  console.log(signin_url)
   return {
     type: actions.USER_LOGIN,
     payload: {
       request: {
-        url: `/signin`,
+        url: signin_url,
         method: 'post',
         headers: getDefaultHeaders(),
         data: {
           email,
           password,
         },
-        transformResponse: data => ({
-          token: data.bearer_token,
-          userId: data.user_id,
-          name: data.first_name,
-          avatar: data.avatar,
-        }),
+        transformResponse: data => {
+          console.log(data)
+          return ({
+            token: data.bearer_token,
+            userId: data.user_id,
+            name: data.first_name,
+            avatar: data.avatar,
+          })
+        },
       },
     },
   }

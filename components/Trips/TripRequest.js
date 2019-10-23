@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native'
 import { View, Text, Button, Picker, Spinner } from 'native-base'
 import PropTypes from 'prop-types'
 import StopsList from '../CurrentTrip/StopsList'
+import Colors from '../../constants/Colors'
 
 const TripRequest = ({ stops, onSend, loading }) => {
   const [state, setState] = React.useState({
@@ -34,7 +35,7 @@ const TripRequest = ({ stops, onSend, loading }) => {
           />
         ))}
       </Picker>
-      {loading && <Spinner color={'#0000FF'} />}
+      {loading && <Spinner color={Colors.mainBlue} />}
       {!loading && (
         <Button
           disabled={!state.selected}
@@ -61,7 +62,7 @@ TripRequest.propTypes = {
 const styles = StyleSheet.create({
   button: {
     alignSelf: 'center',
-    backgroundColor: '#33C534',
+    backgroundColor: Colors.mainBlue,
     borderRadius: 10,
     // height: '10%',
     justifyContent: 'center',
@@ -78,8 +79,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   pickerTitle: {
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: '500',
+    marginBottom: 10,
+    marginTop: 10,
   },
   stopsTitle: {
     fontSize: 20,
@@ -88,7 +91,7 @@ const styles = StyleSheet.create({
   },
   unselectedButton: {
     alignSelf: 'center',
-    backgroundColor: 'grey',
+    backgroundColor: Colors.mainGrey,
     borderRadius: 10,
     // height: '10%',
     justifyContent: 'center',

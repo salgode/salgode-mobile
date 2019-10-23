@@ -7,35 +7,44 @@ import Icon from 'react-native-vector-icons/AntDesign'
 import TimeInfo from './TimeInfo'
 import PedirBoton from './PedirBoton'
 import PropTypes from 'prop-types'
-import { getTripInfo } from '../../../utils/getTripInfo'
+import { getTripInfo, getUserInfo } from '../../../utils/getTripInfo'
 
 const ChooseTrip = ({
   timestamp,
   // spacesUsed,
-  user,
+  // user,
   // stops,
   onSend,
   token,
   tripId,
+  userId,
 }) => {
   const [loading, setLoading] = React.useState(true)
   const [_stops, _setStops] = React.useState(['', ''])
   const [stops, setStops] = React.useState(['', ''])
+  const [user, setUser] = React.useState({ name: '' })
 
   const parseStops = async () => {
     const stps = await getTripInfo(tripId, token)
     _setStops(stps.trip_route_points)
-    setStops(stps.trip_route_points.map(s => s.address))
+    setStops(stps.trip_route_points.map(s => (s || { address: '' }).address))
+  }
+
+  const loadUserInfo = async () => {
+    const userInfo = await getUserInfo(userId, token)
+    setUser(userInfo)
   }
 
   React.useEffect(() => {
-    parseStops()
-    setLoading(false)
+    const stopsPromise = parseStops()
+    const userPromise = loadUserInfo()
+    Promise.all([stopsPromise, userPromise]).then(() => setLoading(false))
   }, [])
 
-  return loading ? (
-    <View></View>
-  ) : (
+  if (loading) {
+    return <View></View>
+  }
+  return (
     <Card style={styles.containerRequested}>
       <CardItem style={styles.dataContainer}>
         <View style={styles.user}>
@@ -44,14 +53,16 @@ const ChooseTrip = ({
               name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
               size={80}
             />
-            <Text style={styles.userText}>{user.name}</Text>
+            <Text style={styles.userText}>
+              {`${user.first_name} ${user.last_name}`}
+            </Text>
           </View>
-          <View style={styles.iconInfoGroup}>
-            <View style={styles.iconContainer}>
-              <Icon name="like1" style={styles.infoIcon} />
-              <Text style={styles.iconText}>{user.reputation}</Text>
-            </View>
-          </View>
+          {/* <View style={styles.iconInfoGroup}>
+              <View style={styles.iconContainer}>
+                <Icon name="like1" style={styles.infoIcon} />
+                <Text style={styles.iconText}>{user.reputation}</Text>
+              </View>
+            </View> */}
         </View>
       </CardItem>
       <CardItem style={styles.locationContainer}>
@@ -60,7 +71,7 @@ const ChooseTrip = ({
       </CardItem>
       <CardItem style={styles.bottomSection}>
         <TimeInfo timestamp={timestamp} />
-        <PedirBoton onSend={() => onSend(_stops, token)} disabled={loading} />
+        <PedirBoton onSend={() => onSend(_stops, tripId)} disabled={loading} />
       </CardItem>
     </Card>
   )
@@ -68,13 +79,14 @@ const ChooseTrip = ({
 
 ChooseTrip.propTypes = {
   timestamp: PropTypes.number.isRequired,
-  user: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    reputation: PropTypes.number.isRequired,
-  }),
+  // user: PropTypes.shape({
+  //   name: PropTypes.string.isRequired,
+  //   reputation: PropTypes.number.isRequired,
+  // }),
   token: PropTypes.string.isRequired,
   tripId: PropTypes.string.isRequired,
   onSend: PropTypes.func,
+  userId: PropTypes.string.isRequired,
 }
 
 const styles = StyleSheet.create({

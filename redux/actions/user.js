@@ -175,7 +175,7 @@ export function uploadImageUser(base64string) {
         url: `/images`,
         method: 'post',
         data: {
-          base64string,
+          base64string: `data:image/jpeg;base64,${base64string}`,
         },
         transformResponse: data => {
           return {

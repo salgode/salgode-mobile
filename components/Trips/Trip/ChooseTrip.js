@@ -23,6 +23,7 @@ const ChooseTrip = ({
   // const [_stops, _setStops] = React.useState(['', ''])
   // const [stops, setStops] = React.useState(['', ''])
   const [user, setUser] = React.useState({ name: '' })
+  console.log(stops)
 
   const parseStops = async () => {
     // const stps = await getTripInfo(tripId, token)

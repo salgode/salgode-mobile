@@ -20,6 +20,7 @@ export const actions = {
 }
 
 const mapDataToUser = data => {
+  // console.log(data)
   let user = {
     token: data.bearer_token,
     name: data.first_name,

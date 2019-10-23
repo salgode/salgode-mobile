@@ -43,6 +43,7 @@ class ChooseTripsScreen extends Component {
 
   async getTrips() {
     const response = await this.props.fetchFutureTrips(this.props.user.token)
+    console.log(response)
 
     if (response.error) {
       Alert.alert(

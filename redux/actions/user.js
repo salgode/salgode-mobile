@@ -135,7 +135,7 @@ export function updateUser(
         url: `/users/${id}`,
         method: 'patch',
         headers: {
-          Authorization: authToken,
+          Authorization: `Bearer ${authToken}`,
         },
         data: data,
       },
@@ -160,7 +160,7 @@ export function fetchUser(authToken, id) {
         url: `/users/${id}`,
         method: 'get',
         headers: {
-          Authorization: authToken,
+          Authorization: `Bearer ${authToken}`,
         },
       },
     },

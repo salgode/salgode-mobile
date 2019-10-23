@@ -5,12 +5,13 @@ export const getTripInfo = async (tripId, token) => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: token,
+        Authorization: `Bearer ${token}`,
       },
     }
   )
     .then(resp => resp.json())
     .catch(err => {
+      // eslint-disable-next-line no-console
       console.log(err)
       return null
     })

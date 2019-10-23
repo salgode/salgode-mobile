@@ -25,7 +25,7 @@ const ChooseTrip = ({
   const parseStops = async () => {
     const stps = await getTripInfo(tripId, token)
     _setStops(stps.trip_route_points)
-    setStops(stps.trip_route_points.map(s => s.address))
+    setStops(stps.trip_route_points.map(s => (s || { address: '' }).address))
   }
 
   React.useEffect(() => {
@@ -60,7 +60,7 @@ const ChooseTrip = ({
         </CardItem>
         <CardItem style={styles.bottomSection}>
           <TimeInfo timestamp={timestamp} />
-          <PedirBoton onSend={() => onSend(_stops, token)} disabled={loading} />
+          <PedirBoton onSend={() => onSend(_stops, tripId)} disabled={loading} />
         </CardItem>
       </Card>
     )
@@ -88,7 +88,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 0,
     elevation: 1,
-    padding: 15,
+    paddingBottom: 15,
+    paddingRight: 15,
+    paddingTop: 15,
     shadowColor: '#bbb',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,

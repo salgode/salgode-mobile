@@ -15,6 +15,8 @@ import {
 import { getAllSpots } from '../redux/actions/spots'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import { spotsFilter } from '../utils/spotsFilter'
+import Colors from '../constants/Colors'
+import PropTypes from 'prop-types'
 
 const colorScheme = Appearance.getColorScheme()
 
@@ -25,7 +27,7 @@ class CreateTripScreen extends Component {
   }
 
   componentDidMount = () => {
-    this.props.getAllSpots()
+    this.props.getAllSpots(this.props.user.token)
   }
 
   showDateTimePicker = () => {
@@ -82,10 +84,10 @@ class CreateTripScreen extends Component {
 
           <View style={styles.group}>
             <Button style={styles.dateButton} onPress={this.showDateTimePicker}>
-              <Text style={styles.whiteText}>
+              <Text>
                 {pickedDate
                   ? `${day} - ${hours}:${minutes < 10 ? '0' : ''}${minutes}`
-                  : 'Hora/Fecha de Salida'}
+                  : 'Selecciona Hora/Fecha de Salida'}
               </Text>
             </Button>
             <DateTimePicker
@@ -117,9 +119,22 @@ CreateTripScreen.navigationOptions = {
   header: null,
 }
 
+CreateTripScreen.propTypes = {
+  getAllSpots: PropTypes.func.isRequired,
+  setStartTime: PropTypes.func.isRequired,
+  setStartStop: PropTypes.func.isRequired,
+  setEndStop: PropTypes.func.isRequired,
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
+  clearStartStop: PropTypes.func.isRequired,
+  clearEndStop: PropTypes.func.isRequired,
+  spots: PropTypes.arrayOf(PropTypes.object).isRequired,
+}
+
 const styles = StyleSheet.create({
   addButton: {
-    backgroundColor: '#33C534',
+    backgroundColor: Colors.mainBlue,
     marginBottom: 25,
     marginLeft: 15,
     marginRight: 15,
@@ -141,7 +156,9 @@ const styles = StyleSheet.create({
   },
 
   dateButton: {
-    backgroundColor: '#0000FF',
+    backgroundColor: 'white',
+    borderColor: Colors.mainGrey,
+    borderWidth: 1,
     justifyContent: 'center',
     marginTop: 20,
   },

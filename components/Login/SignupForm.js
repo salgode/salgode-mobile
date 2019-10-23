@@ -7,8 +7,8 @@ import {
   Modal,
   Dimensions,
 } from 'react-native'
-import { Text, Form, Item, Input, Label, Button } from 'native-base'
 import { Ionicons } from '@expo/vector-icons'
+import { Text, Form, Item, Input, Label, Button, Spinner } from 'native-base'
 import Layout from '../../constants/Layout'
 import PropTypes from 'prop-types'
 import Colors from '../../constants/Colors'
@@ -158,6 +158,7 @@ class SignupForm extends Component {
 
   render() {
     const { height, width } = Dimensions.get('window')
+    const { loading } = this.props
     return (
       <Form style={styles.form}>
         {this.state.hasCameraPermission && (
@@ -303,7 +304,7 @@ class SignupForm extends Component {
             value={this.state.password}
           />
         </Item>
-        <Item floatingLabel last style={styles.item}>
+        <Item floatingLabel style={styles.item}>
           <Label
             style={{
               color:
@@ -331,15 +332,18 @@ class SignupForm extends Component {
           <Text>Tomar selfie</Text>
         </Button>
 
-        <Button
-          block
-          borderRadius={10}
-          style={styles.button}
-          disabled={!this.getValidity()}
-          onPress={this.onPress}
-        >
-          <Text>Siguiente</Text>
-        </Button>
+        {loading && <Spinner color={'#0000FF'} />}
+        {!loading && (
+          <Button
+            block
+            borderRadius={10}
+            style={styles.button}
+            disabled={!this.getValidity()}
+            onPress={this.onPress}
+          >
+            <Text>Siguiente</Text>
+          </Button>
+        )}
       </Form>
     )
   }
@@ -347,8 +351,9 @@ class SignupForm extends Component {
 
 SignupForm.propTypes = {
   onSend: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
 }
-const {height} = Dimensions.get('window')
+const { height } = Dimensions.get('window')
 const styles = StyleSheet.create({
   button: {
     marginTop: 20,

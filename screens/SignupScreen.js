@@ -6,7 +6,7 @@ import {
   Alert,
 } from 'react-native'
 import { connect } from 'react-redux'
-import { Spinner, View } from 'native-base'
+import { View } from 'native-base'
 import PropTypes from 'prop-types'
 import { signupUser, uploadImageUser } from '../redux/actions/user'
 import SignupForm from '../components/Login/SignupForm'
@@ -52,12 +52,12 @@ class SignupScreen extends Component {
   }
 
   render() {
+    const { loading } = this.state
     return (
       <KeyboardAvoidingView behavior="padding" enabled>
         <ScrollView>
           <View style={styles.container}>
-            {this.state.loading && <Spinner />}
-            <SignupForm onSend={this.onSend} />
+            <SignupForm onSend={this.onSend} loading={loading} />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

@@ -1,15 +1,17 @@
 import React, { Component } from 'react'
-import { ScrollView, StyleSheet, View, Text } from 'react-native'
+import { ScrollView, StyleSheet, View, Text, Alert, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
 import { createTrip } from '../redux/actions/createtrip'
 import { Button, Icon } from 'native-base'
 import CardInputSelector from '../components/CardInputSelector'
 import { spotsFilter } from '../utils/spotsFilter'
+import Colors from '../constants/Colors'
 
 class AddStopsScreen extends Component {
   state = {
     stops: [],
+    loading: false,
   }
 
   cleanInput = index => {
@@ -21,8 +23,9 @@ class AddStopsScreen extends Component {
     this.setState({ stops: newStops })
   }
 
-  createTrip = () => {
-    const { startStop, endStop, startTime } = this.props
+  createTrip = async () => {
+    this.setState({ loading: true })
+    const { startStop, endStop, startTime, user } = this.props
     const { stops } = this.state
     const stops_ids = stops.map(stop => {
       return stop.id
@@ -30,7 +33,22 @@ class AddStopsScreen extends Component {
 
     const route_points = [startStop.id].concat(stops_ids, endStop.id)
 
-    this.props.createTrip(route_points, startTime)
+    const response = await this.props.createTrip(
+      route_points,
+      startTime,
+      user.token
+    )
+
+    this.setState({ loading: false })
+    if (response.error) {
+      Alert.alert(
+        'Error de creación',
+        'Hubo un problema al crear tu viaje. Por favor intentalo de nuevo.'
+      )
+    } else {
+      Alert.alert('Creación de exitosa', 'Tu viaje ha sido publicado!')
+      this.props.navigation.popToTop()
+    }
   }
 
   renderStops = () => {
@@ -39,14 +57,14 @@ class AddStopsScreen extends Component {
       return (
         <View key={index} style={styles.textView}>
           <View
-            style={{ ...styles.stopContainer, justifyContent: 'space-evenly' }}
+            style={{ ...styles.stopContainer, justifyContent: 'flex-start', width: '85%' }}
           >
             <Text style={{ fontWeight: 'bold', marginRight: 10 }}>
               #Parada {index + 1}{' '}
             </Text>
-            <Text>{stop.name}</Text>
+            <Text numberOfLines={1} style={{width: '75%'}}>{stop.name}</Text>
           </View>
-          <Button icon transparen onPress={() => this.cleanInput(index)}>
+          <Button icon transparent onPress={() => this.cleanInput(index)}>
             <Icon name="close" />
           </Button>
         </View>
@@ -62,6 +80,7 @@ class AddStopsScreen extends Component {
           style={styles.container}
           contentContainerStyle={styles.contentContainer}
         >
+          {this.state.loading && <ActivityIndicator />}
           <View style={styles.group}>
             <View style={styles.stopContainer}>
               <Text style={{ fontWeight: 'bold', marginRight: 10 }}>
@@ -98,7 +117,7 @@ class AddStopsScreen extends Component {
 
         <View>
           <Button block style={styles.addButton} onPress={this.createTrip}>
-            <Text>Crear Viaje</Text>
+            <Text style={styles.whiteText}>Crear Viaje</Text>
           </Button>
         </View>
       </View>
@@ -112,7 +131,7 @@ AddStopsScreen.navigationOptions = {
 
 const styles = StyleSheet.create({
   addButton: {
-    backgroundColor: '#33C534',
+    backgroundColor: Colors.mainBlue,
     marginBottom: 25,
     marginLeft: 15,
     marginRight: 15,
@@ -149,6 +168,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginLeft: 10,
+  },
+  whiteText: {
+    color: 'white'
   },
 })
 

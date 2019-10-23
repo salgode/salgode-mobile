@@ -42,7 +42,7 @@ class ChooseTripsScreen extends Component {
 
     if (response.error) {
       Alert.alert(
-        'Error al iniciar sesión',
+        'Error obteniendo viajes',
         'Hubo un problema obteniendo los viajes. Por favor intentalo de nuevo.'
       )
     }

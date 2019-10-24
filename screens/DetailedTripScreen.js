@@ -295,9 +295,6 @@ class DetailedTripScreen extends Component {
       asDriver,
       token,
     }))
-    console.log('as driver:');
-    
-    console.log(asDriver);
     
     await this.fetchTrip(tripId, token)
       .then(trip => this.setState({ trip }))

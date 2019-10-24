@@ -1,3 +1,5 @@
+import { getBaseHeaders } from '../../config/api/headers'
+
 export const actions = {
   SET_START_STOP: 'SET_START_STOP',
   SET_END_STOP: 'SET_END_STOP',
@@ -55,9 +57,7 @@ export function createTrip(route_points, etd, userId, token) {
       request: {
         url: `/trips`,
         method: 'post',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: getBaseHeaders(token),
         data: {
           route_points,
           etd,

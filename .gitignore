@@ -10,3 +10,9 @@ npm-debug.*
 web-build/
 web-report/
 .vscode/
+
+# Node_modules
+/node_modules/
+
+# ENV file
+.env

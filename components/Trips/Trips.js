@@ -25,7 +25,7 @@ class MyTrips extends Component {
                 spacesUsed={item.spacesUsed}
                 user={item.driver}
                 status={item.trip_status}
-                asDriver={this.asDriver}
+                asDriver={this.trip_role}
                 onPressTrip={this.props.onPressTrip}
                 tripId={item.trip_id}
                 startLocation={item.trip_route.start}

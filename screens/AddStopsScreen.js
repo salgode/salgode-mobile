@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { ScrollView, StyleSheet, View, Text, Alert, ActivityIndicator } from 'react-native'
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  Text,
+  Alert,
+  ActivityIndicator,
+} from 'react-native'
 import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
 import { createTrip } from '../redux/actions/createtrip'
@@ -58,7 +65,11 @@ class AddStopsScreen extends Component {
       return (
         <View key={index} style={styles.textView}>
           <View
-            style={{ ...styles.stopContainer, justifyContent: 'flex-start', width: '85%' }}
+            style={{
+              ...styles.stopContainer,
+              justifyContent: 'flex-start',
+              width: '85%',
+            }}
           >
             <Text style={{ fontWeight: 'bold', marginRight: 10 }}>
               #Parada {index + 1}{' '}
@@ -101,6 +112,7 @@ class AddStopsScreen extends Component {
               Agrega paradas extra (opcional)
             </Text>
             {this.renderStops()}
+            {(this.state.stops.length < 20) &&
             <CardInputSelector
               text="+"
               placeHolder="Filtra por Comuna o Parada"
@@ -112,7 +124,7 @@ class AddStopsScreen extends Component {
               onSelect={item =>
                 this.setState({ stops: this.state.stops.concat([item]) })
               }
-            />
+            />}
           </View>
         </ScrollView>
 
@@ -171,7 +183,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   whiteText: {
-    color: 'white'
+    color: 'white',
   },
 })
 

@@ -72,8 +72,8 @@ class ChooseTripsScreen extends Component {
                 tripId: trip.trip_id,
                 userId: trip.driver.driver_id,
                 token: this.props.user.token,
+                trip_route: trip.trip_route,
               }
-              console.log(data)
               return data
             })}
           />

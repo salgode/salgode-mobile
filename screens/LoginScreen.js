@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, Button } from 'native-base'
+import { Text, Button, View } from 'native-base'
 import {
   StyleSheet,
   KeyboardAvoidingView,
@@ -7,6 +7,7 @@ import {
   Dimensions,
   Animated,
   Keyboard,
+  // AsyncStorage,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Spinner } from 'native-base'
@@ -32,6 +33,7 @@ class LoginScreen extends Component {
     }
     this.onSend = this.onSend.bind(this)
     this.onCreateAccountPress = this.onCreateAccountPress.bind(this)
+    this.onRecoverPasswordPress = this.onRecoverPasswordPress.bind(this)
     this.imageHeight = new Animated.Value(IMAGE_HEIGHT)
   }
 
@@ -71,15 +73,22 @@ class LoginScreen extends Component {
     const user = await this.props.login(email, password).then(response => {
       return response
     })
+
     this.setState({ loading: false })
 
-    if (user.error) {
+    if (user.error || !user.payload.data.userId) {
       Alert.alert(
         'Hubo un problema iniciando sesión. Por favor intentalo de nuevo.'
       )
     } else {
+      // await AsyncStorage.setItem('@userToken', user.payload.data.token)
+      // await AsyncStorage.setItem('@userId', user.payload.data.userId)
       this.props.navigation.navigate('Main')
     }
+  }
+
+  onRecoverPasswordPress() {
+    this.props.navigation.navigate('RecoverPassword')
   }
 
   onCreateAccountPress() {
@@ -96,9 +105,14 @@ class LoginScreen extends Component {
         {!this.state.loading && <LoginForm onSend={this.onSend} />}
         {this.state.loading && <Spinner color="blue" />}
         {!this.state.loading && (
-          <Button transparent onPress={this.onCreateAccountPress}>
-            <Text>No tienes una cuenta? Crea una aquí</Text>
-          </Button>
+          <View>
+            <Button transparent onPress={this.onCreateAccountPress}>
+              <Text>¿No tienes una cuenta? Crea una aquí</Text>
+            </Button>
+            <Button transparent onPress={this.onRecoverPasswordPress}>
+              <Text>¿Olvidaste tu contraseña? Recupérala aquí</Text>
+            </Button>
+          </View>
         )}
         {this.state.loading && <Text>Comprobando datos</Text>}
       </KeyboardAvoidingView>

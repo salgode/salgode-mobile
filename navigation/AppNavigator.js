@@ -1,17 +1,24 @@
 /* eslint-disable no-unused-vars*/
-import React from 'react'
 import { createAppContainer, createSwitchNavigator } from 'react-navigation'
-
-import ResolveAuthScreen from '../screens/ResolveAuthScreen'
+import React from 'react'
 import MainTabNavigator from './MainTabNavigator'
 import LoginNavigator from './LoginNavigator'
-import TripRequest from '../components/Trips/TripRequest'
+import { store } from '../redux/store'
 
-export default createAppContainer(
-  createSwitchNavigator({
-    // You could add another route here for authentication.
-    // Read more at https://reactnavigation.org/docs/en/auth-flow.html
+// const token = AsyncStorage.getItem("@userToken");
+const renderRoutes = () => {
+  const token = store.getState().user.token
+
+  const userNotLoggedInNav = {
     LoginStack: LoginNavigator,
     Main: MainTabNavigator,
-  })
-)
+  }
+  const userLoggedInNav = {
+    Main: MainTabNavigator,
+    LoginStack: LoginNavigator,
+  }
+
+  return token ? userLoggedInNav : userNotLoggedInNav
+}
+
+export default createAppContainer(createSwitchNavigator(renderRoutes()))

@@ -6,7 +6,7 @@ import {
   createTripReducer,
   slotsReducer,
   spotsReducer,
-  futureTripsReducer,
+  tripReducer,
   userReducer,
 } from './reducers'
 import {
@@ -33,7 +33,7 @@ export const client = axios.create({
 
 const reducer = combineReducers({
   user: userReducer,
-  futureTrips: futureTripsReducer,
+  trips: tripReducer,
   createTrip: createTripReducer,
   spots: spotsReducer,
   slots: slotsReducer,
@@ -46,7 +46,7 @@ export const store = createStore(
     user: userModel,
     createTrip: createTripModel,
     spots: spotsModel,
-    futureTrips: futureTripsModel,
+    trips: futureTripsModel,
   },
   composeWithDevTools(applyMiddleware(axiosMiddleware(client)))
 )

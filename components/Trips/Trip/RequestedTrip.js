@@ -61,14 +61,11 @@ const RequestedTrip = ({
         </View>
       </CardItem>
       <CardItem style={styles.locationContainer}>
-        <Location color={'#0000FF'} location={startLocation.name} />
-        <Location color={'#33C534'} location={endLocation.name} />
+        <Location color={'#0000FF'} location={startLocation} />
+        <Location color={'#33C534'} location={endLocation} />
       </CardItem>
       <CardItem>
-        <TimeInfo timestamp={timestamp.start} />
-      </CardItem>
-      <CardItem>
-        <TimeInfo timestamp={timestamp.end} />
+        <TimeInfo timestamp={timestamp} />
       </CardItem>
       <CardItem style={styles.containerBottom}>
         <Button
@@ -87,14 +84,21 @@ const RequestedTrip = ({
 }
 
 RequestedTrip.propTypes = {
-  timestamp: PropTypes.number.isRequired,
+  timestamp: PropTypes.string.isRequired,
   user: PropTypes.shape({
-    name: PropTypes.string.isRequired,
+    driver_name: PropTypes.string.isRequired,
     selfieLink: PropTypes.string,
   }).isRequired,
-  status: PropTypes.oneOf(['accepted', 'pending', 'rejected']),
-  startLocation: PropTypes.string,
-  endLocation: PropTypes.string,
+  status: PropTypes.oneOf([
+    'accepted',
+    'pending',
+    'rejected',
+    'completed',
+    'open',
+    'in_progress',
+  ]),
+  startLocation: PropTypes.object.isRequired,
+  endLocation: PropTypes.object.isRequired,
   onSend: PropTypes.func,
   tripId: PropTypes.string.isRequired,
 }
@@ -159,13 +163,3 @@ const styles = StyleSheet.create({
 })
 
 export default RequestedTrip
-
-RequestedTrip.propTypes = {
-  timestamp: PropTypes.number.isRequired,
-  spacesUsed: PropTypes.number.isRequired,
-  user: PropTypes.object.isRequired,
-  status: PropTypes.string.isRequired,
-  onPressTrip: PropTypes.func.isRequired,
-  asDriver: PropTypes.bool.isRequired,
-  tripId: PropTypes.string.isRequired,
-}

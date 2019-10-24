@@ -7,6 +7,7 @@ import {
   Dimensions,
   Animated,
   Keyboard,
+  // AsyncStorage,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Spinner } from 'native-base'
@@ -72,6 +73,7 @@ class LoginScreen extends Component {
     const user = await this.props.login(email, password).then(response => {
       return response
     })
+
     this.setState({ loading: false })
 
     if (user.error || !user.payload.data.userId) {
@@ -79,12 +81,14 @@ class LoginScreen extends Component {
         'Hubo un problema iniciando sesión. Por favor intentalo de nuevo.'
       )
     } else {
+      // await AsyncStorage.setItem('@userToken', user.payload.data.token)
+      // await AsyncStorage.setItem('@userId', user.payload.data.userId)
       this.props.navigation.navigate('Main')
     }
   }
 
   onRecoverPasswordPress() {
-    this.props.navigation.navigate('RecoverPassword');
+    this.props.navigation.navigate('RecoverPassword')
   }
 
   onCreateAccountPress() {

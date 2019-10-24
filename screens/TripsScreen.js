@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, StyleSheet } from 'react-native'
 import PropTypes from 'prop-types'
 import Trips from '../components/Trips/Trips'
-import { Spinner, Text } from 'native-base'
+import { Spinner } from 'native-base'
 import { connect } from 'react-redux'
 import { userTrips } from '../redux/actions/user'
 
@@ -39,7 +39,6 @@ class TripsScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>{this.asDriver}</Text>
         {this.state.loading && <Spinner color="blue" />}
         {!this.state.loading && (
           <Trips

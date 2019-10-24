@@ -26,10 +26,9 @@ export const Trip = ({
       <Card style={[styles.container, styles.shadow]}>
         <View style={styles.locationContainer}>
           <Text>{user.driver_name}</Text>
-          <Location color={'#0000FF'} location={startLocation.name} />
-          <Location color={'#33C534'} location={endLocation.name} />
-          <TimeInfo timestamp={timestamp.start} />
-          <TimeInfo timestamp={timestamp.end} />
+          <Location color={'#0000FF'} location={startLocation} />
+          <Location color={'#33C534'} location={endLocation} />
+          <TimeInfo timestamp={timestamp} />
         </View>
         <View style={styles.iconContainer}>
           {/* <CardIcon
@@ -57,7 +56,7 @@ export const Trip = ({
 }
 
 Trip.propTypes = {
-  timestamp: PropTypes.object.isRequired,
+  timestamp: PropTypes.number.isRequired,
   onPressTrip: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
   startLocation: PropTypes.object.isRequired,

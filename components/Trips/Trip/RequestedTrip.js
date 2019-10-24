@@ -61,14 +61,11 @@ const RequestedTrip = ({
         </View>
       </CardItem>
       <CardItem style={styles.locationContainer}>
-        <Location color={'#0000FF'} location={startLocation.name} />
-        <Location color={'#33C534'} location={endLocation.name} />
+        <Location color={'#0000FF'} location={startLocation} />
+        <Location color={'#33C534'} location={endLocation} />
       </CardItem>
       <CardItem>
-        <TimeInfo timestamp={timestamp.start} />
-      </CardItem>
-      <CardItem>
-        <TimeInfo timestamp={timestamp.end} />
+        <TimeInfo timestamp={timestamp} />
       </CardItem>
       <CardItem style={styles.containerBottom}>
         <Button
@@ -87,7 +84,7 @@ const RequestedTrip = ({
 }
 
 RequestedTrip.propTypes = {
-  timestamp: PropTypes.object.isRequired,
+  timestamp: PropTypes.number.isRequired,
   user: PropTypes.shape({
     driver_name: PropTypes.string.isRequired,
     selfieLink: PropTypes.string,

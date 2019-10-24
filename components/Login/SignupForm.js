@@ -1,19 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { Component } from 'react'
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Modal,
-  Dimensions,
-} from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
+import { StyleSheet } from 'react-native'
 import { Text, Form, Item, Input, Label, Button, Spinner } from 'native-base'
 import Layout from '../../constants/Layout'
 import PropTypes from 'prop-types'
 import Colors from '../../constants/Colors'
 import * as Permissions from 'expo-permissions'
-import { Camera } from 'expo-camera'
+import { withNavigation } from 'react-navigation'
 
 class SignupForm extends Component {
   constructor(props) {
@@ -26,10 +19,6 @@ class SignupForm extends Component {
       phoneNumber: '',
       password: '',
       passwordRepeat: '',
-      selfieLink: '',
-      hasCameraPermission: null,
-      type: Camera.Constants.Type.front,
-      onCamera: false,
       validity: {
         name: false,
         lastname: false,
@@ -37,7 +26,6 @@ class SignupForm extends Component {
         phoneNumber: false,
         password: false,
         passwordRepeat: false,
-        selfieLink: false,
       },
     }
 
@@ -50,9 +38,6 @@ class SignupForm extends Component {
 
     this.getValidity = this.getValidity.bind(this)
     this.onPress = this.onPress.bind(this)
-    this.getselfie = this.getselfie.bind(this)
-    this.openCamera = this.openCamera.bind(this)
-    this.closeCamera = this.closeCamera.bind(this)
   }
 
   onChangeName(name) {
@@ -109,46 +94,29 @@ class SignupForm extends Component {
       this.state.validity.email &&
       this.state.validity.phoneNumber &&
       this.state.validity.password &&
-      this.state.validity.passwordRepeat &&
-      this.state.validity.selfieLink
+      this.state.validity.passwordRepeat
     return validity && this.state.password === this.state.passwordRepeat
   }
 
   onPress() {
-    this.props.onSend({
-      name: this.state.name,
-      lastName: this.state.lastname,
-      email: this.state.email,
-      phone: this.state.phoneNumber,
-      password: this.state.password,
-      passwordRepeat: this.state.passwordRepeat,
-      selfieLink: this.state.selfieLink,
+    // this.props.onSend({
+    //   name: this.state.name,
+    //   lastName: this.state.lastname,
+    //   email: this.state.email,
+    //   phone: this.state.phoneNumber,
+    //   password: this.state.password,
+    //   passwordRepeat: this.state.passwordRepeat,
+    // })
+    this.props.navigation.navigate('SignupImages', {
+      userData: {
+        name: this.state.name,
+        lastName: this.state.lastname,
+        email: this.state.email,
+        phone: this.state.phoneNumber,
+        password: this.state.password,
+        passwordRepeat: this.state.passwordRepeat,
+      },
     })
-  }
-
-  async getselfie() {
-    if (this.camera) {
-      const photo = await this.camera.takePictureAsync({
-        quality: 0.5,
-        base64: true,
-      })
-      this.setState(oldState => ({
-        selfieLink: photo.base64,
-        validity: {
-          ...oldState.validity,
-          selfieLink: photo.base64 ? true : false,
-        },
-      }))
-    }
-    this.closeCamera()
-  }
-
-  openCamera() {
-    this.setState({ onCamera: true })
-  }
-
-  closeCamera() {
-    this.setState({ onCamera: false })
   }
 
   async componentDidMount() {
@@ -157,61 +125,9 @@ class SignupForm extends Component {
   }
 
   render() {
-    const { height, width } = Dimensions.get('window')
     const { loading } = this.props
     return (
       <Form style={styles.form}>
-        {this.state.hasCameraPermission && (
-          <Modal
-            animationType="slide"
-            transparent={false}
-            presentationStyle="fullScreen"
-            visible={this.state.onCamera}
-            onRequestClose={this.closeCamera}
-          >
-            <Camera
-              style={{ width: width, height: height, position: 'absolute' }}
-              type={this.state.type}
-              ref={ref => {
-                this.camera = ref
-              }}
-            >
-              <View
-                style={{
-                  flex: 0.1,
-                  backgroundColor: 'transparent',
-                  flexDirection: 'row',
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    this.setState({
-                      type:
-                        this.state.type === Camera.Constants.Type.back
-                          ? Camera.Constants.Type.front
-                          : Camera.Constants.Type.back,
-                    })
-                  }}
-                >
-                  <Button borderRadius={10} style={styles.icon}>
-                    <Ionicons
-                      name="md-reverse-camera"
-                      color="white"
-                      size={24}
-                    />
-                  </Button>
-                </TouchableOpacity>
-              </View>
-            </Camera>
-            <Button
-              borderRadius={10}
-              style={styles.buttonCamera}
-              onPress={this.getselfie}
-            >
-              <Text>Tomar foto </Text>
-            </Button>
-          </Modal>
-        )}
         <Item floatingLabel style={styles.item}>
           <Label
             style={{
@@ -323,15 +239,6 @@ class SignupForm extends Component {
           />
         </Item>
 
-        <Button
-          block
-          borderRadius={10}
-          style={styles.button}
-          onPress={this.openCamera}
-        >
-          <Text>Tomar selfie</Text>
-        </Button>
-
         {loading && <Spinner color={'#0000FF'} />}
         {!loading && (
           <Button
@@ -352,31 +259,18 @@ class SignupForm extends Component {
 SignupForm.propTypes = {
   onSend: PropTypes.func.isRequired,
   loading: PropTypes.bool,
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }),
 }
-const { height } = Dimensions.get('window')
+
 const styles = StyleSheet.create({
   button: {
     marginTop: 20,
   },
-  buttonCamera: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-    marginBottom: 5,
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: height - 70,
-  },
   form: {
     alignItems: 'center',
     margin: 15,
-  },
-  icon: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: 15,
-    marginTop: 20,
-    width: 40,
   },
   input: {
     width: Layout.window.width * 0.85,
@@ -388,4 +282,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default SignupForm
+export default withNavigation(SignupForm)

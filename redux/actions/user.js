@@ -79,8 +79,8 @@ export function signupUser(
   password,
   passwordRepeat,
   selfieLink = 'placeholder',
-  dniFrontLink = 'placeholder',
-  dniBackLink = 'placeholder'
+  identification_image_front = 'placeholder',
+  identification_image_back = 'placeholder'
 ) {
   const data = {
     email,
@@ -91,8 +91,8 @@ export function signupUser(
     passwordRepeat,
     user_identifications: {
       selfie_image: selfieLink,
-      identification_image_front: dniFrontLink,
-      identification_image_back: dniBackLink,
+      identification_image_front,
+      identification_image_back,
     },
   }
   return {

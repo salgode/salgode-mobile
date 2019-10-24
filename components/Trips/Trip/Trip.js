@@ -14,6 +14,8 @@ export const Trip = ({
   onPressTrip,
   asDriver,
   tripId,
+  startLocation,
+  endLocation,
 }) => {
   return (
     <TouchableOpacity
@@ -23,8 +25,8 @@ export const Trip = ({
     >
       <Card style={[styles.container, styles.shadow]}>
         <View style={styles.locationContainer}>
-          <Location color={'#0000FF'} location="Campus San Joaquin" />
-          <Location color={'#33C534'} location="Campus San Joaquin" />
+          <Location color={'#0000FF'} location={startLocation} />
+          <Location color={'#33C534'} location={endLocation} />
           <TimeInfo timestamp={timestamp} isDate />
           <TimeInfo timestamp={timestamp} />
         </View>

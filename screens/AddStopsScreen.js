@@ -112,6 +112,7 @@ class AddStopsScreen extends Component {
               Agrega paradas extra (opcional)
             </Text>
             {this.renderStops()}
+            {(this.state.stops.length < 20) &&
             <CardInputSelector
               text="+"
               placeHolder="Filtra por Comuna o Parada"
@@ -123,7 +124,7 @@ class AddStopsScreen extends Component {
               onSelect={item =>
                 this.setState({ stops: this.state.stops.concat([item]) })
               }
-            />
+            />}
           </View>
         </ScrollView>
 

@@ -30,15 +30,27 @@ class SignupScreen extends Component {
   async onSend(userInfo) {
     this.setState({ loading: true })
     const selfieUrl = await this.props.uploadImage(userInfo.selfieLink)
-    const user = await this.props.signup(
-      userInfo.name,
-      userInfo.lastName,
-      userInfo.email,
-      userInfo.phone,
-      userInfo.password,
-      userInfo.passwordRepeat,
-      selfieUrl
+    const frontIdUrl = await this.props.uploadImage(
+      userInfo.identification_image_front
     )
+    const backIdUrl = await this.props.uploadImage(
+      userInfo.identification_image_back
+    )
+    const user = await this.props
+      .signup(
+        userInfo.name,
+        userInfo.lastName,
+        userInfo.email,
+        userInfo.phone,
+        userInfo.password,
+        userInfo.passwordRepeat,
+        selfieUrl,
+        frontIdUrl,
+        backIdUrl
+      )
+      .then(response => {
+        return response
+      })
     this.setState({ loading: false })
     if (user.error) {
       Alert.alert(lang.signup.error.title, lang.signup.error.message)
@@ -90,7 +102,15 @@ const mapDispatchToProps = dispatch => ({
     phone,
     password,
     passwordRepeat,
-    selfieLink
+    selfieLink,
+    identification_image_front,
+    identification_image_back
+    // driverLicenseLink,
+    // dniLink,
+    // carPlate,
+    // carColor,
+    // carBrand,
+    // carModel
   ) =>
     dispatch(
       signupUser(
@@ -100,7 +120,16 @@ const mapDispatchToProps = dispatch => ({
         phone,
         password,
         passwordRepeat,
-        selfieLink
+        selfieLink,
+        identification_image_front,
+        identification_image_back
+        // driverLicenseLink,
+        // driverLicenseLink,
+        // dniLink,
+        // carPlate,
+        // carColor,
+        // carBrand,
+        // carModel
       )
     ),
 })

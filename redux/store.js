@@ -1,5 +1,7 @@
 import { applyMiddleware, combineReducers, createStore } from 'redux'
 import axiosMiddleware from 'redux-axios-middleware'
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import axios from 'axios'
 import userReducer from './reducers/user'
 import futureTripReducer from './reducers/trips'
@@ -27,7 +29,12 @@ export const client = axios.create({
 //   return request
 // })
 
-const reducer = combineReducers({
+const persistConfig = {
+  key: 'root',
+  storage,
+};
+
+const reducers = combineReducers({
   user: userReducer,
   futureTrips: futureTripReducer,
   createTrip: createTripReducer,
@@ -36,8 +43,10 @@ const reducer = combineReducers({
   loading: false,
 })
 
+const persistedReducer = persistReducer(persistConfig, reducers)
+
 export const store = createStore(
-  reducer,
+  persistedReducer,
   {
     user: userModel,
     createTrip: createTripModel,
@@ -46,3 +55,5 @@ export const store = createStore(
   },
   applyMiddleware(axiosMiddleware(client))
 )
+
+export const persistor = persistStore(store)

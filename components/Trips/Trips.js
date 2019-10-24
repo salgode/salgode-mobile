@@ -21,7 +21,7 @@ class MyTrips extends Component {
       return (
         <SafeAreaView>
           <FlatList
-            data={this.tripsData}
+            data={this.props.trips}
             renderItem={({ item }) => (
               <Trip
                 timestamp={item.trip_times.etd}

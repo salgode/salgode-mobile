@@ -1,7 +1,10 @@
 import { actions as userActions } from '../actions/user'
 
 export default function userReducer(state = {}, action) {
+  // console.log('Here: ', action.type, action.payload)
   switch (action.type) {
+    case userActions.USER_SET:
+      return { ...state, ...action.payload }
     case userActions.USER_LOGIN:
       return { ...state, loading: true }
     case userActions.USER_LOGIN_SUCCESS:

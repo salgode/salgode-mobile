@@ -3,10 +3,10 @@ import { Text, Button, View } from 'native-base'
 import {
   StyleSheet,
   KeyboardAvoidingView,
-  Alert,
   Dimensions,
   Animated,
   Keyboard,
+  AsyncStorage,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Spinner } from 'native-base'
@@ -72,9 +72,12 @@ class LoginScreen extends Component {
     this.setState({ loading: true })
     const user = await this.props.login(email, password)
     this.setState({ loading: false })
-    if (user.error || !user.payload.data.userId) {
-      Alert.alert(lang.signin.error)
+    if (user.error) {
+      alert(lang.signin.error)
     } else {
+      const { data } = user.payload
+      AsyncStorage.setItem('@userToken', data.token)
+      AsyncStorage.setItem('@userId', data.userId)
       this.props.navigation.navigate('Main')
     }
   }

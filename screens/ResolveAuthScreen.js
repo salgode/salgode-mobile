@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { SafeAreaView, StyleSheet, AsyncStorage, Alert } from 'react-native'
 import { Spinner } from 'native-base'
 import { connect } from 'react-redux'
-import { fetchUser } from '../redux/actions/user'
+import { getOwnProfile } from '../redux/actions/user'
+import PropTypes from 'prop-types'
 
 class ResolveAuthScreen extends Component {
   constructor(props) {
@@ -18,18 +19,21 @@ class ResolveAuthScreen extends Component {
   async loginHandler() {
     const userToken = await AsyncStorage.getItem('@userToken')
     const userId = await AsyncStorage.getItem('@userId')
+    // console.log(userToken, userId)
 
     if (!userToken || !userId) {
-      this.props.navigation.navigate('LoginStack')
+      this.props.navigation.navigate('Login')
     } else {
       this.setState({
         loading: true,
       })
 
-      const user = await this.props.login(userToken, userId).then(response => {
-        return response
-      })
-
+      const user = await this.props
+        .loadUser(userToken, userId)
+        .then(response => {
+          return response
+        })
+      // console.log(user)
       if (user.error) {
         Alert.alert(
           'Error al iniciar sesión',
@@ -40,7 +44,7 @@ class ResolveAuthScreen extends Component {
               onPress: () => {
                 AsyncStorage.removeItem('@userToken')
                 AsyncStorage.removeItem('@userId')
-                this.props.navigation.navigate('LoginStack')
+                this.props.navigation.navigate('Login')
               },
             },
           ]
@@ -51,17 +55,16 @@ class ResolveAuthScreen extends Component {
     }
   }
 
+  componentDidMount() {
+    this.loginHandler()
+  }
+
   render() {
-    !this.state.loading && this.loginHandler()
-    if (this.state.loading) {
-      return (
-        <SafeAreaView style={styles.container}>
-          <Spinner color="blue" />
-        </SafeAreaView>
-      )
-    } else {
-      return null
-    }
+    return (
+      <SafeAreaView style={styles.container}>
+        <Spinner color="blue" />
+      </SafeAreaView>
+    )
   }
 }
 
@@ -73,8 +76,15 @@ const styles = StyleSheet.create({
   },
 })
 
+ResolveAuthScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
+  loadUser: PropTypes.func.isRequired,
+}
+
 const mapDispatchToProps = dispatch => ({
-  login: (email, password) => dispatch(fetchUser(email, password)),
+  loadUser: (token, id) => dispatch(getOwnProfile(token, id)),
 })
 
 export default connect(

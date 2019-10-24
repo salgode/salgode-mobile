@@ -1,4 +1,5 @@
 import { applyMiddleware, combineReducers, createStore } from 'redux'
+import { composeWithDevTools } from 'redux-devtools-extension'
 import axiosMiddleware from 'redux-axios-middleware'
 import axios from 'axios'
 import {
@@ -47,5 +48,5 @@ export const store = createStore(
     spots: spotsModel,
     trips: futureTripsModel,
   },
-  applyMiddleware(axiosMiddleware(client))
+  composeWithDevTools(applyMiddleware(axiosMiddleware(client)))
 )

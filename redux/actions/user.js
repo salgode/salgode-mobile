@@ -17,11 +17,12 @@ export const actions = {
   USER_GET_TRIPS: 'USER_GET_TRIPS',
   USER_GET_TRIPS_FAIL: 'USER_GET_TRIPS_FAIL',
   USER_GET_TRIPS_SUCCESS: 'USER_GET_TRIPS_SUCCESS',
+  USER_SET: 'USER_SET',
 }
 
 const mapDataToUser = data => {
   let user = {
-    token: data.bearer_token,
+    // token: data.bearer_token,
     name: data.first_name,
     userId: data.user_id,
     selfie: data.avatar,
@@ -139,6 +140,24 @@ export function fetchUser(authToken, id) {
         url: urls.user.info.get.profile(id),
         method: 'get',
         headers: getBaseHeaders(authToken),
+      },
+    },
+  }
+}
+
+export function getOwnProfile(token, userId) {
+  return {
+    type: actions.USER_LOGIN,
+    payload: {
+      request: {
+        url: urls.user.info.get.profile(userId),
+        method: 'get',
+        headers: getBaseHeaders(token),
+        transformResponse: data => ({
+          ...mapDataToUser(data),
+          userId: userId,
+          token: token,
+        }),
       },
     },
   }

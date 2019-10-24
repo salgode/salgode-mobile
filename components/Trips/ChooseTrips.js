@@ -1,44 +1,45 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 import {
   FlatList,
   SafeAreaView,
   View,
   ActivityIndicator,
-  StyleSheet,
-} from 'react-native'
-import PropTypes from 'prop-types'
-import ChooseTrip from './Trip/ChooseTrip'
+  StyleSheet
+} from "react-native";
+import PropTypes from "prop-types";
+import ChooseTrip from "./Trip/ChooseTrip";
 
 class ChooseTrips extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       loading: false,
-      stops: [],
-    }
-    this.ChooseTrip = ChooseTrip
-    this.onReload = this.onReload.bind(this)
+      stops: []
+    };
+    this.ChooseTrip = ChooseTrip;
+    this.onReload = this.onReload.bind(this);
   }
 
   componentDidMount() {
-    this.onReload()
+    this.onReload();
   }
 
   async onReload() {
-    this.setState({ loading: true })
-    await this.props.onReload()
-    this.setState({ loading: false })
+    this.setState({ loading: true });
+    await this.props.onReload();
+    this.setState({ loading: false });
   }
 
   render() {
-    const Trip = this.ChooseTrip
+    const Trip = this.ChooseTrip;
     if (this.state.loading) {
       return (
         <View>
           <ActivityIndicator size="large" color="#0000FF" marginTop={20} />
         </View>
-      )
+      );
     }
+
     return (
       <SafeAreaView>
         <FlatList
@@ -53,7 +54,7 @@ class ChooseTrips extends Component {
               stops={item.stops}
               onSend={this.props.onSend}
               token={item.token}
-              tripId={item.trip_id}
+              tripId={item.tripId}
               userId={item.userId}
               startLocation={item.trip_route.start.name}
               endLocation={item.trip_route.end.name}
@@ -63,7 +64,7 @@ class ChooseTrips extends Component {
           style={styles.flatList}
         />
       </SafeAreaView>
-    )
+    );
   }
 }
 
@@ -71,16 +72,16 @@ ChooseTrips.propTypes = {
   trips: PropTypes.array,
   isRequestedTrips: PropTypes.bool,
   onSend: PropTypes.func,
-  onReload: PropTypes.func.isRequired,
-}
+  onReload: PropTypes.func.isRequired
+};
 
 ChooseTrips.defaultProps = {
   trips: [],
-  isRequestedTrips: false,
-}
+  isRequestedTrips: false
+};
 
 const styles = StyleSheet.create({
-  flatList: { height: '100%', width: '100%' },
-})
+  flatList: { height: "100%", width: "100%" }
+});
 
-export default ChooseTrips
+export default ChooseTrips;

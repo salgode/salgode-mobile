@@ -23,7 +23,6 @@ const ChooseTrip = ({
   // const [_stops, _setStops] = React.useState(['', ''])
   // const [stops, setStops] = React.useState(['', ''])
   const [user, setUser] = React.useState({ name: '' })
-  console.log(stops)
 
   const parseStops = async () => {
     // const stps = await getTripInfo(tripId, token)
@@ -41,7 +40,6 @@ const ChooseTrip = ({
     const userPromise = loadUserInfo()
     Promise.all([stopsPromise, userPromise]).then(() => setLoading(false))
   }, [])
-
   return loading ? (
     <View></View>
   ) : (
@@ -53,6 +51,8 @@ const ChooseTrip = ({
               name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
               size={80}
             />
+
+            {console.log('print stops', userId)}
             <Text style={styles.userText}>
               {`${user.first_name} ${user.last_name}`}
             </Text>
@@ -66,8 +66,8 @@ const ChooseTrip = ({
         </View>
       </CardItem>
       <CardItem style={styles.locationContainer}>
-        <Location color={'#0000FF'} location={stops[0].name} />
-        <Location color={'#33C534'} location={stops[stops.length - 1].name} />
+        <Location color={'#0000FF'} location={stops[0]} />
+        <Location color={'#33C534'} location={stops[stops.length - 1]} />
       </CardItem>
       <CardItem style={styles.bottomSection}>
         <TimeInfo timestamp={timestamp} />

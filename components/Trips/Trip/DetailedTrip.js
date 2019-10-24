@@ -87,6 +87,7 @@ DetailedTrip.propTypes = {
   trip: PropTypes.object,
   asDriver: PropTypes.bool,
   driver: PropTypes.object,
+  token: PropTypes.string,
 }
 
 const styles = StyleSheet.create({

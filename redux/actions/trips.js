@@ -1,4 +1,5 @@
 import { getBaseHeaders } from '../../config/api/headers'
+import { urls } from '../../config/api'
 
 export const actions = {
   TRIPS_FETCH_FUTURE_TRIPS: 'TRIPS/FETCH',
@@ -40,10 +41,10 @@ export function startJourney(authToken, tripId, users) {
 
 export function fetchTrip(authToken, id) {
   return {
-    type: actions.TRIPS_FETCH_FUTURE_TRIPS,
+    type: actions.TRIPS_FETCH_TRIP,
     payload: {
       request: {
-        url: `/trips/${id}`,
+        url: urls.driver.trips.get.single(id),
         method: 'get',
         headers: {
           Authorization: `Bearer ${authToken}`,

@@ -56,7 +56,7 @@ export const Trip = ({
 }
 
 Trip.propTypes = {
-  timestamp: PropTypes.number.isRequired,
+  timestamp: PropTypes.string.isRequired,
   onPressTrip: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
   startLocation: PropTypes.object.isRequired,

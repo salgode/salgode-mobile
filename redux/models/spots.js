@@ -1,5 +1,7 @@
-export const spotsModel = {
+const spotsModel = {
   spots: [],
   loading: false,
   error: '',
 }
+
+export default spotsModel

@@ -4,7 +4,7 @@ import Location from './Location'
 import Colors from '../../../constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
 import TimeInfo from './TimeInfo'
-import { Card, View, Text, CardItem, Thumbnail, Button } from 'native-base'
+import { Card, View, Text, CardItem, Button } from 'native-base'
 import PropTypes from 'prop-types'
 
 const RequestedTrip = ({

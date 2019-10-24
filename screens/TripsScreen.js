@@ -5,10 +5,6 @@ import Trips from '../components/Trips/Trips'
 import { Spinner, Text } from 'native-base'
 import { connect } from 'react-redux'
 import { userTrips } from '../redux/actions/user'
-import {
-  fetchFutureTripsByPaxId,
-  fetchFutureTripsByDriverId,
-} from '../redux/actions/trips'
 
 class TripsScreen extends Component {
   static navigationOptions = {
@@ -34,16 +30,16 @@ class TripsScreen extends Component {
     this.getTrips()
   }
 
-  async fetchTrips(token) {
+  async fetchTrips(/* token */) {
     // eslint-disable-next-line no-console
     // console.log(
     //   `TODO: get trips corresponding to the token ${token}`,
     //   'pax or driver depending on this.props.isRequestedTrips'
     // )
 
-    const fetcher = this.props.isRequestedTrips
-      ? fetchFutureTripsByPaxId
-      : fetchFutureTripsByDriverId
+    // const fetcher = this.props.isRequestedTrips
+    //   ? fetchFutureTripsByPaxId
+    //   : fetchFutureTripsByDriverId
 
     // fetch from server
     return [

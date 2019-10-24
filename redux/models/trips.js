@@ -1,1 +1,3 @@
-export const futureTripsModel = []
+const futureTripsModel = []
+
+export default futureTripsModel

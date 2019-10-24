@@ -28,7 +28,7 @@ export const DetailedTrip = ({ trip, asDriver, driver, token }) => {
     })
   }
 
-  function startTrip(token) {
+  function startTrip(/* token */) {
     // TODO: connect to server
     // TODO: navigate to current trip screen
     // eslint-disable-next-line no-console

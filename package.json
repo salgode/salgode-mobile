@@ -1,6 +1,15 @@
 {
+  "name": "salgode-mobile-app",
   "main": "node_modules/expo/AppEntry.js",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/salgode/salgode-mobile.git"
+  },
+  "bugs": {
+    "url": "https://github.com/salgode/salgode-mobile/issues"
+  },
+  "homepage": "http://salgode.cl/",
   "scripts": {
     "start": "expo start",
     "dev": "yarn start",

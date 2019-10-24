@@ -106,33 +106,33 @@ class DetailedTripScreen extends Component {
     }*/
   }
 
-  async fetchPassengers(tripId) {
-    // eslint-disable-next-line no-console
-    // fetch from server
-    return [
-      {
-        status: 'pending',
-        name: 'Pasajero 1',
-        start: 'Inicio de partida',
-        finish: 'Destino',
-        phoneNumber: '+56984643021',
-      },
-      {
-        status: 'accepted',
-        name: 'Pasajero 2',
-        start: 'Inicio de partida',
-        finish: 'Destino 2',
-        phoneNumber: '+56984643021',
-      },
-      {
-        status: 'rejected',
-        name: 'Pasajero 3',
-        start: 'Inicio de partida',
-        finish: 'Destino 3',
-        phoneNumber: '+56984643021',
-      },
-    ]
-  }
+  // async fetchPassengers(tripId) {
+  //   // eslint-disable-next-line no-console
+  //   // fetch from server
+  //   return [
+  //     {
+  //       status: 'pending',
+  //       name: 'Pasajero 1',
+  //       start: 'Inicio de partida',
+  //       finish: 'Destino',
+  //       phoneNumber: '+56984643021',
+  //     },
+  //     {
+  //       status: 'accepted',
+  //       name: 'Pasajero 2',
+  //       start: 'Inicio de partida',
+  //       finish: 'Destino 2',
+  //       phoneNumber: '+56984643021',
+  //     },
+  //     {
+  //       status: 'rejected',
+  //       name: 'Pasajero 3',
+  //       start: 'Inicio de partida',
+  //       finish: 'Destino 3',
+  //       phoneNumber: '+56984643021',
+  //     },
+  //   ]
+  // }
 
   renderPassengers(passengers, trip) {
     const locationsLength = trip.route_points.length

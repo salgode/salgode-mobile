@@ -91,10 +91,10 @@ class CreateTripScreen extends Component {
               </Text>
             </Button>
             <DateTimePicker
-              locale='es_ES'
-              titleIOS='Selecciona Hora/Fecha de Salida'
-              confirmTextIOS='Confirmar'
-              cancelTextIOS='Cancelar'
+              locale="es_ES"
+              titleIOS="Selecciona Hora/Fecha de Salida"
+              confirmTextIOS="Confirmar"
+              cancelTextIOS="Cancelar"
               isDarkModeEnabled={colorScheme === 'dark'}
               mode="datetime"
               isVisible={this.state.isDateTimePickerVisible}

@@ -65,13 +65,14 @@ export default class TripRequestCard extends Component {
     await client
       .request(requestObject)
       .then(resp => {
-        console.log(this.props.token)
-        console.log('RESERVATION')
-        console.log(resp)
-      }).catch(err => {
-        console.log(this.props.token)
-        console.log('RESERVATION')
-        console.log(err)
+        console.warn(this.props.token)
+        console.warn('RESERVATION')
+        console.warn(resp)
+      })
+      .catch(err => {
+        console.warn(this.props.token)
+        console.warn('RESERVATION')
+        console.warn(err)
       })
 
     // TODO: fix 403
@@ -218,9 +219,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     flex: 2,
     flexDirection: 'row',
-  },
-  buttonsContainerSpacer: {
-    flex: 3,
   },
   container: {
     alignItems: 'flex-start',

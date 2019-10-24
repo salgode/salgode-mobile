@@ -40,52 +40,52 @@ class DetailedTripScreen extends Component {
     this.getTrip(tripId, asDriver, 'Bearer 12345')
   }
 
-  async fetchDriver(driverId, token) {
-    // eslint-disable-next-line no-console
-    // fetch from server
-    return {
-      user_id: 'usr_fe4e267f-c29d-468f-855a-4b592cbdff1f',
-      user_identifications: {
-        identification_image_front: 'placeholder',
-        identification_image_back: 'placeholder',
-        selfie_image: 'placeholder',
-      },
-      email: 'test3@example.com',
-      last_name: 'Test',
-      phone: '999999999',
-      first_name: 'Test',
-    }
-  }
+  // async fetchDriver(/* driverId, token */) {
+  //   // eslint-disable-next-line no-console
+  //   // fetch from server
+  //   return {
+  //     user_id: 'usr_fe4e267f-c29d-468f-855a-4b592cbdff1f',
+  //     user_identifications: {
+  //       identification_image_front: 'placeholder',
+  //       identification_image_back: 'placeholder',
+  //       selfie_image: 'placeholder',
+  //     },
+  //     email: 'test3@example.com',
+  //     last_name: 'Test',
+  //     phone: '999999999',
+  //     first_name: 'Test',
+  //   }
+  // }
 
-  async fetchPassengers(userIds) {
-    //TODO: fetch from server
-    return [
-      {
-        user_id: 'usr_fe4e267f-c29d-468f-855a-4b592cbdff1f',
-        user_identifications: {
-          identification_image_front: 'placeholder',
-          identification_image_back: 'placeholder',
-          selfie_image: 'placeholder',
-        },
-        email: 'test3@example.com',
-        last_name: 'Test',
-        phone: '999999999',
-        first_name: 'Test',
-      },
-      {
-        user_id: 'usr_fe4e267f-c29d-468f-855a-4b592cbdff1f',
-        user_identifications: {
-          identification_image_front: 'placeholder',
-          identification_image_back: 'placeholder',
-          selfie_image: 'placeholder',
-        },
-        email: 'test3@example.com',
-        last_name: 'Test',
-        phone: '999999999',
-        first_name: 'Test',
-      },
-    ]
-  }
+  // async fetchPassengers(/* userIds */) {
+  //   //TODO: fetch from server
+  //   return [
+  //     {
+  //       user_id: 'usr_fe4e267f-c29d-468f-855a-4b592cbdff1f',
+  //       user_identifications: {
+  //         identification_image_front: 'placeholder',
+  //         identification_image_back: 'placeholder',
+  //         selfie_image: 'placeholder',
+  //       },
+  //       email: 'test3@example.com',
+  //       last_name: 'Test',
+  //       phone: '999999999',
+  //       first_name: 'Test',
+  //     },
+  //     {
+  //       user_id: 'usr_fe4e267f-c29d-468f-855a-4b592cbdff1f',
+  //       user_identifications: {
+  //         identification_image_front: 'placeholder',
+  //         identification_image_back: 'placeholder',
+  //         selfie_image: 'placeholder',
+  //       },
+  //       email: 'test3@example.com',
+  //       last_name: 'Test',
+  //       phone: '999999999',
+  //       first_name: 'Test',
+  //     },
+  //   ]
+  // }
 
   async getUser(userId, token) {
     return await client

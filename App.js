@@ -16,27 +16,25 @@ if (Platform.OS === 'android') {
   SafeAreaView.setStatusBarHeight(0)
 }
 
-export default function App(props) {
+export default function App({ skipLoadingScreen }) {
   const [isLoadingComplete, setLoadingComplete] = useState(false)
-
-  if (!isLoadingComplete && !props.skipLoadingScreen) {
+  if (!isLoadingComplete && !skipLoadingScreen) {
     return (
       <AppLoading
         startAsync={loadResourcesAsync}
         onError={handleLoadingError}
-        onFinish={() => handleFinishLoading(setLoadingComplete)}
+        onFinish={() => setLoadingComplete(true)}
       />
     )
-  } else {
-    return (
-      <Provider store={store}>
-        <View style={styles.container}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <AppNavigator />
-        </View>
-      </Provider>
-    )
   }
+  return (
+    <Provider store={store}>
+      <View style={styles.container}>
+        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+        <AppNavigator />
+      </View>
+    </Provider>
+  )
 }
 
 async function loadResourcesAsync() {
@@ -63,10 +61,6 @@ function handleLoadingError(error) {
   // In this case, you might want to report the error to your error reporting
   // service, for example Sentry
   console.warn(error)
-}
-
-function handleFinishLoading(setLoadingComplete) {
-  setLoadingComplete(true)
 }
 
 const styles = StyleSheet.create({

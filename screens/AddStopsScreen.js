@@ -74,7 +74,9 @@ class AddStopsScreen extends Component {
             <Text style={{ fontWeight: 'bold', marginRight: 10 }}>
               #Parada {index + 1}{' '}
             </Text>
-            <Text numberOfLines={1} style={{ width: '75%' }}>{stop.name}</Text>
+            <Text numberOfLines={1} style={{ width: '75%' }}>
+              {stop.name}
+            </Text>
           </View>
           <Button icon transparent onPress={() => this.cleanInput(index)}>
             <Icon name="close" />
@@ -112,19 +114,20 @@ class AddStopsScreen extends Component {
               Agrega paradas extra (opcional)
             </Text>
             {this.renderStops()}
-            {(this.state.stops.length < 20) &&
-            <CardInputSelector
-              text="+"
-              placeHolder="Filtra por Comuna o Parada"
-              setValue={false}
-              data={spotsFilter(
-                this.props.spots,
-                [startStop, endStop].concat(this.state.stops)
-              )}
-              onSelect={item =>
-                this.setState({ stops: this.state.stops.concat([item]) })
-              }
-            />}
+            {this.state.stops.length < 20 && (
+              <CardInputSelector
+                text="+"
+                placeHolder="Filtra por Comuna o Parada"
+                setValue={false}
+                data={spotsFilter(
+                  this.props.spots,
+                  [startStop, endStop].concat(this.state.stops)
+                )}
+                onSelect={item =>
+                  this.setState({ stops: this.state.stops.concat([item]) })
+                }
+              />
+            )}
           </View>
         </ScrollView>
 

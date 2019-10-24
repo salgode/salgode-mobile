@@ -1,19 +1,22 @@
 import { applyMiddleware, combineReducers, createStore } from 'redux'
 import axiosMiddleware from 'redux-axios-middleware'
 import axios from 'axios'
-import userReducer from './reducers/user'
-import tripReducer from './reducers/trips'
-import { userModel } from './models/user'
-import { futureTripsModel } from './models/trips'
-import createTripReducer from './reducers/createTrip'
-import spotsReducer from './reducers/spots'
-import { createTripModel } from './models/createTrip'
-import { spotsModel } from './models/spots'
-import slotsReducer from './reducers/slots'
+import {
+  createTripReducer,
+  slotsReducer,
+  spotsReducer,
+  tripReducer,
+  userReducer,
+} from './reducers'
+import {
+  createTripModel,
+  spotsModel,
+  futureTripsModel,
+  userModel,
+} from './models/createTrip'
 
 export const client = axios.create({
-  //baseURL: 'https://7wsx5vxfbi.execute-api.us-east-1.amazonaws.com/staging',
-  baseURL: 'https://playground-api.salgode.com', //TODO: get out of playground
+  baseURL: 'https://playground-api.salgode.com', // TODO: get out of playground
   responseType: 'json',
   requestType: 'json',
 })

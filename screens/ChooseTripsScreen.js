@@ -60,22 +60,34 @@ class ChooseTripsScreen extends Component {
           <ChooseTrips
             onSend={this.onRequestTrip}
             onReload={this.getTrips}
-            trips={this.state.trips.map(trip => {
-              const data = {
-                ...trip,
-                timestamp: new Date(trip.etd).getTime(),
-                user: {
-                  name: 'Temp',
-                  reputation: 0,
-                },
-                stops: trip.trip_route_points,
-                tripId: trip.trip_id,
-                userId: trip.driver.driver_id,
-                token: this.props.user.token,
-                trip_route: trip.trip_route,
-              }
-              return data
-            })}
+            // trips={this.state.trips.map(trip => {
+            //   const data = {
+            //     ...trip,
+            //     timestamp: new Date(trip.etd).getTime(),
+            //     user: {
+            //       name: 'Temp',
+            //       reputation: 0,
+            //     },
+            //     stops: trip.trip_route_points,
+            //     tripId: trip.trip_id,
+            //     userId: trip.driver.driver_id,
+            //     token: this.props.user.token,
+            //     trip_route: trip.trip_route,
+            //   }
+            //   return data
+            // })}
+            trips={this.state.trips.map(trip => ({
+              timestamp: new Date(trip.etd).getTime(),
+              user: {
+                name: 'Temp',
+                reputation: 0,
+              },
+              stops: trip.trip_route_points,
+              tripId: trip.trip_id,
+              userId: trip.driver_id,
+              token: this.props.user.token,
+              trip_route: trip.trip_route,
+            }))}
           />
         </View>
       </View>

@@ -1,7 +1,6 @@
 import { actions as userActions } from '../actions/user'
 
 export default function userReducer(state = {}, action) {
-  // console.log(action)
   switch (action.type) {
     case userActions.USER_LOGIN:
       return { ...state, loading: true }

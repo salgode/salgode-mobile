@@ -52,7 +52,6 @@ const ChooseTrip = ({
               size={80}
             />
 
-            {console.log('print stops', userId)}
             <Text style={styles.userText}>
               {`${user.first_name} ${user.last_name}`}
             </Text>

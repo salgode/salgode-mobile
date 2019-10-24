@@ -8,6 +8,9 @@ class MyTrips extends Component {
   constructor(props) {
     super(props)
     this.Trip = this.props.isRequestedTrips ? RequestedTrip : MyTrip
+    this.tripsData = this.props.isRequestedTrips
+      ? this.props.driverTrips
+      : this.props.trips
     this.asDriver = this.props.isRequestedTrips ? false : true
   }
 
@@ -18,15 +21,14 @@ class MyTrips extends Component {
       return (
         <SafeAreaView>
           <FlatList
-            data={this.props.trips}
+            data={this.tripsData}
             renderItem={({ item }) => (
               <Trip
                 timestamp={item.trip_times.etd}
                 spacesUsed={item.spacesUsed}
                 user={item.driver}
                 status={item.trip_status}
-                asDriver={this.trip_role}
-                // asDriver={this.asDriver}
+                asDriver={this.asDriver}
                 onPressTrip={this.props.onPressTrip}
                 tripId={item.trip_id}
                 startLocation={item.trip_route.start}
@@ -52,12 +54,14 @@ class MyTrips extends Component {
 
 MyTrips.propTypes = {
   trips: PropTypes.array,
+  driverTrips: PropTypes.array,
   isRequestedTrips: PropTypes.bool,
   onPressTrip: PropTypes.func.isRequired,
 }
 
 MyTrips.defaultProps = {
   trips: [],
+  driverTrips: [],
   isRequestedTrips: false,
 }
 

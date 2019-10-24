@@ -64,8 +64,8 @@ class ChooseTripsScreen extends Component {
             trips={this.state.trips.map(trip => ({
               timestamp: new Date(trip.etd).getTime(),
               user: {
-                name: 'Temp', 
-                reputation: 0, 
+                name: 'Temp',
+                reputation: 0,
               },
               stops: trip.trip_route_points,
               tripId: trip.trip_id,

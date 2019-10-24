@@ -16,7 +16,7 @@ export default function NotificationCard({
   // opcional: La tarjeta se muestra encima con posición absoluta
   positionAbsolute = true,
   // requerido: función que se ejecuta con el botón
-  onPress = () => console.log('Notification button pressed'),
+  onPress = () => console.warn('Notification button pressed'),
 }) {
   return (
     <Card

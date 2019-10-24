@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/AntDesign'
 import TimeInfo from './TimeInfo'
 import PedirBoton from './PedirBoton'
 import PropTypes from 'prop-types'
-import { getTripInfo, getUserInfo } from '../../../utils/getTripInfo'
+import { getUserInfo } from '../../../utils/getTripInfo'
 
 const ChooseTrip = ({
   timestamp,

@@ -5,7 +5,7 @@ export default function slotsReducer(state = {}, action) {
     case slotActions.SLOTS_CREATE:
       return { ...state, loading: true }
     case slotActions.SLOTS_CREATE_SUCCESS:
-      return { ...state, loading: false } //, futureTrips: action.payload.data }
+      return { ...state, loading: false }
     case slotActions.SLOTS_CREATE_FAIL:
       return {
         ...state,

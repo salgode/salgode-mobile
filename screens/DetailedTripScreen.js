@@ -88,6 +88,7 @@ class DetailedTripScreen extends Component {
   // }
 
   async getUser(userId, token) {
+
     return await client
       .request({
         method: 'get',
@@ -125,15 +126,17 @@ class DetailedTripScreen extends Component {
   }
 
   async fetchTrip(tripId, token) {
-    return await client
-      .request({
-        method: 'get',
-        url: `/trips/${tripId}`,
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then(resp => resp.data)
+    // return await client
+    //   .request({
+    //     method: 'get',
+    //     url: `/trips/${tripId}`,
+    //     headers: {
+    //       Authorization: token,
+    //     },
+    //   })
+    //   .then(resp => {
+    //     console.log(resp.data);
+    //     return resp.data})
     /*
       {
         "available_seats": 3,
@@ -183,42 +186,42 @@ class DetailedTripScreen extends Component {
         "vehicle_id": "veh_12345",
       }
     */
-    // return {
-    //   trip_status: 'open',
-    //   created_at: '2019-10-22T16:41:55-04:00',
-    //   route_points: [
-    //     'spt_d1cd6d79-6fad-4b37-9f87-48e169c9d530',
-    //     'spt_d5eb212a-ab53-4f0e-9e49-15f288ee2cbf',
-    //   ],
-    //   trip_id: 'tri_112b05c8-0973-4160-a40b-f0d588ec2503',
-    //   etd: '2019-10-22T17:10:00.000Z',
-    //   trip_route_points: [
-    //     {
-    //       city: 'SANTIAGO',
-    //       icon:
-    //         'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png',
-    //       commune: 'PROVIDENCIA',
-    //       lon: '-33,4202039',
-    //       address:
-    //         'San Pío X 5255, Vitacura, Providencia, Región Metropolitana',
-    //       lat: '-70,6008346',
-    //       name: 'Centro comercial Plaza San Pío, Vitacura 5255',
-    //       type: "['shopping_mall', 'point_of_interest', 'establishment']",
-    //     },
-    //     {
-    //       city: 'SANTIAGO',
-    //       icon:
-    //         'https://maps.gstatic.com/mapfiles/place_api/icons/train-71.png',
-    //       commune: 'MAIPU',
-    //       lon: '-70.74149089',
-    //       address: 'Avda. Pajaritos 5090',
-    //       lat: '-33.47735571',
-    //       name: 'LAS PARCELAS',
-    //       type: "['subway_station']",
-    //     },
-    //   ],
-    //   driver_id: 'usr_fe4e267f-c29d-468f-855a-4b592cbdff1f',
-    // }
+    return {
+      trip_status: 'open',
+      created_at: '2019-10-22T16:41:55-04:00',
+      route_points: [
+        'spt_d1cd6d79-6fad-4b37-9f87-48e169c9d530',
+        'spt_d5eb212a-ab53-4f0e-9e49-15f288ee2cbf',
+      ],
+      trip_id: 'tri_112b05c8-0973-4160-a40b-f0d588ec2503',
+      etd: '2019-10-22T17:10:00.000Z',
+      trip_route_points: [
+        {
+          city: 'SANTIAGO',
+          icon:
+            'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png',
+          commune: 'PROVIDENCIA',
+          lon: '-33,4202039',
+          address:
+            'San Pío X 5255, Vitacura, Providencia, Región Metropolitana',
+          lat: '-70,6008346',
+          name: 'Centro comercial Plaza San Pío, Vitacura 5255',
+          type: "['shopping_mall', 'point_of_interest', 'establishment']",
+        },
+        {
+          city: 'SANTIAGO',
+          icon:
+            'https://maps.gstatic.com/mapfiles/place_api/icons/train-71.png',
+          commune: 'MAIPU',
+          lon: '-70.74149089',
+          address: 'Avda. Pajaritos 5090',
+          lat: '-33.47735571',
+          name: 'LAS PARCELAS',
+          type: "['subway_station']",
+        },
+      ],
+      driver_id: 'usr_fe4e267f-c29d-468f-855a-4b592cbdff1f',
+    }
   }
 
   async fetchSlots(tripId, token) {
@@ -292,6 +295,7 @@ class DetailedTripScreen extends Component {
       asDriver,
       token,
     }))
+    
     await this.fetchTrip(tripId, token)
       .then(trip => this.setState({ trip }))
       .catch(err => {

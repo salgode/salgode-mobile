@@ -8,8 +8,11 @@ import {
 import { connect } from 'react-redux'
 import { View } from 'native-base'
 import PropTypes from 'prop-types'
+
 import { signupUser, uploadImageUser } from '../redux/actions/user'
 import SignupForm from '../components/Login/SignupForm'
+
+import lang from '../languages/es'
 
 class SignupScreen extends Component {
   static navigationOptions = {
@@ -27,25 +30,18 @@ class SignupScreen extends Component {
   async onSend(userInfo) {
     this.setState({ loading: true })
     const selfieUrl = await this.props.uploadImage(userInfo.selfieLink)
-    const user = await this.props
-      .signup(
-        userInfo.name,
-        userInfo.lastName,
-        userInfo.email,
-        userInfo.phone,
-        userInfo.password,
-        userInfo.passwordRepeat,
-        selfieUrl
-      )
-      .then(response => {
-        return response
-      })
+    const user = await this.props.signup(
+      userInfo.name,
+      userInfo.lastName,
+      userInfo.email,
+      userInfo.phone,
+      userInfo.password,
+      userInfo.passwordRepeat,
+      selfieUrl
+    )
     this.setState({ loading: false })
     if (user.error) {
-      Alert.alert(
-        'Error de registro',
-        'Hubo un problema registrandote. Por favor intentalo de nuevo.'
-      )
+      Alert.alert(lang.signup.error.title, lang.signup.error.message)
     } else {
       this.props.navigation.navigate('ChooseTrips')
     }
@@ -81,11 +77,9 @@ const styles = StyleSheet.create({
   },
 })
 
-const mapStateToProps = state => {
-  return {
-    user: state.user,
-  }
-}
+const mapStateToProps = state => ({
+  user: state.user,
+})
 
 const mapDispatchToProps = dispatch => ({
   uploadImage: img => dispatch(uploadImageUser(img)),
@@ -97,12 +91,6 @@ const mapDispatchToProps = dispatch => ({
     password,
     passwordRepeat,
     selfieLink
-    // driverLicenseLink,
-    // dniLink,
-    // carPlate,
-    // carColor,
-    // carBrand,
-    // carModel
   ) =>
     dispatch(
       signupUser(
@@ -113,12 +101,6 @@ const mapDispatchToProps = dispatch => ({
         password,
         passwordRepeat,
         selfieLink
-        // driverLicenseLink,
-        // dniLink,
-        // carPlate,
-        // carColor,
-        // carBrand,
-        // carModel
       )
     ),
 })

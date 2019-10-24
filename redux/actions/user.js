@@ -24,20 +24,31 @@ export const actions = {
 }
 
 const mapDataToUser = data => {
+
   // console.log(data)
   let user = {
     // token: data.bearer_token,
     name: data.first_name,
     userId: data.user_id,
-    selfie: data.avatar,
+    name: data.first_name,
+    lastName: data.last_name,
+    email: data.email,
+    phone: data.phone,
   }
-  if (data.user_identifications) {
-    user = {
-      ...user,
-      selfieLink: data.user_identifications.selfie_image,
-      dniFrontLink: data.user_identifications.identification_image_front,
-      dniBackLink: data.user_identifications.identification_image_back,
-    }
+  const { user_identifications } = data
+  if (user_identifications) {
+    const { selfie, identification, drivers_license } = user_identifications
+    Object.assign(user, {
+      avatar: selfie,
+      dni: {
+        front: identification.front,
+        back: identification.back,
+      },
+      license: {
+        front: drivers_license.front,
+        back: drivers_license.back,
+      },
+    })
   }
   return user
 }
@@ -54,12 +65,7 @@ export function loginUser(email, password) {
           email,
           password,
         },
-        transformResponse: data => ({
-          token: data.bearer_token,
-          userId: data.user_id,
-          name: data.first_name,
-          avatar: data.avatar,
-        }),
+        transformResponse: mapDataToUser,
       },
     },
   }

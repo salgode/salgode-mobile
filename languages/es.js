@@ -9,4 +9,10 @@ export default {
     forget: '¿Olvidaste tu contraseña? Recupérala aquí',
     verifying: 'Comprobando datos',
   },
+  signup: {
+    error: {
+      title: 'Error de registro',
+      message: 'Hubo un problema registrandote. Por favor intentalo de nuevo.',
+    },
+  },
 }

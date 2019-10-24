@@ -58,12 +58,12 @@ export function loginUser(email, password) {
           password,
         },
         transformResponse: data => {
-          return ({
+          return {
             token: data.bearer_token,
             userId: data.user_id,
             name: data.first_name,
             avatar: data.avatar,
-          })
+          }
         },
       },
     },

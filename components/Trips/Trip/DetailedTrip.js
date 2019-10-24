@@ -29,6 +29,8 @@ export const DetailedTrip = ({ trip, asDriver, driver, token }) => {
   }
 
   function startTrip(/* token */) {
+    console.log(asDriver);
+    
     // TODO: connect to server
     // TODO: navigate to current trip screen
     // eslint-disable-next-line no-console
@@ -87,6 +89,7 @@ DetailedTrip.propTypes = {
   trip: PropTypes.object,
   asDriver: PropTypes.bool,
   driver: PropTypes.object,
+  token: PropTypes.string,
 }
 
 const styles = StyleSheet.create({

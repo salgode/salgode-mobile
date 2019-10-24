@@ -17,12 +17,18 @@ export const actions = {
   USER_GET_TRIPS: 'USER_GET_TRIPS',
   USER_GET_TRIPS_FAIL: 'USER_GET_TRIPS_FAIL',
   USER_GET_TRIPS_SUCCESS: 'USER_GET_TRIPS_SUCCESS',
+  USER_DRIVER_GET_TRIPS: 'USER_DRIVER_GET_TRIPS',
+  USER_DRIVER_GET_TRIPS_FAIL: 'USER_DRIVER_GET_TRIPS_FAIL',
+  USER_DRIVER_GET_TRIPS_SUCCESS: 'USER_DRIVER_GET_TRIPS_SUCCESS',
   USER_SET: 'USER_SET',
 }
 
 const mapDataToUser = data => {
-  const user = {
-    token: data.bearer_token,
+
+  // console.log(data)
+  let user = {
+    // token: data.bearer_token,
+    name: data.first_name,
     userId: data.user_id,
     name: data.first_name,
     lastName: data.last_name,
@@ -193,6 +199,21 @@ export function userTrips(authToken) {
     payload: {
       request: {
         url: urls.user.trips.get.all(),
+        method: 'get',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      },
+    },
+  }
+}
+
+export function driverTrips(authToken) {
+  return {
+    type: actions.USER_DRIVER_GET_TRIPS,
+    payload: {
+      request: {
+        url: urls.driver.trips.get.all(),
         method: 'get',
         headers: {
           Authorization: `Bearer ${authToken}`,

@@ -39,6 +39,7 @@ class ChooseTrips extends Component {
         </View>
       )
     }
+
     return (
       <SafeAreaView>
         <FlatList

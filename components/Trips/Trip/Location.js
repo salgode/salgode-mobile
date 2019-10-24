@@ -14,7 +14,7 @@ const Location = ({ color, location }) => {
 
 Location.propTypes = {
   color: PropTypes.string.isRequired,
-  location: PropTypes.string.isRequired,
+  location: PropTypes.object.isRequired,
 }
 
 const circleDiameter = 15

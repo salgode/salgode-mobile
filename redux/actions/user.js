@@ -114,7 +114,7 @@ export function updateUser(name, lastName, phone, car, id, authToken) {
     payload: {
       request: {
         url: urls.user.info.put.edit(),
-        method: 'patch',
+        method: 'put',
         headers: getBaseHeaders(authToken),
         data: data,
       },

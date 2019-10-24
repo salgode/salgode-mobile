@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Platform,
+  AsyncStorage,
 } from 'react-native'
 import {
   Button,
@@ -120,10 +121,10 @@ const Field = ({ field }) => {
   const validity = field.validate(field.value)
     ? 'valid'
     : isEditing
-    ? 'partial'
-    : hasBeenBlurred
-    ? 'invalid'
-    : 'partial'
+      ? 'partial'
+      : hasBeenBlurred
+        ? 'invalid'
+        : 'partial'
 
   return (
     <Item
@@ -387,7 +388,7 @@ const EditProfileScreen = props => {
                   borderRadius={10}
                   style={styles.button}
                   disabled={true}
-                  onPress={() => {}}
+                  onPress={() => { }}
                 >
                   <Text style={styles.buttonText}>Cambiar contraseña</Text>
                 </Button>
@@ -564,8 +565,10 @@ const _SignOutC = props => (
         {
           text: 'Si',
           onPress: () => {
+            AsyncStorage.removeItem('@userToken')
+            AsyncStorage.removeItem('@userId')
             // eslint-disable-next-line react/prop-types
-            props.navigation.navigate('LoginStack')
+            props.navigation.navigate('Login')
             // eslint-disable-next-line react/prop-types
             props.signOut()
           },

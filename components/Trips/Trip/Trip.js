@@ -16,7 +16,11 @@ export const Trip = ({
   startLocation,
   endLocation,
   tripId,
+  status,
 }) => {
+  if (status === "completed"){
+    return(<View/>)
+  }
   return (
     <TouchableOpacity
       onPress={() => {

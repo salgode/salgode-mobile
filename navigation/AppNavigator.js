@@ -1,4 +1,4 @@
-import React from 'react' // eslint-disable-line no-unused-vars
+import React, { Component } from 'react' // eslint-disable-line no-unused-vars
 import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 
 import MainTabNavigator from './MainTabNavigator'

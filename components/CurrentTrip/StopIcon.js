@@ -4,10 +4,13 @@ import { MaterialIcons } from '@expo/vector-icons'
 import PropTypes from 'prop-types'
 import Colors from '../../constants/Colors'
 
-export const STOP_ICON_TYPES = {
+export const STOP_ICON_TYPES = {  
   start: 0,
   middle: 1,
   end: 2,
+  /*
+  todo: add ACTIVE_options (i.e) start_active, middle_active
+  */
 }
 
 const StopIcon = ({ type, size = 50 }) => {

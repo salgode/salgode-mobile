@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Platform } from 'react-native'
 import {
   createStackNavigator,
@@ -17,6 +17,7 @@ import DetailedTripScreen from '../screens/DetailedTripScreen'
 import TripRequestScreen from '../screens/TripRequestScreen'
 import CurrentStartScreen from '../screens/CurrentTrip/CurrentStartScreen'
 import CurrentStopScreen from '../screens/CurrentTrip/CurrentStopScreen'
+import CurrentFinishScreen from '../screens/CurrentTrip/CurrentFinishScreen'
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -29,6 +30,7 @@ const TripsStack = createStackNavigator(
     DetailedTrip: DetailedTripScreen,
     StartTrip: CurrentStartScreen,
     StopTrip: CurrentStopScreen,
+    FinishTrip: CurrentFinishScreen,
   },
   config
 )

@@ -2,6 +2,8 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 import { Card, CardItem, View, Text, Button } from 'native-base'
 import PropTypes from 'prop-types'
+import { urls } from '../../config/api/index'
+import { client } from '../../redux/store'
 
 const FinishedTrip = ({
   // requerido: Nombre mostrado en la notificación
@@ -13,10 +15,27 @@ const FinishedTrip = ({
   // opcional: Texto del botón
   buttonText = 'Terminar Viaje',
   // opcional: La tarjeta se muestra encima con posición absoluta
-  positionAbsolute = true,
+  positionAbsolute = false,
   // requerido: función que se ejecuta con el botón
   onPress = () => console.warn('Notification button pressed'),
+  // requerido: id del Viaje
+  tripId,
+  // requerido: token del usuario
+  token,
 }) => {
+  async function finishTrip() {
+    await client
+      .request({
+        method: 'post',
+        url: urls.driver.trips.post.complete(tripId),
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(resp => {
+        onPress()
+      })
+  }
   return (
     <Card
       style={{
@@ -35,7 +54,7 @@ const FinishedTrip = ({
         <Text>{thankYouMessage}</Text>
       </CardItem>
       <CardItem style={styles.buttonSection}>
-        <Button style={styles.button} onPress={onPress}>
+        <Button style={styles.button} onPress={() => finishTrip()}>
           <Text style={styles.buttonText} uppercase={false}>
             {buttonText}
           </Text>
@@ -52,6 +71,8 @@ FinishedTrip.propTypes = {
   buttonText: PropTypes.string,
   positionAbsolute: PropTypes.bool,
   onPress: PropTypes.func.isRequired,
+  tripId: PropTypes.string.isRequired,
+  token: PropTypes.string.isRequired,
 }
 
 const styles = StyleSheet.create({

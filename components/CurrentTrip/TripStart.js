@@ -7,18 +7,32 @@ import { urls } from '../../config/api/index'
 import { client } from '../../redux/store'
 
 
-const TripStart = ({ stops = [], tripId, token, onPressStartTrip }) => {
+const TripStart = ({ stops = [], tripId, token, trip, onPressStartTrip }) => {
   async function startTrip(token) {
     await client
       .request({
         method: 'post',
         url: urls.driver.trips.post.next(tripId),
         headers: {
-          Authorization: token,
+          Authorization: `Bearer ${token}`,
         },
       })
       .then(resp => resp.data)
-    onPressStartTrip()
+    fetchManifest(trip);
+  }
+
+  async function fetchManifest(trip){
+    await client
+      .request({
+        method: 'get',
+        url: urls.driver.trips.get.manifest(tripId),
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(resp => {
+        onPressStartTrip(trip, resp.data);
+      })
   }
 
   return (

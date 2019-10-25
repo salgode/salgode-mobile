@@ -14,6 +14,8 @@ const parseTripInfo = trip => {
       name: driver.driver_name,
       reputation: driver.driver_score,
       id: driver.driver_id,
+      //! Ajustar al response del server.
+      avatar: driver.driver_avatar || '',
     },
     stops: trip.trip_route_points,
     tripId: trip.trip_id,

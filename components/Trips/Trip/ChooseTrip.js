@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, Platform } from 'react-native'
-import { Card, View, Text, CardItem } from 'native-base'
+import { Card, View, Text, CardItem, Thumbnail } from 'native-base'
 import Location from './Location'
 import { Ionicons } from '@expo/vector-icons'
 import Icon from 'react-native-vector-icons/AntDesign'
@@ -21,15 +21,25 @@ const ChooseTrip = ({
   tripId,
 }) => {
   // const [loading, setLoading] = React.useState(true)
+  let Avatar
+  if (driver.avatar) {
+    Avatar = <Thumbnail source={{ uri: driver.avatar }} style={styles.avatar} />
+  } else {
+    Avatar = (
+      <Ionicons
+        color={'grey'}
+        name={`${Platform.OS === 'ios' ? 'ios' : 'md'}-contact`}
+        size={80}
+        style={styles.icon}
+      />
+    )
+  }
   return (
     <Card style={styles.containerRequested}>
       <CardItem style={styles.dataContainer}>
         <View style={styles.user}>
           <View style={styles.userData}>
-            <Ionicons
-              name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-              size={80}
-            />
+            {Avatar}
             <Text style={styles.userText}>{`${driver.name}`}</Text>
           </View>
           <View style={styles.iconInfoGroup}>
@@ -58,6 +68,7 @@ ChooseTrip.propTypes = {
     name: PropTypes.string.isRequired,
     reputation: PropTypes.number.isRequired,
     id: PropTypes.string.isRequired,
+    avatar: PropTypes.string.isRequired,
   }),
   tripId: PropTypes.string.isRequired,
   onSend: PropTypes.func,
@@ -65,6 +76,10 @@ ChooseTrip.propTypes = {
 }
 
 const styles = StyleSheet.create({
+  avatar: {
+    height: 80,
+    width: 80,
+  },
   bottomSection: {
     alignSelf: 'stretch',
   },

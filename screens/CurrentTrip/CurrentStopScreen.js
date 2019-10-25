@@ -11,6 +11,13 @@ class CurrentStopScreen extends Component {
       trip: this.props.navigation.getParam('trip', null),
       tripManifest: this.props.navigation.getParam('manifest', null),
     };
+
+    this.onPressCompleteTrip = this.onPressCompleteTrip.bind(this)
+  }
+
+  onPressCompleteTrip(trip) {
+    const token = this.props.navigation.getParam('token', null)
+    this.props.navigation.navigate('FinishTrip', { trip, token })
   }
 
   render() {
@@ -21,6 +28,7 @@ class CurrentStopScreen extends Component {
         stopIndex={0}
         before={0} //todo revisar esto del before y el after, ahora esta todo malo
         after={1}
+        onPressCompleteTrip={this.onPressCompleteTrip}
       />
     )
   }

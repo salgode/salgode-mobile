@@ -16,6 +16,8 @@ class CurrentStop extends Component {
       stopIndex: this.props.stopIndex,
       before: this.props.before,
       after: this.props.after,
+      onPressCompleteTrip: this.props.onPressCompleteTrip,
+      nextStopText: 'Siguiente Parada'
     };
 
 
@@ -41,14 +43,22 @@ class CurrentStop extends Component {
     }
     //if(is mid stop) {}
     else {
+      stopIndex = this.state.stopIndex
       this.setState({
-        stopIndex: this.state.stopIndex+1,
+        stopIndex: stopIndex + 1,
       })
+      // TODO: change with after variable to check end of trip
+      if (stopIndex + 1 === this.state.trip.trip_route_points.length - 1) {
+        this.setState({
+          nextStopText: 'Terminar Viaje',
+        })
+      }
     }
   }
 
   goToLastStop() {
     //change screen to last stop according to mock file
+    this.state.onPressCompleteTrip(this.state.trip);
   }
 
   render() {
@@ -70,7 +80,7 @@ class CurrentStop extends Component {
           ))}
         </ScrollView>
         <Button style={styles.button} onPress={this.goToNextStop}>
-          <Text>Siguiente Parada</Text>
+          <Text>{this.state.nextStopText}</Text>
         </Button>
       </View>
     );

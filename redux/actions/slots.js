@@ -1,4 +1,5 @@
 import { getBaseHeaders } from '../../config/api/headers'
+import { urls } from '../../config/api'
 
 export const actions = {
   SLOTS_CREATE: 'SLOTS_CREATE',
@@ -11,7 +12,7 @@ export function createSlot(authToken, tripId, startId, stopId) {
     type: actions.SLOTS_CREATE,
     payload: {
       request: {
-        url: `/user/reservations`,
+        url: urls.passenger.reservations.post.send(),
         method: 'post',
         headers: getBaseHeaders(authToken),
         data: {

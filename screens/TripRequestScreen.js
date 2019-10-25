@@ -39,6 +39,7 @@ class TripRequestScreen extends Component {
       startStop.id,
       endStop.id
     )
+    console.log(response)
 
     this.setState({ loading: false })
 
@@ -89,8 +90,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  createSlot: (token, tripId, stopId, userId) =>
-    dispatch(createSlot(token, tripId, stopId, userId)),
+  createSlot: (token, tripId, startId, stopId) =>
+    dispatch(createSlot(token, tripId, startId, stopId)),
 })
 
 export default connect(

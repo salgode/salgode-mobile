@@ -1,65 +1,51 @@
 import React from 'react'
 import { StyleSheet, Platform } from 'react-native'
-import { Card, View, Text, CardItem } from 'native-base'
+import { Card, View, Text, CardItem, Thumbnail } from 'native-base'
 import Location from './Location'
 import { Ionicons } from '@expo/vector-icons'
 import Icon from 'react-native-vector-icons/AntDesign'
 import TimeInfo from './TimeInfo'
 import PedirBoton from './PedirBoton'
 import PropTypes from 'prop-types'
-import { getUserInfo } from '../../../utils/getTripInfo'
 
 const ChooseTrip = ({
+  // The timestamp that indicates the start of the trip. Required.
   timestamp,
-  // spacesUsed,
-  // user,
+  // The driver information, including its name, reputation and id. Required.
+  driver,
+  // The stops of the trip, including their name and id. Required.
   stops,
+  // Function called when "Solicitar Viaje" is pressed. Required.
   onSend,
-  token,
+  // The trip id. Required.
   tripId,
-  userId,
 }) => {
-  const [loading, setLoading] = React.useState(true)
-  // const [_stops, _setStops] = React.useState(['', ''])
-  // const [stops, setStops] = React.useState(['', ''])
-  const [user, setUser] = React.useState({ name: '' })
-
-  const parseStops = async () => {
-    // const stps = await getTripInfo(tripId, token)
-    // _setStops(stps.trip_route_points)
-    // setStops(stps.trip_route_points.map(s => (s || { address: '' }).address))
+  // const [loading, setLoading] = React.useState(true)
+  let Avatar
+  if (driver.avatar) {
+    Avatar = <Thumbnail source={{ uri: driver.avatar }} style={styles.avatar} />
+  } else {
+    Avatar = (
+      <Ionicons
+        color={'grey'}
+        name={`${Platform.OS === 'ios' ? 'ios' : 'md'}-contact`}
+        size={80}
+        style={styles.icon}
+      />
+    )
   }
-
-  const loadUserInfo = async () => {
-    const userInfo = await getUserInfo(userId, token)
-    setUser(userInfo)
-  }
-
-  React.useEffect(() => {
-    const stopsPromise = parseStops()
-    const userPromise = loadUserInfo()
-    Promise.all([stopsPromise, userPromise]).then(() => setLoading(false))
-  }, [])
-  return loading ? (
-    <View></View>
-  ) : (
+  return (
     <Card style={styles.containerRequested}>
       <CardItem style={styles.dataContainer}>
         <View style={styles.user}>
           <View style={styles.userData}>
-            <Ionicons
-              name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-              size={80}
-            />
-
-            <Text style={styles.userText}>
-              {`${user.first_name} ${user.last_name}`}
-            </Text>
+            {Avatar}
+            <Text style={styles.userText}>{`${driver.name}`}</Text>
           </View>
           <View style={styles.iconInfoGroup}>
             <View style={styles.iconContainer}>
               <Icon name="like1" style={styles.infoIcon} />
-              <Text style={styles.iconText}>{user.reputation}</Text>
+              <Text style={styles.iconText}>{driver.reputation}</Text>
             </View>
           </View>
         </View>
@@ -70,7 +56,7 @@ const ChooseTrip = ({
       </CardItem>
       <CardItem style={styles.bottomSection}>
         <TimeInfo timestamp={timestamp} />
-        <PedirBoton onSend={() => onSend(stops, tripId)} disabled={loading} />
+        <PedirBoton onSend={() => onSend(stops, tripId)} />
       </CardItem>
     </Card>
   )
@@ -78,18 +64,22 @@ const ChooseTrip = ({
 
 ChooseTrip.propTypes = {
   timestamp: PropTypes.number.isRequired,
-  // user: PropTypes.shape({
-  //   name: PropTypes.string.isRequired,
-  //   reputation: PropTypes.number.isRequired,
-  // }),
-  token: PropTypes.string.isRequired,
+  driver: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    reputation: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
+    avatar: PropTypes.string.isRequired,
+  }),
   tripId: PropTypes.string.isRequired,
   onSend: PropTypes.func,
-  userId: PropTypes.string.isRequired,
   stops: PropTypes.array,
 }
 
 const styles = StyleSheet.create({
+  avatar: {
+    height: 80,
+    width: 80,
+  },
   bottomSection: {
     alignSelf: 'stretch',
   },

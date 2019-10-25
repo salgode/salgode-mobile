@@ -17,13 +17,15 @@ class ResolveAuthScreen extends Component {
   }
 
   async loginHandler() {
-    const userToken = await AsyncStorage.getItem('@userToken')
-    const userId = await AsyncStorage.getItem('@userId')
+    let userToken = await AsyncStorage.getItem('@userToken')
+    let userId = await AsyncStorage.getItem('@userId')
     // console.log(userToken, userId)
 
     if (!userToken || !userId) {
       this.props.navigation.navigate('Login')
     } else {
+      userToken = JSON.parse(userToken)
+      userId = JSON.parse(userId)
       this.setState({
         loading: true,
       })

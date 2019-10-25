@@ -158,7 +158,7 @@ export function getOwnProfile(token, userId) {
     type: actions.USER_LOGIN,
     payload: {
       request: {
-        url: urls.user.info.get.profile(userId),
+        url: urls.user.info.get.own_profile(userId),
         method: 'get',
         headers: getBaseHeaders(token),
         transformResponse: data => ({

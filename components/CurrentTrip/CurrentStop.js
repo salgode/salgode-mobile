@@ -18,8 +18,8 @@ class CurrentStop extends Component {
       after: this.props.after,
     };
 
+
     this.goToNextStop = this.goToNextStop.bind(this);
-    this.getUsersToPickUp = this.getUsersToPickUp.bind(this);
   }
 
   getUsersToPickUp() {

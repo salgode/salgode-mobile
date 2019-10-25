@@ -5,17 +5,25 @@ import PropTypes from 'prop-types'
 import StopsList from './StopsList'
 
 const TripStart = ({ stops = [] }) => {
+  function startTrip(){
+    
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>#Llego en 5</Text>
       <Text>Paradas:</Text>
       <StopsList stops={stops} />
-      <Button style={styles.button}>
+      <Button 
+        style={styles.button}
+        onPress={() => startTrip()}
+      >
         <Text>Iniciar viaje</Text>
       </Button>
     </View>
   )
 }
+
 
 TripStart.propTypes = {
   stops: PropTypes.array,

@@ -5,9 +5,10 @@ import Location from './Location'
 import PropTypes from 'prop-types'
 import Colors from '../../../constants/Colors'
 import TimeInfo from './TimeInfo'
+import { client } from '../../../redux/store'
 import { Ionicons } from '@expo/vector-icons'
 
-export const DetailedTrip = ({ trip, asDriver, driver, token }) => {
+export const DetailedTrip = ({ trip, asDriver, driver, token, onPressStartTrip }) => {
   function renderLocation(locations) {
     return locations.map((location, index) => {
       let color
@@ -28,8 +29,18 @@ export const DetailedTrip = ({ trip, asDriver, driver, token }) => {
     })
   }
 
-  function startTrip(/* token */) {
-    console.log(asDriver);
+  async function startTrip(token) {
+    await client
+      .request({
+        method: 'post',
+        url: `/driver/trips/${trip.trip_id}/journey/start`,
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then(resp => {console.log(resp);
+      })
+    onPressStartTrip(['Escuela Militar', 'Principe de Gales', 'San Joaquín'])
     
     // TODO: connect to server
     // TODO: navigate to current trip screen

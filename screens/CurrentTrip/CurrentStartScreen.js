@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
+import { withNavigation } from 'react-navigation'
 import TripStart from '../../components/CurrentTrip/TripStart'
 
 class CurrentStartScreen extends Component {
   render() {
+    const tripStops = this.props.navigation.getParam('tripStops', null)
     return (
       <TripStart
-        stops={['Escuela Militar', 'Principe de Gales', 'San Joaquín']}
+        stops={tripStops}
       />
     )
   }
 }
 
-export default CurrentStartScreen
+export default withNavigation(CurrentStartScreen)

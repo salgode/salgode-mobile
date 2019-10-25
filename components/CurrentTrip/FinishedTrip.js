@@ -33,7 +33,6 @@ const FinishedTrip = ({
         },
       })
       .then(resp => {
-        console.log(resp.data)
         onPress()
       })
   }

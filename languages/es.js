@@ -15,4 +15,7 @@ export default {
       message: 'Hubo un problema registrandote. Por favor intentalo de nuevo.',
     },
   },
+  camera: {
+    takePhoto: 'Tomar Foto',
+  },
 }

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { StyleSheet, Modal } from 'react-native'
 import { Camera } from 'expo-camera'
 import Layout from '../../constants/Layout'
+import getString from '../../languages'
 
 const CameraModal = ({ isCameraOn, closeCamera, onGetSelfie, destination }) => {
   // eslint-disable-next-line no-unused-vars
@@ -58,7 +59,7 @@ const CameraModal = ({ isCameraOn, closeCamera, onGetSelfie, destination }) => {
         </View> */}
       </Camera>
       <Button borderRadius={10} style={styles.buttonCamera} onPress={getSelfie}>
-        <Text>Tomar foto </Text>
+        <Text>{getString('camera.takePhoto')}</Text>
       </Button>
     </Modal>
   )

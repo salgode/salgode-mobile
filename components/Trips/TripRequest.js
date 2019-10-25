@@ -36,7 +36,7 @@ const TripRequest = ({ stops, onSend, loading }) => {
         <Button
           disabled={!state.selected}
           style={state.selected ? styles.button : styles.unselectedButton}
-          onPress={() => onSend(stops[stops.length - 1], state.selectedStop)}
+          onPress={() => onSend(state.selectedStop, stops[stops.length - 1])}
         >
           <Text>Confirmar Solicitud</Text>
         </Button>

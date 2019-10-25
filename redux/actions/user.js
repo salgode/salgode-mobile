@@ -24,13 +24,11 @@ export const actions = {
 }
 
 const mapDataToUser = data => {
-
   // console.log(data)
-  let user = {
-    // token: data.bearer_token,
+  const user = {
+    token: data.bearer_token,
     name: data.first_name,
     userId: data.user_id,
-    name: data.first_name,
     lastName: data.last_name,
     email: data.email,
     phone: data.phone,

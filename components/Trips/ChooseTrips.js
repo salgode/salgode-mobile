@@ -16,7 +16,6 @@ class ChooseTrips extends Component {
       loading: false,
       stops: [],
     }
-    this.ChooseTrip = ChooseTrip
     this.onReload = this.onReload.bind(this)
   }
 
@@ -31,7 +30,6 @@ class ChooseTrips extends Component {
   }
 
   render() {
-    const Trip = this.ChooseTrip
     if (this.state.loading) {
       return (
         <View>
@@ -47,17 +45,12 @@ class ChooseTrips extends Component {
           onRefresh={this.onReload}
           refreshing={this.state.loading}
           renderItem={({ item }) => (
-            <Trip
+            <ChooseTrip
               timestamp={item.timestamp}
-              user={item.user}
-              status={item.status}
+              driver={item.driver}
               stops={item.stops}
               onSend={this.props.onSend}
-              token={item.token}
               tripId={item.tripId}
-              userId={item.userId}
-              startLocation={item.trip_route.start.name}
-              endLocation={item.trip_route.end.name}
             />
           )}
           keyExtractor={item => item.tripId}

@@ -6,6 +6,21 @@ import ChooseTrips from '../components/Trips/ChooseTrips'
 import { fetchFutureTrips } from '../redux/actions/trips'
 import Colors from '../constants/Colors'
 
+const parseTripInfo = trip => {
+  const { driver } = trip
+  return {
+    timestamp: new Date(trip.etd).getTime(),
+    driver: {
+      name: driver.driver_name,
+      reputation: driver.driver_score,
+      id: driver.driver_id,
+    },
+    stops: trip.trip_route_points,
+    tripId: trip.trip_id,
+    trip_route: trip.trip_route,
+  }
+}
+
 class ChooseTripsScreen extends Component {
   static navigationOptions = {
     // title: 'Pedir Viaje',
@@ -22,6 +37,7 @@ class ChooseTripsScreen extends Component {
 
     this.onRequestTrip = this.onRequestTrip.bind(this)
     this.getTrips = this.getTrips.bind(this)
+    // console.log(this.props.user)
   }
 
   async componentDidMount() {
@@ -48,27 +64,14 @@ class ChooseTripsScreen extends Component {
   }
 
   render() {
+    // console.log(this.state.trips[0])
     return (
       <View style={styles.container}>
         <View>
           <ChooseTrips
             onSend={this.onRequestTrip}
             onReload={this.getTrips}
-            trips={this.state.trips.map(trip => {
-              // console.log(trip)
-              return {
-                timestamp: new Date(trip.etd).getTime(),
-                user: {
-                  name: 'Temp',
-                  reputation: 0,
-                },
-                stops: trip.trip_route_points,
-                tripId: trip.trip_id,
-                userId: trip.driver_id,
-                token: this.props.user.token,
-                trip_route: trip.trip_route,
-              }
-            })}
+            trips={this.state.trips.map(trip => parseTripInfo(trip))}
           />
         </View>
       </View>

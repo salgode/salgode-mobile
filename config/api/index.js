@@ -26,11 +26,13 @@ export const urls = {
       },
       post: {
         trip: () => '/driver/trips',
+        complete: id => `/driver/trips/${id}/journey/complete`,
+        start: id => `/driver/trips/${id}/journey/start`,
+        next: id => `/driver/trips/${id}/journey/next`,
+        arrived: id => `/driver/trips/${id}/journey/next/arrived`,
       },
       put: {
         cancel: id => `/driver/trips/${id}/cancel`,
-        finish: id => `/driver/trips/${id}/finish`,
-        start: id => `/driver/trips/${id}/begin`,
       },
     },
   },

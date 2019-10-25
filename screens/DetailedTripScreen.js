@@ -21,6 +21,7 @@ class DetailedTripScreen extends Component {
     }
 
     this.renderPassengers = this.renderPassengers.bind(this)
+    this.onPressStartTrip = this.onPressStartTrip.bind(this)
   }
 
   componentDidMount() {
@@ -35,6 +36,10 @@ class DetailedTripScreen extends Component {
     })
     // }
     // this.props.fetchSlots(this.props.user.token, tripId)
+  }
+
+  onPressStartTrip(tripStops, tripId, token) {
+    this.props.navigation.navigate('StartTrip', { tripStops, tripId, token })
   }
 
   renderPassengers(passengers) {
@@ -66,6 +71,7 @@ class DetailedTripScreen extends Component {
             trip={this.props.trip}
             driver={this.props.trip.driver}
             token={this.props.user.token}
+            onPressStartTrip={this.onPressStartTrip}
           />
         )}
         {this.state.asDriver && !this.state.loading

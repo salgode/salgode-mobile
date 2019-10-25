@@ -26,12 +26,6 @@ class ChooseTripsScreen extends Component {
 
   async componentDidMount() {
     await this.getTrips()
-    // const trips = await mapTripIdsToTripInfo(
-    //   this.props.trips,
-    //   this.props.user.token
-    // )
-    // console.log(trips)
-    this.setState({ trips: this.props.trips })
   }
 
   onRequestTrip(stops, tripId) {
@@ -43,7 +37,6 @@ class ChooseTripsScreen extends Component {
 
   async getTrips() {
     const response = await this.props.fetchFutureTrips(this.props.user.token)
-
     if (response.error) {
       Alert.alert(
         'Error obteniendo viajes',
@@ -61,17 +54,21 @@ class ChooseTripsScreen extends Component {
           <ChooseTrips
             onSend={this.onRequestTrip}
             onReload={this.getTrips}
-            trips={this.state.trips.map(trip => ({
-              timestamp: new Date(trip.etd).getTime(),
-              user: {
-                name: 'Temp',
-                reputation: 0,
-              },
-              stops: trip.trip_route_points,
-              tripId: trip.trip_id,
-              userId: trip.driver_id,
-              token: this.props.user.token,
-            }))}
+            trips={this.state.trips.map(trip => {
+              // console.log(trip)
+              return {
+                timestamp: new Date(trip.etd).getTime(),
+                user: {
+                  name: 'Temp',
+                  reputation: 0,
+                },
+                stops: trip.trip_route_points,
+                tripId: trip.trip_id,
+                userId: trip.driver_id,
+                token: this.props.user.token,
+                trip_route: trip.trip_route,
+              }
+            })}
           />
         </View>
       </View>
@@ -106,7 +103,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     user: state.user,
-    trips: state.futureTrips.trips || [],
+    trips: state.trips.open || [],
   }
 }
 

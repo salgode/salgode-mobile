@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/AntDesign'
 import TimeInfo from './TimeInfo'
 import PedirBoton from './PedirBoton'
 import PropTypes from 'prop-types'
-import { getTripInfo, getUserInfo } from '../../../utils/getTripInfo'
+import { getUserInfo } from '../../../utils/getTripInfo'
 
 const ChooseTrip = ({
   timestamp,
@@ -40,11 +40,9 @@ const ChooseTrip = ({
     const userPromise = loadUserInfo()
     Promise.all([stopsPromise, userPromise]).then(() => setLoading(false))
   }, [])
-
-  if (loading) {
-    return <View></View>
-  }
-  return (
+  return loading ? (
+    <View></View>
+  ) : (
     <Card style={styles.containerRequested}>
       <CardItem style={styles.dataContainer}>
         <View style={styles.user}>
@@ -53,21 +51,22 @@ const ChooseTrip = ({
               name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
               size={80}
             />
+
             <Text style={styles.userText}>
               {`${user.first_name} ${user.last_name}`}
             </Text>
           </View>
-          {/* <View style={styles.iconInfoGroup}>
-              <View style={styles.iconContainer}>
-                <Icon name="like1" style={styles.infoIcon} />
-                <Text style={styles.iconText}>{user.reputation}</Text>
-              </View>
-            </View> */}
+          <View style={styles.iconInfoGroup}>
+            <View style={styles.iconContainer}>
+              <Icon name="like1" style={styles.infoIcon} />
+              <Text style={styles.iconText}>{user.reputation}</Text>
+            </View>
+          </View>
         </View>
       </CardItem>
       <CardItem style={styles.locationContainer}>
-        <Location color={'#0000FF'} location={stops[0].name} />
-        <Location color={'#33C534'} location={stops[stops.length - 1].name} />
+        <Location color={'#0000FF'} location={stops[0]} />
+        <Location color={'#33C534'} location={stops[stops.length - 1]} />
       </CardItem>
       <CardItem style={styles.bottomSection}>
         <TimeInfo timestamp={timestamp} />

@@ -39,6 +39,7 @@ class ChooseTrips extends Component {
         </View>
       )
     }
+
     return (
       <SafeAreaView>
         <FlatList
@@ -55,6 +56,8 @@ class ChooseTrips extends Component {
               token={item.token}
               tripId={item.tripId}
               userId={item.userId}
+              startLocation={item.trip_route.start.name}
+              endLocation={item.trip_route.end.name}
             />
           )}
           keyExtractor={item => item.tripId}

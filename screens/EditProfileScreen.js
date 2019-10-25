@@ -9,6 +9,8 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Platform,
+  AsyncStorage,
+  Image,
 } from 'react-native'
 import {
   Button,
@@ -25,10 +27,11 @@ import {
 import { withNavigation } from 'react-navigation'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { connect } from 'react-redux'
-import { updateUser, signoutUser } from '../redux/actions/user'
 import { Ionicons } from '@expo/vector-icons'
-import Layout from '../constants/Layout'
 import PropTypes from 'prop-types'
+
+import { updateUser, signoutUser } from '../redux/actions/user'
+import Layout from '../constants/Layout'
 import Colors from '../constants/Colors'
 
 function validateName(str) {
@@ -209,7 +212,7 @@ const EditProfileScreen = props => {
       label: 'Teléfono',
       value: phone,
       setValue: setPhone,
-      validate: phone => phone.match(/^(\+56)?\d{9}$/),
+      validate: phone => (phone ? phone.match(/^(\+56)?\d{9}$/) : ''),
       keyboardType: 'phone-pad',
     },
     // {
@@ -274,14 +277,12 @@ const EditProfileScreen = props => {
   }
 
   React.useEffect(() => {
-    // console.log(props.user)
     const stateUser = props.user
     const user = {
       name: stateUser.name,
       lastName: stateUser.lastName,
       phone: stateUser.phone,
     }
-
     if (stateUser.car) {
       user.car = {
         plate: stateUser.car.plate,
@@ -323,14 +324,12 @@ const EditProfileScreen = props => {
     const response = await props.updateUser(
       user.name,
       user.lastName,
-      // props.user.email,
       user.phone,
       user.car,
       props.user.userId,
       props.user.token
     )
     setIsLoading(false)
-    // console.log(response)
     if (response.error) {
       alert(
         'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
@@ -368,11 +367,23 @@ const EditProfileScreen = props => {
           <View style={{ minHeight: Dimensions.get('window').height }}>
             <View style={styles.row}>
               <View style={styles.profilePhoto}>
-                <MaterialCommunityIcons
-                  name="face-profile"
-                  color="gray"
-                  size={photoSize}
-                />
+                {props.user.avatar ? (
+                  <Image
+                    source={{ uri: props.user.avatar }}
+                    style={{
+                      height: photoSize,
+                      width: photoSize,
+                      resizeMode: 'center',
+                      borderRadius: photoSize / 2,
+                    }}
+                  />
+                ) : (
+                  <MaterialCommunityIcons
+                    name="face-profile"
+                    color="gray"
+                    size={photoSize}
+                  />
+                )}
               </View>
               <View style={styles.readonlyFieldsContainer}>
                 <View style={styles.readonlyField}>
@@ -564,8 +575,10 @@ const _SignOutC = props => (
         {
           text: 'Si',
           onPress: () => {
+            AsyncStorage.removeItem('@userToken')
+            AsyncStorage.removeItem('@userId')
             // eslint-disable-next-line react/prop-types
-            props.navigation.navigate('LoginStack')
+            props.navigation.navigate('Login')
             // eslint-disable-next-line react/prop-types
             props.signOut()
           },

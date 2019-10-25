@@ -40,7 +40,7 @@ const TimeInfo = ({ timestamp, displayAsRow = false }) => {
 }
 
 TimeInfo.propTypes = {
-  timestamp: PropTypes.number.isRequired,
+  timestamp: PropTypes.any.isRequired,
   displayAsRow: PropTypes.bool,
 }
 

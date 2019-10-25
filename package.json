@@ -1,6 +1,15 @@
 {
+  "name": "salgode-mobile-app",
   "main": "node_modules/expo/AppEntry.js",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/salgode/salgode-mobile.git"
+  },
+  "bugs": {
+    "url": "https://github.com/salgode/salgode-mobile/issues"
+  },
+  "homepage": "http://salgode.cl/",
   "scripts": {
     "start": "expo start",
     "dev": "yarn start",
@@ -47,6 +56,8 @@
     "react-redux": "^7.1.1",
     "redux": "^4.0.4",
     "redux-axios-middleware": "^4.0.1",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-persist": "^6.0.0",
     "styled-components": "^4.4.0"
   },
   "devDependencies": {

@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { View, StyleSheet } from 'react-native'
 import PropTypes from 'prop-types'
 import Trips from '../components/Trips/Trips'
-import { Spinner, Text } from 'native-base'
+import { Spinner } from 'native-base'
 import { connect } from 'react-redux'
-import { userTrips } from '../redux/actions/user'
+import { userTrips, driverTrips } from '../redux/actions/user'
 
 class TripsScreen extends Component {
   static navigationOptions = {
@@ -22,30 +22,34 @@ class TripsScreen extends Component {
     this.onPressTrip = this.onPressTrip.bind(this)
   }
 
-  onPressTrip(asDriver) {
-    this.props.navigation.navigate('DetailedTrip', { asDriver })
+  onPressTrip(asDriver = false, tripId) {
+    this.props.navigation.navigate('DetailedTrip', { asDriver, tripId })
   }
 
   componentDidMount() {
     this.getTrips()
+    this.asDriver = this.props.navigation.getParam('asDriver', null)
   }
 
   async getTrips() {
     this.setState({ loading: true })
+
     await this.props.fetchTrips(this.props.user.token)
+    await this.props.fetchDriverTrips(this.props.user.token)
     this.setState({ loading: false })
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <Text>{this.asDriver}</Text>
         {this.state.loading && <Spinner color="blue" />}
         {!this.state.loading && (
           <Trips
+            key={`trips-${this.props.isRequestedTrips ? 'requested' : ''}`}
             isRequestedTrips={this.props.isRequestedTrips}
             trips={this.props.trips}
             onPressTrip={this.onPressTrip}
+            driverTrips={this.props.driverTrips}
           />
         )}
       </View>
@@ -62,7 +66,9 @@ TripsScreen.propTypes = {
     userId: PropTypes.string.isRequired,
   }).isRequired,
   fetchTrips: PropTypes.func.isRequired,
+  fetchDriverTrips: PropTypes.func.isRequired,
   trips: PropTypes.array,
+  driverTrips: PropTypes.array,
 }
 
 TripsScreen.defaultProps = {
@@ -79,10 +85,12 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
   user: state.user,
   trips: state.user.trips,
+  driverTrips: state.user.driverTrips,
 })
 
 const mapDispatchToProps = dispatch => ({
   fetchTrips: token => dispatch(userTrips(token)),
+  fetchDriverTrips: token => dispatch(driverTrips(token)),
 })
 
 export default connect(

@@ -1,16 +1,9 @@
 import React, { Component } from 'react'
-import {
-  ScrollView,
-  StyleSheet,
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-} from 'react-native'
+import { StyleSheet, View, Text } from 'react-native'
 import { Appearance } from 'react-native-appearance'
 import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
-import { Button, Item, Icon, Card } from 'native-base'
+import { Button } from 'native-base'
 import {
   setStartStop,
   setEndStop,
@@ -34,7 +27,6 @@ class CreateTripScreen extends Component {
   }
 
   componentDidMount = () => {
-    console.log('USER', this.props.user)
     this.props.getAllSpots()
   }
 

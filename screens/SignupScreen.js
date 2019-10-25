@@ -8,8 +8,11 @@ import {
 import { connect } from 'react-redux'
 import { View } from 'native-base'
 import PropTypes from 'prop-types'
+
 import { signupUser, uploadImageUser } from '../redux/actions/user'
 import SignupForm from '../components/Login/SignupForm'
+
+import lang from '../languages/es'
 
 class SignupScreen extends Component {
   static navigationOptions = {
@@ -27,6 +30,12 @@ class SignupScreen extends Component {
   async onSend(userInfo) {
     this.setState({ loading: true })
     const selfieUrl = await this.props.uploadImage(userInfo.selfieLink)
+    const frontIdUrl = await this.props.uploadImage(
+      userInfo.identification_image_front
+    )
+    const backIdUrl = await this.props.uploadImage(
+      userInfo.identification_image_back
+    )
     const user = await this.props
       .signup(
         userInfo.name,
@@ -35,17 +44,16 @@ class SignupScreen extends Component {
         userInfo.phone,
         userInfo.password,
         userInfo.passwordRepeat,
-        selfieUrl
+        selfieUrl,
+        frontIdUrl,
+        backIdUrl
       )
       .then(response => {
         return response
       })
     this.setState({ loading: false })
     if (user.error) {
-      Alert.alert(
-        'Error de registro',
-        'Hubo un problema registrandote. Por favor intentalo de nuevo.'
-      )
+      Alert.alert(lang.signup.error.title, lang.signup.error.message)
     } else {
       this.props.navigation.navigate('ChooseTrips')
     }
@@ -81,11 +89,9 @@ const styles = StyleSheet.create({
   },
 })
 
-const mapStateToProps = state => {
-  return {
-    user: state.user,
-  }
-}
+const mapStateToProps = state => ({
+  user: state.user,
+})
 
 const mapDispatchToProps = dispatch => ({
   uploadImage: img => dispatch(uploadImageUser(img)),
@@ -96,7 +102,9 @@ const mapDispatchToProps = dispatch => ({
     phone,
     password,
     passwordRepeat,
-    selfieLink
+    selfieLink,
+    identification_image_front,
+    identification_image_back
     // driverLicenseLink,
     // dniLink,
     // carPlate,
@@ -112,7 +120,10 @@ const mapDispatchToProps = dispatch => ({
         phone,
         password,
         passwordRepeat,
-        selfieLink
+        selfieLink,
+        identification_image_front,
+        identification_image_back
+        // driverLicenseLink,
         // driverLicenseLink,
         // dniLink,
         // carPlate,

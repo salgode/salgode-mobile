@@ -10,7 +10,8 @@ class LoginForm extends Component {
     this.state = {
       email: '',
       password: '',
-      inputValidity: true,
+      emailValidity: false,
+      passwordValidity: false,
     }
 
     this.onChangePassword = this.onChangePassword.bind(this)
@@ -22,11 +23,11 @@ class LoginForm extends Component {
       // eslint-disable-next-line no-useless-escape
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     )
-    this.setState({ email, inputValidity: validity })
+    this.setState({ email, emailValidity: validity })
   }
 
   onChangePassword(password) {
-    this.setState({ password })
+    this.setState({ password, passwordValidity: password.length > 3 })
   }
 
   render() {
@@ -57,7 +58,8 @@ class LoginForm extends Component {
           block
           borderRadius={10}
           style={styles.button}
-          disabled={!this.state.inputValidity}
+          color="#0000FF"
+          disabled={!(this.state.emailValidity && this.state.passwordValidity)}
           onPress={() =>
             this.props.onSend(this.state.email, this.state.password)
           }
@@ -75,7 +77,7 @@ LoginForm.propTypes = {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#0000FF',
+    // backgroundColor: '#0000FF',
     marginTop: 20,
   },
   form: {

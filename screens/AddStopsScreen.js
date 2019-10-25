@@ -6,8 +6,6 @@ import {
   Text,
   Alert,
   ActivityIndicator,
-  TouchableOpacity,
-  TextInput,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
@@ -18,9 +16,13 @@ import Colors from '../constants/Colors'
 import CardInput from '../components/CardInput'
 
 class AddStopsScreen extends Component {
-  state = {
-    stops: [],
-    loading: false,
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      stops: [],
+      loading: false,
+    }
   }
 
   cleanInput = index => {

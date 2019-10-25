@@ -1,8 +1,10 @@
 import { actions as userActions } from '../actions/user'
 
 export default function userReducer(state = {}, action) {
-  // console.log(action)
+  // console.log('Here: ', action.type, action.payload)
   switch (action.type) {
+    case userActions.USER_SET:
+      return { ...state, ...action.payload }
     case userActions.USER_LOGIN:
       return { ...state, loading: true }
     case userActions.USER_LOGIN_SUCCESS:
@@ -47,6 +49,10 @@ export default function userReducer(state = {}, action) {
       return { ...state, loading: true }
     case userActions.USER_GET_TRIPS_SUCCESS:
       return { ...state, loading: false, trips: action.payload.data }
+    case userActions.USER_DRIVER_GET_TRIPS:
+      return { ...state, loading: true }
+    case userActions.USER_DRIVER_GET_TRIPS_SUCCESS:
+      return { ...state, loading: false, driverTrips: action.payload.data }
     default:
       return state
   }

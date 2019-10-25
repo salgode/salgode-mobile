@@ -1,12 +1,14 @@
-/* eslint-disable no-unused-vars*/
 import { createStackNavigator } from 'react-navigation'
-import LoginScreen from '../screens/LoginScreen'
-import SignupScreen from '../screens/SignupScreen'
+
+import { LoginScreen, RecoverPasswordScreen, SignupScreen } from '../screens'
+import ImageSignupForm from '../components/Login/ImageSignupForm'
 
 export default createStackNavigator(
   {
     Login: LoginScreen,
     Signup: SignupScreen,
+    SignupImages: ImageSignupForm,
+    RecoverPassword: RecoverPasswordScreen,
   },
   {
     navigationOptions: {

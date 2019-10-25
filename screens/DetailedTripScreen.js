@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
-import { StyleSheet, Alert } from 'react-native'
+import { StyleSheet } from 'react-native'
 import PropTypes from 'prop-types'
 import DetailedTrip from '../components/Trips/Trip/DetailedTrip'
 import { Spinner } from 'native-base'
 import TripRequestCard from '../components/Trips/Trip/TripRequestCard'
 import { ScrollView } from 'react-native-gesture-handler'
+import { connect } from 'react-redux'
+import { withNavigation } from 'react-navigation'
+import { fetchTrip } from '../redux/actions/trips'
 
 class DetailedTripScreen extends Component {
   static navigationOptions = {
@@ -14,136 +17,43 @@ class DetailedTripScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      loadingTrip: true,
-      loadingPassengers: true,
-      trip: null,
-      passengers: [],
-      asDriver: false,
+      loading: true,
     }
 
-    this.getTrip = this.getTrip.bind(this)
-    this.fetchTrip = this.fetchTrip.bind(this)
-    this.fetchPassengers = this.fetchPassengers.bind(this)
+    this.renderPassengers = this.renderPassengers.bind(this)
   }
 
-  async componentDidMount() {
-    this.setState({
-      asDriver: this.props.navigation.getParam('asDriver', false),
+  componentDidMount() {
+    // TODO: get token from redux store
+    this.asDriver = this.props.navigation.getParam('asDriver', null)
+    const tripId = this.props.navigation.getParam('tripId', null)
+    // if (asDriver) {
+    //   this.props.fetchTripDriver(this.props.user.token, tripId)
+    // } else {
+    this.props.fetchTrip(this.props.user.token, tripId).then(() => {
+      this.setState({ loading: false })
     })
-    this.getTrip(123, this.state.asDriver)
+    // }
+    // this.props.fetchSlots(this.props.user.token, tripId)
   }
 
-  async fetchTrip(token) {
-    // eslint-disable-next-line no-console
-    // fetch from server
-    return {
-      trip_id: 'id',
-      etd: 1571590002,
-      driver: {
-        name: 'Nombre',
-        lastName: 'Apellido',
-        email: 'example@mail.com',
-        phone: '+56999999999',
-        selfieLink: 'https://link1.com',
-        driverLicenseLink: 'https://link2.com',
-        dniFrontLink: 'https://link3.com',
-        dniBackLink: 'https://link3.com',
-        car: {
-          plate: 'AABB99',
-          color: 'Azul',
-          brand: 'Toyota',
-          model: 'Yaris',
-        },
-      },
-      route_points: [
-        {
-          name: 'UC',
-          address: 'Plaza italia',
-          city: 'Santiago',
-        },
-        {
-          name: 'Plaza Italia',
-          address: 'Plaza italia',
-          city: 'Santiago',
-        },
-        {
-          name: 'Metro Tobalaba',
-          address: 'Plaza italia',
-          city: 'Santiago',
-        },
-      ],
-      day: 'Lunes',
-      hour: '16.00',
-    }
-  }
-
-  async getTrip(tripId, asDriver) {
-    this.setState({ loading: true })
-    //_this.setState is not a function. (In '_this.setState({]
-
-    await this.fetchTrip(tripId)
-      .then(trip => this.setState({ trip }))
-      .catch(err => {
-        this.setState({ loading: false })
-        Alert.alert('Hubo un error, intenta de nuevo más tarde', err)
-      })
-    await this.fetchPassengers(tripId, asDriver)
-      .then(passengers => this.setState({ passengers }))
-      .catch(err => {
-        this.setState({ loadingPassengers: false })
-        Alert.alert('Hubo un error, intenta de nuevo más tarde', err)
-      })
-
-    this.setState({ loading: false })
-    this.setState({ loadingPassengers: false })
-    /*
-    if (user.error) {
-      Alert.alert(
-        'Hubo un problema iniciando sesión. Por favor intentalo de nuevo.'
-      )
-    } else {
-      this.props.navigation.navigate('Trips')
-    }*/
-  }
-
-  async fetchPassengers(tripId) {
-    // eslint-disable-next-line no-console
-    // fetch from server
-    return [
-      {
-        status: 'pending',
-        name: 'Pasajero 1',
-        start: 'Inicio de partida',
-        finish: 'Destino',
-        phoneNumber: '+56984643021',
-      },
-      {
-        status: 'accepted',
-        name: 'Pasajero 2',
-        start: 'Inicio de partida',
-        finish: 'Destino 2',
-        phoneNumber: '+56984643021',
-      },
-      {
-        status: 'rejected',
-        name: 'Pasajero 3',
-        start: 'Inicio de partida',
-        finish: 'Destino 3',
-        phoneNumber: '+56984643021',
-      },
-    ]
-  }
-
-  renderPassengers(passengers, trip) {
-    const locationsLength = trip.route_points.length
-    const finalLocation = trip.route_points[locationsLength - 1].name
-    return passengers.map((passenger, index) => (
-      <TripRequestCard
-        key={`passenger-${index}`}
-        passenger={passenger}
-        finalLocation={finalLocation}
-      />
-    ))
+  renderPassengers(passengers) {
+    const finishStop = this.props.trip
+      ? this.props.trip.trip_route_points[
+          this.props.trip.trip_route_points.length - 1
+        ].name
+      : 'cargando..'
+    return passengers
+      ? passengers.map((passenger, index) => (
+          <TripRequestCard
+            key={`passenger-${index}`}
+            passenger={passenger}
+            finishStop={finishStop}
+            // slot={this.props.slots[index]}
+            token={this.props.user.token}
+          />
+        ))
+      : null
   }
 
   render() {
@@ -151,10 +61,15 @@ class DetailedTripScreen extends Component {
       <ScrollView style={styles.container}>
         {this.state.loading && <Spinner color="blue" />}
         {!this.state.loading && (
-          <DetailedTrip asDriver={this.state.asDriver} trip={this.state.trip} />
+          <DetailedTrip
+            asDriver={this.asDriver}
+            trip={this.props.trip}
+            driver={this.props.trip.driver}
+            token={this.props.user.token}
+          />
         )}
-        {this.state.asDriver && !this.state.loadingPassengers
-          ? this.renderPassengers(this.state.passengers, this.state.trip)
+        {this.state.asDriver && !this.state.loading
+          ? this.renderPassengers(this.state.passengers, this.state.token)
           : null}
       </ScrollView>
     )
@@ -168,6 +83,12 @@ DetailedTripScreen.propTypes = {
     navigate: PropTypes.func.isRequired,
     getParam: PropTypes.func.isRequired,
   }).isRequired,
+  user: PropTypes.shape({
+    token: PropTypes.string.isRequired,
+  }).isRequired,
+  trip: PropTypes.object.isRequired,
+  // slots: PropTypes.object.isRequired,
+  fetchTrip: PropTypes.func.isRequired,
 }
 
 DetailedTripScreen.defaultProps = {
@@ -182,4 +103,18 @@ const styles = StyleSheet.create({
   },
 })
 
-export default DetailedTripScreen
+const mapPropsToState = state => ({
+  user: state.user,
+  trip: state.trips.trip,
+  // slots: state.trips.trip.slots,
+})
+
+const mapDispatchToState = dispatch => ({
+  fetchTrip: (token, id) => dispatch(fetchTrip(token, id)),
+  // fetchSlots:()=>(),
+})
+
+export default connect(
+  mapPropsToState,
+  mapDispatchToState
+)(withNavigation(DetailedTripScreen))

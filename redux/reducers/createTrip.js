@@ -1,7 +1,7 @@
 import { actions as createTripActions } from '../actions/createtrip'
 
 export default function createTripReducer(state = {}, action) {
-  console.log('SPOTS', action)
+  // console.log('SPOTS', action)
   switch (action.type) {
     case createTripActions.SET_START_STOP:
       return { ...state, startStop: action.payload }

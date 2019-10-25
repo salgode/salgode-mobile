@@ -27,7 +27,7 @@ class CreateTripScreen extends Component {
   }
 
   componentDidMount = () => {
-    this.props.getAllSpots()
+    this.props.getAllSpots(this.props.user.token)
   }
 
   showDateTimePicker = () => {
@@ -66,7 +66,7 @@ class CreateTripScreen extends Component {
       hours = pickedDate.getHours()
       minutes = pickedDate.getMinutes()
     }
-    const filteredSpots = spotsFilter(spots, [startStop, endStop])
+    const filteredSpots = spots // spotsFilter(spots, [startStop, endStop])
 
     return (
       <View style={styles.container}>
@@ -199,15 +199,16 @@ const mapStateToProps = ({ user, createTrip, spots }) => {
   }
 }
 
-const mapDispatchToProps = {
+const mapDispatchToProps = dispatch => ({
   loginUser,
   setStartStop,
   setEndStop,
   setStartTime,
   clearStartStop,
   clearEndStop,
-  getAllSpots,
-}
+  getAllSpots: token => dispatch(getAllSpots(token)),
+})
+
 CreateTripScreen.navigationOptions = {
   title: 'Crear un viaje',
 }

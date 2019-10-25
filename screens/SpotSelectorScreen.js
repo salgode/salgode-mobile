@@ -22,9 +22,9 @@ class SpotSelectorScreen extends Component {
     const { navigation, spots } = this.props
     const { filter } = this.state
     const normalizedInput = normalizeText(filter)
-    console.log('Spots1:', spots[0])
+    // console.log('Spots1:', spots[0])
     const data = navigation.getParam('data', spots)
-    console.log(data)
+    // console.log(data)
     const filteredData = data.filter(
       item =>
         normalizeText(item.name).includes(normalizedInput) ||

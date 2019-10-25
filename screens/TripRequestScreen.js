@@ -39,7 +39,7 @@ class TripRequestScreen extends Component {
       startStop.id,
       endStop.id
     )
-    console.log(response)
+    // console.log(response)
 
     this.setState({ loading: false })
 

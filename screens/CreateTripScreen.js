@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import { ScrollView, StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Text } from 'react-native'
 import { Appearance } from 'react-native-appearance'
 import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
 import { Button } from 'native-base'
-import CardInputSelector from '../components/CardInputSelector'
 import {
   setStartStop,
   setEndStop,
@@ -17,6 +16,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker'
 import { spotsFilter } from '../utils/spotsFilter'
 import Colors from '../constants/Colors'
 import PropTypes from 'prop-types'
+import CardInput from '../components/CardInput'
 
 const colorScheme = Appearance.getColorScheme()
 
@@ -45,7 +45,17 @@ class CreateTripScreen extends Component {
   }
 
   render() {
-    const { navigation, startStop, endStop, startTime, spots } = this.props
+    const {
+      navigation,
+      startStop,
+      endStop,
+      startTime,
+      spots,
+      clearStartStop,
+      clearEndStop,
+      setStartStop,
+      setEndStop,
+    } = this.props
     const disabled = startStop && endStop && startTime ? false : true
     const { pickedDate } = this.state
     let day
@@ -56,54 +66,62 @@ class CreateTripScreen extends Component {
       hours = pickedDate.getHours()
       minutes = pickedDate.getMinutes()
     }
-    const filteredSlots = spots ? spotsFilter(spots, [startStop, endStop]) : []
+    const filteredSpots = spots // spotsFilter(spots, [startStop, endStop])
 
     return (
       <View style={styles.container}>
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}
-        >
-          <View style={styles.group}>
-            <CardInputSelector
-              text="#Desde"
-              placeHolder="Filtra por Comuna o Parada"
-              onSelect={item => this.props.setStartStop(item)}
-              onClear={this.props.clearStartStop}
-              data={filteredSlots}
-            />
+        <View>
+          <CardInput
+            onTouchablePress={() =>
+              navigation.navigate('SpotSelectorScreen', {
+                title: 'Seleccionar #Desde',
+                text: '#Desde',
+                onClearPress: clearStartStop,
+                onItemPress: setStartStop,
+                data: filteredSpots,
+              })
+            }
+            placeholder="Filtra por Comuna o Parada"
+            value={startStop.name}
+            text="#Desde"
+            editable={false}
+            onClearPress={clearStartStop}
+          />
 
-            <CardInputSelector
-              text="#A"
-              placeHolder="Filtra por Comuna o Parada"
-              onSelect={item => this.props.setEndStop(item)}
-              onClear={this.props.clearEndStop}
-              data={filteredSlots}
-            />
-          </View>
+          <CardInput
+            onTouchablePress={() =>
+              navigation.navigate('SpotSelectorScreen', {
+                title: 'Seleccionar #A',
+                text: '#A',
+                onClearPress: clearStartStop,
+                onItemPress: setEndStop,
+                data: filteredSpots,
+              })
+            }
+            placeholder="Filtra por Comuna o Parada"
+            value={endStop.name}
+            text="#A"
+            editable={false}
+            onClearPress={clearEndStop}
+          />
+        </View>
 
-          <View style={styles.group}>
-            <Button style={styles.dateButton} onPress={this.showDateTimePicker}>
-              <Text>
-                {pickedDate
-                  ? `${day} - ${hours}:${minutes < 10 ? '0' : ''}${minutes}`
-                  : 'Selecciona Hora/Fecha de Salida'}
-              </Text>
-            </Button>
-            <DateTimePicker
-              locale="es_ES"
-              titleIOS="Selecciona Hora/Fecha de Salida"
-              confirmTextIOS="Confirmar"
-              cancelTextIOS="Cancelar"
-              isDarkModeEnabled={colorScheme === 'dark'}
-              mode="datetime"
-              isVisible={this.state.isDateTimePickerVisible}
-              onConfirm={this.handleDatePicked}
-              onCancel={this.hideDateTimePicker}
-            />
-          </View>
-        </ScrollView>
-
+        <View style={styles.group}>
+          <Button style={styles.dateButton} onPress={this.showDateTimePicker}>
+            <Text>
+              {pickedDate
+                ? `${day} - ${hours}:${minutes < 10 ? '0' : ''}${minutes}`
+                : 'Selecciona Hora/Fecha de Salida'}
+            </Text>
+          </Button>
+          <DateTimePicker
+            isDarkModeEnabled={colorScheme === 'dark'}
+            mode="datetime"
+            isVisible={this.state.isDateTimePickerVisible}
+            onConfirm={this.handleDatePicked}
+            onCancel={this.hideDateTimePicker}
+          />
+        </View>
         <View>
           <Button
             block
@@ -152,13 +170,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.lightBackground,
     flex: 1,
-  },
-  contentContainer: {
     paddingTop: 30,
   },
-
   dateButton: {
     backgroundColor: 'white',
     borderColor: Colors.mainGrey,
@@ -167,9 +182,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   group: {
-    marginBottom: 40,
-    marginLeft: 20,
-    marginRight: 20,
+    margin: 10,
   },
   whiteText: {
     color: 'white',
@@ -186,15 +199,16 @@ const mapStateToProps = ({ user, createTrip, spots }) => {
   }
 }
 
-const mapDispatchToProps = {
-  loginUser,
-  setStartStop,
-  setEndStop,
-  setStartTime,
-  clearStartStop,
-  clearEndStop,
-  getAllSpots,
-}
+const mapDispatchToProps = dispatch => ({
+  loginUser: (email, password) => dispatch(loginUser(email, password)),
+  setStartStop: item => dispatch(setStartStop(item)),
+  setEndStop: item => dispatch(setEndStop(item)),
+  setStartTime: time => dispatch(setStartTime(time)),
+  clearStartStop: () => dispatch(clearStartStop()),
+  clearEndStop: () => dispatch(clearEndStop()),
+  getAllSpots: token => dispatch(getAllSpots(token)),
+})
+
 CreateTripScreen.navigationOptions = {
   title: 'Crear un viaje',
 }

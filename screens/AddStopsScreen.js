@@ -11,19 +11,18 @@ import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
 import { createTrip } from '../redux/actions/createtrip'
 import { Button, Icon } from 'native-base'
-import CardInputSelector from '../components/CardInputSelector'
 import { spotsFilter } from '../utils/spotsFilter'
 import Colors from '../constants/Colors'
+import CardInput from '../components/CardInput'
 
 class AddStopsScreen extends Component {
-
   constructor(props) {
-    super(props);
-  
+    super(props)
+
     this.state = {
       stops: [],
       loading: false,
-    };
+    }
   }
 
   cleanInput = index => {
@@ -92,7 +91,13 @@ class AddStopsScreen extends Component {
   }
 
   render() {
-    const { startStop, endStop } = this.props
+    const { startStop, endStop, navigation } = this.props
+    const { stops } = this.state
+    const filteredSpots = spotsFilter(this.props.spots, [
+      startStop,
+      endStop,
+      ...stops,
+    ])
     return (
       <View style={styles.container}>
         <ScrollView
@@ -119,20 +124,20 @@ class AddStopsScreen extends Component {
               Agrega paradas extra (opcional)
             </Text>
             {this.renderStops()}
-            {this.state.stops.length < 20 && (
-              <CardInputSelector
-                text="+"
-                placeHolder="Filtra por Comuna o Parada"
-                setValue={false}
-                data={spotsFilter(
-                  this.props.spots,
-                  [startStop, endStop].concat(this.state.stops)
-                )}
-                onSelect={item =>
-                  this.setState({ stops: this.state.stops.concat([item]) })
-                }
-              />
-            )}
+            <CardInput
+              onTouchablePress={() =>
+                navigation.navigate('SpotSelectorScreen', {
+                  title: 'Seleccionar #Parada',
+                  text: '#Parada',
+                  data: filteredSpots,
+                  onItemPress: item =>
+                    this.setState({ stops: stops.concat(item) }),
+                })
+              }
+              placeholder="Filtra por Comuna o Parada"
+              text="#Desde"
+              editable={false}
+            />
           </View>
         </ScrollView>
 

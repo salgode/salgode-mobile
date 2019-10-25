@@ -78,8 +78,8 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
         }))
         break
       default:
-        // eslint-disable-next-line no-console
-        console.log(dest)
+      // eslint-disable-next-line no-console
+      // console.log(dest)
     }
   }
 

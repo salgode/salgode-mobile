@@ -1,7 +1,7 @@
-const createTripModel = {
-  startStop: '',
+export const createTripModel = {
+  startStop: {}, // ''
   startTime: '',
-  endStop: '',
+  endStop: {},
   error: '',
   loading: false,
 }

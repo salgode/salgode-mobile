@@ -11,7 +11,7 @@ export function getAllSpots(authToken) {
     type: actions.RETRIEVE_ALL_SPOTS,
     payload: {
       request: {
-        url: `/spots`,
+        url: '/places',
         method: 'get',
         headers: getBaseHeaders(authToken),
       },

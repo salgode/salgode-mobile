@@ -16,9 +16,14 @@ import { spotsFilter } from '../utils/spotsFilter'
 import Colors from '../constants/Colors'
 
 class AddStopsScreen extends Component {
-  state = {
-    stops: [],
-    loading: false,
+
+  constructor(props) {
+    super(props);
+  
+    this.state = {
+      stops: [],
+      loading: false,
+    };
   }
 
   cleanInput = index => {

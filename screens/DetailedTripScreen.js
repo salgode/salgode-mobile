@@ -38,8 +38,8 @@ class DetailedTripScreen extends Component {
     // this.props.fetchSlots(this.props.user.token, tripId)
   }
 
-  onPressStartTrip(tripStops, tripId, token) {
-    this.props.navigation.navigate('StartTrip', { tripStops, tripId, token })
+  onPressStartTrip(tripStops, tripId, token, trip) {
+    this.props.navigation.navigate('StartTrip', { tripStops, tripId, token, trip })
   }
 
   renderPassengers(passengers) {

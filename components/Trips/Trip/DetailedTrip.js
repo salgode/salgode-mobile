@@ -37,12 +37,12 @@ export const DetailedTrip = ({ trip, asDriver, driver, token, onPressStartTrip }
         method: 'post',
         url: urls.driver.trips.post.start(trip_id),
         headers: {
-          Authorization: token,
+          Authorization: `Bearer ${token}`,
         },
       })
       .then(resp => resp.data)
     const stops = trip.trip_route_points.map(r => r.name);
-    onPressStartTrip(stops, trip_id, token);
+    onPressStartTrip(stops, trip_id, token, trip);
   }
 
   const selfieImage = driver != null ? driver.avatar : 'placeholder'

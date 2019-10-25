@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { StyleSheet, ScrollView } from 'react-native'
 import { View, Text, Button } from 'native-base'
 import PropTypes from 'prop-types'
@@ -24,7 +24,7 @@ class CurrentStop extends Component {
 
   getUsersToPickUp() {
     return this.state.tripManifest.passengers.filter((passenger) => {
-      return passenger.trip_route.start.name == this.state.trip.trip_route_points[stopIndex].name;
+      return passenger.trip_route.start.name == this.state.trip.trip_route_points[this.state.stopIndex].name;
       //podria usarse el numero de parada, pero creo que este esto es mas general (y mas claro)
     })
   }
@@ -36,7 +36,7 @@ class CurrentStop extends Component {
 
     //}
     //if(is last stop)
-    if(stopIndex == trip.trip_route_points.length - 1) {
+    if(this.state.stopIndex == trip.trip_route_points.length - 1) {
       this.goToLastStop();
     }
     //if(is mid stop) {} //TODO this works for now but its is not the optimal condition
@@ -60,7 +60,7 @@ class CurrentStop extends Component {
           <View style={styles.bar} />
           <StopIcon type={this.state.after} />
         </View>
-        <Text style={styles.location}>{this.state.trip.trip_route_points[stopIndex].name}</Text>
+        <Text style={styles.location}>{this.state.trip.trip_route_points[this.state.stopIndex].name}</Text>
         <Text style={styles.pickup}>Recoge a:</Text>
         <ScrollView style={styles.userContainer}>
           {this.getUsersToPickUp.map((passenger, i) => (

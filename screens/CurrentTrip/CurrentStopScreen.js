@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withNavigation } from 'react-navigation'
 import CurrentStop from '../../components/CurrentTrip/CurrentStop'
 
 class CurrentStopScreen extends Component {
@@ -7,8 +8,8 @@ class CurrentStopScreen extends Component {
     super(props);
 
     this.state = {
-      trip: this.props.trip,
-      tripManifest: this.props.tripManifest,
+      trip: this.props.navigation.getParam('trip', null),
+      tripManifest: this.props.navigation.getParam('manifest', null),
     };
   }
 
@@ -27,4 +28,4 @@ class CurrentStopScreen extends Component {
 
 CurrentStopScreen.propTypes = {}
 
-export default CurrentStopScreen
+export default withNavigation(CurrentStopScreen)

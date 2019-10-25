@@ -8,20 +8,22 @@ class CurrentStartScreen extends Component {
     this.onPressStartTrip = this.onPressStartTrip.bind(this)
   }
 
-  onPressStartTrip() {
-    this.props.navigation.navigate('StopTrip')
+  onPressStartTrip(trip, manifest) {
+    this.props.navigation.navigate('StopTrip', { trip, manifest })
   }
 
   render() {
     const tripStops = this.props.navigation.getParam('tripStops', null)
     const tripId = this.props.navigation.getParam('tripId', null)
     const token = this.props.navigation.getParam('token', null)
+    const trip = this.props.navigation.getParam('trip', null)
     return (
       <TripStart
         stops={tripStops}
         onPressStartTrip={this.onPressStartTrip}
         tripId={tripId}
         token={token}
+        trip={trip}
       />
     )
   }

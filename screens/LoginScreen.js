@@ -76,8 +76,8 @@ class LoginScreen extends Component {
       alert(lang.signin.error)
     } else {
       const { data } = user.payload
-      AsyncStorage.setItem('@userToken', data.token)
-      AsyncStorage.setItem('@userId', data.userId)
+      AsyncStorage.setItem('@userToken', String(JSON.stringify(data.token)))
+      AsyncStorage.setItem('@userId', String(JSON.stringify(data.userId)))
       this.props.navigation.navigate('Main')
     }
   }

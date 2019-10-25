@@ -18,8 +18,8 @@ class CurrentStop extends Component {
       after: this.props.after,
     };
 
+    
     this.goToNextStop = this.goToNextStop.bind(this);
-    this.getUsersToPickUp = this.getUsersToPickUp.bind(this);
   }
 
   getUsersToPickUp() {
@@ -35,14 +35,14 @@ class CurrentStop extends Component {
     //if(stopIndex == 0) {
 
     //}
-    //if(is last stop)
-    if(this.state.stopIndex == trip.trip_route_points.length - 1) {
+    //if(is last stop) {}
+    if(this.state.stopIndex == this.state.trip.trip_route_points.length - 1) {
       this.goToLastStop();
     }
-    //if(is mid stop) {} //TODO this works for now but its is not the optimal condition
+    //if(is mid stop) {}
     else {
       this.setState({
-        stopIndex: stopIndex+1,
+        stopIndex: this.state.stopIndex+1,
       })
     }
   }
@@ -63,7 +63,7 @@ class CurrentStop extends Component {
         <Text style={styles.location}>{this.state.trip.trip_route_points[this.state.stopIndex].name}</Text>
         <Text style={styles.pickup}>Recoge a:</Text>
         <ScrollView style={styles.userContainer}>
-          {this.getUsersToPickUp.map((passenger, i) => (
+          {this.getUsersToPickUp().map((passenger, i) => (
             <UserToPickUp name={passenger.passenger_name}  
             location={passenger.trip_route.start.name} /*la location no esta demas? porque solo se muestran las personas a recoger en la parada actual. o es la location a la cual quieren llegar?*/
             key={i} />

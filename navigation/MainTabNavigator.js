@@ -14,7 +14,8 @@ import TripsNavigator from './TripsNavigator'
 import EditProfileScreen from '../screens/EditProfileScreen'
 import DetailedTripScreen from '../screens/DetailedTripScreen'
 import TripRequestScreen from '../screens/TripRequestScreen'
-import TripStart from '../screens/CurrentTrip/CurrentStartScreen'
+import CurrentStartScreen from '../screens/CurrentTrip/CurrentStartScreen'
+import CurrentStopScreen from '../screens/CurrentTrip/CurrentStopScreen'
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -25,7 +26,8 @@ const TripsStack = createStackNavigator(
   {
     Trips: TripsNavigator,
     DetailedTrip: DetailedTripScreen,
-    StartTrip: TripStart,
+    StartTrip: CurrentStartScreen,
+    StopTrip: CurrentStopScreen,
   },
   config
 )

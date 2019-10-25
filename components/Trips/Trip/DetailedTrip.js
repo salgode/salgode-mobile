@@ -5,6 +5,7 @@ import Location from './Location'
 import PropTypes from 'prop-types'
 import Colors from '../../../constants/Colors'
 import TimeInfo from './TimeInfo'
+import { urls } from '../../../config/api/index'
 import { client } from '../../../redux/store'
 import { Ionicons } from '@expo/vector-icons'
 
@@ -30,22 +31,18 @@ export const DetailedTrip = ({ trip, asDriver, driver, token, onPressStartTrip }
   }
 
   async function startTrip(token) {
+    const { trip_id } = trip;
     await client
       .request({
         method: 'post',
-        url: `/driver/trips/${trip.trip_id}/journey/start`,
+        url: urls.driver.trips.post.start(trip_id),
         headers: {
           Authorization: token,
         },
       })
-      .then(resp => {console.log(resp);
-      })
-    onPressStartTrip(['Escuela Militar', 'Principe de Gales', 'San Joaquín'])
-    
-    // TODO: connect to server
-    // TODO: navigate to current trip screen
-    // eslint-disable-next-line no-console
-    // console.log('trip!', token)
+      .then(resp => resp.data)
+    const stops = trip.trip_route_points.map(r => r.name);
+    onPressStartTrip(stops, trip_id, token);
   }
 
   const selfieImage = driver != null ? driver.avatar : 'placeholder'

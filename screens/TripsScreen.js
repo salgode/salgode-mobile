@@ -22,8 +22,8 @@ class TripsScreen extends Component {
     this.onPressTrip = this.onPressTrip.bind(this)
   }
 
-  onPressTrip(asDriver = false, tripId) {
-    this.props.navigation.navigate('DetailedTrip', { asDriver, tripId })
+  onPressTrip(asDriver = false, trip) {
+    this.props.navigation.navigate('DetailedTrip', { asDriver, trip })
   }
 
   componentDidMount() {
@@ -40,6 +40,7 @@ class TripsScreen extends Component {
   }
 
   render() {
+    // console.log(this.props.trips)
     return (
       <View style={styles.container}>
         {this.state.loading && <Spinner color="blue" />}

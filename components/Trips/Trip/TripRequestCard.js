@@ -84,6 +84,7 @@ export default class TripRequestCard extends Component {
     const selfieImage =
       this.state.passenger != null ? this.state.passenger.avatar : 'placeholder'
 
+    // console.log(this.state.passenger)
     return this.state.passenger !== null && this.state.slot ? (
       <Card style={styles.container}>
         <CardItem>
@@ -91,11 +92,11 @@ export default class TripRequestCard extends Component {
             {selfieImage && selfieImage !== 'placeholder' ? (
               <Thumbnail source={{ uri: selfieImage }} />
             ) : (
-              <Ionicons
-                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-                size={40}
-              />
-            )}
+                <Ionicons
+                  name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                  size={40}
+                />
+              )}
             <Text style={styles.userText}>
               {this.state.passenger.first_name} {this.state.passenger.last_name}
             </Text>

@@ -56,7 +56,7 @@ class CreateTripScreen extends Component {
       hours = pickedDate.getHours()
       minutes = pickedDate.getMinutes()
     }
-    const filteredSlots = spotsFilter(spots, [startStop, endStop])
+    const filteredSlots = spots ? spotsFilter(spots, [startStop, endStop]) : null
 
     return (
       <View style={styles.container}>

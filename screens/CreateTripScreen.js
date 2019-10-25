@@ -200,12 +200,12 @@ const mapStateToProps = ({ user, createTrip, spots }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  loginUser,
-  setStartStop,
-  setEndStop,
-  setStartTime,
-  clearStartStop,
-  clearEndStop,
+  loginUser: (email, password) => dispatch(loginUser(email, password)),
+  setStartStop: item => dispatch(setStartStop(item)),
+  setEndStop: item => dispatch(setEndStop(item)),
+  setStartTime: time => dispatch(setStartTime(time)),
+  clearStartStop: () => dispatch(clearStartStop()),
+  clearEndStop: () => dispatch(clearEndStop()),
   getAllSpots: token => dispatch(getAllSpots(token)),
 })
 

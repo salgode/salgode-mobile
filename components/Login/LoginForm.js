@@ -8,10 +8,11 @@ class LoginForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      email: '',
-      password: '',
-      emailValidity: false,
-      passwordValidity: false,
+      // TODO: cambiar!!!
+      email: 'example@mail.com',
+      password: 'password',
+      emailValidity: true,
+      passwordValidity: true,
     }
 
     this.onChangePassword = this.onChangePassword.bind(this)

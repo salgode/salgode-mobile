@@ -3,7 +3,7 @@ import { StyleSheet, View, Text } from 'react-native'
 import { Appearance } from 'react-native-appearance'
 import { connect } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
-import { Button } from 'native-base'
+import { Button, Spinner } from 'native-base'
 import {
   setStartStop,
   setEndStop,
@@ -55,6 +55,7 @@ class CreateTripScreen extends Component {
       clearEndStop,
       setStartStop,
       setEndStop,
+      loading,
     } = this.props
     const disabled = startStop && endStop && startTime ? false : true
     const { pickedDate } = this.state
@@ -67,6 +68,10 @@ class CreateTripScreen extends Component {
       minutes = pickedDate.getMinutes()
     }
     const filteredSpots = spots // spotsFilter(spots, [startStop, endStop])
+
+    if (loading) {
+      return <Spinner color={'#0000FF'} />
+    }
 
     return (
       <View style={styles.container}>
@@ -190,7 +195,9 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = ({ user, createTrip, spots }) => {
+  console.log(spots.loading)
   return {
+    loading: spots.loading,
     user: user,
     startStop: createTrip.startStop,
     endStop: createTrip.endStop,

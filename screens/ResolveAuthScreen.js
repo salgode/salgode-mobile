@@ -21,7 +21,12 @@ class ResolveAuthScreen extends Component {
     let userId = await AsyncStorage.getItem('@userId')
     // console.log(userToken, userId)
 
-    if (!userToken || !userId) {
+    if (
+      !userToken ||
+      !userId ||
+      userToken === 'undefined' ||
+      userId === 'undefined'
+    ) {
       this.props.navigation.navigate('Login')
     } else {
       userToken = JSON.parse(userToken)

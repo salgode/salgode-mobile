@@ -7,15 +7,15 @@ export default function createTripReducer(state = {}, action) {
     case createTripActions.SET_END_STOP:
       return { ...state, endStop: action.payload }
     case createTripActions.CLEAR_START_STOP:
-      return { ...state, startStop: '' }
+      return { ...state, startStop: {} }
     case createTripActions.CLEAR_END_STOP:
-      return { ...state, endStop: '' }
+      return { ...state, endStop: {} }
     case createTripActions.SET_START_TIME:
       return { ...state, startTime: action.payload }
     case createTripActions.CLEAR_CREATE_TRIP_INFO:
       return {
-        startStop: '',
-        endStop: '',
+        startStop: {},
+        endStop: {},
         startTime: '',
       }
     case createTripActions.CREATE_TRIP:

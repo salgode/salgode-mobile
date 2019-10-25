@@ -1,4 +1,4 @@
-import { getBaseHeaders } from '../../config/api/headers'
+import { getDefaultHeaders, getBaseHeaders, urls } from '../../config/api'
 
 export const actions = {
   SET_START_STOP: 'SET_START_STOP',
@@ -55,7 +55,7 @@ export function createTrip(route_points, etd, userId, token) {
     type: actions.CREATE_TRIP,
     payload: {
       request: {
-        url: `/trips`,
+        url: urls.driver.trips.post.trip(),
         method: 'post',
         headers: getBaseHeaders(token),
         data: {

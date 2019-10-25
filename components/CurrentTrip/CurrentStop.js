@@ -18,8 +18,8 @@ class CurrentStop extends Component {
       after: this.props.after,
     };
 
-    
     this.goToNextStop = this.goToNextStop.bind(this);
+    this.getUsersToPickUp = this.getUsersToPickUp.bind(this);
   }
 
   getUsersToPickUp() {
@@ -64,7 +64,7 @@ class CurrentStop extends Component {
         <Text style={styles.pickup}>Recoge a:</Text>
         <ScrollView style={styles.userContainer}>
           {this.getUsersToPickUp().map((passenger, i) => (
-            <UserToPickUp name={passenger.passenger_name}  
+            <UserToPickUp name={passenger.passenger_name}
             location={passenger.trip_route.start.name} /*la location no esta demas? porque solo se muestran las personas a recoger en la parada actual. o es la location a la cual quieren llegar?*/
             key={i} />
           ))}

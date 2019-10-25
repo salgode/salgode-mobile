@@ -195,7 +195,6 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = ({ user, createTrip, spots }) => {
-  console.log(spots.loading)
   return {
     loading: spots.loading,
     user: user,

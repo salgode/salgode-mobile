@@ -63,25 +63,9 @@ function validatePlate(str) {
   }
   str = str.trim()
 
-  // old format: XX1234
-  let firstLetter = 'ABCEFGHDKLNPRSTUVXYZWM'
-  let secondLetter = 'ABCDEFGHIJKLNPRSTUVXYZW'
-  firstLetter = '[' + firstLetter + firstLetter.toLowerCase() + ']'
-  secondLetter = '[' + secondLetter + secondLetter.toLowerCase() + ']'
-  const oldFormat = new RegExp(
-    '^' + firstLetter + secondLetter + '[1-9][0-9][0-9][0-9]$',
-    'g'
-  )
+  const pattern = new RegExp('\\b([A-Z]{2}([A-Z]|[0-9]){2}[0-9]{2})\\b', 'gi')
 
-  // new format: XXXX12
-  const whitelist = 'BCDFGHJKLPRSTVWXYZ'
-  const letter = '[' + whitelist + whitelist.toLowerCase() + ']'
-  const newFormat = new RegExp(
-    '^' + letter + letter + letter + letter + '[1-9][0-9]$',
-    'g'
-  )
-
-  return oldFormat.test(str) || newFormat.test(str)
+  return pattern.test(str)
 }
 
 function validateColor(str) {

@@ -48,6 +48,11 @@ class CreateTripScreen extends Component {
     this.hideDateTimePicker()
   }
 
+  isVerifiedDriver = () => {
+    console.log(this.props.user.token);
+    return this.props.user.user_verifications.drivers_license && this.props.user.vehicles.length;
+  }
+
   render() {
     const {
       navigation,
@@ -79,72 +84,86 @@ class CreateTripScreen extends Component {
       return <Spinner color={'#0000FF'} />
     }
 
-    return (
-      <View style={styles.container}>
-        <View>
-          <CardInput
-            onTouchablePress={() =>
-              navigation.navigate('SpotSelectorScreen', {
-                title: 'Seleccionar #Desde',
-                text: '#Desde',
-                onClearPress: clearStartStop,
-                onItemPress: setStartStop,
-                data: filteredSpots,
-              })
-            }
-            placeholder="Filtra por Comuna o Parada"
-            value={startStop.name}
-            text="#Desde"
-            editable={false}
-            onClearPress={clearStartStop}
-          />
+    let isConfirmedDriver = this.isVerifiedDriver(); 
 
-          <CardInput
-            onTouchablePress={() =>
-              navigation.navigate('SpotSelectorScreen', {
-                title: 'Seleccionar #A',
-                text: '#A',
-                onClearPress: clearStartStop,
-                onItemPress: setEndStop,
-                data: filteredSpots,
-              })
-            }
-            placeholder="Filtra por Comuna o Parada"
-            value={endStop.name}
-            text="#A"
-            editable={false}
-            onClearPress={clearEndStop}
-          />
+    if(isConfirmedDriver) {
+      return (
+        <View style={styles.container}>
+          <View>
+            <CardInput
+              onTouchablePress={() =>
+                navigation.navigate('SpotSelectorScreen', {
+                  title: 'Seleccionar #Desde',
+                  text: '#Desde',
+                  onClearPress: clearStartStop,
+                  onItemPress: setStartStop,
+                  data: filteredSpots,
+                })
+              }
+              placeholder="Filtra por Comuna o Parada"
+              value={startStop.name}
+              text="#Desde"
+              editable={false}
+              onClearPress={clearStartStop}
+            />
+  
+            <CardInput
+              onTouchablePress={() =>
+                navigation.navigate('SpotSelectorScreen', {
+                  title: 'Seleccionar #A',
+                  text: '#A',
+                  onClearPress: clearStartStop,
+                  onItemPress: setEndStop,
+                  data: filteredSpots,
+                })
+              }
+              placeholder="Filtra por Comuna o Parada"
+              value={endStop.name}
+              text="#A"
+              editable={false}
+              onClearPress={clearEndStop}
+            />
+          </View>
+  
+          <View style={styles.group}>
+            <Button style={styles.dateButton} onPress={this.showDateTimePicker}>
+              <Text>
+                {pickedDate
+                  ? `${day} - ${hours}:${minutes < 10 ? '0' : ''}${minutes}`
+                  : 'Selecciona Hora/Fecha de Salida'}
+              </Text>
+            </Button>
+            <DateTimePicker
+              isDarkModeEnabled={colorScheme === 'dark'}
+              mode="datetime"
+              isVisible={this.state.isDateTimePickerVisible}
+              onConfirm={this.handleDatePicked}
+              onCancel={this.hideDateTimePicker}
+            />
+          </View>
+          <View>
+            <Button
+              block
+              style={disabled ? styles.addButtonDisabled : styles.addButton}
+              disabled={disabled}
+              onPress={() => navigation.navigate('AddStopsScreen')}
+            >
+              <Text style={styles.whiteText}>Siguiente</Text>
+            </Button>
+          </View>
         </View>
-
-        <View style={styles.group}>
-          <Button style={styles.dateButton} onPress={this.showDateTimePicker}>
-            <Text>
-              {pickedDate
-                ? `${day} - ${hours}:${minutes < 10 ? '0' : ''}${minutes}`
-                : 'Selecciona Hora/Fecha de Salida'}
-            </Text>
-          </Button>
-          <DateTimePicker
-            isDarkModeEnabled={colorScheme === 'dark'}
-            mode="datetime"
-            isVisible={this.state.isDateTimePickerVisible}
-            onConfirm={this.handleDatePicked}
-            onCancel={this.hideDateTimePicker}
-          />
-        </View>
+      )
+    } 
+    else { //not verified driver
+      return (
         <View>
-          <Button
-            block
-            style={disabled ? styles.addButtonDisabled : styles.addButton}
-            disabled={disabled}
-            onPress={() => navigation.navigate('AddStopsScreen')}
-          >
-            <Text style={styles.whiteText}>Siguiente</Text>
-          </Button>
+          <Text>
+            Para poder crear viajes debes tener un auto (e indicar sus cualidades) y haber enviado una foto por ambos lados de tu licencia. 
+          </Text>
         </View>
-      </View>
-    )
+      )
+    }
+
   }
 }
 
@@ -205,6 +224,7 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = ({ user, createTrip, spots }) => {
+  console.log(user);  
   return {
     loading: spots.loading,
     user: user,

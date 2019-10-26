@@ -24,7 +24,7 @@ class MyTrips extends Component {
             data={this.props.trips}
             renderItem={({ item }) => (
               <Trip
-                timestamp={item.trip_times.etd}
+                timestamp={item.etd_info.etd}
                 spacesUsed={item.spacesUsed}
                 user={item.driver}
                 status={item.trip_status}

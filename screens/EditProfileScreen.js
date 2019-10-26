@@ -222,7 +222,7 @@ const EditProfileScreen = props => {
   const carFields = [
     {
       label: 'Patente',
-      value: carPlate.toUpperCase(),
+      value: carPlate ? carPlate.toUpperCase() : carPlate,
       setValue: setCarPlate,
       validate: validatePlate,
     },

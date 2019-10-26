@@ -3,7 +3,11 @@ import { View, StyleSheet, Alert, Text } from 'react-native'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import ChooseTrips from '../components/Trips/ChooseTrips'
-import { fetchFutureTrips } from '../redux/actions/trips'
+import {
+  fetchFutureTrips,
+  setSearchStartPlace,
+  cleanSearchStartPlace,
+} from '../redux/actions/trips'
 import Colors from '../constants/Colors'
 import CardInput from '../components/CardInput'
 
@@ -67,7 +71,7 @@ class ChooseTripsScreen extends Component {
   }
 
   render() {
-    const { navigation } = this.props
+    const { navigation, startPlace } = this.props
     return (
       <View style={styles.container}>
         <View>
@@ -76,16 +80,34 @@ class ChooseTripsScreen extends Component {
               navigation.navigate('SpotSelectorScreen', {
                 title: 'Buscas #Desde',
                 text: '#Desde',
-                onClearPress: () => console.log('onClearPress'),
-                onItemPress: () => console.log('onItemPress'),
-                data: [],
+                onClearPress: this.props.cleanSearchStartPlace,
+                onItemPress: this.props.setSearchStartPlace,
+                data: [
+                  // TODO: Esto deberia ser propio de una request (GET all places)
+                  // Ojo que esta request ya se hace una vez en create trip
+                  // Se debería hacer una sola vez al iniciar sesion y guardar los places en el storage
+                  {
+                    address:
+                      'San Pío X 5255, Vitacura, Providencia, Región Metropolitana',
+                    city: 'SANTIAGO',
+                    id: 'spt_d1cd6d79-6fad-4b37-9f87-48e169c9d530',
+                    name: 'Centro comercial Plaza San Pío, Vitacura 5255',
+                  },
+                  {
+                    address:
+                      'San Pío X 5255, Vitacura, Providencia, Región Metropolitana',
+                    city: 'SANTIAGO',
+                    id: 'spt_d1cd6d79-6fad-4b37-9f87-48e169c9d530',
+                    name: 'Cenhuhcuahcusa',
+                  },
+                ],
               })
             }
             placeholder="Filtra por Comuna o Parada"
-            value={'startStop.name'}
+            value={startPlace ? startPlace.name : ''}
             text="#Desde"
             editable={false}
-            onClearPress={() => console.log('onClearPress 2')}
+            onClearPress={this.props.cleanSearchStartPlace}
           />
         </View>
 
@@ -111,6 +133,8 @@ ChooseTripsScreen.propTypes = {
     navigate: PropTypes.func.isRequired,
   }).isRequired,
   trips: PropTypes.array.isRequired,
+  setSearchStartPlace: PropTypes.func.isRequired,
+  cleanSearchStartPlace: PropTypes.func.isRequired,
 }
 
 ChooseTripsScreen.defaultProps = {
@@ -129,11 +153,14 @@ const mapStateToProps = state => {
   return {
     user: state.user,
     trips: state.trips.open || [],
+    startPlace: state.trips.startPlace,
   }
 }
 
 const mapDispatchToProps = dispatch => ({
   fetchFutureTrips: token => dispatch(fetchFutureTrips(token)),
+  setSearchStartPlace: item => dispatch(setSearchStartPlace(item)),
+  cleanSearchStartPlace: () => dispatch(cleanSearchStartPlace()),
 })
 
 ChooseTripsScreen.navigationOptions = {

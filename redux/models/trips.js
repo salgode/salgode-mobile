@@ -1,3 +1,6 @@
-const futureTripsModel = []
+export const futureTripsModel = {
+  futureTripsModel: [],
+  startPlace: {},
+}
 
 export default futureTripsModel

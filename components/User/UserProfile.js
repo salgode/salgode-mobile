@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { StyleSheet } from 'react-native'
 import { View, Text, Thumbnail } from 'native-base'
 import PropTypes from 'prop-types'
-import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'
+import { MaterialCommunityIcons, AntDesign, Octicons } from '@expo/vector-icons'
 
 const photoSize = 96
 
@@ -49,6 +49,19 @@ class UserProfile extends Component {
     }
   }
 
+  renderVerification(verified, title) {
+    return (
+      <View style={styles.verifiedContainer}>
+        <Text>{title}</Text>
+        <Octicons
+          name={verified ? 'verified' : 'unverified'}
+          color={verified ? 'green' : 'red'}
+          size={20}
+        />
+      </View>
+    )
+  }
+
   render() {
     const { user } = this.props
 
@@ -63,11 +76,13 @@ class UserProfile extends Component {
             {user.phone && this.readonlyField('Celular', user.phone)}
           </View>
         </View>
-        <View>
+        {this.renderVerification(user.dniVerified, 'Usuario verificado')}
+        {this.renderVerification(user.licenceVerified, 'Conductor verificado')}
+        {/* <View>
           <Text style={styles.idTitle}>Identificación de usuario</Text>
           {this.renderIdentification(user.dniFront, 'Carnet de Identidad')}
           {this.renderIdentification(user.licenceFront, 'Licencia de Conducir')}
-        </View>
+        </View> */}
       </View>
     )
   }
@@ -81,8 +96,10 @@ UserProfile.propTypes = {
     last_name: PropTypes.string.isRequired,
     phone: PropTypes.string,
     email: PropTypes.string,
-    dniFront: PropTypes.string,
-    licenceFront: PropTypes.string,
+    //dniFront: Si llegamos a mostrarlo: PropTypes.string,
+    //licenceFront: Si llegamos a mostrarlo: PropTypes.string,
+    dniVerified: PropTypes.bool,
+    licenceVerified: PropTypes.bool,
   }).isRequired,
 }
 
@@ -131,6 +148,10 @@ const styles = StyleSheet.create({
     height: photoSize,
     resizeMode: 'center',
     width: photoSize,
+  },
+  verifiedContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
   },
 })
 

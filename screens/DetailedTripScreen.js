@@ -47,7 +47,9 @@ class DetailedTripScreen extends Component {
       this.props.user.token,
       trip.trip_id
     )
-    console.log(reservations)
+    // console.log(reservations)
+    // console.log(asDriver)
+    this.setState({ loading: false })
     if (!reservations) {
       alert(
         'Hubo un problema obteniendo las reservas. Por favor intentalo de nuevo.'
@@ -55,7 +57,6 @@ class DetailedTripScreen extends Component {
     } else {
       this.setState({ reservations })
     }
-    this.setState({ loading: false })
   }
 
   onPressStartTrip(tripStops, tripId, token, trip) {
@@ -84,7 +85,7 @@ class DetailedTripScreen extends Component {
         {this.state.loading && <Spinner color="blue" />}
         {!this.state.loading && (
           <DetailedTrip
-            asDriver={this.asDriver}
+            asDriver={this.state.asDriver}
             trip={this.state.trip}
             driver={this.state.trip.driver}
             token={this.props.user.token}

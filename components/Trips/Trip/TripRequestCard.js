@@ -61,7 +61,7 @@ export default class TripRequestCard extends Component {
     if (status !== 'accepted') {
       requestObject.data = this.state.body
     }
-
+    // console.log(requestObject)
     await client
       .request(requestObject)
       .then(resp => {
@@ -80,10 +80,14 @@ export default class TripRequestCard extends Component {
 
   render() {
     const { reservation } = this.state
+    // console.log(reservation)
     const { passenger } = this.props.reservation
     const selfieImage = passenger.avatar || 'placeholder'
 
     // console.log(this.state.passenger)
+    if (!reservation) {
+      return null
+    }
     return (
       <Card style={styles.container}>
         <CardItem>
@@ -108,7 +112,7 @@ export default class TripRequestCard extends Component {
         <CardItem style={styles.locationContainer}>
           <Location
             color={'#0000FF'}
-            location={reservation.reservation_route_points.start}
+            location={reservation.reservation_route.start}
           />
           <Location
             color={
@@ -117,7 +121,7 @@ export default class TripRequestCard extends Component {
                 : Colors.textGray*/
               '#33C534'
             }
-            location={reservation.reservation_route_points.end}
+            location={reservation.reservation_route.end}
           />
         </CardItem>
 

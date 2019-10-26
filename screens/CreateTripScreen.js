@@ -84,7 +84,7 @@ class CreateTripScreen extends Component {
       return <Spinner color={'#0000FF'} />
     }
 
-    let isConfirmedDriver = this.isVerifiedDriver(); 
+    let isConfirmedDriver = this.isVerifiedDriver();
 
     if(isConfirmedDriver) {
       return (
@@ -106,7 +106,7 @@ class CreateTripScreen extends Component {
               editable={false}
               onClearPress={clearStartStop}
             />
-  
+
             <CardInput
               onTouchablePress={() =>
                 navigation.navigate('SpotSelectorScreen', {
@@ -124,7 +124,7 @@ class CreateTripScreen extends Component {
               onClearPress={clearEndStop}
             />
           </View>
-  
+
           <View style={styles.group}>
             <Button style={styles.dateButton} onPress={this.showDateTimePicker}>
               <Text>
@@ -153,12 +153,12 @@ class CreateTripScreen extends Component {
           </View>
         </View>
       )
-    } 
+    }
     else { //not verified driver
       return (
         <View>
           <Text>
-            Para poder crear viajes debes tener un auto (e indicar sus cualidades) y haber enviado una foto por ambos lados de tu licencia. 
+            Para poder crear viajes debes tener un auto (e indicar sus cualidades) y haber enviado una foto por ambos lados de tu licencia.
           </Text>
         </View>
       )
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = ({ user, createTrip, spots }) => {
-  console.log(user);  
+  console.log(user);
   return {
     loading: spots.loading,
     user: user,

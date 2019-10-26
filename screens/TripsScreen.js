@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, StyleSheet } from 'react-native'
 import PropTypes from 'prop-types'
 import Trips from '../components/Trips/Trips'
-import { Spinner } from 'native-base'
+import { Spinner, Text } from 'native-base'
 import { connect } from 'react-redux'
 import { userTrips, driverTrips } from '../redux/actions/user'
 
@@ -52,7 +52,7 @@ class TripsScreen extends Component {
 
     let isConfirmedDriver = this.isVerifiedDriver(); 
 
-    if(isConfirmedDriver) {
+    if(isConfirmedDriver || this.props.type == 'pedidos') {
       return (
         <View style={styles.container}>
           {this.state.loading && <Spinner color="blue" />}

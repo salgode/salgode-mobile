@@ -9,6 +9,7 @@ import PropTypes from 'prop-types'
 import { Ionicons } from '@expo/vector-icons'
 import { client } from '../../../redux/store'
 import { getBaseHeaders, urls } from '../../../config/api'
+import { shareToWhatsApp } from '../../../utils/whatsappShare'
 
 export default class TripRequestCard extends Component {
   constructor(props) {
@@ -98,11 +99,11 @@ export default class TripRequestCard extends Component {
                 style={{ width: 40, height: 40 }}
               />
             ) : (
-                <Ionicons
-                  name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-                  size={40}
-                />
-              )}
+              <Ionicons
+                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                size={40}
+              />
+            )}
             <Text style={styles.userText}>
               {passenger.name} {passenger.last_name}
             </Text>
@@ -183,6 +184,28 @@ export default class TripRequestCard extends Component {
                 }}
               >
                 Contactar
+              </Text>
+            </Button>
+            <Button
+              style={{ ...styles.buttonTrip, backgroundColor: 'green' }}
+              onPress={() =>
+                passenger.phone && passenger.phone.includes('+')
+                  ? shareToWhatsApp(
+                      'Hola! Encontré tu viaje en #Salgode y me sirve mucho',
+                      passenger.phone
+                    )
+                  : null
+              }
+            >
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 15,
+                  fontWeight: '700',
+                  alignSelf: 'center',
+                }}
+              >
+                Whatsapp
               </Text>
             </Button>
           </View>

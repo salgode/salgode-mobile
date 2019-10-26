@@ -50,6 +50,7 @@ TripsStack.path = ''
 const ChooseTripsStack = createStackNavigator({
   ChooseTrips: ChooseTripsScreen,
   RequestTrip: TripRequestScreen,
+  SpotSelectorScreen,
 })
 const EditProfileStack = createStackNavigator(
   {

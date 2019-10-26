@@ -7,6 +7,7 @@ import PropTypes from 'prop-types'
 import Colors from '../../constants/Colors'
 import * as Permissions from 'expo-permissions'
 import { withNavigation } from 'react-navigation'
+import { validPhone } from '../../utils/input';
 
 class SignupForm extends Component {
   constructor(props) {
@@ -66,7 +67,7 @@ class SignupForm extends Component {
   }
 
   onChangePhoneNumber(phoneNumber) {
-    const validity = phoneNumber.match(/^(\+56)?\d{9}$/)
+    const validity = validPhone(phoneNumber);
     this.setState(oldState => ({
       phoneNumber,
       validity: { ...oldState.validity, phoneNumber: !!validity },

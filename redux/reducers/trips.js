@@ -2,6 +2,10 @@ import { actions as tripActions } from '../actions/trips'
 
 export default function tripsReducer(state = {}, action) {
   switch (action.type) {
+    case tripActions.CLEAN_SEARCH_START_PLACE:
+      return { ...state, startPlace: {} }
+    case tripActions.SET_SEARCH_START_PLACE:
+      return { ...state, startPlace: action.payload }
     case tripActions.TRIPS_FETCH_FUTURE_TRIPS:
       return { ...state, loading: true }
     case tripActions.TRIPS_FETCH_FUTURE_TRIPS_SUCCESS:

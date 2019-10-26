@@ -8,6 +8,21 @@ export const actions = {
   TRIPS_FETCH_TRIP: 'TRIPS/FETCH_TRIP',
   TRIPS_FETCH_TRIP_SUCCESS: 'TRIPS/FETCH_TRIP_SUCCESS',
   TRIPS_FETCH_TRIP_FAIL: 'TRIP/FETCH_TRIP_FAIL',
+  SET_SEARCH_START_PLACE: 'SET_SEARCH_START_PLACE',
+  CLEAN_SEARCH_START_PLACE: 'CLEAN_SEARCH_START_PLACE',
+}
+
+export function cleanSearchStartPlace() {
+  return {
+    type: actions.CLEAN_SEARCH_START_PLACE,
+  }
+}
+
+export function setSearchStartPlace(startPlace) {
+  return {
+    type: actions.SET_SEARCH_START_PLACE,
+    payload: startPlace,
+  }
 }
 
 export function fetchFutureTrips(authToken) {

@@ -98,7 +98,7 @@ class CreateTripScreen extends Component {
               navigation.navigate('SpotSelectorScreen', {
                 title: 'Seleccionar #A',
                 text: '#A',
-                onClearPress: clearStartStop,
+                onClearPress: clearEndStop,
                 onItemPress: setEndStop,
                 data: filteredSpots,
               })

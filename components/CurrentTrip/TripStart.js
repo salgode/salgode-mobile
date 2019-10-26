@@ -6,7 +6,6 @@ import StopsList from './StopsList'
 import { urls } from '../../config/api/index'
 import { client } from '../../redux/store'
 
-
 const TripStart = ({ stops = [], tripId, token, trip, onPressStartTrip }) => {
   async function startTrip(token) {
     await client
@@ -18,10 +17,10 @@ const TripStart = ({ stops = [], tripId, token, trip, onPressStartTrip }) => {
         },
       })
       .then(resp => resp.data)
-    fetchManifest(trip);
+    fetchManifest(trip)
   }
 
-  async function fetchManifest(trip){
+  async function fetchManifest(trip) {
     await client
       .request({
         method: 'get',
@@ -31,7 +30,7 @@ const TripStart = ({ stops = [], tripId, token, trip, onPressStartTrip }) => {
         },
       })
       .then(resp => {
-        onPressStartTrip(trip, resp.data);
+        onPressStartTrip(trip, resp.data)
       })
   }
 
@@ -40,16 +39,12 @@ const TripStart = ({ stops = [], tripId, token, trip, onPressStartTrip }) => {
       <Text style={styles.title}>#Llego en 5</Text>
       <Text>Paradas:</Text>
       <StopsList stops={stops} />
-      <Button 
-        style={styles.button}
-        onPress={() => startTrip(token)}
-      >
+      <Button style={styles.button} onPress={() => startTrip(token)}>
         <Text>Iniciar viaje</Text>
       </Button>
     </View>
   )
 }
-
 
 TripStart.propTypes = {
   stops: PropTypes.array,

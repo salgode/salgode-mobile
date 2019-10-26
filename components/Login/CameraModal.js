@@ -6,7 +6,14 @@ import { Camera } from 'expo-camera'
 import Layout from '../../constants/Layout'
 import getString from '../../languages'
 
-const CameraModal = ({ isCameraOn, closeCamera, onGetSelfie, destination, cameraType, text }) => {
+const CameraModal = ({
+  isCameraOn,
+  closeCamera,
+  onGetSelfie,
+  destination,
+  cameraType,
+  text,
+}) => {
   const [camera, setCamera] = React.useState(null)
 
   const getSelfie = async () => {
@@ -36,11 +43,14 @@ const CameraModal = ({ isCameraOn, closeCamera, onGetSelfie, destination, camera
           setCamera(ref)
         }}
         ratio="1:1"
-      >
-      </Camera>
+      ></Camera>
       <Container style={styles.container}>
         <H2>{text}</H2>
-        <Button borderRadius={10} style={styles.buttonCamera} onPress={getSelfie}>
+        <Button
+          borderRadius={10}
+          style={styles.buttonCamera}
+          onPress={getSelfie}
+        >
           <Text>{getString('camera.takePhoto')}</Text>
         </Button>
       </Container>
@@ -56,14 +66,6 @@ CameraModal.propTypes = {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    backgroundColor: 'transparent',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    marginTop: Layout.window.width,
-  },
   buttonCamera: {
     alignItems: 'center',
     flex: 1,
@@ -77,6 +79,14 @@ const styles = StyleSheet.create({
     height: Layout.window.width,
     position: 'absolute',
     width: Layout.window.width,
+  },
+  container: {
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    marginTop: Layout.window.width,
   },
   modal: {
     backgroundColor: 'black',

@@ -45,14 +45,17 @@ class TripsScreen extends Component {
   }
 
   isVerifiedDriver = () => {
-    return this.props.user.user_verifications.drivers_license && this.props.user.vehicles.length;
+    return (
+      this.props.user.user_verifications.drivers_license &&
+      this.props.user.vehicles.length
+    )
   }
   render() {
     // console.log(this.props.trips)
 
-    let isConfirmedDriver = this.isVerifiedDriver(); 
+    const isConfirmedDriver = this.isVerifiedDriver()
 
-    if(isConfirmedDriver || this.props.type == 'pedidos') {
+    if (isConfirmedDriver || this.props.type == 'pedidos') {
       return (
         <View style={styles.container}>
           {this.state.loading && <Spinner color="blue" />}
@@ -67,12 +70,13 @@ class TripsScreen extends Component {
           )}
         </View>
       )
-    } 
-    else { //not verified driver
+    } else {
+      //not verified driver
       return (
         <View>
           <Text>
-            Para poder crear viajes debes tener un auto (e indicar sus cualidades) y haber enviado una foto por ambos lados de tu licencia. 
+            Para poder crear viajes debes tener un auto (e indicar sus
+            cualidades) y haber enviado una foto por ambos lados de tu licencia.
           </Text>
         </View>
       )

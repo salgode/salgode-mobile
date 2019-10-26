@@ -3,14 +3,13 @@ import { withNavigation } from 'react-navigation'
 import CurrentStop from '../../components/CurrentTrip/CurrentStop'
 
 class CurrentStopScreen extends Component {
-
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       trip: this.props.navigation.getParam('trip', null),
       tripManifest: this.props.navigation.getParam('manifest', null),
-    };
+    }
 
     this.onPressCompleteTrip = this.onPressCompleteTrip.bind(this)
   }

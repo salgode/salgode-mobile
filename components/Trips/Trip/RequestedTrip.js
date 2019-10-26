@@ -43,11 +43,11 @@ const RequestedTrip = ({
             {user.driver_avatar ? (
               <Thumbnail source={{ uri: user.driver_avatar }} />
             ) : (
-                <Ionicons
-                  name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-                  size={40}
-                />
-              )}
+              <Ionicons
+                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                size={40}
+              />
+            )}
             <Text style={styles.userText}>{user.driver_name}</Text>
           </View>
         </View>

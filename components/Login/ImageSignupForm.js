@@ -9,14 +9,14 @@ import { Camera } from 'expo-camera'
 import { connect } from 'react-redux'
 import { signupUser, uploadImageUser } from '../../redux/actions/user'
 
-const getCameraType = (destination) => {
+const getCameraType = destination => {
   if (destination === 'selfie') {
     return Camera.Constants.Type.front
   }
   return Camera.Constants.Type.back
 }
 
-const getText = (destination) => {
+const getText = destination => {
   switch (destination) {
     case 'selfie':
       return 'Sonríe para la cámara'

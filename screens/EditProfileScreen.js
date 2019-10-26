@@ -203,7 +203,7 @@ const EditProfileScreen = props => {
       label: 'Teléfono',
       value: phone,
       maxLength: maxLengthPhone,
-      setValue: (value) => {
+      setValue: value => {
         if (notWrongPhone(value)) {
           setPhone(formatPhone(value))
         }
@@ -364,10 +364,7 @@ const EditProfileScreen = props => {
             <View style={styles.row}>
               <View style={styles.profilePhoto}>
                 {props.user.avatar ? (
-                  <Thumbnail
-                    source={{ uri: props.user.avatar }}
-                    large
-                  />
+                  <Thumbnail source={{ uri: props.user.avatar }} large />
                 ) : (
                   <MaterialCommunityIcons
                     name="face-profile"

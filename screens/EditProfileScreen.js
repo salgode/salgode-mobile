@@ -33,6 +33,12 @@ import PropTypes from 'prop-types'
 import { updateUser, signoutUser } from '../redux/actions/user'
 import Layout from '../constants/Layout'
 import Colors from '../constants/Colors'
+import {
+  formatPhone,
+  maxLengthPhone,
+  notWrongPhone,
+  validPhone,
+} from '../utils/input'
 
 function validateName(str) {
   if (typeof str !== 'string') {
@@ -151,6 +157,7 @@ const Field = ({ field }) => {
         value={field.value}
         secureTextEntry={field.isSecure}
         keyboardType={field.keyboardType || 'default'}
+        maxLength={field.maxLength ? field.maxLength(field.value) : undefined}
       />
       {validity === 'valid' ? (
         <Icon name="checkmark-circle" style={styles.checkMark} />
@@ -211,8 +218,13 @@ const EditProfileScreen = props => {
     {
       label: 'Teléfono',
       value: phone,
-      setValue: setPhone,
-      validate: phone => (phone ? phone.match(/^(\+56)?\d{9}$/) : ''),
+      maxLength: maxLengthPhone,
+      setValue: (value) => {
+        if (notWrongPhone(value)) {
+          setPhone(formatPhone(value))
+        }
+      },
+      validate: validPhone,
       keyboardType: 'phone-pad',
     },
     // {

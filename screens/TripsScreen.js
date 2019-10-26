@@ -45,7 +45,7 @@ class TripsScreen extends Component {
   }
 
   isVerifiedDriver = () => {
-    return false;//this.props.user.user_verifications.drivers_license && this.props.user.vehicles.length;
+    return this.props.user.user_verifications.drivers_license && this.props.user.vehicles.length;
   }
   render() {
     // console.log(this.props.trips)

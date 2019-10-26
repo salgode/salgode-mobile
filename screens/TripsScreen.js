@@ -23,7 +23,10 @@ class TripsScreen extends Component {
   }
 
   onPressTrip(asDriver = false, trip) {
-    this.props.navigation.navigate('DetailedTrip', { asDriver, trip })
+    this.props.navigation.navigate('DetailedTrip', {
+      asDriver: this.asDriver,
+      trip,
+    })
   }
 
   componentDidMount() {

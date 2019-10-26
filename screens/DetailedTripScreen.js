@@ -21,6 +21,7 @@ class DetailedTripScreen extends Component {
       loading: true,
       trip: null,
       reservations: [],
+      asDriver: false,
     }
 
     this.renderPassengers = this.renderPassengers.bind(this)
@@ -30,7 +31,7 @@ class DetailedTripScreen extends Component {
   async componentDidMount() {
     // TODO: get token from redux store
     this.setState({ loading: true })
-    this.asDriver = this.props.navigation.getParam('asDriver', null)
+    const asDriver = this.props.navigation.getParam('asDriver', null)
     const trip = this.props.navigation.getParam('trip', null)
     // if (asDriver) {
     //   this.props.fetchTripDriver(this.props.user.token, tripId)
@@ -41,12 +42,12 @@ class DetailedTripScreen extends Component {
     // }
     // this.props.fetchSlots(this.props.user.token, tripId)
     // console.log(trip)
-    this.setState({ trip })
+    this.setState({ trip, asDriver })
     const reservations = await getTripReservations(
       this.props.user.token,
       trip.trip_id
     )
-    // console.log(reservations)
+    console.log(reservations)
     if (!reservations) {
       alert(
         'Hubo un problema obteniendo las reservas. Por favor intentalo de nuevo.'
@@ -69,7 +70,7 @@ class DetailedTripScreen extends Component {
     return this.state.reservations.map((reservation, index) => (
       <TripRequestCard
         key={`passenger-${index}`}
-        passenger={reservation}
+        reservation={reservation}
         finishStop={finishStop}
         // slot={this.props.slots[index]}
         token={this.props.user.token}

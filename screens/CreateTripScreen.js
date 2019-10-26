@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import { Appearance } from 'react-native-appearance'
 import { connect } from 'react-redux'
-import { loginUser } from '../redux/actions/user'
 import { Button, Spinner } from 'native-base'
 import {
   setStartStop,
@@ -13,10 +12,10 @@ import {
 } from '../redux/actions/createtrip'
 import { getAllSpots } from '../redux/actions/spots'
 import DateTimePicker from 'react-native-modal-datetime-picker'
-import { spotsFilter } from '../utils/spotsFilter'
 import Colors from '../constants/Colors'
 import PropTypes from 'prop-types'
 import CardInput from '../components/CardInput'
+import { getUsercar } from '../redux/actions/user'
 
 const colorScheme = Appearance.getColorScheme()
 
@@ -28,6 +27,11 @@ class CreateTripScreen extends Component {
 
   componentDidMount = () => {
     this.props.getAllSpots(this.props.user.token)
+    this.props.getUserCar(this.props.user.token).then(response => {
+      if (!response.payload.data.vehicle_id) {
+        this.props.navigation.navigate('EditProfile')
+      }
+    })
   }
 
   showDateTimePicker = () => {
@@ -62,6 +66,8 @@ class CreateTripScreen extends Component {
       setEndStop,
       loading,
     } = this.props
+    console.log(this.props.user)
+
     const disabled = startStop && endStop && startTime ? false : true
     const { pickedDate } = this.state
     let day
@@ -167,6 +173,7 @@ CreateTripScreen.navigationOptions = {
 
 CreateTripScreen.propTypes = {
   getAllSpots: PropTypes.func.isRequired,
+  getUserCar: PropTypes.func.isRequired,
   setStartTime: PropTypes.func.isRequired,
   setStartStop: PropTypes.func.isRequired,
   setEndStop: PropTypes.func.isRequired,
@@ -176,6 +183,9 @@ CreateTripScreen.propTypes = {
   clearStartStop: PropTypes.func.isRequired,
   clearEndStop: PropTypes.func.isRequired,
   spots: PropTypes.arrayOf(PropTypes.object).isRequired,
+  user: PropTypes.shape({
+    token: PropTypes.string.isRequired,
+  }).isRequired,
 }
 
 const styles = StyleSheet.create({
@@ -226,13 +236,13 @@ const mapStateToProps = ({ user, createTrip, spots }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  loginUser: (email, password) => dispatch(loginUser(email, password)),
   setStartStop: item => dispatch(setStartStop(item)),
   setEndStop: item => dispatch(setEndStop(item)),
   setStartTime: time => dispatch(setStartTime(time)),
   clearStartStop: () => dispatch(clearStartStop()),
   clearEndStop: () => dispatch(clearEndStop()),
   getAllSpots: token => dispatch(getAllSpots(token)),
+  getUserCar: token => dispatch(getUsercar(token)),
 })
 
 CreateTripScreen.navigationOptions = {

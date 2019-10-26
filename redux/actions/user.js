@@ -20,6 +20,9 @@ export const actions = {
   USER_DRIVER_GET_TRIPS: 'USER_DRIVER_GET_TRIPS',
   USER_DRIVER_GET_TRIPS_FAIL: 'USER_DRIVER_GET_TRIPS_FAIL',
   USER_DRIVER_GET_TRIPS_SUCCESS: 'USER_DRIVER_GET_TRIPS_SUCCESS',
+  USER_GET_CAR: 'USER_GET_CAR',
+  USER_GET_CAR_FAIL: 'USER_GET_CAR_FAIL',
+  USER_GET_CAR_SUCCESS: 'USER_GET_CAR_SUCCESS',
   USER_SET: 'USER_SET',
 }
 
@@ -217,6 +220,21 @@ export function driverTrips(authToken) {
     payload: {
       request: {
         url: urls.driver.trips.get.all(),
+        method: 'get',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      },
+    },
+  }
+}
+
+export function getUsercar(authToken) {
+  return {
+    type: actions.USER_GET_CAR,
+    payload: {
+      request: {
+        url: urls.user.vehicles.get.all(),
         method: 'get',
         headers: {
           Authorization: `Bearer ${authToken}`,

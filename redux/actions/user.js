@@ -35,7 +35,12 @@ const mapDataToUser = data => {
     lastName: data.last_name,
     email: data.email,
     phone: data.phone,
+    user_verifications: {
+      drivers_license: data.user_verifications.drivers_license,
+    },
+    vehicles: data.vehicles,
   }
+  
   const { user_identifications } = data
   if (user_identifications) {
     const { selfie, identification, drivers_license } = user_identifications

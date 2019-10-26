@@ -14,8 +14,16 @@ class MyTrips extends Component {
     this.asDriver = this.props.isRequestedTrips ? false : true
   }
 
+  sortTrips() {
+    //this.props.trips.forEach(element => {
+    //  console.log(element);
+    //});
+    this.props.trips.sort((trip1, trip2) => (trip1.trip_status > trip2.trip_status) ? 1 : -1);  //todo include all status types
+  }
+
   render() {
     const Trip = this.Trip
+    this.sortTrips();
 
     if (this.props.trips) {
       return (

@@ -24,7 +24,7 @@ class UserProfile extends Component {
   renderAvatar() {
     const { avatar } = this.props.user
     if (avatar) {
-      return <Thumbnail source={{ uri: avatar }} style={styles.thumbnail} />
+      return <Thumbnail source={{ uri: avatar }} large />
     } else {
       return (
         <MaterialCommunityIcons

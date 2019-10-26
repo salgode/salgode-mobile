@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   Platform,
   AsyncStorage,
-  Image,
 } from 'react-native'
 import {
   Button,
@@ -23,6 +22,7 @@ import {
   View,
   Icon,
   CheckBox,
+  Thumbnail,
 } from 'native-base'
 import { withNavigation } from 'react-navigation'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
@@ -203,7 +203,7 @@ const EditProfileScreen = props => {
       label: 'Teléfono',
       value: phone,
       maxLength: maxLengthPhone,
-      setValue: (value) => {
+      setValue: value => {
         if (notWrongPhone(value)) {
           setPhone(formatPhone(value))
         }
@@ -364,15 +364,7 @@ const EditProfileScreen = props => {
             <View style={styles.row}>
               <View style={styles.profilePhoto}>
                 {props.user.avatar ? (
-                  <Image
-                    source={{ uri: props.user.avatar }}
-                    style={{
-                      height: photoSize,
-                      width: photoSize,
-                      resizeMode: 'center',
-                      borderRadius: photoSize / 2,
-                    }}
-                  />
+                  <Thumbnail source={{ uri: props.user.avatar }} large />
                 ) : (
                   <MaterialCommunityIcons
                     name="face-profile"

@@ -23,7 +23,7 @@ const ChooseTrip = ({
   // const [loading, setLoading] = React.useState(true)
   let Avatar
   if (driver.avatar) {
-    Avatar = <Thumbnail source={{ uri: driver.avatar }} style={styles.avatar} />
+    Avatar = <Thumbnail source={{ uri: driver.avatar }} />
   } else {
     Avatar = (
       <Ionicons

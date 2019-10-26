@@ -5,8 +5,29 @@ import CameraModal from './CameraModal'
 import * as Permissions from 'expo-permissions'
 import PhotoTaker from './PhotoTaker'
 import PropTypes from 'prop-types'
+import { Camera } from 'expo-camera'
 import { connect } from 'react-redux'
 import { signupUser, uploadImageUser } from '../../redux/actions/user'
+
+const getCameraType = (destination) => {
+  if (destination === 'selfie') {
+    return Camera.Constants.Type.front
+  }
+  return Camera.Constants.Type.back
+}
+
+const getText = (destination) => {
+  switch (destination) {
+    case 'selfie':
+      return 'Sonríe para la cámara'
+    case 'frontId':
+      return 'Cédula de identidad frontal'
+    case 'backId':
+      return 'Cédula de identidad trasera'
+    default:
+      return ''
+  }
+}
 
 const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
   const [isCameraOn, setIsCameraOn] = React.useState(false)
@@ -30,7 +51,6 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
       identification_image_front: null,
       identification_image_back: null,
     }
-    // console.log(userData)
     setUserData(userData)
     requestCameraPermission()
   }, [])
@@ -45,7 +65,6 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
   }
 
   const onTakePicture = (photo, photoUri, dest) => {
-    // console.log(photoUri)
     switch (dest) {
       case 'selfie':
         setSelfie(photoUri)
@@ -137,6 +156,8 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
           onGetSelfie={onTakePicture}
           isCameraOn={isCameraOn}
           destination={destination}
+          cameraType={getCameraType(destination)}
+          text={getText(destination)}
         />
       )}
       <PhotoTaker

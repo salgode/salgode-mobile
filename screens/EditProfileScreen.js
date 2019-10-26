@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   Platform,
   AsyncStorage,
-  Image,
 } from 'react-native'
 import {
   Button,
@@ -23,6 +22,7 @@ import {
   View,
   Icon,
   CheckBox,
+  Thumbnail,
 } from 'native-base'
 import { withNavigation } from 'react-navigation'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
@@ -364,14 +364,9 @@ const EditProfileScreen = props => {
             <View style={styles.row}>
               <View style={styles.profilePhoto}>
                 {props.user.avatar ? (
-                  <Image
+                  <Thumbnail
                     source={{ uri: props.user.avatar }}
-                    style={{
-                      height: photoSize,
-                      width: photoSize,
-                      resizeMode: 'center',
-                      borderRadius: photoSize / 2,
-                    }}
+                    large
                   />
                 ) : (
                   <MaterialCommunityIcons

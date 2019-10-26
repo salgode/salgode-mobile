@@ -8,6 +8,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { connect } from 'react-redux'
 import { withNavigation } from 'react-navigation'
 import { fetchTrip } from '../redux/actions/trips'
+import { getTripReservations } from '../utils/getTripInfo'
 
 class DetailedTripScreen extends Component {
   static navigationOptions = {
@@ -18,47 +19,64 @@ class DetailedTripScreen extends Component {
     super(props)
     this.state = {
       loading: true,
+      trip: null,
+      reservations: [],
+      asDriver: false,
     }
 
     this.renderPassengers = this.renderPassengers.bind(this)
     this.onPressStartTrip = this.onPressStartTrip.bind(this)
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     // TODO: get token from redux store
-    this.asDriver = this.props.navigation.getParam('asDriver', null)
-    const tripId = this.props.navigation.getParam('tripId', null)
+    this.setState({ loading: true })
+    const asDriver = this.props.navigation.getParam('asDriver', null)
+    const trip = this.props.navigation.getParam('trip', null)
     // if (asDriver) {
     //   this.props.fetchTripDriver(this.props.user.token, tripId)
     // } else {
-    this.props.fetchTrip(this.props.user.token, tripId).then(() => {
-      this.setState({ loading: false })
-    })
+    // this.props.fetchTrip(this.props.user.token, tripId).then(() => {
+    //   this.setState({ loading: false })
+    // })
     // }
     // this.props.fetchSlots(this.props.user.token, tripId)
+    // console.log(trip)
+    this.setState({ trip, asDriver })
+    const reservations = await getTripReservations(
+      this.props.user.token,
+      trip.trip_id
+    )
+    // console.log(reservations)
+    // console.log(asDriver)
+    this.setState({ loading: false })
+    if (!reservations) {
+      alert(
+        'Hubo un problema obteniendo las reservas. Por favor intentalo de nuevo.'
+      )
+    } else {
+      this.setState({ reservations })
+    }
   }
 
   onPressStartTrip(tripStops, tripId, token, trip) {
     this.props.navigation.navigate('StartTrip', { tripStops, tripId, token, trip })
   }
 
-  renderPassengers(passengers) {
-    const finishStop = this.props.trip
-      ? this.props.trip.trip_route_points[
-          this.props.trip.trip_route_points.length - 1
-        ].name
-      : 'cargando..'
-    return passengers
-      ? passengers.map((passenger, index) => (
-          <TripRequestCard
-            key={`passenger-${index}`}
-            passenger={passenger}
-            finishStop={finishStop}
-            // slot={this.props.slots[index]}
-            token={this.props.user.token}
-          />
-        ))
-      : null
+  renderPassengers() {
+    if (!this.state.trip) {
+      return null
+    }
+    const finishStop = this.state.trip.trip_route.end.name
+    return this.state.reservations.map((reservation, index) => (
+      <TripRequestCard
+        key={`passenger-${index}`}
+        reservation={reservation}
+        finishStop={finishStop}
+        // slot={this.props.slots[index]}
+        token={this.props.user.token}
+      />
+    ))
   }
 
   render() {
@@ -67,15 +85,21 @@ class DetailedTripScreen extends Component {
         {this.state.loading && <Spinner color="blue" />}
         {!this.state.loading && (
           <DetailedTrip
-            asDriver={this.asDriver}
-            trip={this.props.trip}
-            driver={this.props.trip.driver}
+            asDriver={this.state.asDriver}
+            trip={this.state.trip}
+            driver={this.state.trip.driver}
             token={this.props.user.token}
-            onPressStartTrip={this.onPressStartTrip}
+            onPressStartTrip={() =>
+              this.onPressStartTrip(
+                this.state.trip.trip_route_points,
+                this.state.trip.trip_id,
+                this.props.user.token
+              )
+            }
           />
         )}
         {this.state.asDriver && !this.state.loading
-          ? this.renderPassengers(this.state.passengers, this.state.token)
+          ? this.renderPassengers()
           : null}
       </ScrollView>
     )
@@ -92,7 +116,7 @@ DetailedTripScreen.propTypes = {
   user: PropTypes.shape({
     token: PropTypes.string.isRequired,
   }).isRequired,
-  trip: PropTypes.object.isRequired,
+  // trip: PropTypes.object.isRequired,
   // slots: PropTypes.object.isRequired,
   fetchTrip: PropTypes.func.isRequired,
 }

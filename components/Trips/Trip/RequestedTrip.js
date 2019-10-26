@@ -4,7 +4,7 @@ import Location from './Location'
 import Colors from '../../../constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
 import TimeInfo from './TimeInfo'
-import { Card, View, Text, CardItem, Button } from 'native-base'
+import { Card, View, Text, CardItem, Button, Thumbnail } from 'native-base'
 import PropTypes from 'prop-types'
 
 const RequestedTrip = ({
@@ -16,7 +16,7 @@ const RequestedTrip = ({
   onSend,
   onPressTrip,
   asDriver,
-  tripId,
+  trip,
 }) => {
   let statusColor
   let statusText
@@ -40,22 +40,14 @@ const RequestedTrip = ({
       <CardItem>
         <View style={styles.user}>
           <View style={styles.userData}>
-            {
-              //user.selfieLink ? (
-              // FIX: must recieve selfie link from user/trips in driver object
-              // <Thumbnail source={{ uri: user.selfieLink }} />
-              //) : (
-              // <Ionicons
-              // name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-              // size={40}
-              // />
-              //)
-              null
-            }
-            <Ionicons
-              name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-              size={40}
-            />
+            {user.driver_avatar ? (
+              <Thumbnail source={{ uri: user.driver_avatar }} />
+            ) : (
+                <Ionicons
+                  name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                  size={40}
+                />
+              )}
             <Text style={styles.userText}>{user.driver_name}</Text>
           </View>
         </View>
@@ -71,7 +63,7 @@ const RequestedTrip = ({
         <Button
           borderRadius={10}
           style={styles.button}
-          onPress={() => onPressTrip(asDriver, tripId)}
+          onPress={() => onPressTrip(asDriver, trip)}
         >
           <Text style={styles.blueText}>Ver Viaje</Text>
         </Button>
@@ -87,7 +79,7 @@ RequestedTrip.propTypes = {
   timestamp: PropTypes.string.isRequired,
   user: PropTypes.shape({
     driver_name: PropTypes.string.isRequired,
-    selfieLink: PropTypes.string,
+    driver_avatar: PropTypes.string,
   }).isRequired,
   status: PropTypes.oneOf([
     'accepted',
@@ -100,7 +92,7 @@ RequestedTrip.propTypes = {
   startLocation: PropTypes.object.isRequired,
   endLocation: PropTypes.object.isRequired,
   onSend: PropTypes.func,
-  tripId: PropTypes.string.isRequired,
+  trip: PropTypes.object.isRequired,
 }
 
 const styles = StyleSheet.create({

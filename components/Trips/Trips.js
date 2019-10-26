@@ -30,7 +30,7 @@ class MyTrips extends Component {
                 status={item.trip_status}
                 asDriver={this.asDriver}
                 onPressTrip={this.props.onPressTrip}
-                tripId={item.trip_id}
+                trip={item}
                 startLocation={item.trip_route.start}
                 endLocation={item.trip_route.end}
               />
@@ -45,8 +45,8 @@ class MyTrips extends Component {
         {this.props.isRequestedTrips ? (
           <Text>No haz agendado Viajes 🚗</Text>
         ) : (
-          <Text>No tienes Viajes pendientes 🚘</Text>
-        )}
+            <Text>No tienes Viajes pendientes 🚘</Text>
+          )}
       </View>
     )
   }

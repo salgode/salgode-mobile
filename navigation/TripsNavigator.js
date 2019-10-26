@@ -20,6 +20,7 @@ export default createMaterialTopTabNavigator(
         },
         title: 'Mis Viajes',
       }),
+      params: { asDriver: true },
     },
     Pedidos: {
       screen: props => <TripsScreen isRequestedTrips {...props} />,
@@ -36,6 +37,7 @@ export default createMaterialTopTabNavigator(
         },
         title: 'Pedidos',
       }),
+      params: { asDriver: false },
     },
   },
   {

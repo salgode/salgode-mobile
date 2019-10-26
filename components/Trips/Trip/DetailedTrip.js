@@ -9,8 +9,15 @@ import { urls } from '../../../config/api/index'
 import { client } from '../../../redux/store'
 import { Ionicons } from '@expo/vector-icons'
 
-export const DetailedTrip = ({ trip, asDriver, driver, token, onPressStartTrip }) => {
+export const DetailedTrip = ({
+  trip,
+  asDriver,
+  driver,
+  token,
+  onPressStartTrip,
+}) => {
   function renderLocation(locations) {
+    // console.log(locations)
     return locations.map((location, index) => {
       let color
       if (index === 0) {
@@ -21,17 +28,13 @@ export const DetailedTrip = ({ trip, asDriver, driver, token, onPressStartTrip }
         color = Colors.textGray //index === locations.length - 1 ? '#33C534'
       }
       return (
-        <Location
-          key={`location-${index}`}
-          color={color}
-          location={location.name}
-        />
+        <Location key={`location-${index}`} color={color} location={location} />
       )
     })
   }
 
   async function startTrip(token) {
-    const { trip_id } = trip;
+    const { trip_id } = trip
     await client
       .request({
         method: 'post',
@@ -41,8 +44,8 @@ export const DetailedTrip = ({ trip, asDriver, driver, token, onPressStartTrip }
         },
       })
       .then(resp => resp.data)
-    const stops = trip.trip_route_points.map(r => r.name);
-    onPressStartTrip(stops, trip_id, token, trip);
+    const stops = trip.trip_route_points.map(r => r.name)
+    onPressStartTrip(stops, trip_id, token)
   }
 
   const selfieImage = driver != null ? driver.avatar : 'placeholder'
@@ -63,14 +66,12 @@ export const DetailedTrip = ({ trip, asDriver, driver, token, onPressStartTrip }
           {selfieImage && selfieImage !== 'placeholder' ? (
             <Thumbnail source={{ uri: selfieImage }} />
           ) : (
-            <Ionicons
-              name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-              size={40}
-            />
-          )}
-          <Text style={styles.userText}>
-            {driver.first_name} {driver.last_name}
-          </Text>
+              <Ionicons
+                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                size={40}
+              />
+            )}
+          <Text style={styles.userText}>{driver.driver_name}</Text>
         </View>
       </CardItem>
       <CardItem style={styles.locationContainer}>

@@ -15,16 +15,15 @@ export const Trip = ({
   user,
   startLocation,
   endLocation,
-  tripId,
-  status,
+  trip,
 }) => {
-  if (status === "completed"){
-    return(<View/>)
+  if (trip.trip_status === 'completed') {
+    return <View />
   }
   return (
     <TouchableOpacity
       onPress={() => {
-        onPressTrip(asDriver, tripId)
+        onPressTrip(asDriver, trip)
       }}
     >
       <Card style={[styles.container, styles.shadow]}>
@@ -66,7 +65,7 @@ Trip.propTypes = {
   startLocation: PropTypes.object.isRequired,
   endLocation: PropTypes.object.isRequired,
   asDriver: PropTypes.bool.isRequired,
-  tripId: PropTypes.string.isRequired,
+  trip: PropTypes.object.isRequired,
 }
 
 const styles = StyleSheet.create({

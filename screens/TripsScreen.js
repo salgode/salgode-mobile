@@ -16,19 +16,24 @@ class TripsScreen extends Component {
     this.state = {
       loading: true,
       trips: [],
+      asDriver: false,
     }
 
     this.getTrips = this.getTrips.bind(this)
     this.onPressTrip = this.onPressTrip.bind(this)
   }
 
-  onPressTrip(asDriver = false, tripId) {
-    this.props.navigation.navigate('DetailedTrip', { asDriver, tripId })
+  onPressTrip(asDriver = false, trip) {
+    this.props.navigation.navigate('DetailedTrip', {
+      asDriver: this.state.asDriver,
+      trip,
+    })
   }
 
   componentDidMount() {
     this.getTrips()
-    this.asDriver = this.props.navigation.getParam('asDriver', null)
+    const asDriver = this.props.navigation.getParam('asDriver', null)
+    this.setState({ asDriver })
   }
 
   async getTrips() {
@@ -40,6 +45,7 @@ class TripsScreen extends Component {
   }
 
   render() {
+    // console.log(this.props.trips)
     return (
       <View style={styles.container}>
         {this.state.loading && <Spinner color="blue" />}

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable react-native/no-inline-styles */
 import React, { Component } from 'react'
 import { StyleSheet, Platform, Linking } from 'react-native'
@@ -7,29 +8,19 @@ import PropTypes from 'prop-types'
 /*import Colors from '../../../constants/Colors'*/
 import { Ionicons } from '@expo/vector-icons'
 import { client } from '../../../redux/store'
+import { getBaseHeaders, urls } from '../../../config/api'
 
 export default class TripRequestCard extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      passenger: null,
-      finishStop: null,
-      slot: null,
+      reservation: props.reservation,
       body: {
         decline_reason: 'out_of_space',
         decline_message: "I'm sorry, got a last minute friend on board",
       },
     }
     this.handleChangeStatus = this.handleChangeStatus.bind(this)
-  }
-
-  componentDidMount() {
-    this.setState({
-      passenger: this.props.passenger,
-      finalLocation: this.props.finalLocation,
-      finishStop: this.props.finishStop,
-      slot: this.props.slot,
-    })
   }
 
   dialCall(phoneNumber) {
@@ -44,60 +35,76 @@ export default class TripRequestCard extends Component {
 
   async handleChangeStatus(status) {
     this.setState(prevState => {
-      const slot = prevState.slot
-      slot.slot_status = status
-      return { slot }
+      const reservation = { ...prevState.reservation }
+      reservation.reservation_status = status
+      return { reservation }
     })
 
     const requestObject = {
       method: 'post',
-      url: `/reservations/${this.state.slot.slot_id}/
-      ${status === 'accepted' ? 'accept' : 'decline'}`,
-      headers: {
-        Authorization: this.props.token,
-      },
+      headers: getBaseHeaders(this.props.token),
+    }
+
+    const { reservation } = this.state
+    if (status === 'accepted') {
+      requestObject.url = urls.driver.reservations.post.acept(
+        reservation.trip_id,
+        reservation.reservation_id
+      )
+    } else {
+      requestObject.url = urls.driver.reservations.post.decline(
+        reservation.trip_id,
+        reservation.reservation_id
+      )
     }
 
     if (status !== 'accepted') {
       requestObject.data = this.state.body
     }
-
+    // console.log(requestObject)
     await client
       .request(requestObject)
       .then(resp => {
-        console.warn(this.props.token)
-        console.warn('RESERVATION')
-        console.warn(resp)
+        console.log(this.props.token)
+        console.log('RESERVATION')
+        console.log(resp)
       })
       .catch(err => {
-        console.warn(this.props.token)
-        console.warn('RESERVATION')
-        console.warn(err)
+        console.log(this.props.token)
+        console.log('RESERVATION')
+        console.log(err)
       })
 
     // TODO: fix 403
   }
 
   render() {
-    /*const { finalLocation } = this.state*/
-    // console.log('SLOT', this.state.slot)
-    const selfieImage =
-      this.state.passenger != null ? this.state.passenger.avatar : 'placeholder'
+    const { reservation } = this.state
+    // console.log(reservation)
+    const { passenger } = this.props.reservation
+    const selfieImage = passenger.avatar || 'placeholder'
 
-    return this.state.passenger !== null && this.state.slot ? (
+    // console.log(this.state.passenger)
+    if (!reservation) {
+      return null
+    }
+    return (
       <Card style={styles.container}>
         <CardItem>
           <View style={styles.user}>
             {selfieImage && selfieImage !== 'placeholder' ? (
-              <Thumbnail source={{ uri: selfieImage }} />
-            ) : (
-              <Ionicons
-                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-                size={40}
+              <Thumbnail
+                source={{ uri: selfieImage }}
+                style={{ width: 40, height: 40 }}
               />
-            )}
+            ) : (
+                <Ionicons
+                  name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                  size={40}
+                />
+              )}
             <Text style={styles.userText}>
-              {this.state.passenger.first_name} {this.state.passenger.last_name}
+              {passenger.name} {passenger.last_name}
             </Text>
           </View>
         </CardItem>
@@ -105,9 +112,7 @@ export default class TripRequestCard extends Component {
         <CardItem style={styles.locationContainer}>
           <Location
             color={'#0000FF'}
-            location={
-              this.state.slot ? this.state.slot.route_point.name : 'cargando..'
-            }
+            location={reservation.reservation_route.start}
           />
           <Location
             color={
@@ -116,11 +121,11 @@ export default class TripRequestCard extends Component {
                 : Colors.textGray*/
               '#33C534'
             }
-            location={this.state.finishStop}
+            location={reservation.reservation_route.end}
           />
         </CardItem>
 
-        {this.state.slot.slot_status === 'pending' && (
+        {reservation.reservation_status === 'pending' && (
           <CardItem style={styles.buttonsContainer}>
             <Button
               style={{
@@ -161,11 +166,13 @@ export default class TripRequestCard extends Component {
           </CardItem>
         )}
 
-        {this.state.slot.slot_status === 'accepted' && (
+        {reservation.reservation_status === 'accepted' && (
           <View style={styles.buttonsContainer}>
             <Button
               style={{ ...styles.buttonTrip, backgroundColor: 'green' }}
-              onPress={() => this.dialCall(this.state.passenger.phone)}
+              onPress={() =>
+                passenger.phone ? this.dialCall(passenger.phone) : null
+              }
             >
               <Text
                 style={{
@@ -180,7 +187,7 @@ export default class TripRequestCard extends Component {
             </Button>
           </View>
         )}
-        {this.state.slot.slot_status === 'rejected' && (
+        {reservation.reservation_status === 'rejected' && (
           <View style={styles.buttonsContainer}>
             <Button style={{ ...styles.buttonTrip, backgroundColor: 'red' }}>
               <Text
@@ -197,15 +204,14 @@ export default class TripRequestCard extends Component {
           </View>
         )}
       </Card>
-    ) : null
+    )
   }
 }
 
 TripRequestCard.propTypes = {
-  passenger: PropTypes.object.isRequired,
+  reservation: PropTypes.object.isRequired,
   finalLocation: PropTypes.string,
   finishStop: PropTypes.string,
-  slot: PropTypes.object,
   token: PropTypes.string.isRequired,
 }
 

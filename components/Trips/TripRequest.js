@@ -14,7 +14,7 @@ const TripRequest = ({ stops, onSend, loading }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.stopsTitle}>Paradas:</Text>
-      <StopsList stops={stops.map(s => s.name)} />
+      <StopsList stops={stops} />
       <Text style={styles.pickerTitle}>
         Selecciona la parada en la que te subirás
       </Text>

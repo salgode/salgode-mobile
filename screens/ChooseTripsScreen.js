@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Alert } from 'react-native'
+import { View, StyleSheet, Alert, Text } from 'react-native'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import ChooseTrips from '../components/Trips/ChooseTrips'
 import { fetchFutureTrips } from '../redux/actions/trips'
 import Colors from '../constants/Colors'
+import CardInput from '../components/CardInput'
 
 const parseTripInfo = trip => {
   const { driver } = trip
@@ -66,9 +67,28 @@ class ChooseTripsScreen extends Component {
   }
 
   render() {
-    // console.log(this.state.trips[0])
+    const { navigation } = this.props
     return (
       <View style={styles.container}>
+        <View>
+          <CardInput
+            onTouchablePress={() =>
+              navigation.navigate('SpotSelectorScreen', {
+                title: 'Buscas #Desde',
+                text: '#Desde',
+                onClearPress: () => console.log('onClearPress'),
+                onItemPress: () => console.log('onItemPress'),
+                data: [],
+              })
+            }
+            placeholder="Filtra por Comuna o Parada"
+            value={'startStop.name'}
+            text="#Desde"
+            editable={false}
+            onClearPress={() => console.log('onClearPress 2')}
+          />
+        </View>
+
         <View>
           <ChooseTrips
             onSend={this.onRequestTrip}

@@ -42,12 +42,12 @@ const ChooseTrip = ({
             {Avatar}
             <Text style={styles.userText}>{`${driver.name}`}</Text>
           </View>
-          <View style={styles.iconInfoGroup}>
+          {/* <View style={styles.iconInfoGroup}>
             <View style={styles.iconContainer}>
               <Icon name="like1" style={styles.infoIcon} />
               <Text style={styles.iconText}>{driver.reputation}</Text>
             </View>
-          </View>
+          </View> */}
         </View>
       </CardItem>
       <CardItem style={styles.locationContainer}>
@@ -101,22 +101,22 @@ const styles = StyleSheet.create({
   dataContainer: {
     alignSelf: 'stretch',
   },
-  iconContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  iconInfoGroup: {
-    position: 'absolute',
-    right: 5,
-  },
-  iconText: {
-    color: 'grey',
-  },
-  infoIcon: {
-    color: 'grey',
-    fontSize: 30,
-    paddingRight: 5,
-  },
+  // iconContainer: {
+  //   alignItems: 'center',
+  //   flexDirection: 'row',
+  // },
+  // iconInfoGroup: {
+  //   position: 'absolute',
+  //   right: 5,
+  // },
+  // iconText: {
+  //   color: 'grey',
+  // },
+  // infoIcon: {
+  //   color: 'grey',
+  //   fontSize: 30,
+  //   paddingRight: 5,
+  // },
   locationContainer: {
     alignItems: 'flex-start',
     flexDirection: 'column',

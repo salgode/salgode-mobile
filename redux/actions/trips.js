@@ -8,6 +8,9 @@ export const actions = {
   TRIPS_FETCH_TRIP: 'TRIPS/FETCH_TRIP',
   TRIPS_FETCH_TRIP_SUCCESS: 'TRIPS/FETCH_TRIP_SUCCESS',
   TRIPS_FETCH_TRIP_FAIL: 'TRIP/FETCH_TRIP_FAIL',
+  TRIPS_FETCH_TRIP_MANIFEST: 'TRIPS/FETCH_TRIP_MANIFEST',
+  TRIPS_FETCH_TRIP_MANIFEST_SUCCESS: 'TRIPS/FETCH_TRIP_MANIFEST_SUCCESS',
+  TRIPS_FETCH_TRIP_MANIFEST_FAIL: 'TRIP/FETCH_TRIP_MANIFEST_FAIL',
 }
 
 export function fetchFutureTrips(authToken) {
@@ -45,6 +48,21 @@ export function fetchTrip(authToken, id) {
     payload: {
       request: {
         url: urls.driver.trips.get.single(id),
+        method: 'get',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      },
+    },
+  }
+}
+
+export function fetchTripManifest(authToken, id) {
+  return {
+    type: actions.TRIPS_FETCH_TRIP_MANIFEST,
+    payload: {
+      request: {
+        url: urls.driver.trips.get.manifest(id),
         method: 'get',
         headers: {
           Authorization: `Bearer ${authToken}`,

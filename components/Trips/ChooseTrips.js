@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from 'react-native'
+import { withNavigation } from 'react-navigation'
 import PropTypes from 'prop-types'
 import ChooseTrip from './Trip/ChooseTrip'
 
@@ -27,6 +28,25 @@ class ChooseTrips extends Component {
     this.setState({ loading: true })
     await this.props.onReload()
     this.setState({ loading: false })
+  }
+
+  handleOnPress(tripId) {
+    const { trips } = this.props
+    const selectedTrip = trips.find(x => x.tripId == tripId)
+    this.props.navigation.navigate('UserProfile', {
+      userData: {
+        avatar: selectedTrip.driver.avatar,
+        first_name: selectedTrip.driver.name,
+        last_name: 'lastName',
+        phone: selectedTrip.driver.phone,
+        email: 'TODO: Email',
+        dniVerified: true,
+        licenceVerified: true,
+        trip_route_points: selectedTrip.trip_route_points,
+        etd_info: selectedTrip.etd_info,
+        isAccepted: false,
+      },
+    })
   }
 
   render() {
@@ -51,6 +71,7 @@ class ChooseTrips extends Component {
               stops={item.stops}
               onSend={this.props.onSend}
               tripId={item.tripId}
+              onPress={() => this.handleOnPress(item.tripId)}
             />
           )}
           keyExtractor={item => item.tripId}
@@ -66,6 +87,9 @@ ChooseTrips.propTypes = {
   isRequestedTrips: PropTypes.bool,
   onSend: PropTypes.func,
   onReload: PropTypes.func.isRequired,
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
 }
 
 ChooseTrips.defaultProps = {
@@ -77,4 +101,4 @@ const styles = StyleSheet.create({
   flatList: { height: '100%', width: '100%' },
 })
 
-export default ChooseTrips
+export default withNavigation(ChooseTrips)

@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Platform } from 'react-native'
+import { StyleSheet, Platform, TouchableWithoutFeedback } from 'react-native'
 import { Card, View, Text, CardItem, Thumbnail } from 'native-base'
 import Location from './Location'
 import { Ionicons } from '@expo/vector-icons'
@@ -19,6 +19,8 @@ const ChooseTrip = ({
   onSend,
   // The trip id. Required.
   tripId,
+  // Function called when the user tap on the whole card.
+  onPress,
 }) => {
   // const [loading, setLoading] = React.useState(true)
   let Avatar
@@ -35,35 +37,37 @@ const ChooseTrip = ({
     )
   }
   return (
-    <Card style={styles.containerRequested}>
-      <CardItem style={styles.dataContainer}>
-        <View style={styles.user}>
-          <View style={styles.userData}>
-            {Avatar}
-            <Text style={styles.userText}>{`${driver.name}`}</Text>
-          </View>
-          <View style={styles.iconInfoGroup}>
-            <View style={styles.iconContainer}>
-              <Icon name="like1" style={styles.infoIcon} />
-              <Text style={styles.iconText}>{driver.reputation}</Text>
+    <TouchableWithoutFeedback onPress={() => onPress()}>
+      <Card style={styles.containerRequested}>
+        <CardItem style={styles.dataContainer}>
+          <View style={styles.user}>
+            <View style={styles.userData}>
+              {Avatar}
+              <Text style={styles.userText}>{`${driver.name}`}</Text>
+            </View>
+            <View style={styles.iconInfoGroup}>
+              <View style={styles.iconContainer}>
+                <Icon name="like1" style={styles.infoIcon} />
+                <Text style={styles.iconText}>{driver.reputation}</Text>
+              </View>
             </View>
           </View>
-        </View>
-      </CardItem>
-      <CardItem style={styles.locationContainer}>
-        <Location color={'#0000FF'} location={stops[0]} />
-        <Location color={'#33C534'} location={stops[stops.length - 1]} />
-      </CardItem>
-      <CardItem style={styles.bottomSection}>
-        <TimeInfo timestamp={timestamp} />
-        <PedirBoton onSend={() => onSend(stops, tripId)} />
-      </CardItem>
-    </Card>
+        </CardItem>
+        <CardItem style={styles.locationContainer}>
+          <Location color={'#0000FF'} location={stops[0]} />
+          <Location color={'#33C534'} location={stops[stops.length - 1]} />
+        </CardItem>
+        <CardItem style={styles.bottomSection}>
+          <TimeInfo timestamp={timestamp} isDate />
+          <PedirBoton onSend={() => onSend(stops, tripId)} />
+        </CardItem>
+      </Card>
+    </TouchableWithoutFeedback>
   )
 }
 
 ChooseTrip.propTypes = {
-  timestamp: PropTypes.number.isRequired,
+  timestamp: PropTypes.instanceOf(Date).isRequired,
   driver: PropTypes.shape({
     name: PropTypes.string.isRequired,
     reputation: PropTypes.number.isRequired,

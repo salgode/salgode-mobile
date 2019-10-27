@@ -51,9 +51,7 @@ class TripsScreen extends Component {
     )
   }
   render() {
-    // console.log(this.props.trips)
-
-    const isConfirmedDriver = this.isVerifiedDriver()
+    let isConfirmedDriver = this.isVerifiedDriver()
 
     if (isConfirmedDriver || this.props.type == 'pedidos') {
       return (
@@ -70,13 +68,12 @@ class TripsScreen extends Component {
           )}
         </View>
       )
-    } else {
-      //not verified driver
+    }
+    else { //not verified driver
       return (
         <View>
           <Text>
-            Para poder crear viajes debes tener un auto (e indicar sus
-            cualidades) y haber enviado una foto por ambos lados de tu licencia.
+            Para poder crear viajes debes tener un auto (e indicar sus cualidades) y haber enviado una foto por ambos lados de tu licencia.
           </Text>
         </View>
       )

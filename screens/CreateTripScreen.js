@@ -27,11 +27,12 @@ class CreateTripScreen extends Component {
 
   componentDidMount = () => {
     this.props.getAllSpots(this.props.user.token)
-    this.props.getUserCar(this.props.user.token).then(response => {
-      if (!response.payload.data.vehicle_id) {
-        this.props.navigation.navigate('EditProfile')
-      }
-    })
+    this.props.getUserCar(this.props.user.token)
+    // .then(response => {
+    // if (!response.payload.data.vehicle_id) {
+    //   this.props.navigation.navigate('EditProfile')
+    // }
+    // })
   }
 
   showDateTimePicker = () => {
@@ -49,10 +50,9 @@ class CreateTripScreen extends Component {
   }
 
   isVerifiedDriver = () => {
-    //console.log(this.props.user.token);
     return (
       this.props.user.user_verifications.driver_license &&
-      this.props.user.vehicles.length
+      this.props.user.vehicles
     )
   }
 
@@ -156,12 +156,13 @@ class CreateTripScreen extends Component {
         </View>
       )
     } else {
-      //not verified driver
       return (
         <View style={styles.viewContainer}>
           <Text>
-            Para crear viajes debes registrar tu auto y enviar una foto por
-            ambos lados de tu licencia.
+
+            Para poder crear viajes debes tener un auto registrado y enviar una
+            foto por ambos lados de tu licencia.
+
           </Text>
         </View>
       )

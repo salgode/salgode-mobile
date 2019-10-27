@@ -1,4 +1,6 @@
 import React from 'react'
+import Constants from 'expo-constants'
+import { Entypo } from '@expo/vector-icons'
 import {
   StyleSheet,
   KeyboardAvoidingView,
@@ -30,7 +32,7 @@ import { connect } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons'
 import PropTypes from 'prop-types'
 
-import { updateUser, signoutUser } from '../redux/actions/user'
+import { updateUser, signoutUser, uploadImageUser } from '../redux/actions/user'
 import Layout from '../constants/Layout'
 import Colors from '../constants/Colors'
 import {
@@ -39,6 +41,7 @@ import {
   notWrongPhone,
   validPhone,
 } from '../utils/input'
+import * as ImagePicker from 'expo-image-picker';
 
 function validateName(str) {
   if (typeof str !== 'string') {
@@ -181,6 +184,8 @@ const EditProfileScreen = props => {
   const [carColor, setCarColor] = React.useState('Gris')
   const [carBrand, setCarBrand] = React.useState('Nissan')
   const [carModel, setCarModel] = React.useState('Sportage')
+  //user avatar
+  const [avatar, setAvatar] = React.useState(props.user.avatar)
 
   const [isLoading, setIsLoading] = React.useState(true)
   // eslint-disable-next-line no-unused-vars
@@ -356,23 +361,62 @@ const EditProfileScreen = props => {
     )
   }
 
+  getPermissionAsync = async () => {
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== 'granted') {
+        alert('Sorry, we need camera roll permissions to make this work!');
+      }
+    }
+  }
+
+  _pickImage = async () => {
+    if (Constants.platform.ios) {
+      const { status_roll } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status_roll !== 'granted') {
+        alert('Perdón sin permisos no se puede acceder a su galería');
+      }
+    }
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [3, 3],
+      base64: true,
+    });
+
+    if (!result.cancelled) {
+      setAvatar(result.uri)
+      uploadImageUser(result.base64)
+    }
+  };
+
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.flex1}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Content>
           <View style={{ minHeight: Dimensions.get('window').height }}>
             <View style={styles.row}>
-              <View style={styles.profilePhoto}>
-                {props.user.avatar ? (
-                  <Thumbnail source={{ uri: props.user.avatar }} large />
-                ) : (
-                  <MaterialCommunityIcons
-                    name="face-profile"
-                    color="gray"
-                    size={photoSize}
-                  />
-                )}
+            <TouchableWithoutFeedback
+                disabled={isSaving || !isValidUser()}
+                onPress={_pickImage}
+              >
+                <View>
+                <View style={styles.profilePhoto}>
+                  {avatar ? (
+                    <Thumbnail source={{ uri: avatar }} large />
+                  ) : (
+                    <MaterialCommunityIcons
+                      name="face-profile"
+                      color="gray"
+                      size={photoSize}
+                    />
+                  )}
+                </View>
+              <View style={{alignItems:'center'}}>
+                    <Text style={styles.buttonText}>Editar foto</Text>
               </View>
+              </View>
+              </TouchableWithoutFeedback>
               <View style={styles.readonlyFieldsContainer}>
                 <View style={styles.readonlyField}>
                   <Text style={[styles.label, styles.readonlyFieldText]}>

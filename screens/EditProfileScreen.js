@@ -33,7 +33,6 @@ import { connect } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons'
 import { Camera } from 'expo-camera'
 import PropTypes from 'prop-types'
-import * as Permissions from 'expo-permissions'
 
 import {
   updateUser,
@@ -419,7 +418,7 @@ const EditProfileScreen = props => {
       </View>
     )
   }
-  
+
   const _pickImage = async () => {
     if (Constants.platform.ios) {
       const { status_roll } = await Permissions.askAsync(

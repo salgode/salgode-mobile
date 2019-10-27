@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   Platform,
   AsyncStorage,
-  Image,
 } from 'react-native'
 import {
   Button,
@@ -23,6 +22,7 @@ import {
   View,
   Icon,
   CheckBox,
+  Thumbnail,
 } from 'native-base'
 import { withNavigation } from 'react-navigation'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
@@ -33,6 +33,12 @@ import PropTypes from 'prop-types'
 import { updateUser, signoutUser } from '../redux/actions/user'
 import Layout from '../constants/Layout'
 import Colors from '../constants/Colors'
+import {
+  formatPhone,
+  maxLengthPhone,
+  notWrongPhone,
+  validPhone,
+} from '../utils/input'
 
 function validateName(str) {
   if (typeof str !== 'string') {
@@ -57,25 +63,9 @@ function validatePlate(str) {
   }
   str = str.trim()
 
-  // old format: XX1234
-  let firstLetter = 'ABCEFGHDKLNPRSTUVXYZWM'
-  let secondLetter = 'ABCDEFGHIJKLNPRSTUVXYZW'
-  firstLetter = '[' + firstLetter + firstLetter.toLowerCase() + ']'
-  secondLetter = '[' + secondLetter + secondLetter.toLowerCase() + ']'
-  const oldFormat = new RegExp(
-    '^' + firstLetter + secondLetter + '[1-9][0-9][0-9][0-9]$',
-    'g'
-  )
+  const pattern = new RegExp('\\b([A-Z]{2}([A-Z]|[0-9]){2}[0-9]{2})\\b', 'gi')
 
-  // new format: XXXX12
-  const whitelist = 'BCDFGHJKLPRSTVWXYZ'
-  const letter = '[' + whitelist + whitelist.toLowerCase() + ']'
-  const newFormat = new RegExp(
-    '^' + letter + letter + letter + letter + '[1-9][0-9]$',
-    'g'
-  )
-
-  return oldFormat.test(str) || newFormat.test(str)
+  return pattern.test(str)
 }
 
 function validateColor(str) {
@@ -151,6 +141,7 @@ const Field = ({ field }) => {
         value={field.value}
         secureTextEntry={field.isSecure}
         keyboardType={field.keyboardType || 'default'}
+        maxLength={field.maxLength ? field.maxLength(field.value) : undefined}
       />
       {validity === 'valid' ? (
         <Icon name="checkmark-circle" style={styles.checkMark} />
@@ -211,8 +202,13 @@ const EditProfileScreen = props => {
     {
       label: 'Teléfono',
       value: phone,
-      setValue: setPhone,
-      validate: phone => (phone ? phone.match(/^(\+56)?\d{9}$/) : ''),
+      maxLength: maxLengthPhone,
+      setValue: value => {
+        if (notWrongPhone(value)) {
+          setPhone(formatPhone(value))
+        }
+      },
+      validate: validPhone,
       keyboardType: 'phone-pad',
     },
     // {
@@ -226,7 +222,7 @@ const EditProfileScreen = props => {
   const carFields = [
     {
       label: 'Patente',
-      value: carPlate,
+      value: carPlate ? carPlate.toUpperCase() : carPlate,
       setValue: setCarPlate,
       validate: validatePlate,
     },
@@ -368,15 +364,7 @@ const EditProfileScreen = props => {
             <View style={styles.row}>
               <View style={styles.profilePhoto}>
                 {props.user.avatar ? (
-                  <Image
-                    source={{ uri: props.user.avatar }}
-                    style={{
-                      height: photoSize,
-                      width: photoSize,
-                      resizeMode: 'center',
-                      borderRadius: photoSize / 2,
-                    }}
-                  />
+                  <Thumbnail source={{ uri: props.user.avatar }} large />
                 ) : (
                   <MaterialCommunityIcons
                     name="face-profile"

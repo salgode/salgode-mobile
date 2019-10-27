@@ -53,6 +53,10 @@ export default function userReducer(state = {}, action) {
       return { ...state, loading: true }
     case userActions.USER_DRIVER_GET_TRIPS_SUCCESS:
       return { ...state, loading: false, driverTrips: action.payload.data }
+    case userActions.USER_GET_CAR:
+      return { ...state, loading: true }
+    case userActions.USER_GET_CAR_SUCCESS:
+      return { ...state, loading: false, car: action.payload.data }
     default:
       return state
   }

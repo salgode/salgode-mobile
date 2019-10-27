@@ -21,7 +21,7 @@ const PhotoTaker = ({
           block
           borderRadius={10}
           style={styles.button}
-          onPress={openCamera}
+          onPress={() => openCamera(setImage)}
         >
           <Text>{buttonText}</Text>
         </Button>

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, StyleSheet } from 'react-native'
 import PropTypes from 'prop-types'
 import Trips from '../components/Trips/Trips'
-import { Spinner } from 'native-base'
+import { Spinner, Text } from 'native-base'
 import { connect } from 'react-redux'
 import { userTrips, driverTrips } from '../redux/actions/user'
 
@@ -44,22 +44,40 @@ class TripsScreen extends Component {
     this.setState({ loading: false })
   }
 
-  render() {
-    // console.log(this.props.trips)
+  isVerifiedDriver = () => {
     return (
-      <View style={styles.container}>
-        {this.state.loading && <Spinner color="blue" />}
-        {!this.state.loading && (
-          <Trips
-            key={`trips-${this.props.isRequestedTrips ? 'requested' : ''}`}
-            isRequestedTrips={this.props.isRequestedTrips}
-            trips={this.props.trips}
-            onPressTrip={this.onPressTrip}
-            driverTrips={this.props.driverTrips}
-          />
-        )}
-      </View>
+      this.props.user.user_verifications.drivers_license &&
+      this.props.user.vehicles.length
     )
+  }
+  render() {
+    let isConfirmedDriver = this.isVerifiedDriver()
+
+    if (isConfirmedDriver || this.props.type == 'pedidos') {
+      return (
+        <View style={styles.container}>
+          {this.state.loading && <Spinner color="blue" />}
+          {!this.state.loading && (
+            <Trips
+              key={`trips-${this.props.isRequestedTrips ? 'requested' : ''}`}
+              isRequestedTrips={this.props.isRequestedTrips}
+              trips={this.props.trips}
+              onPressTrip={this.onPressTrip}
+              driverTrips={this.props.driverTrips}
+            />
+          )}
+        </View>
+      )
+    }
+    else { //not verified driver
+      return (
+        <View>
+          <Text>
+            Para poder crear viajes debes tener un auto (e indicar sus cualidades) y haber enviado una foto por ambos lados de tu licencia.
+          </Text>
+        </View>
+      )
+    }
   }
 }
 

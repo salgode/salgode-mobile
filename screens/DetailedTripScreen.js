@@ -60,7 +60,12 @@ class DetailedTripScreen extends Component {
   }
 
   onPressStartTrip(tripStops, tripId, token, trip) {
-    this.props.navigation.navigate('StartTrip', { tripStops, tripId, token, trip })
+    this.props.navigation.navigate('StartTrip', {
+      tripStops,
+      tripId,
+      token,
+      trip,
+    })
   }
 
   renderPassengers() {
@@ -93,7 +98,8 @@ class DetailedTripScreen extends Component {
               this.onPressStartTrip(
                 this.state.trip.trip_route_points,
                 this.state.trip.trip_id,
-                this.props.user.token
+                this.props.user.token,
+                this.state.trip
               )
             }
           />

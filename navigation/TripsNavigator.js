@@ -6,7 +6,9 @@ import Colors from '../constants/Colors'
 export default createMaterialTopTabNavigator(
   {
     MisViajes: {
-      screen: props => <TripsScreen isRequestedTrips={false} {...props} />,
+      screen: props => (
+        <TripsScreen type={'misviajes'} isRequestedTrips={false} {...props} />
+      ),
       navigationOptions: () => ({
         tabBarOptions: {
           labelStyle: {
@@ -23,7 +25,9 @@ export default createMaterialTopTabNavigator(
       params: { asDriver: true },
     },
     Pedidos: {
-      screen: props => <TripsScreen isRequestedTrips {...props} />,
+      screen: props => (
+        <TripsScreen type={'pedidos'} isRequestedTrips {...props} />
+      ),
       navigationOptions: () => ({
         tabBarOptions: {
           labelStyle: {

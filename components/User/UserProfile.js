@@ -1,15 +1,25 @@
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
-import { View, Text, Thumbnail } from 'native-base'
+import { StyleSheet, Linking } from 'react-native'
+import { Card, CardItem, View, Text, Thumbnail } from 'native-base'
 import PropTypes from 'prop-types'
 import { MaterialCommunityIcons, AntDesign, Octicons } from '@expo/vector-icons'
+import TimeInfo from '../../components/Trips/Trip/TimeInfo'
+import Location from '../../components/Trips/Trip/Location'
+import Colors from '../../constants/Colors'
 
 const photoSize = 96
 
 class UserProfile extends Component {
+  static navigationOptions = {
+    title: 'Detalle Viaje',
+  }
+
   constructor(props) {
     super(props)
     this.readonlyField = this.readonlyField.bind(this)
+    this.renderLocation = this.renderLocation.bind(this)
+    this.renderIdentification = this.renderIdentification.bind(this)
+    this.renderVerification = this.renderVerification.bind(this)
   }
 
   readonlyField(label, data) {
@@ -22,9 +32,10 @@ class UserProfile extends Component {
   }
 
   renderAvatar() {
-    const { avatar } = this.props.user
+    const { navigation } = this.props
+    const { avatar } = navigation.state.params.userData
     if (avatar) {
-      return <Thumbnail source={{ uri: avatar }} style={styles.thumbnail} />
+      return <Thumbnail source={{ uri: avatar }} large />
     } else {
       return (
         <MaterialCommunityIcons
@@ -34,6 +45,22 @@ class UserProfile extends Component {
         />
       )
     }
+  }
+
+  renderLocation(locations) {
+    return locations.map((location, index) => {
+      let color
+      if (index === 0) {
+        color = '#0000FF'
+      } else if (index === locations.length - 1) {
+        color = '#33C534'
+      } else {
+        color = Colors.textGray //index === locations.length - 1 ? '#33C534'
+      }
+      return (
+        <Location key={`location-${index}`} color={color} location={location} />
+      )
+    })
   }
 
   renderIdentification(identificationLink, altText = '') {
@@ -52,97 +79,105 @@ class UserProfile extends Component {
   renderVerification(verified, title) {
     return (
       <View style={styles.verifiedContainer}>
-        <Text>{title}</Text>
+        <Text style={styles.verifiedText}>{title}</Text>
         <Octicons
           name={verified ? 'verified' : 'unverified'}
           color={verified ? 'green' : 'red'}
-          size={20}
+          size={14}
         />
       </View>
     )
   }
 
   render() {
-    const { user } = this.props
+    const { navigation } = this.props
+    const { userData } = navigation.state.params
 
     return (
-      <View>
-        <View style={styles.row}>
-          <View style={styles.profilePhoto}>{this.renderAvatar()}</View>
-          <View style={styles.readonlyFieldsContainer}>
-            {user.first_name && this.readonlyField('Nombre', user.first_name)}
-            {user.last_name && this.readonlyField('Apellido', user.last_name)}
-            {user.email && this.readonlyField('Email', user.email)}
-            {user.phone && this.readonlyField('Celular', user.phone)}
-          </View>
-        </View>
-        {this.renderVerification(user.dniVerified, 'Usuario verificado')}
-        {this.renderVerification(user.licenceVerified, 'Conductor verificado')}
-        {/* <View>
-          <Text style={styles.idTitle}>Identificación de usuario</Text>
-          {this.renderIdentification(user.dniFront, 'Carnet de Identidad')}
-          {this.renderIdentification(user.licenceFront, 'Licencia de Conducir')}
-        </View> */}
+      <View style={styles.container}>
+        <Card
+          style={{
+            ...styles.cardContainer,
+            ...styles.shadow,
+          }}
+        >
+          <CardItem>
+            <View style={styles.user}>
+              <View style={styles.profilePhoto}>{this.renderAvatar()}</View>
+              <View style={{flexDirection: 'column', alignSelf: 'flex-start'}}>
+                <Text style={styles.userText}>{`${userData.first_name} ${userData.last_name}`}</Text>
+                {userData.isAccepted && <Text
+                  style={styles.phoneText}
+                  onPress={() => Linking.openURL(`tel:${userData.phone}`)}>
+                  {userData.phone}
+                </Text>}
+                {this.renderVerification(userData.dniVerified, 'Usuario verificado')}
+                {this.renderVerification(userData.licenceVerified, 'Conductor verificado')}
+              </View>
+            </View>
+          </CardItem>
+          <CardItem style={styles.locationContainer}>
+            {this.renderLocation(userData.trip_route_points)}
+          </CardItem>
+          <CardItem>
+            <TimeInfo timestamp={Date.parse(userData.etd_info.etd)} isDate />
+          </CardItem>
+        </Card>
       </View>
     )
   }
 }
 
 UserProfile.propTypes = {
-  // TODO: Adaptar al response del backend
-  user: PropTypes.shape({
-    avatar: PropTypes.string.isRequired,
-    first_name: PropTypes.string.isRequired,
-    last_name: PropTypes.string.isRequired,
-    phone: PropTypes.string,
-    email: PropTypes.string,
-    //dniFront: Si llegamos a mostrarlo: PropTypes.string,
-    //licenceFront: Si llegamos a mostrarlo: PropTypes.string,
-    dniVerified: PropTypes.bool,
-    licenceVerified: PropTypes.bool,
+  navigation: PropTypes.shape({
+    state: PropTypes.object.isRequired,
   }).isRequired,
 }
 
 const styles = StyleSheet.create({
-  idTitle: {
-    fontSize: 20,
-    fontWeight: '500',
-    margin: 20,
+  container: {
+    padding: 15,
+    ...StyleSheet.absoluteFill,
   },
-  identificationPlaceholder: {
+  cardContainer: {
+    alignItems: 'flex-start',
+    borderColor: 'white',
+    borderRadius: 20,
+    marginBottom: 25,
+    padding: 15,
+  },
+  locationContainer: {
+    alignItems: 'flex-start',
+    flexDirection: 'column',
+  },
+  shadow: {
+    shadowColor: '#b3b3b3',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
+  },
+  user: {
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
   },
-  label: {
-    color: '#8c8c8c',
-    fontSize: 14,
-  },
-  profilePhoto: {
-    alignItems: 'center',
-    borderColor: 'gray',
-    borderRadius: photoSize / 2,
-    borderWidth: 1,
-    height: photoSize,
+  userData: {
+    alignSelf: 'center',
+    flexDirection: 'row',
     justifyContent: 'center',
-    marginHorizontal: 16,
-    marginVertical: 16,
-    width: photoSize,
   },
-  readonlyField: {
-    flexDirection: 'row',
-    paddingVertical: 8,
+  userText: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    marginLeft: 15,
   },
-  readonlyFieldText: {
+  phoneText: {
+    color: 'grey',
     fontSize: 14,
-    paddingHorizontal: 8,
-  },
-  readonlyFieldsContainer: {
-    marginTop: 20,
-    paddingHorizontal: 12,
-  },
-  row: {
-    flexDirection: 'row',
+    marginLeft: 15,
+    marginTop: 3,
   },
   thumbnail: {
     height: photoSize,
@@ -153,6 +188,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
   },
+  verifiedText: {
+    color: 'black',
+    fontSize: 14,
+    marginLeft: 15,
+    marginTop: 3,
+  }
 })
 
 export default UserProfile

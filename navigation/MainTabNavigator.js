@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Platform } from 'react-native'
 import {
   createStackNavigator,
@@ -6,7 +6,6 @@ import {
 } from 'react-navigation'
 
 import TabBarIcon from '../components/TabBarIcon'
-import SettingsScreen from '../screens/SettingsScreen'
 import CreateTripScreen from '../screens/CreateTripScreen'
 import AddStopsScreen from '../screens/AddStopsScreen'
 import SpotSelectorScreen from '../screens/SpotSelectorScreen'
@@ -18,6 +17,7 @@ import TripRequestScreen from '../screens/TripRequestScreen'
 import CurrentStartScreen from '../screens/CurrentTrip/CurrentStartScreen'
 import CurrentStopScreen from '../screens/CurrentTrip/CurrentStopScreen'
 import CurrentFinishScreen from '../screens/CurrentTrip/CurrentFinishScreen'
+import UserProfileScreen from '../components/User/UserProfile'
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -50,6 +50,7 @@ TripsStack.path = ''
 const ChooseTripsStack = createStackNavigator({
   ChooseTrips: ChooseTripsScreen,
   RequestTrip: TripRequestScreen,
+  UserProfile: UserProfileScreen,
   SpotSelectorScreen,
 })
 const EditProfileStack = createStackNavigator(
@@ -79,25 +80,6 @@ EditProfileStack.navigationOptions = {
 }
 
 EditProfileStack.path = ''
-
-const SettingsStack = createStackNavigator(
-  {
-    Settings: SettingsScreen,
-  },
-  config
-)
-
-SettingsStack.navigationOptions = {
-  tabBarLabel: 'Settings',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-settings' : 'md-options'}
-    />
-  ),
-}
-
-SettingsStack.path = ''
 
 const CreateTripStack = createStackNavigator(
   {

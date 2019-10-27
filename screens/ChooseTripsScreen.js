@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Alert } from 'react-native'
+import { View, StyleSheet, Alert, AsyncStorage } from 'react-native'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import ChooseTrips from '../components/Trips/ChooseTrips'
 import { fetchFutureTrips } from '../redux/actions/trips'
+import { getOwnProfile } from '../redux/actions/user'
 import Colors from '../constants/Colors'
 import lang from '../languages/es'
 
@@ -28,7 +29,6 @@ const parseTripInfo = trip => {
 
 class ChooseTripsScreen extends Component {
   static navigationOptions = {
-    // title: 'Pedir Viaje',
     header: null,
   }
 
@@ -46,6 +46,25 @@ class ChooseTripsScreen extends Component {
   }
 
   async componentDidMount() {
+    if (!this.props.user.vehicles) {
+      const userResponse = await this.props.loadUser(this.props.user.token, this.props.user.userId)
+      if (userResponse.error) {
+        Alert.alert(
+          'Error al iniciar sesión',
+          'Hubo un problema con iniciar sesión por favor intente de nuevo.',
+          [
+            {
+              text: 'Intentar de nuevo',
+              onPress: () => {
+                AsyncStorage.removeItem('@userToken')
+                AsyncStorage.removeItem('@userId')
+                this.props.navigation.navigate('Login')
+              },
+            },
+          ]
+        )
+      }
+    }
     await this.getTrips()
   }
 
@@ -87,6 +106,7 @@ class ChooseTripsScreen extends Component {
 ChooseTripsScreen.propTypes = {
   isRequestedTrips: PropTypes.bool,
   fetchFutureTrips: PropTypes.func.isRequired,
+  loadUser: PropTypes.func.isRequired,
   user: PropTypes.shape({
     token: PropTypes.string.isRequired,
   }).isRequired,
@@ -117,6 +137,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   fetchFutureTrips: token => dispatch(fetchFutureTrips(token)),
+  loadUser: (token, id) => dispatch(getOwnProfile(token, id)),
 })
 
 ChooseTripsScreen.navigationOptions = {

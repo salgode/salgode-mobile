@@ -31,18 +31,40 @@ import * as Permissions from 'expo-permissions'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { connect } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons'
+import { Camera } from 'expo-camera'
 import PropTypes from 'prop-types'
+import * as Permissions from 'expo-permissions'
 
-import { updateUser, signoutUser, uploadImageUser } from '../redux/actions/user'
+import {
+  updateUser,
+  signoutUser,
+  getUserCar,
+  uploadImageUser,
+  createVehicle,
+} from '../redux/actions/user'
 import Layout from '../constants/Layout'
 import Colors from '../constants/Colors'
+import PhotoTaker from '../components/Login/PhotoTaker'
+import CameraModal from '../components/Login/CameraModal'
 import {
   formatPhone,
   maxLengthPhone,
   notWrongPhone,
   validPhone,
+  notWrongPlate,
 } from '../utils/input'
 import * as ImagePicker from 'expo-image-picker'
+
+const getText = destination => {
+  switch (destination) {
+    case 'licenseFront':
+      return 'Licencia de conducir frontal'
+    case 'licenseBack':
+      return 'Licencia de conducir trasera'
+    default:
+      return ''
+  }
+}
 
 function validateName(str) {
   if (typeof str !== 'string') {
@@ -127,7 +149,11 @@ const Field = ({ field }) => {
       key={field.label}
       inlineLabel
       regular
-      style={styles.item}
+      style={{
+        ...styles.item,
+        backgroundColor:
+          field.editable !== undefined && !field.editable ? '#C0C0C0' : '#FFF',
+      }}
       success={validity === 'valid'}
       error={validity === 'invalid'}
     >
@@ -143,9 +169,11 @@ const Field = ({ field }) => {
           setHasBeenBlurred(true)
         }}
         value={field.value}
+        placeholder={field.placeholder}
         secureTextEntry={field.isSecure}
         keyboardType={field.keyboardType || 'default'}
         maxLength={field.maxLength ? field.maxLength(field.value) : undefined}
+        editable={field.editable}
       />
       {validity === 'valid' ? (
         <Icon name="checkmark-circle" style={styles.checkMark} />
@@ -180,12 +208,11 @@ const EditProfileScreen = props => {
   const [lastName, setLastName] = React.useState('')
   const [phone, setPhone] = React.useState('')
   // const [password, setPassword] = React.useState('')
-  const [hasCar, setHasCar] = React.useState(!!props.user.car)
-  const [carPlate, setCarPlate] = React.useState('BC2019')
-  const [carColor, setCarColor] = React.useState('Gris')
-  const [carBrand, setCarBrand] = React.useState('Nissan')
-  const [carModel, setCarModel] = React.useState('Sportage')
-  //user avatar
+  const [hasCar, setHasCar] = React.useState(false)
+  const [carPlate, setCarPlate] = React.useState('')
+  const [carColor, setCarColor] = React.useState('')
+  const [carBrand, setCarBrand] = React.useState('')
+  const [carModel, setCarModel] = React.useState('')
   const [avatar, setAvatar] = React.useState(props.user.avatar)
 
   const [isLoading, setIsLoading] = React.useState(true)
@@ -196,6 +223,26 @@ const EditProfileScreen = props => {
   const [isSaving, setIsSaving] = React.useState(false)
   // eslint-disable-next-line no-unused-vars
   const [saveErr, setSaveErr] = React.useState(null)
+  const [isCameraOn, setIsCameraOn] = React.useState(false)
+  const [hasCameraPermission, setHasCameraPermission] = React.useState(false)
+  const [destination, setDestination] = React.useState('licenseFront')
+  const [licenseFront, setLicenseFront] = React.useState(
+    props.user.license && props.user.license.front
+  )
+  const [frontSubmit, setFrontSubmit] = React.useState('')
+  const [licenseBack, setLicenseBack] = React.useState(
+    props.user.license && props.user.license.back
+  )
+  const [backSubmit, setBackSubmit] = React.useState('')
+  const [isUploadingLicense, setIsUploadingLicense] = React.useState(false)
+  const [isSavingCar, setIsSavingCar] = React.useState(false)
+  const [canSubmitCar, setCanSubmitCar] = React.useState(false)
+
+  // duplicate code -> goes in utils
+  const requestCameraPermission = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA)
+    setHasCameraPermission(status === 'granted')
+  }
 
   const commonFields = [
     { label: 'Nombre', value: name, setValue: setName, validate: validateName },
@@ -216,39 +263,45 @@ const EditProfileScreen = props => {
       },
       validate: validPhone,
       keyboardType: 'phone-pad',
+      placeholder: '+56 9 9999 9999',
     },
-    // {
-    //   label: 'Contraseña',
-    //   value: password,
-    //   setValue: setPassword,
-    //   validate: pass => typeof pass === 'string' && pass.length > 3,
-    //   isSecure: true,
-    // },
   ]
   const carFields = [
     {
       label: 'Patente',
       value: carPlate ? carPlate.toUpperCase() : carPlate,
-      setValue: setCarPlate,
+      setValue: value => {
+        if (notWrongPlate(value)) {
+          setCarPlate(value)
+        }
+      },
       validate: validatePlate,
+      editable: canSubmitCar,
+      placeholder: 'AABB99',
     },
     {
       label: 'Color',
       value: carColor,
       setValue: setCarColor,
       validate: validateColor,
+      editable: canSubmitCar,
+      placeholder: 'Negro',
     },
     {
       label: 'Marca',
       value: carBrand,
       setValue: setCarBrand,
       validate: validateBrand,
+      editable: canSubmitCar,
+      placeholder: 'Toyota',
     },
     {
       label: 'Modelo',
       value: carModel,
       setValue: setCarModel,
       validate: validateModel,
+      editable: canSubmitCar,
+      placeholder: 'Corolla',
     },
   ]
 
@@ -265,17 +318,17 @@ const EditProfileScreen = props => {
   }
 
   const isValidUser = () => {
-    const isCarValid =
-      !hasCar ||
-      (validateBrand(user.car.brand) &&
-        validateColor(user.car.color) &&
-        validateModel(user.car.model) &&
-        validatePlate(user.car.plate))
     const validFields = [...commonFields].every(field =>
       field.validate(field.value)
     )
+    return validFields
+  }
 
-    return isCarValid && validFields
+  const isValidCar = () => {
+    const validFields = [...carFields].every(field =>
+      field.validate(field.value)
+    )
+    return validFields
   }
 
   React.useEffect(() => {
@@ -285,32 +338,33 @@ const EditProfileScreen = props => {
       lastName: stateUser.lastName,
       phone: stateUser.phone,
     }
-    if (stateUser.car) {
-      user.car = {
-        plate: stateUser.car.plate,
-        color: stateUser.car.color,
-        brand: stateUser.car.brand,
-        model: stateUser.car.model,
-      }
+    if (stateUser.vehicles && stateUser.vehicles.length !== 0) {
+      props.getUserCar(stateUser.token, stateUser.vehicles[0].vehicle_id)
     } else {
-      user.car = {
-        plate: '',
-        color: '',
-        brand: '',
-        model: '',
-      }
+      setCanSubmitCar(true)
     }
-
     setName(user.name)
     setLastName(user.lastName)
     setPhone(user.phone)
-    setCarPlate(user.car.plate)
-    setCarColor(user.car.color)
-    setCarBrand(user.car.brand)
-    setCarModel(user.car.model)
-
     setIsLoading(false)
   }, [])
+
+  React.useEffect(() => {
+    const { car } = props.user
+    if (car && car.vehicle_attributes && car.vehicle_identification) {
+      const {
+        vehicle_color,
+        vehicle_brand,
+        vehicle_model,
+      } = car.vehicle_attributes
+      const { identification_id } = car.vehicle_identification
+      setCarBrand(vehicle_brand)
+      setCarColor(vehicle_color)
+      setCarModel(vehicle_model)
+      setCarPlate(identification_id)
+      setHasCar(true)
+    }
+  }, [props.user.car])
 
   React.useEffect(() => {
     if (saveErr != null) {
@@ -321,23 +375,27 @@ const EditProfileScreen = props => {
     }
   }, [loadErr])
 
+  React.useEffect(() => {
+    if (hasCar) {
+      requestCameraPermission()
+    }
+  }, [hasCar])
+
   const saveUser = async () => {
     setIsLoading(true)
-    const response = await props.updateUser(
-      user.name,
-      user.lastName,
-      user.phone,
-      user.car,
-      props.user.userId,
-      props.user.token
-    )
+    const response = await props.updateUser(props.user.token, {
+      first_name: user.name,
+      last_name: user.lastName,
+      phone: user.phone,
+    })
     setIsLoading(false)
     if (response.error) {
-      alert(
+      Alert.alert(
+        'Error actualizando datos',
         'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
       )
     } else {
-      alert('Informacion actualizada con exito')
+      Alert.alert('Actualización exitosa', 'Informacion actualizada con exito')
     }
   }
 
@@ -361,7 +419,7 @@ const EditProfileScreen = props => {
       </View>
     )
   }
-
+  
   const _pickImage = async () => {
     if (Constants.platform.ios) {
       const { status_roll } = await Permissions.askAsync(
@@ -381,6 +439,87 @@ const EditProfileScreen = props => {
     if (!result.cancelled) {
       setAvatar(result.uri)
       uploadImageUser(result.base64)
+    }
+  }
+
+  const onTakePicture = (photo, photoUri, dest) => {
+    switch (dest) {
+      case 'licenseFront':
+        setLicenseFront(photoUri)
+        setFrontSubmit(photo)
+        break
+      case 'licenseBack':
+        setLicenseBack(photoUri)
+        setBackSubmit(photo)
+        break
+      default:
+        break
+    }
+  }
+
+  const openCamera = dest => {
+    setDestination(dest)
+    setIsCameraOn(true)
+  }
+
+  const closeCamera = () => {
+    setIsCameraOn(false)
+  }
+
+  const onPressSaveLicense = async () => {
+    setIsUploadingLicense(true)
+    setIsLoading(true)
+    const frontIdUrl = await props.uploadImage(frontSubmit)
+    const backIdUrl = await props.uploadImage(backSubmit)
+    const response = await props.updateUser(props.user.token, {
+      user_identifications: {
+        driver_license_image_front: frontIdUrl,
+        driver_license_image_back: backIdUrl,
+      },
+    })
+    setIsLoading(false)
+    setFrontSubmit('')
+    setBackSubmit('')
+    setIsUploadingLicense(false)
+    if (response.error) {
+      Alert.alert(
+        'Error actualizando datos',
+        'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
+      )
+    } else {
+      Alert.alert('Actualización exitosa', 'Solicitud enviada con éxito')
+    }
+  }
+
+  const onPressSaveCar = async () => {
+    const { token, email } = props.user
+    setIsSavingCar(true)
+    setIsLoading(true)
+    const response = await props.createVehicle(token, {
+      nickname: `Vehicle ${email}`,
+      type: 'car',
+      seats: '0',
+      color: carColor,
+      vehicle_identification: {
+        type: 'license_plate',
+        identification: carPlate.toUpperCase(),
+        country: 'Chile',
+      },
+      vehicle_attributes: {
+        brand: carBrand,
+        model: carModel,
+      },
+    })
+    setIsLoading(false)
+    setIsSaving(false)
+    if (response.error) {
+      Alert.alert(
+        'Error ingresando el vehículo',
+        'Hubo un problema al intentar ingresar tu vehículo. Por favor intentalo de nuevo.'
+      )
+    } else {
+      setCanSubmitCar(false)
+      Alert.alert('Ingreso exitoso', 'Tu vehículo fue ingresado exitosamente')
     }
   }
 
@@ -441,6 +580,16 @@ const EditProfileScreen = props => {
               {commonFields.map(field => (
                 <Field key={field.label} field={field} validity="partial" />
               ))}
+              <Button
+                block
+                borderRadius={10}
+                style={styles.blueButton}
+                disabled={isSaving || !isValidUser()}
+                onPress={onPressSaveProfile}
+                color={'#0000FF'}
+              >
+                <Text style={styles.buttonText}>Guardar cambios</Text>
+              </Button>
               <TouchableOpacity
                 style={styles.rowCenter}
                 onPress={() => setHasCar(!hasCar)}
@@ -450,30 +599,88 @@ const EditProfileScreen = props => {
                   checked={hasCar}
                   onPress={() => setHasCar(!hasCar)}
                 />
-                <Text style={styles.checkboxLabel}>Tengo Auto</Text>
+                <Text style={styles.checkboxLabel}>Tengo Vehículo</Text>
               </TouchableOpacity>
               {hasCar ? (
                 <>
                   <View style={styles.headerTextContainer}>
-                    <Text style={styles.headerText}>Datos auto</Text>
+                    <Text style={styles.headerText}>Licencia de conducir</Text>
                   </View>
+                  {hasCameraPermission && (
+                    <CameraModal
+                      closeCamera={closeCamera}
+                      onGetSelfie={onTakePicture}
+                      isCameraOn={isCameraOn}
+                      destination={destination}
+                      cameraType={Camera.Constants.Type.back}
+                      text={getText(destination)}
+                    />
+                  )}
+                  <PhotoTaker
+                    openCamera={openCamera}
+                    setImage={'licenseFront'}
+                    selfie={licenseFront}
+                    iconName="vcard-o"
+                    iconType="FontAwesome"
+                    size={60}
+                    buttonText="Tomar Frente de Licencia"
+                  />
+                  <PhotoTaker
+                    openCamera={openCamera}
+                    setImage={'licenseBack'}
+                    selfie={licenseBack}
+                    iconName="vcard-o"
+                    iconType="FontAwesome"
+                    size={60}
+                    buttonText="Tomar Atrás de Licencia"
+                  />
+                  <Button
+                    block
+                    borderRadius={10}
+                    style={styles.blueButton}
+                    disabled={isUploadingLicense || !frontSubmit || !backSubmit}
+                    onPress={onPressSaveLicense}
+                    color={'#0000FF'}
+                  >
+                    <Text style={styles.buttonText}>Solicitar revisión</Text>
+                  </Button>
+                  <View style={styles.headerTextContainer}>
+                    <Text style={styles.headerText}>Datos Vehículo</Text>
+                  </View>
+                  {canSubmitCar ? (
+                    <View style={styles.headerTextContainer}>
+                      <Text style={styles.warning}>
+                        Advertencia: los datos del vehículo no podrán ser
+                        modificados una vez ingresados
+                      </Text>
+                    </View>
+                  ) : (
+                    <></>
+                  )}
                   {carFields.map(field => (
                     <Field key={field.label} field={field} validity="partial" />
                   ))}
+                  {canSubmitCar ? (
+                    <Button
+                      block
+                      borderRadius={10}
+                      style={styles.blueButton}
+                      disabled={!canSubmitCar || !isValidCar()}
+                      onPress={onPressSaveCar}
+                      color={'#0000FF'}
+                    >
+                      <Text style={styles.buttonText}>Ingresar Vehículo</Text>
+                    </Button>
+                  ) : (
+                    <></>
+                  )}
                 </>
-              ) : null}
-              <Button
-                block
-                borderRadius={10}
-                style={styles.blueButton}
-                disabled={isSaving || !isValidUser()}
-                onPress={onPressSaveProfile}
-              >
-                <Text style={styles.buttonText}> Guardar cambios</Text>
-              </Button>
+              ) : (
+                <></>
+              )}
             </Form>
           </View>
-          <View style={styles.artificialKeyboardPadding} />
+          {hasCar && <View style={styles.artificialKeyboardPadding} />}
         </Content>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -506,20 +713,20 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  updateUser: (name, lastName, email, phone, password, car, id, authToken) =>
-    dispatch(
-      updateUser(name, lastName, email, phone, password, car, id, authToken)
-    ),
+  updateUser: (authToken, data) => dispatch(updateUser(authToken, data)),
+  uploadImage: base64string => dispatch(uploadImageUser(base64string)),
   signOut: () => dispatch(signoutUser()),
+  getUserCar: (token, carId) => dispatch(getUserCar(token, carId)),
+  createVehicle: (token, data) => dispatch(createVehicle(token, data)),
 })
 
 const photoSize = 96
 
 const styles = StyleSheet.create({
-  artificialKeyboardPadding: { height: 128 },
+  artificialKeyboardPadding: { height: 600 },
   blueButton: {
-    backgroundColor: '#0000FF',
-    marginTop: 30,
+    marginBottom: 30,
+    marginTop: 20,
   },
   button: {
     marginTop: 20,
@@ -550,7 +757,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     marginLeft: 5,
   },
-  headerTextContainer: { alignSelf: 'flex-start', marginTop: 10 },
+  headerTextContainer: {
+    alignSelf: 'flex-start',
+    marginTop: 30,
+  },
   input: {
     fontSize: 14,
     height: 40,
@@ -598,6 +808,10 @@ const styles = StyleSheet.create({
   rowCenter: {
     alignItems: 'center',
     flexDirection: 'row',
+  },
+  warning: {
+    color: 'red',
+    marginBottom: 10,
   },
 })
 

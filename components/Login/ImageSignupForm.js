@@ -19,7 +19,7 @@ const getCameraType = destination => {
 const getText = destination => {
   switch (destination) {
     case 'selfie':
-      return 'Sonríe para la cámara'
+      return 'Sonríe'
     case 'frontId':
       return 'Cédula de identidad frontal'
     case 'backId':

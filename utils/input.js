@@ -1,8 +1,8 @@
 export function formatPhone(phone) {
-  let phoneWithoutSpaces = phone.replace(/ /g, '')
+  const phoneWithoutSpaces = phone.replace(/ /g, '')
   let finalPhone = ''
-  const offset = (phoneWithoutSpaces.slice(0, 1) === '+') ? [3, 4, 8] : [1, 5]
-  for (let index in phoneWithoutSpaces) {
+  const offset = phoneWithoutSpaces.slice(0, 1) === '+' ? [3, 4, 8] : [1, 5]
+  for (const index in phoneWithoutSpaces) {
     if (offset.includes(parseInt(index))) {
       finalPhone = finalPhone.concat(' ')
     }
@@ -23,7 +23,7 @@ export function notWrongPhone(phone) {
   if (!phone) {
     return true
   }
-  let phoneWithoutSpaces = phone.replace(/ /g, '')
+  const phoneWithoutSpaces = phone.replace(/ /g, '')
   return /^\+?[0-9]*$/g.test(phoneWithoutSpaces)
 }
 
@@ -31,6 +31,6 @@ export function validPhone(phone) {
   if (!phone) {
     return false
   }
-  let phoneWithoutSpaces = phone.replace(/ /g, '')
+  const phoneWithoutSpaces = phone.replace(/ /g, '')
   return /^(\+[0-9]{11}|[0-9]{9})$/g.test(phoneWithoutSpaces)
 }

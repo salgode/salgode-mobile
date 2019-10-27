@@ -8,7 +8,7 @@ import UserToPickUp from './UserToPickUp'
 
 class CurrentStop extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       trip: this.props.trip,
@@ -17,16 +17,18 @@ class CurrentStop extends Component {
       before: this.props.before,
       after: this.props.after,
       onPressCompleteTrip: this.props.onPressCompleteTrip,
-      nextStopText: 'Siguiente Parada'
-    };
+      nextStopText: 'Siguiente Parada',
+    }
 
-
-    this.goToNextStop = this.goToNextStop.bind(this);
+    this.goToNextStop = this.goToNextStop.bind(this)
   }
 
   getUsersToPickUp() {
-    return this.state.tripManifest.passengers.filter((passenger) => {
-      return passenger.trip_route.start.name == this.state.trip.trip_route_points[this.state.stopIndex].name;
+    return this.state.tripManifest.passengers.filter(passenger => {
+      return (
+        passenger.trip_route.start.name ===
+        this.state.trip.trip_route_points[this.state.stopIndex].name
+      )
       //podria usarse el numero de parada, pero creo que este esto es mas general (y mas claro)
     })
   }
@@ -38,12 +40,12 @@ class CurrentStop extends Component {
 
     //}
     //if(is last stop) {}
-    if(this.state.stopIndex == this.state.trip.trip_route_points.length - 1) {
-      this.goToLastStop();
+    if (this.state.stopIndex === this.state.trip.trip_route_points.length - 1) {
+      this.goToLastStop()
     }
     //if(is mid stop) {}
     else {
-      stopIndex = this.state.stopIndex
+      const stopIndex = this.state.stopIndex
       this.setState({
         stopIndex: stopIndex + 1,
       })
@@ -58,7 +60,7 @@ class CurrentStop extends Component {
 
   goToLastStop() {
     //change screen to last stop according to mock file
-    this.state.onPressCompleteTrip(this.state.trip);
+    this.state.onPressCompleteTrip(this.state.trip)
   }
 
   render() {
@@ -70,27 +72,34 @@ class CurrentStop extends Component {
           <View style={styles.bar} />
           <StopIcon type={this.state.after} />
         </View>
-        <Text style={styles.location}>{this.state.trip.trip_route_points[this.state.stopIndex].name}</Text>
+        <Text style={styles.location}>
+          {this.state.trip.trip_route_points[this.state.stopIndex].name}
+        </Text>
         <Text style={styles.pickup}>Recoge a:</Text>
         <ScrollView style={styles.userContainer}>
           {this.getUsersToPickUp().map((passenger, i) => (
-            <UserToPickUp name={passenger.passenger_name}
-            location={passenger.trip_route.start.name} /*la location no esta demas? porque solo se muestran las personas a recoger en la parada actual. o es la location a la cual quieren llegar?*/
-            key={i} />
+            <UserToPickUp
+              phone={passenger.passenger_phone}
+              name={passenger.passenger_name}
+              location={
+                passenger.trip_route.start.name
+              } /*la location no esta demas? porque solo se muestran las personas a recoger en la parada actual. o es la location a la cual quieren llegar?*/
+              key={i}
+            />
           ))}
         </ScrollView>
         <Button style={styles.button} onPress={this.goToNextStop}>
           <Text>{this.state.nextStopText}</Text>
         </Button>
       </View>
-    );
+    )
   }
 }
 
 CurrentStop.propTypes = {
   before: PropTypes.oneOf(Object.values(STOP_ICON_TYPES)).isRequired,
   after: PropTypes.oneOf(Object.values(STOP_ICON_TYPES)).isRequired,
-  location: PropTypes.string.isRequired,
+  // location: PropTypes.string.isRequired,
   usersToPickUp: PropTypes.array,
 }
 

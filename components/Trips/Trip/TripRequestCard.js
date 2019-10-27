@@ -94,10 +94,7 @@ export default class TripRequestCard extends Component {
         <CardItem>
           <View style={styles.user}>
             {selfieImage && selfieImage !== 'placeholder' ? (
-              <Thumbnail
-                source={{ uri: selfieImage }}
-                style={{ width: 40, height: 40 }}
-              />
+              <Thumbnail source={{ uri: selfieImage }} />
             ) : (
               <Ionicons
                 name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}

@@ -4,8 +4,8 @@ import { View, Text } from 'native-base'
 import { Ionicons } from '@expo/vector-icons'
 import PropTypes from 'prop-types'
 import Colors from '../../constants/Colors'
-
-const UserToPickUp = ({ name, location }) => {
+import { Linking } from 'react-native'
+const UserToPickUp = ({ name, location, phone }) => {
   return (
     <View style={styles.container}>
       <Ionicons
@@ -15,6 +15,12 @@ const UserToPickUp = ({ name, location }) => {
       <View style={styles.textContainer}>
         <Text style={styles.userText}>{name}</Text>
         <Text style={styles.locationText}>{location}</Text>
+        <Text
+          style={{ color: 'blue' }}
+          onPress={() => Linking.openURL(`tel:${phone}`)}
+        >
+          {phone}
+        </Text>
       </View>
     </View>
   )
@@ -23,6 +29,7 @@ const UserToPickUp = ({ name, location }) => {
 UserToPickUp.propTypes = {
   name: PropTypes.string.isRequired,
   location: PropTypes.string.isRequired,
+  phone: PropTypes.string.isRequired,
 }
 
 const styles = StyleSheet.create({

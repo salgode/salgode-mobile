@@ -158,10 +158,10 @@ class CreateTripScreen extends Component {
     } else {
       //not verified driver
       return (
-        <View>
+        <View style={styles.viewContainer}>
           <Text>
-            Para poder crear viajes debes tener un auto (e indicar sus
-            cualidades) y haber enviado una foto por ambos lados de tu licencia.
+            Para crear viajes debes registrar tu auto y enviar una foto por
+            ambos lados de tu licencia.
           </Text>
         </View>
       )
@@ -219,6 +219,11 @@ const styles = StyleSheet.create({
   },
   group: {
     margin: 10,
+  },
+  viewContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
   },
   whiteText: {
     color: 'white',

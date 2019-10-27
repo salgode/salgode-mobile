@@ -8,10 +8,15 @@ export const actions = {
   TRIPS_FETCH_TRIP: 'TRIPS/FETCH_TRIP',
   TRIPS_FETCH_TRIP_SUCCESS: 'TRIPS/FETCH_TRIP_SUCCESS',
   TRIPS_FETCH_TRIP_FAIL: 'TRIP/FETCH_TRIP_FAIL',
+
   SET_SEARCH_START_PLACE: 'SET_SEARCH_START_PLACE',
   CLEAN_SEARCH_START_PLACE: 'CLEAN_SEARCH_START_PLACE',
+  SET_SEARCH_START_PLACE_FAIL: 'SET_SEARCH_START_PLACE_FAIL',
+  SET_SEARCH_START_PLACE_SUCCESS: 'SET_SEARCH_START_PLACE_SUCCESS',
+
   SET_SEARCH_END_PLACE: 'SET_SEARCH_END_PLACE',
   CLEAN_SEARCH_END_PLACE: 'CLEAN_SEARCH_END_PLACE',
+ 
 }
 
 export function cleanSearchStartPlace() {
@@ -21,12 +26,13 @@ export function cleanSearchStartPlace() {
 }
 
 export function setSearchStartPlace(startPlace, authToken) {
+  console.log(startPlace.id)
   return {
     type: actions.SET_SEARCH_START_PLACE,
     payload: {
       startPlace,
       request: {
-        url: `/trips/open`,
+        url: `/trips/search/interesects/${startPlace.id}`, // TODO: request trips especificos
         method: 'get',
         headers: getBaseHeaders(authToken),
       },
@@ -65,6 +71,7 @@ export function startJourney(authToken, tripId, users) {
     type: actions.TRIPS_START_JOURNEY,
     payload: {
       request: {
+        
         url: `/trips/${tripId}/start`,
         method: 'post',
         headers: getBaseHeaders(authToken),

@@ -69,7 +69,6 @@ class CreateTripScreen extends Component {
       setEndStop,
       loading,
     } = this.props
-    console.log(this.props.user)
 
     const disabled = startStop && endStop && startTime ? false : true
     const { pickedDate } = this.state
@@ -89,7 +88,7 @@ class CreateTripScreen extends Component {
 
     const isConfirmedDriver = this.isVerifiedDriver()
 
-    if (isConfirmedDriver) {
+    if (!isConfirmedDriver) { // CHANGE THIS!!! SACAR EL !
       return (
         <View style={styles.container}>
           <View>
@@ -227,7 +226,6 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = ({ user, createTrip, spots }) => {
-  console.log(user)
   return {
     loading: spots.loading,
     user: user,

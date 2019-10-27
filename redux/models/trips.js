@@ -1,5 +1,5 @@
 export const futureTripsModel = {
-  futureTripsModel: [],
+  requestedTrips: [],
   startPlace: {},
   endPlace: {},
 }

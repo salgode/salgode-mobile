@@ -1,11 +1,30 @@
 import { actions as tripActions } from '../actions/trips'
 
 export default function tripsReducer(state = {}, action) {
+  console.log(action.type)
   switch (action.type) {
     case tripActions.CLEAN_SEARCH_START_PLACE:
       return { ...state, startPlace: {} }
+
     case tripActions.SET_SEARCH_START_PLACE:
-      return { ...state, startPlace: action.payload.startPlace }
+      return { 
+        ...state, 
+        loading: true,
+        startPlace: action.payload.startPlace,
+      }
+    case tripActions.SET_SEARCH_START_PLACE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        requestedTrips: action.payload.data,
+      }
+    case tripActions.SET_SEARCH_START_PLACE_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: 'Error while fetching requested trips',
+      }
+
     case tripActions.CLEAN_SEARCH_END_PLACE:
       return { ...state, endPlace: {} }
     case tripActions.SET_SEARCH_END_PLACE:
@@ -23,7 +42,12 @@ export default function tripsReducer(state = {}, action) {
     case tripActions.TRIPS_FETCH_TRIP:
       return { ...state, loading: true }
     case tripActions.TRIPS_FETCH_TRIP_SUCCESS:
-      return { ...state, loading: false, trip: action.payload.data }
+      console.log("aca van los trips!", actions.payload.data)
+      return { 
+        ...state, 
+        loading: false, 
+        trip: action.payload.data 
+      }
     case tripActions.TRIPS_FETCH_TRIP_FAIL:
       return {
         ...state,

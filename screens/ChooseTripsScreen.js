@@ -44,17 +44,17 @@ class ChooseTripsScreen extends Component {
     this.state = {
       avalibleTrips: null,
       rerender: true,
-      trips: [],
+      // trips: [],
     }
 
     this.onRequestTrip = this.onRequestTrip.bind(this)
-    this.getTrips = this.getTrips.bind(this)
-    // console.log(this.props.user)
+    // this.getTrips = this.getTrips.bind(this)
+    this.setSearchStartPlaceFetch = this.setSearchStartPlaceFetch.bind(this)
   }
 
-  async componentDidMount() {
-    await this.getTrips()
-  }
+  // async componentDidMount() {
+  //   await this.getTrips()
+  // }
 
   onRequestTrip(stops, tripId) {
     this.props.navigation.navigate('RequestTrip', {
@@ -63,20 +63,22 @@ class ChooseTripsScreen extends Component {
     })
   }
 
-  async getTrips() {
-    const response = await this.props.fetchFutureTrips(this.props.user.token)
+  async setSearchStartPlaceFetch(item) {
+    const response = await this.props.setSearchStartPlace(item, this.props.user.token)
     if (response.error) {
       Alert.alert(
         'Error obteniendo viajes',
         'Hubo un problema obteniendo los viajes. Por favor intentalo de nuevo.'
       )
     }
+  }
 
-    // this.setState({ trips: this.props.trips })
+  async getTrips(item) {
+    await console.log("esto no va")
   }
 
   render() {
-    const { navigation, startPlace, endPlace } = this.props
+    const { navigation, startPlace, endPlace, requestedTrips } = this.props
     return (
       <View style={styles.container}>
         <View>
@@ -86,26 +88,8 @@ class ChooseTripsScreen extends Component {
                 title: 'Buscas #Desde',
                 text: '#Desde',
                 onClearPress: this.props.cleanSearchStartPlace,
-                onItemPress: this.props.setSearchStartPlace,
-                data: [
-                  // TODO: Esto deberia ser propio de una request (GET all places)
-                  // Ojo que esta request ya se hace una vez en create trip
-                  // Se debería hacer una sola vez al iniciar sesion y guardar los places en el storage
-                  {
-                    address:
-                      'San Pío X 5255, Vitacura, Providencia, Región Metropolitana',
-                    city: 'SANTIAGO',
-                    id: 'spt_d1cd6d79-6fad-4b37-9f87-48e169c9d530',
-                    name: 'Centro comercial Plaza San Pío, Vitacura 5255',
-                  },
-                  {
-                    address:
-                      'San Pío X 5255, Vitacura, Providencia, Región Metropolitana',
-                    city: 'SANTIAGO',
-                    id: 'spt_d1cd6d79-6fad-4b37-9f87-48e169c9d530',
-                    name: 'Cenhuhcuahcusa',
-                  },
-                ],
+                onItemPress: this.setSearchStartPlaceFetch,
+                data: this.props.spots,
               })
             }
             placeholder="Filtra por Comuna o Parada"
@@ -121,25 +105,7 @@ class ChooseTripsScreen extends Component {
                 text: '#A',
                 onClearPress: this.props.cleanSearchEndPlace,
                 onItemPress: this.props.setSearchEndPlace,
-                data: [
-                  // TODO: Esto deberia ser propio de una request (GET all places)
-                  // Ojo que esta request ya se hace una vez en create trip
-                  // Se debería hacer una sola vez al iniciar sesion y guardar los places en el storage
-                  {
-                    address:
-                      'San Pío X 5255, Vitacura, Providencia, Región Metropolitana',
-                    city: 'SANTIAGO',
-                    id: 'spt_d1cd6d79-6fad-4b37-9f87-48e169c9d530',
-                    name: 'Centro comercial Plaza San Pío, Vitacura 5255',
-                  },
-                  {
-                    address:
-                      'San Pío X 5255, Vitacura, Providencia, Región Metropolitana',
-                    city: 'SANTIAGO',
-                    id: 'spt_d1cd6d79-6fad-4b37-9f87-48e169c9d530',
-                    name: 'Cenhuhcuahcusa',
-                  },
-                ],
+                data: this.props.spots,
               })
             }
             placeholder="Filtra por Comuna o Parada"
@@ -151,11 +117,17 @@ class ChooseTripsScreen extends Component {
         </View>
 
         <View>
+          {requestedTrips ? 
           <ChooseTrips
             onSend={this.onRequestTrip}
             onReload={this.getTrips}
-            trips={this.state.trips.map(trip => parseTripInfo(trip))}
+            trips={requestedTrips.map(trip => parseTripInfo(trip))}
           />
+          :
+          <Text>
+            No se ha hecho ninguna solicitud
+          </Text>
+          }
         </View>
       </View>
     )
@@ -171,7 +143,7 @@ ChooseTripsScreen.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
   }).isRequired,
-  trips: PropTypes.array.isRequired,
+  requestedTrips: PropTypes.array.isRequired,
   setSearchStartPlace: PropTypes.func.isRequired,
   cleanSearchStartPlace: PropTypes.func.isRequired,
   setSearchEndPlace: PropTypes.func.isRequired,
@@ -193,15 +165,18 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     user: state.user,
-    trips: state.trips.open || [],
+    requestedTrips: state.trips.requestedTrips || [],
     startPlace: state.trips.startPlace,
     endPlace: state.trips.endPlace,
+    spots: state.spots.spots || [],
+    
+    
   }
 }
 
 const mapDispatchToProps = dispatch => ({
   fetchFutureTrips: token => dispatch(fetchFutureTrips(token)),
-  setSearchStartPlace: item => dispatch(setSearchStartPlace(item)),
+  setSearchStartPlace: (item, token) => dispatch(setSearchStartPlace(item, token)),
   cleanSearchStartPlace: () => dispatch(cleanSearchStartPlace()),
   setSearchEndPlace: item => dispatch(setSearchEndPlace(item)),
   cleanSearchEndPlace: () => dispatch(cleanSearchEndPlace()),

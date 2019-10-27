@@ -15,7 +15,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker'
 import Colors from '../constants/Colors'
 import PropTypes from 'prop-types'
 import CardInput from '../components/CardInput'
-import { getUsercar } from '../redux/actions/user'
+import { getUserCars } from '../redux/actions/user'
 
 const colorScheme = Appearance.getColorScheme()
 
@@ -249,7 +249,7 @@ const mapDispatchToProps = dispatch => ({
   clearStartStop: () => dispatch(clearStartStop()),
   clearEndStop: () => dispatch(clearEndStop()),
   getAllSpots: token => dispatch(getAllSpots(token)),
-  getUserCar: token => dispatch(getUsercar(token)),
+  getUserCars: token => dispatch(getUserCars(token)),
 })
 
 CreateTripScreen.navigationOptions = {

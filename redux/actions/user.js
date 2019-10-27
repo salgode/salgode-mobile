@@ -20,13 +20,19 @@ export const actions = {
   USER_DRIVER_GET_TRIPS: 'USER_DRIVER_GET_TRIPS',
   USER_DRIVER_GET_TRIPS_FAIL: 'USER_DRIVER_GET_TRIPS_FAIL',
   USER_DRIVER_GET_TRIPS_SUCCESS: 'USER_DRIVER_GET_TRIPS_SUCCESS',
+  USER_GET_CARS: 'USER_GET_CARS',
+  USER_GET_CARS_FAIL: 'USER_GET_CARS_FAIL',
+  USER_GET_CARS_SUCCESS: 'USER_GET_CARS_SUCCESS',
+  USER_SET: 'USER_SET',
   USER_GET_CAR: 'USER_GET_CAR',
   USER_GET_CAR_FAIL: 'USER_GET_CAR_FAIL',
   USER_GET_CAR_SUCCESS: 'USER_GET_CAR_SUCCESS',
   USER_GET_CURRENT_TRIP: 'USER_GET_CURRENT_TRIP',
   USER_GET_CURRENT_TRIP_FAIL: 'USER_GET_CURRENT_TRIP_FAIL',
   USER_GET_CURRENT_TRIP_SUCCESS: 'USER_GET_CURRENT_TRIP_SUCCESS',
-  USER_SET: 'USER_SET',
+  USER_CREATE_VEHICLE: 'USER_CREATE_VEHICLE',
+  USER_CREATE_VEHICLE_FAIL: 'USER_CREATE_VEHICLE_FAIL',
+  USER_CREATE_VEHICLE_SUCCESS: 'USER_CREATE_VEHICLE_SUCCESS',
 }
 
 const mapDataToUser = data => {
@@ -118,17 +124,7 @@ export function signupUser(
   }
 }
 
-export function updateUser(name, lastName, phone, car, id, authToken) {
-  const data = {
-    last_name: lastName,
-    first_name: name,
-    phone,
-  }
-  if (car) {
-    if (car.plate && car.color && car.brand && car.model) {
-      data.car = car
-    }
-  }
+export function updateUser(authToken, data) {
   return {
     type: actions.USER_UPDATE,
     payload: {
@@ -136,7 +132,7 @@ export function updateUser(name, lastName, phone, car, id, authToken) {
         url: urls.user.info.put.edit(),
         method: 'put',
         headers: getBaseHeaders(authToken),
-        data: data,
+        data,
       },
     },
   }
@@ -232,9 +228,9 @@ export function driverTrips(authToken) {
   }
 }
 
-export function getUsercar(authToken) {
+export function getUserCars(authToken) {
   return {
-    type: actions.USER_GET_CAR,
+    type: actions.USER_GET_CARS,
     payload: {
       request: {
         url: urls.user.vehicles.get.all(),
@@ -257,6 +253,33 @@ export function getCurrentTrip(authToken) {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
+      },
+    },
+  }
+}
+
+export function getUserCar(authToken, carId) {
+  return {
+    type: actions.USER_GET_CAR,
+    payload: {
+      request: {
+        url: urls.user.vehicles.get.single(carId),
+        method: 'get',
+        headers: getBaseHeaders(authToken),
+      },
+    },
+  }
+}
+
+export function createVehicle(authToken, data) {
+  return {
+    type: actions.USER_CREATE_VEHICLE,
+    payload: {
+      request: {
+        url: urls.user.vehicles.post.create(),
+        method: 'post',
+        headers: getBaseHeaders(authToken),
+        data,
       },
     },
   }

@@ -41,7 +41,7 @@ import {
   notWrongPhone,
   validPhone,
 } from '../utils/input'
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from 'expo-image-picker'
 
 function validateName(str) {
   if (typeof str !== 'string') {
@@ -361,34 +361,27 @@ const EditProfileScreen = props => {
     )
   }
 
-  getPermissionAsync = async () => {
+  const _pickImage = async () => {
     if (Constants.platform.ios) {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      if (status !== 'granted') {
-        alert('Sorry, we need camera roll permissions to make this work!');
-      }
-    }
-  }
-
-  _pickImage = async () => {
-    if (Constants.platform.ios) {
-      const { status_roll } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      const { status_roll } = await Permissions.askAsync(
+        Permissions.CAMERA_ROLL
+      )
       if (status_roll !== 'granted') {
-        alert('Perdón sin permisos no se puede acceder a su galería');
+        alert('Perdón sin permisos no se puede acceder a su galería')
       }
     }
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [3, 3],
       base64: true,
-    });
+    })
 
     if (!result.cancelled) {
       setAvatar(result.uri)
       uploadImageUser(result.base64)
     }
-  };
+  }
 
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.flex1}>
@@ -396,30 +389,33 @@ const EditProfileScreen = props => {
         <Content>
           <View style={{ minHeight: Dimensions.get('window').height }}>
             <View style={styles.row}>
-            <TouchableWithoutFeedback
+              <TouchableWithoutFeedback
                 disabled={isSaving || !isValidUser()}
                 onPress={_pickImage}
               >
                 <View>
-                <View style={styles.profilePhoto}>
-                  {avatar ? (
-                    <Thumbnail source={{ uri: avatar }} large />
-                  ) : (
-                    <MaterialCommunityIcons
-                      name="face-profile"
-                      color="gray"
-                      size={photoSize}
-                    />
-                  )}
-                </View>
-              <View style={{flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
+                  <View style={styles.profilePhoto}>
+                    {avatar ? (
+                      <Thumbnail source={{ uri: avatar }} large />
+                    ) : (
+                      <MaterialCommunityIcons
+                        name="face-profile"
+                        color="gray"
+                        size={photoSize}
+                      />
+                    )}
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
                     <Text style={styles.buttonText}>Editar foto</Text>
-                    <Entypo 
-                      name="edit"
-                      style={{marginLeft: 4}}
-                    />
-              </View>
-              </View>
+                    <Entypo name="edit" style={{ marginLeft: 4 }} />
+                  </View>
+                </View>
               </TouchableWithoutFeedback>
               <View style={styles.readonlyFieldsContainer}>
                 <View style={styles.readonlyField}>

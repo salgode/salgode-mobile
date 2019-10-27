@@ -20,10 +20,17 @@ export function cleanSearchStartPlace() {
   }
 }
 
-export function setSearchStartPlace(startPlace) {
+export function setSearchStartPlace(startPlace, authToken) {
   return {
     type: actions.SET_SEARCH_START_PLACE,
-    payload: startPlace,
+    payload: {
+      startPlace,
+      request: {
+        url: `/trips/open`,
+        method: 'get',
+        headers: getBaseHeaders(authToken),
+      },
+    },
   }
 }
 

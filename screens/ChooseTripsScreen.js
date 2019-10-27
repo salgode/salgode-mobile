@@ -72,7 +72,7 @@ class ChooseTripsScreen extends Component {
       )
     }
 
-    this.setState({ trips: this.props.trips })
+    // this.setState({ trips: this.props.trips })
   }
 
   render() {

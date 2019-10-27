@@ -51,7 +51,7 @@ class CreateTripScreen extends Component {
   isVerifiedDriver = () => {
     //console.log(this.props.user.token);
     return (
-      this.props.user.user_verifications.drivers_license &&
+      this.props.user.user_verifications.driver_license &&
       this.props.user.vehicles.length
     )
   }
@@ -69,7 +69,6 @@ class CreateTripScreen extends Component {
       setEndStop,
       loading,
     } = this.props
-    console.log(this.props.user)
 
     const disabled = startStop && endStop && startTime ? false : true
     const { pickedDate } = this.state
@@ -159,10 +158,10 @@ class CreateTripScreen extends Component {
     } else {
       //not verified driver
       return (
-        <View>
+        <View style={styles.viewContainer}>
           <Text>
-            Para poder crear viajes debes tener un auto (e indicar sus
-            cualidades) y haber enviado una foto por ambos lados de tu licencia.
+            Para crear viajes debes registrar tu auto y enviar una foto por
+            ambos lados de tu licencia.
           </Text>
         </View>
       )
@@ -221,13 +220,17 @@ const styles = StyleSheet.create({
   group: {
     margin: 10,
   },
+  viewContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
   whiteText: {
     color: 'white',
   },
 })
 
 const mapStateToProps = ({ user, createTrip, spots }) => {
-  console.log(user)
   return {
     loading: spots.loading,
     user: user,

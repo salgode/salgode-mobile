@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { withNavigation } from 'react-navigation'
 import TripStart from '../../components/CurrentTrip/TripStart'
+import PropTypes from 'prop-types'
 
 class CurrentStartScreen extends Component {
   constructor(props) {
@@ -28,6 +29,12 @@ class CurrentStartScreen extends Component {
       />
     )
   }
+}
+
+CurrentStartScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
 }
 
 export default withNavigation(CurrentStartScreen)

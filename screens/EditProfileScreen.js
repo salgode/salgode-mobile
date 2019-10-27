@@ -368,7 +368,7 @@ const EditProfileScreen = props => {
         Permissions.CAMERA_ROLL
       )
       if (status_roll !== 'granted') {
-        alert('Perdón sin permisos no se puede acceder a su galería')
+        alert('Necesitamos permiso para poder acceder a tus cámara y biblioteca de imágenes.')
       }
     }
     const result = await ImagePicker.launchImageLibraryAsync({

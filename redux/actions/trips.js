@@ -10,6 +10,8 @@ export const actions = {
   TRIPS_FETCH_TRIP_FAIL: 'TRIP/FETCH_TRIP_FAIL',
   SET_SEARCH_START_PLACE: 'SET_SEARCH_START_PLACE',
   CLEAN_SEARCH_START_PLACE: 'CLEAN_SEARCH_START_PLACE',
+  SET_SEARCH_END_PLACE: 'SET_SEARCH_END_PLACE',
+  CLEAN_SEARCH_END_PLACE: 'CLEAN_SEARCH_END_PLACE',
 }
 
 export function cleanSearchStartPlace() {
@@ -22,6 +24,19 @@ export function setSearchStartPlace(startPlace) {
   return {
     type: actions.SET_SEARCH_START_PLACE,
     payload: startPlace,
+  }
+}
+
+export function cleanSearchEndPlace() {
+  return {
+    type: actions.CLEAN_SEARCH_END_PLACE,
+  }
+}
+
+export function setSearchEndPlace(endPlace) {
+  return {
+    type: actions.SET_SEARCH_END_PLACE,
+    payload: endPlace,
   }
 }
 

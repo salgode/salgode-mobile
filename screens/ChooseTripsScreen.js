@@ -7,6 +7,8 @@ import {
   fetchFutureTrips,
   setSearchStartPlace,
   cleanSearchStartPlace,
+  setSearchEndPlace,
+  cleanSearchEndPlace,
 } from '../redux/actions/trips'
 import Colors from '../constants/Colors'
 import CardInput from '../components/CardInput'
@@ -74,7 +76,7 @@ class ChooseTripsScreen extends Component {
   }
 
   render() {
-    const { navigation, startPlace } = this.props
+    const { navigation, startPlace, endPlace } = this.props
     return (
       <View style={styles.container}>
         <View>
@@ -112,6 +114,40 @@ class ChooseTripsScreen extends Component {
             editable={false}
             onClearPress={this.props.cleanSearchStartPlace}
           />
+          <CardInput
+            onTouchablePress={() =>
+              navigation.navigate('SpotSelectorScreen', {
+                title: 'Buscas #A',
+                text: '#A',
+                onClearPress: this.props.cleanSearchEndPlace,
+                onItemPress: this.props.setSearchEndPlace,
+                data: [
+                  // TODO: Esto deberia ser propio de una request (GET all places)
+                  // Ojo que esta request ya se hace una vez en create trip
+                  // Se debería hacer una sola vez al iniciar sesion y guardar los places en el storage
+                  {
+                    address:
+                      'San Pío X 5255, Vitacura, Providencia, Región Metropolitana',
+                    city: 'SANTIAGO',
+                    id: 'spt_d1cd6d79-6fad-4b37-9f87-48e169c9d530',
+                    name: 'Centro comercial Plaza San Pío, Vitacura 5255',
+                  },
+                  {
+                    address:
+                      'San Pío X 5255, Vitacura, Providencia, Región Metropolitana',
+                    city: 'SANTIAGO',
+                    id: 'spt_d1cd6d79-6fad-4b37-9f87-48e169c9d530',
+                    name: 'Cenhuhcuahcusa',
+                  },
+                ],
+              })
+            }
+            placeholder="Filtra por Comuna o Parada"
+            value={endPlace ? endPlace.name : ''}
+            text="#A"
+            editable={false}
+            onClearPress={this.props.cleanSearchEndPlace}
+          />
         </View>
 
         <View>
@@ -138,6 +174,8 @@ ChooseTripsScreen.propTypes = {
   trips: PropTypes.array.isRequired,
   setSearchStartPlace: PropTypes.func.isRequired,
   cleanSearchStartPlace: PropTypes.func.isRequired,
+  setSearchEndPlace: PropTypes.func.isRequired,
+  cleanSearchEndPlace: PropTypes.func.isRequired,
 }
 
 ChooseTripsScreen.defaultProps = {
@@ -157,6 +195,7 @@ const mapStateToProps = state => {
     user: state.user,
     trips: state.trips.open || [],
     startPlace: state.trips.startPlace,
+    endPlace: state.trips.endPlace,
   }
 }
 
@@ -164,6 +203,8 @@ const mapDispatchToProps = dispatch => ({
   fetchFutureTrips: token => dispatch(fetchFutureTrips(token)),
   setSearchStartPlace: item => dispatch(setSearchStartPlace(item)),
   cleanSearchStartPlace: () => dispatch(cleanSearchStartPlace()),
+  setSearchEndPlace: item => dispatch(setSearchEndPlace(item)),
+  cleanSearchEndPlace: () => dispatch(cleanSearchEndPlace()),
 })
 
 ChooseTripsScreen.navigationOptions = {

@@ -6,6 +6,10 @@ export default function tripsReducer(state = {}, action) {
       return { ...state, startPlace: {} }
     case tripActions.SET_SEARCH_START_PLACE:
       return { ...state, startPlace: action.payload }
+    case tripActions.CLEAN_SEARCH_END_PLACE:
+      return { ...state, endPlace: {} }
+    case tripActions.SET_SEARCH_END_PLACE:
+      return { ...state, endPlace: action.payload }
     case tripActions.TRIPS_FETCH_FUTURE_TRIPS:
       return { ...state, loading: true }
     case tripActions.TRIPS_FETCH_FUTURE_TRIPS_SUCCESS:

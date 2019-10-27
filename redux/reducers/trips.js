@@ -41,7 +41,6 @@ export default function tripsReducer(state = {}, action) {
     case tripActions.TRIPS_FETCH_TRIP:
       return { ...state, loading: true }
     case tripActions.TRIPS_FETCH_TRIP_SUCCESS:
-      console.log("aca van los trips!", actions.payload.data)
       return { 
         ...state, 
         loading: false, 

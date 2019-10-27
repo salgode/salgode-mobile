@@ -88,7 +88,7 @@ class CreateTripScreen extends Component {
 
     const isConfirmedDriver = this.isVerifiedDriver()
 
-    if (!isConfirmedDriver) { // CHANGE THIS!!! SACAR EL !
+    if (isConfirmedDriver) {
       return (
         <View style={styles.container}>
           <View>

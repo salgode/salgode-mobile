@@ -412,8 +412,12 @@ const EditProfileScreen = props => {
                     />
                   )}
                 </View>
-              <View style={{alignItems:'center'}}>
+              <View style={{flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
                     <Text style={styles.buttonText}>Editar foto</Text>
+                    <Entypo 
+                      name="edit"
+                      style={{marginLeft: 4}}
+                    />
               </View>
               </View>
               </TouchableWithoutFeedback>

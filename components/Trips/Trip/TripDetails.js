@@ -3,17 +3,13 @@ import { StyleSheet, Linking } from 'react-native'
 import { Card, CardItem, View, Text, Thumbnail } from 'native-base'
 import PropTypes from 'prop-types'
 import { MaterialCommunityIcons, AntDesign, Octicons } from '@expo/vector-icons'
-import TimeInfo from '../../components/Trips/Trip/TimeInfo'
-import Location from '../../components/Trips/Trip/Location'
-import Colors from '../../constants/Colors'
+import TimeInfo from './TimeInfo'
+import Location from './Location'
+import Colors from '../../../constants/Colors'
 
 const photoSize = 96
 
-class UserProfile extends Component {
-  static navigationOptions = {
-    title: 'Detalle Viaje',
-  }
-
+class TripDetails extends Component {
   constructor(props) {
     super(props)
     this.readonlyField = this.readonlyField.bind(this)
@@ -32,8 +28,7 @@ class UserProfile extends Component {
   }
 
   renderAvatar() {
-    const { navigation } = this.props
-    const { avatar } = navigation.state.params.userData
+    const { avatar } = this.props
     if (avatar) {
       return <Thumbnail source={{ uri: avatar }} large />
     } else {
@@ -90,8 +85,16 @@ class UserProfile extends Component {
   }
 
   render() {
-    const { navigation } = this.props
-    const { userData } = navigation.state.params
+    const {
+      firstName,
+      lastName,
+      phone,
+      isReserved,
+      dniVerified,
+      licenseVerified,
+      tripRoutePoints,
+      etd,
+    } = this.props;
 
     return (
       <View style={styles.container}>
@@ -104,23 +107,23 @@ class UserProfile extends Component {
           <CardItem>
             <View style={styles.user}>
               <View style={styles.profilePhoto}>{this.renderAvatar()}</View>
-              <View style={{flexDirection: 'column', alignSelf: 'flex-start'}}>
-                <Text style={styles.userText}>{`${userData.first_name} ${userData.last_name}`}</Text>
-                {userData.isAccepted && <Text
+              <View style={styles.userContainer}>
+                <Text style={styles.userText}>{`${firstName} ${lastName}`}</Text>
+                {isReserved && <Text
                   style={styles.phoneText}
-                  onPress={() => Linking.openURL(`tel:${userData.phone}`)}>
-                  {userData.phone}
+                  onPress={() => Linking.openURL(`tel:${phone}`)}>
+                  {phone}
                 </Text>}
-                {this.renderVerification(userData.dniVerified, 'Usuario verificado')}
-                {this.renderVerification(userData.licenceVerified, 'Conductor verificado')}
+                {this.renderVerification(dniVerified, 'Usuario verificado')}
+                {this.renderVerification(licenseVerified, 'Conductor verificado')}
               </View>
             </View>
           </CardItem>
           <CardItem style={styles.locationContainer}>
-            {this.renderLocation(userData.trip_route_points)}
+            {this.renderLocation(tripRoutePoints)}
           </CardItem>
           <CardItem>
-            <TimeInfo timestamp={Date.parse(userData.etd_info.etd)} isDate />
+            <TimeInfo timestamp={Date.parse(etd)} isDate />
           </CardItem>
         </Card>
       </View>
@@ -128,10 +131,16 @@ class UserProfile extends Component {
   }
 }
 
-UserProfile.propTypes = {
-  navigation: PropTypes.shape({
-    state: PropTypes.object.isRequired,
-  }).isRequired,
+TripDetails.propTypes = {
+  avatar: PropTypes.string,
+  firstName: PropTypes.string,
+  lastName: PropTypes.string,
+  phone: PropTypes.string,
+  isReserved: PropTypes.bool,
+  dniVerified: PropTypes.bool,
+  licenseVerified: PropTypes.bool,
+  tripRoutePoints: PropTypes.array,
+  etd: PropTypes.string
 }
 
 const styles = StyleSheet.create({
@@ -163,10 +172,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
   },
-  userData: {
-    alignSelf: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
+  userContainer: {
+    flexDirection: 'column',
+    alignSelf: 'flex-start',
   },
   userText: {
     fontSize: 17,
@@ -196,4 +204,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default UserProfile
+export default TripDetails

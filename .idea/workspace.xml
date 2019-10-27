@@ -7,8 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d1b56ca6-71f2-4e18-bce7-c340778c2f0d" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/redux/reducers/trips.js" beforeDir="false" afterPath="$PROJECT_DIR$/redux/reducers/trips.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/ChooseTripsScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/ChooseTripsScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/navigation/MainTabNavigator.js" beforeDir="false" afterPath="$PROJECT_DIR$/navigation/MainTabNavigator.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -22,7 +21,7 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="71" />
-    <option name="y" value="30" />
+    <option name="y" value="24" />
     <option name="width" value="2489" />
     <option name="height" value="1410" />
   </component>
@@ -115,7 +114,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="71" y="30" width="2489" height="1410" extended-state="0" />
+    <frame x="71" y="24" width="2489" height="1410" extended-state="0" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="right" id="Palette&#9;" />

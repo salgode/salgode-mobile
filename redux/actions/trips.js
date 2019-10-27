@@ -26,17 +26,22 @@ export function cleanSearchStartPlace() {
 }
 
 export function setSearchStartPlace(startPlace, authToken) {
-  console.log(startPlace.id)
+  if (startPlace){
+    return {
+      type: actions.SET_SEARCH_START_PLACE,
+      payload: {
+        startPlace,
+        request: {
+          url: `/trips/search/intersects/${startPlace.id}`, // TODO: request trips especificos
+          method: 'get',
+          headers: getBaseHeaders(authToken),
+        },
+      },
+    }
+  }
   return {
     type: actions.SET_SEARCH_START_PLACE,
-    payload: {
-      startPlace,
-      request: {
-        url: `/trips/search/interesects/${startPlace.id}`, // TODO: request trips especificos
-        method: 'get',
-        headers: getBaseHeaders(authToken),
-      },
-    },
+    payload: { startPlace }
   }
 }
 

@@ -73,10 +73,6 @@ class ChooseTripsScreen extends Component {
     }
   }
 
-  async getTrips(item) {
-    await console.log("esto no va")
-  }
-
   render() {
     const { navigation, startPlace, endPlace, requestedTrips } = this.props
     return (
@@ -120,7 +116,7 @@ class ChooseTripsScreen extends Component {
           {requestedTrips ? 
           <ChooseTrips
             onSend={this.onRequestTrip}
-            onReload={this.getTrips}
+            onReload={this.setSearchStartPlaceFetch}
             trips={requestedTrips.map(trip => parseTripInfo(trip))}
           />
           :
@@ -168,9 +164,7 @@ const mapStateToProps = state => {
     requestedTrips: state.trips.requestedTrips || [],
     startPlace: state.trips.startPlace,
     endPlace: state.trips.endPlace,
-    spots: state.spots.spots || [],
-    
-    
+    spots: state.spots.spots || [],    
   }
 }
 

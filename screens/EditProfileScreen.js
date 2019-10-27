@@ -51,6 +51,7 @@ import {
   maxLengthPhone,
   notWrongPhone,
   validPhone,
+  notWrongPlate,
 } from '../utils/input'
 import * as ImagePicker from 'expo-image-picker'
 
@@ -264,19 +265,16 @@ const EditProfileScreen = props => {
       keyboardType: 'phone-pad',
       placeholder: '+56 9 9999 9999',
     },
-    // {
-    //   label: 'Contraseña',
-    //   value: password,
-    //   setValue: setPassword,
-    //   validate: pass => typeof pass === 'string' && pass.length > 3,
-    //   isSecure: true,
-    // },
   ]
   const carFields = [
     {
       label: 'Patente',
       value: carPlate ? carPlate.toUpperCase() : carPlate,
-      setValue: setCarPlate,
+      setValue: value => {
+        if (notWrongPlate(value)) {
+          setCarPlate(value)
+        }
+      },
       validate: validatePlate,
       editable: canSubmitCar,
       placeholder: 'AABB99',
@@ -323,7 +321,13 @@ const EditProfileScreen = props => {
     const validFields = [...commonFields].every(field =>
       field.validate(field.value)
     )
+    return validFields
+  }
 
+  const isValidCar = () => {
+    const validFields = [...carFields].every(field =>
+      field.validate(field.value)
+    )
     return validFields
   }
 
@@ -661,7 +665,7 @@ const EditProfileScreen = props => {
                       block
                       borderRadius={10}
                       style={styles.blueButton}
-                      disabled={!canSubmitCar}
+                      disabled={!canSubmitCar || !isValidCar()}
                       onPress={onPressSaveCar}
                       color={'#0000FF'}
                     >

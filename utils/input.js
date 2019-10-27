@@ -1,3 +1,5 @@
+// Phone
+
 export function formatPhone(phone) {
   const phoneWithoutSpaces = phone.replace(/ /g, '')
   let finalPhone = ''
@@ -33,4 +35,14 @@ export function validPhone(phone) {
   }
   const phoneWithoutSpaces = phone.replace(/ /g, '')
   return /^(\+[0-9]{11}|[0-9]{9})$/g.test(phoneWithoutSpaces)
+}
+
+// Plate
+
+export function validPlate(plate) {
+  return /^([a-zA-Z]{4}[0-9]{2}|[a-zA-Z]{2}[0-9]{4})$/i.test(plate)
+}
+
+export function notWrongPlate(plate) {
+  return /^[a-zA-Z]{0,4}[0-9]{0,4}$/i.test(plate) && !/^([a-zA-Z]{3}[0-9]{1,3}|[a-zA-Z]{1}[0-9]{1,5})$/i.test(plate) && !/^[0-9]+/i.test(plate)
 }

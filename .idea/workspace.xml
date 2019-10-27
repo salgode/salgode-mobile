@@ -7,11 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d1b56ca6-71f2-4e18-bce7-c340778c2f0d" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/redux/actions/trips.js" beforeDir="false" afterPath="$PROJECT_DIR$/redux/actions/trips.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/redux/models/trips.js" beforeDir="false" afterPath="$PROJECT_DIR$/redux/models/trips.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/redux/reducers/trips.js" beforeDir="false" afterPath="$PROJECT_DIR$/redux/reducers/trips.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/screens/ChooseTripsScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/ChooseTripsScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/CreateTripScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/CreateTripScreen.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />

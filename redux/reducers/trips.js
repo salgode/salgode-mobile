@@ -1,7 +1,6 @@
 import { actions as tripActions } from '../actions/trips'
 
 export default function tripsReducer(state = {}, action) {
-  console.log(action.type)
   switch (action.type) {
     case tripActions.CLEAN_SEARCH_START_PLACE:
       return { ...state, startPlace: {} }

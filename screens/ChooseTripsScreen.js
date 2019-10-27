@@ -10,6 +10,7 @@ import {
   setSearchEndPlace,
   cleanSearchEndPlace,
 } from '../redux/actions/trips'
+import { getAllSpots } from '../redux/actions/spots'
 import Colors from '../constants/Colors'
 import CardInput from '../components/CardInput'
 import lang from '../languages/es'
@@ -55,6 +56,9 @@ class ChooseTripsScreen extends Component {
   // async componentDidMount() {
   //   await this.getTrips()
   // }
+  componentDidMount = () => {
+    this.props.getAllSpots(this.props.user.token)
+  }
 
   onRequestTrip(stops, tripId) {
     this.props.navigation.navigate('RequestTrip', {
@@ -64,6 +68,7 @@ class ChooseTripsScreen extends Component {
   }
 
   async setSearchStartPlaceFetch(item) {
+    console.log("aca")
     const response = await this.props.setSearchStartPlace(item, this.props.user.token)
     if (response.error) {
       Alert.alert(
@@ -94,7 +99,7 @@ class ChooseTripsScreen extends Component {
             editable={false}
             onClearPress={this.props.cleanSearchStartPlace}
           />
-          <CardInput
+          {/* <CardInput
             onTouchablePress={() =>
               navigation.navigate('SpotSelectorScreen', {
                 title: 'Buscas #A',
@@ -109,11 +114,11 @@ class ChooseTripsScreen extends Component {
             text="#A"
             editable={false}
             onClearPress={this.props.cleanSearchEndPlace}
-          />
+          /> */}
         </View>
 
         <View>
-          {requestedTrips ? 
+          {requestedTrips.length  > 0 ? 
           <ChooseTrips
             onSend={this.onRequestTrip}
             onReload={this.setSearchStartPlaceFetch}
@@ -121,7 +126,7 @@ class ChooseTripsScreen extends Component {
           />
           :
           <Text>
-            No se ha hecho ninguna solicitud
+            No se ha encontrado ningun viaje segun lo solicitado
           </Text>
           }
         </View>
@@ -144,6 +149,7 @@ ChooseTripsScreen.propTypes = {
   cleanSearchStartPlace: PropTypes.func.isRequired,
   setSearchEndPlace: PropTypes.func.isRequired,
   cleanSearchEndPlace: PropTypes.func.isRequired,
+  getAllSpots: PropTypes.func.isRequired,
 }
 
 ChooseTripsScreen.defaultProps = {
@@ -174,6 +180,7 @@ const mapDispatchToProps = dispatch => ({
   cleanSearchStartPlace: () => dispatch(cleanSearchStartPlace()),
   setSearchEndPlace: item => dispatch(setSearchEndPlace(item)),
   cleanSearchEndPlace: () => dispatch(cleanSearchEndPlace()),
+  getAllSpots: token => dispatch(getAllSpots(token)),
 })
 
 ChooseTripsScreen.navigationOptions = {

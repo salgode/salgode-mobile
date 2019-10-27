@@ -23,6 +23,9 @@ export const actions = {
   USER_GET_CAR: 'USER_GET_CAR',
   USER_GET_CAR_FAIL: 'USER_GET_CAR_FAIL',
   USER_GET_CAR_SUCCESS: 'USER_GET_CAR_SUCCESS',
+  USER_GET_CURRENT_TRIP: 'USER_GET_CURRENT_TRIP',
+  USER_GET_CURRENT_TRIP_FAIL: 'USER_GET_CURRENT_TRIP_FAIL',
+  USER_GET_CURRENT_TRIP_SUCCESS: 'USER_GET_CURRENT_TRIP_SUCCESS',
   USER_SET: 'USER_SET',
 }
 
@@ -36,14 +39,14 @@ const mapDataToUser = data => {
     email: data.email,
     phone: data.phone,
     user_verifications: {
-      drivers_license: data.user_verifications.drivers_license,
+      driver_license: data.user_verifications.driver_license,
     },
     vehicles: data.vehicles,
   }
-  
+
   const { user_identifications } = data
   if (user_identifications) {
-    const { selfie, identification, drivers_license } = user_identifications
+    const { selfie, identification, driver_license } = user_identifications
     Object.assign(user, {
       avatar: selfie,
       dni: {
@@ -51,8 +54,8 @@ const mapDataToUser = data => {
         back: identification.back,
       },
       license: {
-        front: drivers_license.front,
-        back: drivers_license.back,
+        front: driver_license.front,
+        back: driver_license.back,
       },
     })
   }
@@ -235,6 +238,21 @@ export function getUsercar(authToken) {
     payload: {
       request: {
         url: urls.user.vehicles.get.all(),
+        method: 'get',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      },
+    },
+  }
+}
+
+export function getCurrentTrip(authToken) {
+  return {
+    type: actions.USER_GET_CURRENT_TRIP,
+    payload: {
+      request: {
+        url: urls.user.trips.get.current(),
         method: 'get',
         headers: {
           Authorization: `Bearer ${authToken}`,

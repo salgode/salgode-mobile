@@ -60,6 +60,7 @@ export function setSearchEndPlace(endPlace) {
     type: actions.SET_SEARCH_END_PLACE,
     payload: endPlace,
   }
+}
 
 export function startJourney(authToken, tripId, users) {
   return {

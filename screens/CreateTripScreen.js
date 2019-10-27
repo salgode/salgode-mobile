@@ -51,7 +51,7 @@ class CreateTripScreen extends Component {
 
   isVerifiedDriver = () => {
     return (
-      this.props.user.user_verifications.drivers_license &&
+      this.props.user.user_verifications.driver_license &&
       this.props.user.vehicles
     )
   }
@@ -159,8 +159,10 @@ class CreateTripScreen extends Component {
       return (
         <View style={styles.viewContainer}>
           <Text>
+
             Para poder crear viajes debes tener un auto registrado y enviar una
             foto por ambos lados de tu licencia.
+
           </Text>
         </View>
       )

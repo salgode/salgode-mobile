@@ -27,6 +27,7 @@ import {
   Thumbnail,
 } from 'native-base'
 import { withNavigation } from 'react-navigation'
+import * as Permissions from 'expo-permissions'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { connect } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons'

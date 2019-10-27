@@ -51,11 +51,9 @@ class TripsScreen extends Component {
     )
   }
   render() {
-    // console.log(this.props.trips)
-
     const isConfirmedDriver = this.isVerifiedDriver()
 
-    if (isConfirmedDriver || this.props.type == 'pedidos') {
+    if (isConfirmedDriver || this.props.type === 'pedidos') {
       return (
         <View style={styles.container}>
           {this.state.loading && <Spinner color="blue" />}

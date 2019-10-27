@@ -112,7 +112,7 @@ export function signupUser(
         method: 'post',
         headers: getDefaultHeaders(),
         data: data,
-        transformResponse: data => mapDataToUser(data),
+        transformResponse: mapDataToUser,
       },
     },
   }

@@ -5,13 +5,16 @@ import PropTypes from 'prop-types'
 import ChooseTrips from '../components/Trips/ChooseTrips'
 import { fetchFutureTrips } from '../redux/actions/trips'
 import Colors from '../constants/Colors'
+import lang from '../languages/es'
 
 const parseTripInfo = trip => {
   const { driver } = trip
   return {
-    timestamp: new Date(trip.etd).getTime(),
+    ...trip,
+    timestamp: new Date(trip.etd_info.etd),
     driver: {
       name: driver.driver_name,
+      phone: driver.driver_phone,
       reputation: driver.driver_score,
       id: driver.driver_id,
       //TODO Ajustar al response del server.
@@ -118,6 +121,7 @@ const mapDispatchToProps = dispatch => ({
 
 ChooseTripsScreen.navigationOptions = {
   title: 'Busca tu viaje',
+  headerBackTitle: lang.default.back,
 }
 export default connect(
   mapStateToProps,

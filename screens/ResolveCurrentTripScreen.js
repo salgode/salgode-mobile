@@ -35,8 +35,8 @@ class ResolveCurrentTripScreen extends Component {
           trip,
           userToken,
           manifest,
-          // asDriver: JSON.parse(data.payload.data.is_driver),
-          asDriver: true,
+          asDriver: JSON.parse(data.payload.data.is_driver),
+          // asDriver: true,
         })
       } else {
         this.props.navigation.navigate('Main')

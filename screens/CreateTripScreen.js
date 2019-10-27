@@ -87,7 +87,6 @@ class CreateTripScreen extends Component {
       return <Spinner color={'#0000FF'} />
     }
 
-<<<<<<< HEAD
     const isConfirmedDriver = this.isVerifiedDriver()
 
     if (isConfirmedDriver) {
@@ -128,45 +127,6 @@ class CreateTripScreen extends Component {
               onClearPress={clearEndStop}
             />
           </View>
-=======
-    return (
-      <View style={styles.container}>
-        <View>
-          <CardInput
-            onTouchablePress={() =>
-              navigation.navigate('SpotSelectorScreen', {
-                title: 'Seleccionar #Desde',
-                text: '#Desde',
-                onClearPress: clearStartStop,
-                onItemPress: setStartStop,
-                data: filteredSpots,
-              })
-            }
-            placeholder="Filtra por Comuna o Parada"
-            value={startStop.name}
-            text="#Desde"
-            editable={false}
-            onClearPress={clearStartStop}
-          />
-
-          <CardInput
-            onTouchablePress={() =>
-              navigation.navigate('SpotSelectorScreen', {
-                title: 'Seleccionar #A',
-                text: '#A',
-                onClearPress: clearEndStop,
-                onItemPress: setEndStop,
-                data: filteredSpots,
-              })
-            }
-            placeholder="Filtra por Comuna o Parada"
-            value={endStop.name}
-            text="#A"
-            editable={false}
-            onClearPress={clearEndStop}
-          />
-        </View>
->>>>>>> add to storage state variable searchStartPlace and works within search bar
 
           <View style={styles.group}>
             <Button style={styles.dateButton} onPress={this.showDateTimePicker}>

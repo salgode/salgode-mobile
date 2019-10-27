@@ -19,7 +19,8 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "cl.salgode.salgode"
+      "bundleIdentifier": "cl.salgode.salgode",
+      "buildNumber": "2"
     },
     "android": {
       "package": "cl.salgode.salgode"

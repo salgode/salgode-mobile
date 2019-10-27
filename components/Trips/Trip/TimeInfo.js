@@ -26,7 +26,7 @@ const TimeInfo = ({ timestamp, displayAsRow = false }) => {
             '/' +
             datetime.getMonth() +
             '/' +
-            datetime.getYear()}
+            datetime.getFullYear()}
         </Text>
       </View>
       <View style={styles.rowElement}>

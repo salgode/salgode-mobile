@@ -33,7 +33,7 @@ class ChooseTrips extends Component {
   handleOnPress(tripId) {
     const { trips } = this.props
     const selectedTrip = trips.find(x => x.tripId == tripId)
-    this.props.navigation.navigate('UserProfile', {
+    this.props.navigation.navigate('TripDetails', {
       userData: {
         avatar: selectedTrip.driver.avatar,
         first_name: selectedTrip.driver.name,
@@ -41,10 +41,10 @@ class ChooseTrips extends Component {
         phone: selectedTrip.driver.phone,
         email: 'TODO: Email',
         dniVerified: true,
-        licenceVerified: true,
+        licenseVerified: true,
         trip_route_points: selectedTrip.trip_route_points,
         etd_info: selectedTrip.etd_info,
-        isAccepted: false,
+        isReserved: false,
       },
     })
   }

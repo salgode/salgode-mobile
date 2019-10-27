@@ -10,7 +10,6 @@ import { View, StyleSheet, Alert, AsyncStorage, Text } from 'react-native'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import ChooseTrips from '../components/Trips/ChooseTrips'
-// import { fetchFutureTrips } from '../redux/actions/trips'
 import { getOwnProfile } from '../redux/actions/user'
 import Colors from '../constants/Colors'
 import CardInput from '../components/CardInput'
@@ -45,11 +44,9 @@ class ChooseTripsScreen extends Component {
     this.state = {
       avalibleTrips: null,
       rerender: true,
-      // trips: [],
     }
 
     this.onRequestTrip = this.onRequestTrip.bind(this)
-    // this.getTrips = this.getTrips.bind(this)
     this.setSearchStartPlaceFetch = this.setSearchStartPlaceFetch.bind(this)
   }
 
@@ -190,7 +187,6 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  // fetchFutureTrips: token => dispatch(fetchFutureTrips(token)),
   setSearchStartPlace: (item, token) => dispatch(setSearchStartPlace(item, token)),
   cleanSearchStartPlace: () => dispatch(cleanSearchStartPlace()),
   setSearchEndPlace: item => dispatch(setSearchEndPlace(item)),

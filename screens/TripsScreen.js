@@ -8,7 +8,7 @@ import { userTrips, driverTrips } from '../redux/actions/user'
 
 class TripsScreen extends Component {
   static navigationOptions = {
-    title: 'Mis Viajes',
+    title: '#Manejando',
   }
 
   constructor(props) {

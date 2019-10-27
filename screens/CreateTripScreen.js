@@ -27,7 +27,7 @@ class CreateTripScreen extends Component {
 
   componentDidMount = () => {
     this.props.getAllSpots(this.props.user.token)
-    this.props.getUserCar(this.props.user.token)
+    this.props.getUserCars(this.props.user.token)
     // .then(response => {
     // if (!response.payload.data.vehicle_id) {
     //   this.props.navigation.navigate('EditProfile')
@@ -159,10 +159,8 @@ class CreateTripScreen extends Component {
       return (
         <View style={styles.viewContainer}>
           <Text>
-
             Para poder crear viajes debes tener un auto registrado y enviar una
             foto por ambos lados de tu licencia.
-
           </Text>
         </View>
       )
@@ -176,7 +174,7 @@ CreateTripScreen.navigationOptions = {
 
 CreateTripScreen.propTypes = {
   getAllSpots: PropTypes.func.isRequired,
-  getUserCar: PropTypes.func.isRequired,
+  getUserCars: PropTypes.func.isRequired,
   setStartTime: PropTypes.func.isRequired,
   setStartStop: PropTypes.func.isRequired,
   setEndStop: PropTypes.func.isRequired,

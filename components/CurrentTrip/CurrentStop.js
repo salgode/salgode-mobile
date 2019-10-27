@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import StopIcon, { STOP_ICON_TYPES } from './StopIcon'
 import Colors from '../../constants/Colors'
 import UserToPickUp from './UserToPickUp'
+import StopsList from './StopsList'
 
 class CurrentStop extends Component {
   constructor(props) {
@@ -27,7 +28,7 @@ class CurrentStop extends Component {
     return this.state.tripManifest.passengers.filter(passenger => {
       return (
         passenger.trip_route.start.name ===
-        this.state.trip.trip_route_points[this.state.stopIndex].name
+        this.state.trip.route_points[this.state.stopIndex].name
       )
       //podria usarse el numero de parada, pero creo que este esto es mas general (y mas claro)
     })
@@ -40,7 +41,7 @@ class CurrentStop extends Component {
 
     //}
     //if(is last stop) {}
-    if (this.state.stopIndex === this.state.trip.trip_route_points.length - 1) {
+    if (this.state.stopIndex === this.state.trip.route_points.length - 1) {
       this.goToLastStop()
     }
     //if(is mid stop) {}
@@ -50,7 +51,7 @@ class CurrentStop extends Component {
         stopIndex: stopIndex + 1,
       })
       // TODO: change with after variable to check end of trip
-      if (stopIndex + 1 === this.state.trip.trip_route_points.length - 1) {
+      if (stopIndex + 1 === this.state.trip.route_points.length - 1) {
         this.setState({
           nextStopText: 'Terminar Viaje',
         })
@@ -64,33 +65,56 @@ class CurrentStop extends Component {
   }
 
   render() {
+    if (this.props.asDriver) {
+      return (
+        <View style={styles.container}>
+          <Text style={styles.title}>#Llego en 5</Text>
+          <View style={styles.roadContainer}>
+            <StopIcon type={this.state.before} />
+            <View style={styles.bar} />
+            <StopIcon type={this.state.after} />
+          </View>
+          <Text style={styles.location}>
+            {this.state.trip.route_points[this.state.stopIndex].name}
+          </Text>
+          <View>
+            <Text style={styles.pickup}>Recoge a:</Text>
+            <ScrollView style={styles.userContainer}>
+              {this.getUsersToPickUp().map((passenger, i) => (
+                <UserToPickUp
+                  phone={passenger.passenger_phone}
+                  name={passenger.passenger_name}
+                  location={
+                    passenger.trip_route.start.name
+                  } /*la location no esta demas? porque solo se muestran las personas a recoger en la parada actual. o es la location a la cual quieren llegar?*/
+                  key={i}
+                />
+              ))}
+            </ScrollView>
+            <Button style={styles.button} onPress={this.goToNextStop}>
+              <Text>{this.state.nextStopText}</Text>
+            </Button>
+          </View>
+        </View>
+      )
+    }
+
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>#Llego en 5</Text>
-        <View style={styles.roadContainer}>
-          <StopIcon type={this.state.before} />
-          <View style={styles.bar} />
-          <StopIcon type={this.state.after} />
-        </View>
-        <Text style={styles.location}>
-          {this.state.trip.trip_route_points[this.state.stopIndex].name}
-        </Text>
-        <Text style={styles.pickup}>Recoge a:</Text>
-        <ScrollView style={styles.userContainer}>
-          {this.getUsersToPickUp().map((passenger, i) => (
+        <Text style={styles.title}>#BuenViaje</Text>
+        <Text style={styles.pickup}>La ruta:</Text>
+        <StopsList stops={this.props.trip.trip_route_points} />
+
+        <View>
+          <Text style={styles.pickup}>Te lleva:</Text>
+          <ScrollView style={styles.userContainer}>
             <UserToPickUp
-              phone={passenger.passenger_phone}
-              name={passenger.passenger_name}
-              location={
-                passenger.trip_route.start.name
-              } /*la location no esta demas? porque solo se muestran las personas a recoger en la parada actual. o es la location a la cual quieren llegar?*/
-              key={i}
+              phone={this.props.trip.driver.driver_phone}
+              name={this.props.trip.driver.driver_name}
+              location=""
             />
-          ))}
-        </ScrollView>
-        <Button style={styles.button} onPress={this.goToNextStop}>
-          <Text>{this.state.nextStopText}</Text>
-        </Button>
+          </ScrollView>
+        </View>
       </View>
     )
   }
@@ -101,6 +125,7 @@ CurrentStop.propTypes = {
   after: PropTypes.oneOf(Object.values(STOP_ICON_TYPES)).isRequired,
   // location: PropTypes.string.isRequired,
   usersToPickUp: PropTypes.array,
+  asDriver: PropTypes.bool.isRequired,
 }
 
 const styles = StyleSheet.create({

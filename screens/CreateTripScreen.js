@@ -50,7 +50,10 @@ class CreateTripScreen extends Component {
 
   isVerifiedDriver = () => {
     //console.log(this.props.user.token);
-    return this.props.user.user_verifications.drivers_license && this.props.user.vehicles.length;
+    return (
+      this.props.user.user_verifications.driver_license &&
+      this.props.user.vehicles.length
+    )
   }
 
   render() {
@@ -66,7 +69,6 @@ class CreateTripScreen extends Component {
       setEndStop,
       loading,
     } = this.props
-    console.log(this.props.user)
 
     const disabled = startStop && endStop && startTime ? false : true
     const { pickedDate } = this.state
@@ -84,9 +86,9 @@ class CreateTripScreen extends Component {
       return <Spinner color={'#0000FF'} />
     }
 
-    let isConfirmedDriver = this.isVerifiedDriver(); 
+    const isConfirmedDriver = this.isVerifiedDriver()
 
-    if(isConfirmedDriver) {
+    if (isConfirmedDriver) {
       return (
         <View style={styles.container}>
           <View>
@@ -106,7 +108,7 @@ class CreateTripScreen extends Component {
               editable={false}
               onClearPress={clearStartStop}
             />
-  
+
             <CardInput
               onTouchablePress={() =>
                 navigation.navigate('SpotSelectorScreen', {
@@ -124,7 +126,7 @@ class CreateTripScreen extends Component {
               onClearPress={clearEndStop}
             />
           </View>
-  
+
           <View style={styles.group}>
             <Button style={styles.dateButton} onPress={this.showDateTimePicker}>
               <Text>
@@ -153,17 +155,17 @@ class CreateTripScreen extends Component {
           </View>
         </View>
       )
-    } 
-    else { //not verified driver
+    } else {
+      //not verified driver
       return (
         <View>
           <Text>
-            Para poder crear viajes debes tener un auto (e indicar sus cualidades) y haber enviado una foto por ambos lados de tu licencia. 
+            Para poder crear viajes debes tener un auto (e indicar sus
+            cualidades) y haber enviado una foto por ambos lados de tu licencia.
           </Text>
         </View>
       )
     }
-
   }
 }
 
@@ -224,7 +226,6 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = ({ user, createTrip, spots }) => {
-  console.log(user);  
   return {
     loading: spots.loading,
     user: user,

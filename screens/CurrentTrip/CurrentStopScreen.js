@@ -4,6 +4,9 @@ import CurrentStop from '../../components/CurrentTrip/CurrentStop'
 import PropTypes from 'prop-types'
 
 class CurrentStopScreen extends Component {
+  static navigationOptions = {
+    title: 'En Curso',
+  }
   constructor(props) {
     super(props)
 

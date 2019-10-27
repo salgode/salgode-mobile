@@ -105,9 +105,9 @@ class LoginScreen extends Component {
             <Button transparent onPress={this.onCreateAccountPress}>
               <Text>{lang.signin.create}</Text>
             </Button>
-            <Button transparent onPress={this.onRecoverPasswordPress}>
+            {/* <Button transparent onPress={this.onRecoverPasswordPress}>
               <Text>{lang.signin.forget}</Text>
-            </Button>
+            </Button> */}
           </View>
         )}
         {loading && <Text>{lang.signin.verifying}</Text>}

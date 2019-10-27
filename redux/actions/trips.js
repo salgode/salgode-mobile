@@ -9,6 +9,10 @@ export const actions = {
   TRIPS_FETCH_TRIP_SUCCESS: 'TRIPS/FETCH_TRIP_SUCCESS',
   TRIPS_FETCH_TRIP_FAIL: 'TRIP/FETCH_TRIP_FAIL',
 
+  TRIPS_FETCH_TRIP_MANIFEST: 'TRIPS/FETCH_TRIP_MANIFEST',
+  TRIPS_FETCH_TRIP_MANIFEST_SUCCESS: 'TRIPS/FETCH_TRIP_MANIFEST_SUCCESS',
+  TRIPS_FETCH_TRIP_MANIFEST_FAIL: 'TRIP/FETCH_TRIP_MANIFEST_FAIL',
+
   SET_SEARCH_START_PLACE: 'SET_SEARCH_START_PLACE',
   CLEAN_SEARCH_START_PLACE: 'CLEAN_SEARCH_START_PLACE',
   SET_SEARCH_START_PLACE_FAIL: 'SET_SEARCH_START_PLACE_FAIL',
@@ -56,20 +60,6 @@ export function setSearchEndPlace(endPlace) {
     type: actions.SET_SEARCH_END_PLACE,
     payload: endPlace,
   }
-}
-
-export function fetchFutureTrips(authToken) {
-  return {
-    type: actions.TRIPS_FETCH_FUTURE_TRIPS,
-    payload: {
-      request: {
-        url: `/trips/open`,
-        method: 'get',
-        headers: getBaseHeaders(authToken),
-      },
-    },
-  }
-}
 
 export function startJourney(authToken, tripId, users) {
   return {
@@ -94,6 +84,21 @@ export function fetchTrip(authToken, id) {
     payload: {
       request: {
         url: urls.driver.trips.get.single(id),
+        method: 'get',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      },
+    },
+  }
+}
+
+export function fetchTripManifest(authToken, id) {
+  return {
+    type: actions.TRIPS_FETCH_TRIP_MANIFEST,
+    payload: {
+      request: {
+        url: urls.driver.trips.get.manifest(id),
         method: 'get',
         headers: {
           Authorization: `Bearer ${authToken}`,

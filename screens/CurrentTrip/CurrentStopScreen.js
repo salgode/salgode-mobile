@@ -1,14 +1,19 @@
 import React, { Component } from 'react'
 import { withNavigation } from 'react-navigation'
 import CurrentStop from '../../components/CurrentTrip/CurrentStop'
+import PropTypes from 'prop-types'
 
 class CurrentStopScreen extends Component {
+  static navigationOptions = {
+    title: 'En Curso',
+  }
   constructor(props) {
     super(props)
 
     this.state = {
       trip: this.props.navigation.getParam('trip', null),
       tripManifest: this.props.navigation.getParam('manifest', null),
+      asDriver: this.props.navigation.getParam('asDriver', false),
     }
 
     this.onPressCompleteTrip = this.onPressCompleteTrip.bind(this)
@@ -28,11 +33,16 @@ class CurrentStopScreen extends Component {
         before={0} //todo revisar esto del before y el after, ahora esta todo malo
         after={1}
         onPressCompleteTrip={this.onPressCompleteTrip}
+        asDriver={this.state.asDriver}
       />
     )
   }
 }
 
-CurrentStopScreen.propTypes = {}
+CurrentStopScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
+}
 
 export default withNavigation(CurrentStopScreen)

@@ -8,7 +8,7 @@ import { userTrips, driverTrips } from '../redux/actions/user'
 
 class TripsScreen extends Component {
   static navigationOptions = {
-    title: 'Mis Viajes',
+    title: '#Manejando',
   }
 
   constructor(props) {
@@ -46,14 +46,14 @@ class TripsScreen extends Component {
 
   isVerifiedDriver = () => {
     return (
-      this.props.user.user_verifications.drivers_license &&
+      this.props.user.user_verifications.driver_license &&
       this.props.user.vehicles.length
     )
   }
   render() {
-    let isConfirmedDriver = this.isVerifiedDriver()
+    const isConfirmedDriver = this.isVerifiedDriver()
 
-    if (isConfirmedDriver || this.props.type == 'pedidos') {
+    if (isConfirmedDriver || this.props.type === 'pedidos') {
       return (
         <View style={styles.container}>
           {this.state.loading && <Spinner color="blue" />}
@@ -68,12 +68,13 @@ class TripsScreen extends Component {
           )}
         </View>
       )
-    }
-    else { //not verified driver
+    } else {
+      //not verified driver
       return (
-        <View>
+        <View style={styles.viewContainer}>
           <Text>
-            Para poder crear viajes debes tener un auto (e indicar sus cualidades) y haber enviado una foto por ambos lados de tu licencia.
+            Para crear viajes debes registrar tu auto y enviar una foto por
+            ambos lados de tu licencia.
           </Text>
         </View>
       )
@@ -103,6 +104,11 @@ const styles = StyleSheet.create({
   container: {
     padding: 15,
     ...StyleSheet.absoluteFill,
+  },
+  viewContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
   },
 })
 

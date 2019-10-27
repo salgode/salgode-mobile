@@ -15,7 +15,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker'
 import Colors from '../constants/Colors'
 import PropTypes from 'prop-types'
 import CardInput from '../components/CardInput'
-import { getUsercar } from '../redux/actions/user'
+import { getUserCars } from '../redux/actions/user'
 
 const colorScheme = Appearance.getColorScheme()
 
@@ -27,11 +27,12 @@ class CreateTripScreen extends Component {
 
   componentDidMount = () => {
     this.props.getAllSpots(this.props.user.token)
-    this.props.getUserCar(this.props.user.token).then(response => {
-      if (!response.payload.data.vehicle_id) {
-        this.props.navigation.navigate('EditProfile')
-      }
-    })
+    this.props.getUserCars(this.props.user.token)
+    // .then(response => {
+    // if (!response.payload.data.vehicle_id) {
+    //   this.props.navigation.navigate('EditProfile')
+    // }
+    // })
   }
 
   showDateTimePicker = () => {
@@ -49,10 +50,9 @@ class CreateTripScreen extends Component {
   }
 
   isVerifiedDriver = () => {
-    //console.log(this.props.user.token);
     return (
-      this.props.user.user_verifications.drivers_license &&
-      this.props.user.vehicles.length
+      this.props.user.user_verifications.driver_license &&
+      this.props.user.vehicles
     )
   }
 
@@ -156,12 +156,11 @@ class CreateTripScreen extends Component {
         </View>
       )
     } else {
-      //not verified driver
       return (
-        <View>
+        <View style={styles.viewContainer}>
           <Text>
-            Para poder crear viajes debes tener un auto (e indicar sus
-            cualidades) y haber enviado una foto por ambos lados de tu licencia.
+            Para poder crear viajes debes tener un auto registrado y enviar una
+            foto por ambos lados de tu licencia.
           </Text>
         </View>
       )
@@ -175,7 +174,7 @@ CreateTripScreen.navigationOptions = {
 
 CreateTripScreen.propTypes = {
   getAllSpots: PropTypes.func.isRequired,
-  getUserCar: PropTypes.func.isRequired,
+  getUserCars: PropTypes.func.isRequired,
   setStartTime: PropTypes.func.isRequired,
   setStartStop: PropTypes.func.isRequired,
   setEndStop: PropTypes.func.isRequired,
@@ -220,6 +219,11 @@ const styles = StyleSheet.create({
   group: {
     margin: 10,
   },
+  viewContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
   whiteText: {
     color: 'white',
   },
@@ -243,7 +247,7 @@ const mapDispatchToProps = dispatch => ({
   clearStartStop: () => dispatch(clearStartStop()),
   clearEndStop: () => dispatch(clearEndStop()),
   getAllSpots: token => dispatch(getAllSpots(token)),
-  getUserCar: token => dispatch(getUsercar(token)),
+  getUserCars: token => dispatch(getUserCars(token)),
 })
 
 CreateTripScreen.navigationOptions = {

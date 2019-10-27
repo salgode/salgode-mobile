@@ -40,7 +40,6 @@ class ResolveAuthScreen extends Component {
         .then(response => {
           return response
         })
-      // console.log(user)
       if (user.error) {
         Alert.alert(
           'Error al iniciar sesión',
@@ -57,7 +56,7 @@ class ResolveAuthScreen extends Component {
           ]
         )
       } else {
-        this.props.navigation.navigate('Main')
+        this.props.navigation.navigate('ResolveCurrentTripScreen')
       }
     }
   }

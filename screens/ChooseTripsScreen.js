@@ -1,16 +1,17 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Alert, Text } from 'react-native'
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
-import ChooseTrips from '../components/Trips/ChooseTrips'
 import {
-  fetchFutureTrips,
   setSearchStartPlace,
   cleanSearchStartPlace,
   setSearchEndPlace,
   cleanSearchEndPlace,
 } from '../redux/actions/trips'
 import { getAllSpots } from '../redux/actions/spots'
+import { View, StyleSheet, Alert, AsyncStorage, Text } from 'react-native'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import ChooseTrips from '../components/Trips/ChooseTrips'
+// import { fetchFutureTrips } from '../redux/actions/trips'
+import { getOwnProfile } from '../redux/actions/user'
 import Colors from '../constants/Colors'
 import CardInput from '../components/CardInput'
 import lang from '../languages/es'
@@ -36,7 +37,6 @@ const parseTripInfo = trip => {
 
 class ChooseTripsScreen extends Component {
   static navigationOptions = {
-    // title: 'Pedir Viaje',
     header: null,
   }
 
@@ -53,10 +53,26 @@ class ChooseTripsScreen extends Component {
     this.setSearchStartPlaceFetch = this.setSearchStartPlaceFetch.bind(this)
   }
 
-  // async componentDidMount() {
-  //   await this.getTrips()
-  // }
-  componentDidMount = () => {
+  async componentDidMount() {
+    if (!this.props.user.vehicles) {
+      const userResponse = await this.props.loadUser(this.props.user.token, this.props.user.userId)
+      if (userResponse.error) {
+        Alert.alert(
+          'Error al iniciar sesión',
+          'Hubo un problema con iniciar sesión por favor intente de nuevo.',
+          [
+            {
+              text: 'Intentar de nuevo',
+              onPress: () => {
+                AsyncStorage.removeItem('@userToken')
+                AsyncStorage.removeItem('@userId')
+                this.props.navigation.navigate('Login')
+              },
+            },
+          ]
+        )
+      }
+    }
     this.props.getAllSpots(this.props.user.token)
   }
 
@@ -68,7 +84,6 @@ class ChooseTripsScreen extends Component {
   }
 
   async setSearchStartPlaceFetch(item) {
-    console.log("aca")
     const response = await this.props.setSearchStartPlace(item, this.props.user.token)
     if (response.error) {
       Alert.alert(
@@ -137,7 +152,7 @@ class ChooseTripsScreen extends Component {
 
 ChooseTripsScreen.propTypes = {
   isRequestedTrips: PropTypes.bool,
-  fetchFutureTrips: PropTypes.func.isRequired,
+  loadUser: PropTypes.func.isRequired,
   user: PropTypes.shape({
     token: PropTypes.string.isRequired,
   }).isRequired,
@@ -175,12 +190,13 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchFutureTrips: token => dispatch(fetchFutureTrips(token)),
+  // fetchFutureTrips: token => dispatch(fetchFutureTrips(token)),
   setSearchStartPlace: (item, token) => dispatch(setSearchStartPlace(item, token)),
   cleanSearchStartPlace: () => dispatch(cleanSearchStartPlace()),
   setSearchEndPlace: item => dispatch(setSearchEndPlace(item)),
   cleanSearchEndPlace: () => dispatch(cleanSearchEndPlace()),
   getAllSpots: token => dispatch(getAllSpots(token)),
+  loadUser: (token, id) => dispatch(getOwnProfile(token, id)),
 })
 
 ChooseTripsScreen.navigationOptions = {

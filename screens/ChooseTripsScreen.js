@@ -1,11 +1,18 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Alert, AsyncStorage } from 'react-native'
+import {
+  setSearchStartPlace,
+  cleanSearchStartPlace,
+  setSearchEndPlace,
+  cleanSearchEndPlace,
+} from '../redux/actions/trips'
+import { getAllSpots } from '../redux/actions/spots'
+import { View, StyleSheet, Alert, AsyncStorage, Text } from 'react-native'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import ChooseTrips from '../components/Trips/ChooseTrips'
-import { fetchFutureTrips } from '../redux/actions/trips'
 import { getOwnProfile } from '../redux/actions/user'
 import Colors from '../constants/Colors'
+import CardInput from '../components/CardInput'
 import lang from '../languages/es'
 
 const parseTripInfo = trip => {
@@ -37,12 +44,10 @@ class ChooseTripsScreen extends Component {
     this.state = {
       avalibleTrips: null,
       rerender: true,
-      trips: [],
     }
 
     this.onRequestTrip = this.onRequestTrip.bind(this)
-    this.getTrips = this.getTrips.bind(this)
-    // console.log(this.props.user)
+    this.setSearchStartPlaceFetch = this.setSearchStartPlaceFetch.bind(this)
   }
 
   async componentDidMount() {
@@ -65,7 +70,7 @@ class ChooseTripsScreen extends Component {
         )
       }
     }
-    await this.getTrips()
+    this.props.getAllSpots(this.props.user.token)
   }
 
   onRequestTrip(stops, tripId) {
@@ -75,28 +80,67 @@ class ChooseTripsScreen extends Component {
     })
   }
 
-  async getTrips() {
-    const response = await this.props.fetchFutureTrips(this.props.user.token)
+  async setSearchStartPlaceFetch(item) {
+    const response = await this.props.setSearchStartPlace(item, this.props.user.token)
     if (response.error) {
       Alert.alert(
         'Error obteniendo viajes',
         'Hubo un problema obteniendo los viajes. Por favor intentalo de nuevo.'
       )
     }
-
-    this.setState({ trips: this.props.trips })
   }
 
   render() {
-    // console.log(this.state.trips[0])
+    const { navigation, startPlace, endPlace, requestedTrips } = this.props
     return (
       <View style={styles.container}>
         <View>
+          <CardInput
+            onTouchablePress={() =>
+              navigation.navigate('SpotSelectorScreen', {
+                title: 'Buscas #Desde',
+                text: '#Desde',
+                onClearPress: this.props.cleanSearchStartPlace,
+                onItemPress: this.setSearchStartPlaceFetch,
+                data: this.props.spots,
+              })
+            }
+            placeholder="Filtra por Comuna o Parada"
+            value={startPlace ? startPlace.name : ''}
+            text="#Desde"
+            editable={false}
+            onClearPress={this.props.cleanSearchStartPlace}
+          />
+          {/* <CardInput
+            onTouchablePress={() =>
+              navigation.navigate('SpotSelectorScreen', {
+                title: 'Buscas #A',
+                text: '#A',
+                onClearPress: this.props.cleanSearchEndPlace,
+                onItemPress: this.props.setSearchEndPlace,
+                data: this.props.spots,
+              })
+            }
+            placeholder="Filtra por Comuna o Parada"
+            value={endPlace ? endPlace.name : ''}
+            text="#A"
+            editable={false}
+            onClearPress={this.props.cleanSearchEndPlace}
+          /> */}
+        </View>
+
+        <View>
+          {requestedTrips.length  > 0 ? 
           <ChooseTrips
             onSend={this.onRequestTrip}
-            onReload={this.getTrips}
-            trips={this.state.trips.map(trip => parseTripInfo(trip))}
+            onReload={this.setSearchStartPlaceFetch}
+            trips={requestedTrips.map(trip => parseTripInfo(trip))}
           />
+          :
+          <Text>
+            No se ha encontrado ningun viaje segun lo solicitado
+          </Text>
+          }
         </View>
       </View>
     )
@@ -105,7 +149,6 @@ class ChooseTripsScreen extends Component {
 
 ChooseTripsScreen.propTypes = {
   isRequestedTrips: PropTypes.bool,
-  fetchFutureTrips: PropTypes.func.isRequired,
   loadUser: PropTypes.func.isRequired,
   user: PropTypes.shape({
     token: PropTypes.string.isRequired,
@@ -113,7 +156,12 @@ ChooseTripsScreen.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
   }).isRequired,
-  trips: PropTypes.array.isRequired,
+  requestedTrips: PropTypes.array.isRequired,
+  setSearchStartPlace: PropTypes.func.isRequired,
+  cleanSearchStartPlace: PropTypes.func.isRequired,
+  setSearchEndPlace: PropTypes.func.isRequired,
+  cleanSearchEndPlace: PropTypes.func.isRequired,
+  getAllSpots: PropTypes.func.isRequired,
 }
 
 ChooseTripsScreen.defaultProps = {
@@ -131,12 +179,19 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     user: state.user,
-    trips: state.trips.open || [],
+    requestedTrips: state.trips.requestedTrips || [],
+    startPlace: state.trips.startPlace,
+    endPlace: state.trips.endPlace,
+    spots: state.spots.spots || [],    
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchFutureTrips: token => dispatch(fetchFutureTrips(token)),
+  setSearchStartPlace: (item, token) => dispatch(setSearchStartPlace(item, token)),
+  cleanSearchStartPlace: () => dispatch(cleanSearchStartPlace()),
+  setSearchEndPlace: item => dispatch(setSearchEndPlace(item)),
+  cleanSearchEndPlace: () => dispatch(cleanSearchEndPlace()),
+  getAllSpots: token => dispatch(getAllSpots(token)),
   loadUser: (token, id) => dispatch(getOwnProfile(token, id)),
 })
 

@@ -8,21 +8,57 @@ export const actions = {
   TRIPS_FETCH_TRIP: 'TRIPS/FETCH_TRIP',
   TRIPS_FETCH_TRIP_SUCCESS: 'TRIPS/FETCH_TRIP_SUCCESS',
   TRIPS_FETCH_TRIP_FAIL: 'TRIP/FETCH_TRIP_FAIL',
+
   TRIPS_FETCH_TRIP_MANIFEST: 'TRIPS/FETCH_TRIP_MANIFEST',
   TRIPS_FETCH_TRIP_MANIFEST_SUCCESS: 'TRIPS/FETCH_TRIP_MANIFEST_SUCCESS',
   TRIPS_FETCH_TRIP_MANIFEST_FAIL: 'TRIP/FETCH_TRIP_MANIFEST_FAIL',
+
+  SET_SEARCH_START_PLACE: 'SET_SEARCH_START_PLACE',
+  CLEAN_SEARCH_START_PLACE: 'CLEAN_SEARCH_START_PLACE',
+  SET_SEARCH_START_PLACE_FAIL: 'SET_SEARCH_START_PLACE_FAIL',
+  SET_SEARCH_START_PLACE_SUCCESS: 'SET_SEARCH_START_PLACE_SUCCESS',
+
+  SET_SEARCH_END_PLACE: 'SET_SEARCH_END_PLACE',
+  CLEAN_SEARCH_END_PLACE: 'CLEAN_SEARCH_END_PLACE',
+ 
 }
 
-export function fetchFutureTrips(authToken) {
+export function cleanSearchStartPlace() {
   return {
-    type: actions.TRIPS_FETCH_FUTURE_TRIPS,
-    payload: {
-      request: {
-        url: `/trips/open`,
-        method: 'get',
-        headers: getBaseHeaders(authToken),
+    type: actions.CLEAN_SEARCH_START_PLACE,
+  }
+}
+
+export function setSearchStartPlace(startPlace, authToken) {
+  if (startPlace){
+    return {
+      type: actions.SET_SEARCH_START_PLACE,
+      payload: {
+        startPlace,
+        request: {
+          url: `/trips/search/intersects/${startPlace.id}`, // TODO: request trips especificos
+          method: 'get',
+          headers: getBaseHeaders(authToken),
+        },
       },
-    },
+    }
+  }
+  return {
+    type: actions.SET_SEARCH_START_PLACE,
+    payload: { startPlace }
+  }
+}
+
+export function cleanSearchEndPlace() {
+  return {
+    type: actions.CLEAN_SEARCH_END_PLACE,
+  }
+}
+
+export function setSearchEndPlace(endPlace) {
+  return {
+    type: actions.SET_SEARCH_END_PLACE,
+    payload: endPlace,
   }
 }
 
@@ -31,6 +67,7 @@ export function startJourney(authToken, tripId, users) {
     type: actions.TRIPS_START_JOURNEY,
     payload: {
       request: {
+        
         url: `/trips/${tripId}/start`,
         method: 'post',
         headers: getBaseHeaders(authToken),

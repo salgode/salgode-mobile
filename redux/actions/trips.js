@@ -20,7 +20,6 @@ export const actions = {
 
   SET_SEARCH_END_PLACE: 'SET_SEARCH_END_PLACE',
   CLEAN_SEARCH_END_PLACE: 'CLEAN_SEARCH_END_PLACE',
- 
 }
 
 export function cleanSearchStartPlace() {
@@ -30,13 +29,13 @@ export function cleanSearchStartPlace() {
 }
 
 export function setSearchStartPlace(startPlace, authToken) {
-  if (startPlace){
+  if (startPlace) {
     return {
       type: actions.SET_SEARCH_START_PLACE,
       payload: {
         startPlace,
         request: {
-          url: `/trips/search/intersects/${startPlace.id}`, // TODO: request trips especificos
+          url: `/trips/search/intersects/${startPlace.place_id}`, // TODO: request trips especificos
           method: 'get',
           headers: getBaseHeaders(authToken),
         },
@@ -45,7 +44,7 @@ export function setSearchStartPlace(startPlace, authToken) {
   }
   return {
     type: actions.SET_SEARCH_START_PLACE,
-    payload: { startPlace }
+    payload: { startPlace },
   }
 }
 
@@ -67,7 +66,6 @@ export function startJourney(authToken, tripId, users) {
     type: actions.TRIPS_START_JOURNEY,
     payload: {
       request: {
-        
         url: `/trips/${tripId}/start`,
         method: 'post',
         headers: getBaseHeaders(authToken),

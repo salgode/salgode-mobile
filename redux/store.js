@@ -17,7 +17,7 @@ import {
 } from './models/createTrip'
 
 export const client = axios.create({
-  baseURL: 'https://playground-api.salgode.com', // TODO: get out of playground
+  baseURL: 'https://api.salgode.com',
   responseType: 'json',
   requestType: 'json',
 })

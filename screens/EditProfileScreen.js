@@ -353,11 +353,11 @@ const EditProfileScreen = props => {
     if (car && car.vehicle_attributes && car.vehicle_identification) {
       const {
         vehicle_color,
-        vehicle_brand,
+        vehicle_make,
         vehicle_model,
       } = car.vehicle_attributes
       const { identification_id } = car.vehicle_identification
-      setCarBrand(vehicle_brand)
+      setCarBrand(vehicle_make)
       setCarColor(vehicle_color)
       setCarModel(vehicle_model)
       setCarPlate(identification_id)
@@ -495,18 +495,18 @@ const EditProfileScreen = props => {
     setIsSavingCar(true)
     setIsLoading(true)
     const response = await props.createVehicle(token, {
-      nickname: `Vehicle ${email}`,
-      type: 'car',
-      seats: '0',
-      color: carColor,
+      alias: `Vehicle ${email}`,
       vehicle_identification: {
         type: 'license_plate',
         identification: carPlate.toUpperCase(),
-        country: 'Chile',
+        country: 'CL',
       },
       vehicle_attributes: {
         brand: carBrand,
         model: carModel,
+        type: 'car',
+        seats: 0,
+        color: carColor,
       },
     })
     setIsLoading(false)

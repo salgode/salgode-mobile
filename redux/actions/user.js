@@ -44,9 +44,9 @@ const mapDataToUser = data => {
     lastName: data.last_name,
     email: data.email,
     phone: data.phone,
-    user_verifications: {
-      driver_license: data.user_verifications.driver_license,
-    },
+    // user_verifications: {
+    //   driver_license: data.user_verifications.driver_license,
+    // },
     vehicles: data.vehicles,
   }
 
@@ -178,19 +178,22 @@ export function getOwnProfile(token, userId) {
   }
 }
 
-export function uploadImageUser(base64string) {
+export function getImageUrl(fileName, fileType) {
   return {
     type: actions.USER_UPLOAD_IMAGE,
     payload: {
       request: {
-        url: urls.user.images.post.upload(),
+        url: urls.user.images.post.getLink(),
         method: 'post',
         data: {
-          base64string: `data:image/jpeg;base64,${base64string}`,
+          file_name: `${fileName}.${fileType}`,
+          file_type: fileType.toUpperCase(),
         },
         transformResponse: data => {
           return {
-            img_id: data.img_id,
+            image_id: data.image_id,
+            fetch: data.image_urls.fetch,
+            upload: data.image_urls.upload,
           }
         },
       },

@@ -1,11 +1,32 @@
 import React from 'react'
 import { Alert } from 'react-native'
+import axios from 'axios'
 import { View, Spinner, Button, Text } from 'native-base'
 import PhotoTaker from './PhotoTaker'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { signupUser, uploadImageUser } from '../../redux/actions/user'
 import * as ImagePicker from 'expo-image-picker'
+import { signupUser, getImageUrl } from '../../redux/actions/user'
+
+const getCameraType = destination => {
+  if (destination === 'selfie') {
+    return Camera.Constants.Type.front
+  }
+  return Camera.Constants.Type.back
+}
+
+const getText = destination => {
+  switch (destination) {
+    case 'selfie':
+      return 'Sonríe'
+    case 'frontId':
+      return 'Cédula de identidad frontal'
+    case 'backId':
+      return 'Cédula de identidad trasera'
+    default:
+      return ''
+  }
+}
 
 const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
   const [selfie, setSelfie] = React.useState(null)
@@ -88,11 +109,48 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
     }
   }
 
+  const uploadImageToS3 = async (signedRequest, file, fileType) => {
+    console.log(signedRequest.upload)
+    const response = await axios.put(signedRequest.upload, file, {
+      headers: {
+        'Content-Type': fileType.toUpperCase(),
+      },
+    })
+    console.log(signedRequest.fetch)
+    return response.status === 200
+  }
+
   const onSend = async () => {
     setLoading(true)
-    const selfieUrl = await uploadImage(userData.selfie)
-    const frontIdUrl = await uploadImage(userData.identification_image_front)
-    const backIdUrl = await uploadImage(userData.identification_image_back)
+
+    // TODO: Refactor -> upload function
+    const [selfieFN, selfieFT] = selfie.split('/').slice(-1)[0].split('.')
+    const selfieResponse = await uploadImage(selfieFN, selfieFT)
+    if (!await uploadImageToS3(selfieResponse.payload.data, userData.user_identifications.selfie, selfieFT)) {
+      setLoading(false)
+      Alert.alert(
+        'Error de registro',
+        'Hubo un problema registrandote. Por favor intentalo de nuevo.'
+      )
+    }
+    const [frontFN, frontFT] = frontId.split('/').slice(-1)[0].split('.')
+    const frontResponse = await uploadImage(frontFN, frontFT)
+    if (!uploadImageToS3(frontResponse.payload.data.upload, userData.user_identifications.identification_image_front, frontFT)) {
+      setLoading(false)
+      Alert.alert(
+        'Error de registro',
+        'Hubo un problema registrandote. Por favor intentalo de nuevo.'
+      )
+    }
+    const [backFN, backFT] = backId.split('/').slice(-1)[0].split('.')
+    const backResponse = await uploadImage(backFN, backFT)
+    if (!uploadImageToS3(backResponse.payload.data.upload, userData.user_identifications.identification_image_back, backFT)) {
+      setLoading(false)
+      Alert.alert(
+        'Error de registro',
+        'Hubo un problema registrandote. Por favor intentalo de nuevo.'
+      )
+    }
     const user = await signup(
       userData.name,
       userData.lastName,
@@ -100,13 +158,12 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
       userData.phone,
       userData.password,
       userData.passwordRepeat,
-      selfieUrl,
-      frontIdUrl,
-      backIdUrl
-    ).then(response => {
-      return response
-    })
+      selfieResponse.payload.data.fetch,
+      frontResponse.payload.data.fetch,
+      backResponse.payload.data.fetch,
+    )
     setLoading(false)
+    console.log(user.error)
     if (user.error) {
       Alert.alert(
         'Error de registro',
@@ -197,7 +254,7 @@ const styles = {
 }
 
 const mapDispatchToProps = dispatch => ({
-  uploadImage: img => dispatch(uploadImageUser(img)),
+  uploadImage: (name, type) => dispatch(getImageUrl(name, type)),
   signup: (
     name,
     lastName,

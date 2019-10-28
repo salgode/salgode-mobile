@@ -19,7 +19,6 @@ class ResolveAuthScreen extends Component {
   async loginHandler() {
     let userToken = await AsyncStorage.getItem('@userToken')
     let userId = await AsyncStorage.getItem('@userId')
-    // console.log(userToken, userId)
 
     if (
       !userToken ||

@@ -1,48 +1,18 @@
 import React from 'react'
 import { Alert } from 'react-native'
 import { View, Spinner, Button, Text } from 'native-base'
-import CameraModal from './CameraModal'
-import * as Permissions from 'expo-permissions'
 import PhotoTaker from './PhotoTaker'
 import PropTypes from 'prop-types'
-import { Camera } from 'expo-camera'
 import { connect } from 'react-redux'
 import { signupUser, uploadImageUser } from '../../redux/actions/user'
-
-const getCameraType = destination => {
-  if (destination === 'selfie') {
-    return Camera.Constants.Type.front
-  }
-  return Camera.Constants.Type.back
-}
-
-const getText = destination => {
-  switch (destination) {
-    case 'selfie':
-      return 'Sonríe'
-    case 'frontId':
-      return 'Cédula de identidad frontal'
-    case 'backId':
-      return 'Cédula de identidad trasera'
-    default:
-      return ''
-  }
-}
+import * as ImagePicker from 'expo-image-picker'
 
 const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
-  const [isCameraOn, setIsCameraOn] = React.useState(false)
-  const [hasCameraPermission, setHasCameraPermission] = React.useState(false)
   const [selfie, setSelfie] = React.useState(null)
   const [frontId, setFrontId] = React.useState(null)
   const [backId, setBackId] = React.useState(null)
-  const [destination, setDestination] = React.useState('selfie')
   const [userData, setUserData] = React.useState(null)
   const [loading, setLoading] = React.useState(false)
-
-  const requestCameraPermission = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA)
-    setHasCameraPermission(status === 'granted')
-  }
 
   React.useEffect(() => {
     const userData = navigation.getParam('userData', null)
@@ -52,16 +22,19 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
       identification_image_back: null,
     }
     setUserData(userData)
-    requestCameraPermission()
   }, [])
 
-  const openCamera = dest => {
-    setDestination(dest)
-    setIsCameraOn(true)
-  }
-
-  const closeCamera = () => {
-    setIsCameraOn(false)
+  const takePhoto = async dest => {
+    const photo = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+      base64: true,
+    })
+    if (!photo.cancelled) {
+      onTakePicture(photo.base64, photo.uri, dest)
+    }
   }
 
   const onTakePicture = (photo, photoUri, dest) => {
@@ -150,24 +123,14 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
 
   return (
     <View>
-      {hasCameraPermission && (
-        <CameraModal
-          closeCamera={closeCamera}
-          onGetSelfie={onTakePicture}
-          isCameraOn={isCameraOn}
-          destination={destination}
-          cameraType={getCameraType(destination)}
-          text={getText(destination)}
-        />
-      )}
       <PhotoTaker
-        openCamera={openCamera}
+        takePhoto={takePhoto}
         selfie={selfie}
         setImage={'selfie'}
         buttonText="Tomar Selfie"
       />
       <PhotoTaker
-        openCamera={openCamera}
+        takePhoto={takePhoto}
         setImage={'frontId'}
         selfie={frontId}
         iconName="vcard-o"
@@ -176,7 +139,7 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
         buttonText="Tomar Frente de Carnet"
       />
       <PhotoTaker
-        openCamera={openCamera}
+        takePhoto={takePhoto}
         setImage={'backId'}
         selfie={backId}
         iconName="vcard-o"

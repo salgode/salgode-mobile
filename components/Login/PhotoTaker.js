@@ -6,7 +6,7 @@ import { Ionicons, FontAwesome } from '@expo/vector-icons'
 
 const PhotoTaker = ({
   selfie,
-  openCamera,
+  takePhoto,
   iconName = Platform.OS === 'ios' ? 'ios-contact' : 'md-contact',
   iconType = 'Ionicon',
   setImage,
@@ -21,7 +21,7 @@ const PhotoTaker = ({
           block
           borderRadius={10}
           style={styles.button}
-          onPress={() => openCamera(setImage)}
+          onPress={() => takePhoto(setImage)}
         >
           <Text>{buttonText}</Text>
         </Button>
@@ -39,7 +39,7 @@ const PhotoTaker = ({
           block
           borderRadius={10}
           style={styles.button}
-          onPress={() => openCamera(setImage)}
+          onPress={() => takePhoto(setImage)}
         >
           <Text>{buttonText}</Text>
         </Button>
@@ -50,7 +50,7 @@ const PhotoTaker = ({
 
 PhotoTaker.propTypes = {
   selfie: PropTypes.string,
-  openCamera: PropTypes.func.isRequired,
+  takePhoto: PropTypes.func.isRequired,
   iconName: PropTypes.string,
   iconType: PropTypes.oneOf(['Ionicon', 'FontAwesome']),
   setImage: PropTypes.string.isRequired,

@@ -25,10 +25,10 @@ class ResolveCurrentTripScreen extends Component {
     this.props.fetchCurrentTrip(userToken).then(async data => {
       if (data.payload) {
         const trip = await this.props
-          .fetchTrip(userToken, data.payload.trip_id)
+          .fetchTrip(userToken, data.payload.data.trip_id)
           .then(response => response.payload.data)
         const manifest = await this.props
-          .fetchManifest(userToken, data.payload.trip_id)
+          .fetchManifest(userToken, data.payload.data.trip_id)
           .then(response => response.payload.data)
 
         this.props.navigation.navigate('StopTrip', {

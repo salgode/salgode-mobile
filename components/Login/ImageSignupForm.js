@@ -37,6 +37,19 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
     }
   }
 
+  const choosePhoto = async dest => {
+    const photo = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+      base64: true,
+    })
+    if (!photo.cancelled) {
+      onTakePicture(photo.base64, photo.uri, dest)
+    }
+  }
+
   const onTakePicture = (photo, photoUri, dest) => {
     switch (dest) {
       case 'selfie':
@@ -125,27 +138,30 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
     <View>
       <PhotoTaker
         takePhoto={takePhoto}
+        choosePhoto={choosePhoto}
         selfie={selfie}
         setImage={'selfie'}
-        buttonText="Tomar Selfie"
+        buttonText="Subir Selfie"
       />
       <PhotoTaker
         takePhoto={takePhoto}
+        choosePhoto={choosePhoto}
         setImage={'frontId'}
         selfie={frontId}
         iconName="vcard-o"
         iconType="FontAwesome"
         size={60}
-        buttonText="Tomar Frente de Carnet"
+        buttonText="Subir Frente de Carnet"
       />
       <PhotoTaker
         takePhoto={takePhoto}
+        choosePhoto={choosePhoto}
         setImage={'backId'}
         selfie={backId}
         iconName="vcard-o"
         iconType="FontAwesome"
         size={60}
-        buttonText="Tomar Atras de Carnet"
+        buttonText="Subir Atras de Carnet"
       />
 
       {loading && <Spinner color={'#0000FF'} />}

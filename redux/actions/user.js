@@ -103,7 +103,6 @@ export function signupUser(
     first_name: name,
     phone,
     password,
-    passwordRepeat,
     user_identifications: {
       selfie_image: selfieLink,
       identification_image_front,
@@ -117,7 +116,7 @@ export function signupUser(
         url: urls.session.post.register(),
         method: 'post',
         headers: getDefaultHeaders(),
-        data: data,
+        data,
         transformResponse: mapDataToUser,
       },
     },

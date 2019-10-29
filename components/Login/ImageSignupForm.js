@@ -7,6 +7,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import * as ImagePicker from 'expo-image-picker'
 import { signupUser, getImageUrl } from '../../redux/actions/user'
+import { promiseXMLHttpRequest } from '../../utils/xmlhttprequest'
 
 const getCameraType = destination => {
   if (destination === 'selfie') {
@@ -109,14 +110,20 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
     }
   }
 
-  const uploadImageToS3 = async (signedRequest, file, fileType) => {
-    console.log(signedRequest.upload)
-    const response = await axios.put(signedRequest.upload, file, {
+  const uploadImageToS3 = async (signedRequest, fileType, uri) => {
+    const response = await promiseXMLHttpRequest({
+      url: signedRequest,
+      method: 'put',
       headers: {
+        'X-Amz-ACL': 'public-read',
         'Content-Type': fileType.toUpperCase(),
       },
+      body: {
+        uri,
+        type: fileType,
+        name: `picture.${fileType}`,
+      },
     })
-    console.log(signedRequest.fetch)
     return response.status === 200
   }
 
@@ -126,7 +133,7 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
     // TODO: Refactor -> upload function
     const [selfieFN, selfieFT] = selfie.split('/').slice(-1)[0].split('.')
     const selfieResponse = await uploadImage(selfieFN, selfieFT)
-    if (!await uploadImageToS3(selfieResponse.payload.data, userData.user_identifications.selfie, selfieFT)) {
+    if (!await uploadImageToS3(selfieResponse.payload.data.upload, selfieFT, selfie)) {
       setLoading(false)
       Alert.alert(
         'Error de registro',
@@ -135,7 +142,7 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
     }
     const [frontFN, frontFT] = frontId.split('/').slice(-1)[0].split('.')
     const frontResponse = await uploadImage(frontFN, frontFT)
-    if (!uploadImageToS3(frontResponse.payload.data.upload, userData.user_identifications.identification_image_front, frontFT)) {
+    if (!uploadImageToS3(frontResponse.payload.data.upload, frontFT, frontId)) {
       setLoading(false)
       Alert.alert(
         'Error de registro',
@@ -144,7 +151,7 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
     }
     const [backFN, backFT] = backId.split('/').slice(-1)[0].split('.')
     const backResponse = await uploadImage(backFN, backFT)
-    if (!uploadImageToS3(backResponse.payload.data.upload, userData.user_identifications.identification_image_back, backFT)) {
+    if (!uploadImageToS3(backResponse.payload.data.upload, backFT, backId)) {
       setLoading(false)
       Alert.alert(
         'Error de registro',
@@ -158,12 +165,11 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
       userData.phone,
       userData.password,
       userData.passwordRepeat,
-      selfieResponse.payload.data.fetch,
-      frontResponse.payload.data.fetch,
-      backResponse.payload.data.fetch,
+      selfieResponse.payload.data.image_id,
+      frontResponse.payload.data.image_id,
+      backResponse.payload.data.image_id,
     )
     setLoading(false)
-    console.log(user.error)
     if (user.error) {
       Alert.alert(
         'Error de registro',

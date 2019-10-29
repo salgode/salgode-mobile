@@ -33,29 +33,25 @@ class DetailedTripScreen extends Component {
     this.setState({ loading: true })
     const asDriver = this.props.navigation.getParam('asDriver', null)
     const trip = this.props.navigation.getParam('trip', null)
-    // if (asDriver) {
-    //   this.props.fetchTripDriver(this.props.user.token, tripId)
-    // } else {
-    // this.props.fetchTrip(this.props.user.token, tripId).then(() => {
-    //   this.setState({ loading: false })
-    // })
-    // }
-    // this.props.fetchSlots(this.props.user.token, tripId)
-    // console.log(trip)
     this.setState({ trip, asDriver })
-    const reservations = await getTripReservations(
-      this.props.user.token,
-      trip.trip_id
-    )
-    // console.log(reservations)
-    // console.log(asDriver)
-    this.setState({ loading: false })
-    if (!reservations) {
-      alert(
-        'Hubo un problema obteniendo las reservas. Por favor intentalo de nuevo.'
+
+    if (asDriver) {
+      const reservations = await getTripReservations(
+        this.props.user.token,
+        trip.trip_id
       )
+      // console.log('Aca', reservations)
+      // console.log(asDriver)
+      this.setState({ loading: false })
+      if (!reservations || reservations.message) {
+        alert(
+          'Hubo un problema obteniendo las reservas. Por favor intentalo de nuevo.'
+        )
+      } else {
+        this.setState({ reservations })
+      }
     } else {
-      this.setState({ reservations })
+      this.setState({ loading: false })
     }
   }
 

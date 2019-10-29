@@ -1,6 +1,6 @@
 import { urls, getBaseHeaders } from '../config/api'
 
-const baseUrl = 'https://7wsx5vxfbi.execute-api.us-east-1.amazonaws.com/staging'
+const baseUrl = 'https://api.salgode.com'
 // const baseUrl = 'https://playground-api.salgode.com'
 
 export const getTripInfo = async (tripId, token) => {

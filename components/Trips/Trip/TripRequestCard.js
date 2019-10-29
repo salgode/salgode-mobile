@@ -96,21 +96,23 @@ export default class TripRequestCard extends Component {
             {selfieImage && selfieImage !== 'placeholder' ? (
               <Thumbnail source={{ uri: selfieImage }} />
             ) : (
-              <Ionicons
-                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-                size={40}
-              />
-            )}
-            <Text style={styles.userText}>
-              {passenger.name} {passenger.last_name}
-            </Text>
+                <Ionicons
+                  name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                  size={40}
+                />
+              )}
+            <Text style={styles.userText}>{passenger.passenger_name}</Text>
           </View>
         </CardItem>
 
         <CardItem style={styles.locationContainer}>
           <Location
             color={'#0000FF'}
-            location={reservation.reservation_route.start}
+            location={
+              reservation.reservation_route_places.start || {
+                place_name: 'Fix me',
+              }
+            }
           />
           <Location
             color={
@@ -119,7 +121,11 @@ export default class TripRequestCard extends Component {
                 : Colors.textGray*/
               '#33C534'
             }
-            location={reservation.reservation_route.end}
+            location={
+              reservation.reservation_route_places.end || {
+                place_name: 'Fix me',
+              }
+            }
           />
         </CardItem>
 
@@ -188,9 +194,9 @@ export default class TripRequestCard extends Component {
               onPress={() =>
                 passenger.phone && passenger.phone.includes('+')
                   ? shareToWhatsApp(
-                      'Hola! Encontré tu viaje en #Salgode y me sirve mucho',
-                      passenger.phone
-                    )
+                    'Hola! Encontré tu viaje en #Salgode y me sirve mucho',
+                    passenger.phone
+                  )
                   : null
               }
             >

@@ -7,7 +7,7 @@ const Location = ({ color, location }) => {
   return (
     <View style={styles.container}>
       <View style={{ ...styles.circle, backgroundColor: color }} />
-      <Text style={styles.location}>{location.name}</Text>
+      <Text style={styles.location}>{location.place_name}</Text>
     </View>
   )
 }

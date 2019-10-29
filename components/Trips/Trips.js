@@ -16,25 +16,28 @@ class MyTrips extends Component {
 
   render() {
     const Trip = this.Trip
+    // console.log(this.props.trips.filter(t => t.etd_info))
 
     if (this.props.trips) {
       return (
         <SafeAreaView>
           <FlatList
-            data={this.props.trips}
-            renderItem={({ item }) => (
-              <Trip
-                timestamp={item.etd_info.etd}
-                spacesUsed={item.spacesUsed}
-                user={item.driver}
-                status={item.trip_status}
-                asDriver={this.asDriver}
-                onPressTrip={this.props.onPressTrip}
-                trip={item}
-                startLocation={item.trip_route.start}
-                endLocation={item.trip_route.end}
-              />
-            )}
+            data={this.props.trips.filter(t => t.etd_info)}
+            renderItem={({ item }) => {
+              return (
+                <Trip
+                  timestamp={item.etd_info.etd}
+                  spacesUsed={item.spacesUsed}
+                  user={item.driver}
+                  status={item.trip_status}
+                  asDriver={this.asDriver}
+                  onPressTrip={this.props.onPressTrip}
+                  trip={item}
+                  startLocation={item.trip_route.start}
+                  endLocation={item.trip_route.end}
+                />
+              )
+            }}
             keyExtractor={item => item.trip_id}
           />
         </SafeAreaView>
@@ -45,8 +48,8 @@ class MyTrips extends Component {
         {this.props.isRequestedTrips ? (
           <Text>No haz agendado Viajes 🚗</Text>
         ) : (
-          <Text>No tienes Viajes pendientes 🚘</Text>
-        )}
+            <Text>No tienes Viajes pendientes 🚘</Text>
+          )}
       </View>
     )
   }

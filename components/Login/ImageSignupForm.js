@@ -142,6 +142,7 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
         selfie={selfie}
         setImage={'selfie'}
         buttonText="Subir Selfie"
+        disableLibrary={true}
       />
       <PhotoTaker
         takePhoto={takePhoto}

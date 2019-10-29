@@ -13,20 +13,24 @@ const PhotoTaker = ({
   setImage,
   size = 80,
   buttonText = 'Tomar foto',
+  disableLibrary = false,
 }) => {
   if (selfie) {
     return (
       <View style={styles.container}>
         <Image style={styles.iconView} source={{ uri: selfie }} />
         <View style={styles.buttonContainer}>
-          <Button
-            block
-            borderRadius={10}
-            style={styles.button}
-            onPress={() => choosePhoto(setImage)}
-          >
-            <Text>{buttonText}</Text>
-          </Button>
+          {disableLibrary ? null : (
+            <Button
+              block
+              borderRadius={10}
+              style={styles.button}
+              onPress={() => choosePhoto(setImage)}
+            >
+              <Text>{buttonText}</Text>
+            </Button>
+          )}
+
           <Button
             block
             borderRadius={10}
@@ -46,14 +50,16 @@ const PhotoTaker = ({
           <Icon name={iconName} size={size} />
         </View>
         <View style={styles.buttonContainer}>
-          <Button
-            block
-            borderRadius={10}
-            style={styles.button}
-            onPress={() => choosePhoto(setImage)}
-          >
-            <Text>{buttonText}</Text>
-          </Button>
+          {disableLibrary ? null : (
+            <Button
+              block
+              borderRadius={10}
+              style={styles.button}
+              onPress={() => choosePhoto(setImage)}
+            >
+              <Text>{buttonText}</Text>
+            </Button>
+          )}
           <Button
             block
             borderRadius={10}

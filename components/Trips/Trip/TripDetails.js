@@ -53,7 +53,11 @@ class TripDetails extends Component {
         color = Colors.textGray //index === locations.length - 1 ? '#33C534'
       }
       return (
-        <Location key={`location-${index}`} color={color} location={location} />
+        <Location
+          key={`location-${index}`}
+          color={color}
+          location={location.name}
+        />
       )
     })
   }
@@ -87,15 +91,13 @@ class TripDetails extends Component {
   render() {
     const {
       firstName,
-      lastName,
       phone,
       isReserved,
       dniVerified,
       licenseVerified,
       tripRoutePoints,
       etd,
-    } = this.props;
-
+    } = this.props
     return (
       <View style={styles.container}>
         <Card
@@ -108,14 +110,20 @@ class TripDetails extends Component {
             <View style={styles.user}>
               <View style={styles.profilePhoto}>{this.renderAvatar()}</View>
               <View style={styles.userContainer}>
-                <Text style={styles.userText}>{`${firstName} ${lastName}`}</Text>
-                {isReserved && <Text
-                  style={styles.phoneText}
-                  onPress={() => Linking.openURL(`tel:${phone}`)}>
-                  {phone}
-                </Text>}
+                <Text style={styles.userText}>{`${firstName}`}</Text>
+                {isReserved && (
+                  <Text
+                    style={styles.phoneText}
+                    onPress={() => Linking.openURL(`tel:${phone}`)}
+                  >
+                    {phone}
+                  </Text>
+                )}
                 {this.renderVerification(dniVerified, 'Usuario verificado')}
-                {this.renderVerification(licenseVerified, 'Conductor verificado')}
+                {this.renderVerification(
+                  licenseVerified,
+                  'Conductor verificado'
+                )}
               </View>
             </View>
           </CardItem>
@@ -133,21 +141,16 @@ class TripDetails extends Component {
 
 TripDetails.propTypes = {
   avatar: PropTypes.string,
-  firstName: PropTypes.string,
-  lastName: PropTypes.string,
-  phone: PropTypes.string,
+  firstName: PropTypes.string.isRequired,
+  phone: PropTypes.string.isRequired,
   isReserved: PropTypes.bool,
   dniVerified: PropTypes.bool,
   licenseVerified: PropTypes.bool,
-  tripRoutePoints: PropTypes.array,
-  etd: PropTypes.string
+  tripRoutePoints: PropTypes.array.isRequired,
+  etd: PropTypes.string.isRequired,
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 15,
-    ...StyleSheet.absoluteFill,
-  },
   cardContainer: {
     alignItems: 'flex-start',
     borderColor: 'white',
@@ -155,9 +158,19 @@ const styles = StyleSheet.create({
     marginBottom: 25,
     padding: 15,
   },
+  container: {
+    padding: 15,
+    ...StyleSheet.absoluteFill,
+  },
   locationContainer: {
     alignItems: 'flex-start',
     flexDirection: 'column',
+  },
+  phoneText: {
+    color: 'grey',
+    fontSize: 14,
+    marginLeft: 15,
+    marginTop: 3,
   },
   shadow: {
     shadowColor: '#b3b3b3',
@@ -168,29 +181,23 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 5,
   },
+  thumbnail: {
+    height: photoSize,
+    resizeMode: 'center',
+    width: photoSize,
+  },
   user: {
     alignItems: 'center',
     flexDirection: 'row',
   },
   userContainer: {
-    flexDirection: 'column',
     alignSelf: 'flex-start',
+    flexDirection: 'column',
   },
   userText: {
     fontSize: 17,
     fontWeight: 'bold',
     marginLeft: 15,
-  },
-  phoneText: {
-    color: 'grey',
-    fontSize: 14,
-    marginLeft: 15,
-    marginTop: 3,
-  },
-  thumbnail: {
-    height: photoSize,
-    resizeMode: 'center',
-    width: photoSize,
   },
   verifiedContainer: {
     alignItems: 'center',
@@ -201,7 +208,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginLeft: 15,
     marginTop: 3,
-  }
+  },
 })
 
 export default TripDetails

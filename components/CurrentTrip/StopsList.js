@@ -26,7 +26,7 @@ const StopsList = ({ stops = [] }) => {
             <View style={styles.iconView}>
               <StopIcon type={stopIndexToStopType(i, stops.length)} size={25} />
             </View>
-            <Text styles={styles.stopText}>{stop.name}</Text>
+            <Text styles={styles.stopText}>{stop.place_name}</Text>
           </View>
         ))}
       </ScrollView>

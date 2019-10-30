@@ -7,14 +7,14 @@ const Location = ({ color, location }) => {
   return (
     <View style={styles.container}>
       <View style={{ ...styles.circle, backgroundColor: color }} />
-      <Text style={styles.location}>{location.place_name}</Text>
+      <Text style={styles.location}>{location}</Text>
     </View>
   )
 }
 
 Location.propTypes = {
   color: PropTypes.string.isRequired,
-  location: PropTypes.object.isRequired,
+  location: PropTypes.string.isRequired,
 }
 
 const circleDiameter = 15

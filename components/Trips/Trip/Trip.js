@@ -29,8 +29,8 @@ export const Trip = ({
       <Card style={[styles.container, styles.shadow]}>
         <View style={styles.locationContainer}>
           <Text>{user.driver_name}</Text>
-          <Location color={'#0000FF'} location={startLocation} />
-          <Location color={'#33C534'} location={endLocation} />
+          <Location color={'#0000FF'} location={startLocation.place_name} />
+          <Location color={'#33C534'} location={endLocation.place_name} />
           <TimeInfo timestamp={timestamp} />
         </View>
         <View style={styles.iconContainer}>

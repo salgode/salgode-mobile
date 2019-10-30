@@ -15,25 +15,6 @@ import Colors from '../constants/Colors'
 import CardInput from '../components/CardInput'
 import lang from '../languages/es'
 
-const parseTripInfo = trip => {
-  const { driver } = trip
-  return {
-    ...trip,
-    timestamp: new Date(trip.etd_info.etd),
-    driver: {
-      name: driver.driver_name,
-      phone: driver.driver_phone,
-      reputation: driver.driver_score,
-      id: driver.driver_id,
-      //TODO Ajustar al response del server.
-      avatar: driver.driver_avatar || '',
-    },
-    stops: trip.trip_route_points,
-    tripId: trip.trip_id,
-    trip_route: trip.trip_route,
-  }
-}
-
 class ChooseTripsScreen extends Component {
   static navigationOptions = {
     header: null,
@@ -52,7 +33,10 @@ class ChooseTripsScreen extends Component {
 
   async componentDidMount() {
     if (!this.props.user.vehicles) {
-      const userResponse = await this.props.loadUser(this.props.user.token, this.props.user.userId)
+      const userResponse = await this.props.loadUser(
+        this.props.user.token,
+        this.props.user.userId
+      )
       if (userResponse.error) {
         Alert.alert(
           'Error al iniciar sesión',
@@ -81,7 +65,11 @@ class ChooseTripsScreen extends Component {
   }
 
   async setSearchStartPlaceFetch(item) {
-    const response = await this.props.setSearchStartPlace(item, this.props.user.token)
+    const response = await this.props.setSearchStartPlace(
+      item,
+      this.props.user.token
+    )
+
     if (response.error) {
       Alert.alert(
         'Error obteniendo viajes',
@@ -130,17 +118,16 @@ class ChooseTripsScreen extends Component {
         </View>
 
         <View>
-          {requestedTrips.length  > 0 ? 
-          <ChooseTrips
-            onSend={this.onRequestTrip}
-            onReload={this.setSearchStartPlaceFetch}
-            trips={requestedTrips.map(trip => parseTripInfo(trip))}
-          />
-          :
-          <Text>
-            No se ha encontrado ningun viaje segun lo solicitado
-          </Text>
-          }
+          {requestedTrips.length > 0 ? (
+            <ChooseTrips
+              onSend={this.onRequestTrip}
+              onReload={this.setSearchStartPlaceFetch}
+              // trips={requestedTrips.map(trip => parseTripInfo(trip))}
+              trips={requestedTrips}
+            />
+          ) : (
+            <Text>No se ha encontrado ningun viaje segun lo solicitado</Text>
+          )}
         </View>
       </View>
     )
@@ -182,12 +169,13 @@ const mapStateToProps = state => {
     requestedTrips: state.trips.requestedTrips || [],
     startPlace: state.trips.startPlace,
     endPlace: state.trips.endPlace,
-    spots: state.spots.spots || [],    
+    spots: state.spots.spots || [],
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  setSearchStartPlace: (item, token) => dispatch(setSearchStartPlace(item, token)),
+  setSearchStartPlace: (item, token) =>
+    dispatch(setSearchStartPlace(item, token)),
   cleanSearchStartPlace: () => dispatch(cleanSearchStartPlace()),
   setSearchEndPlace: item => dispatch(setSearchEndPlace(item)),
   cleanSearchEndPlace: () => dispatch(cleanSearchEndPlace()),

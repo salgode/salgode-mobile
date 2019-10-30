@@ -53,8 +53,8 @@ const RequestedTrip = ({
         </View>
       </CardItem>
       <CardItem style={styles.locationContainer}>
-        <Location color={'#0000FF'} location={startLocation} />
-        <Location color={'#33C534'} location={endLocation} />
+        <Location color={'#0000FF'} location={startLocation.place_name} />
+        <Location color={'#33C534'} location={endLocation.place_name} />
       </CardItem>
       <CardItem>
         <TimeInfo timestamp={timestamp} />

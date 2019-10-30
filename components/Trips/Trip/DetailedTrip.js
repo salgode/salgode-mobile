@@ -17,7 +17,6 @@ export const DetailedTrip = ({
   onPressStartTrip,
 }) => {
   function renderLocation(locations) {
-    // console.log(locations)
     return locations.map((location, index) => {
       let color
       if (index === 0) {
@@ -28,7 +27,11 @@ export const DetailedTrip = ({
         color = Colors.textGray //index === locations.length - 1 ? '#33C534'
       }
       return (
-        <Location key={`location-${index}`} color={color} location={location} />
+        <Location
+          key={`location-${index}`}
+          color={color}
+          location={location.place_name}
+        />
       )
     })
   }
@@ -66,11 +69,11 @@ export const DetailedTrip = ({
           {selfieImage && selfieImage !== 'placeholder' ? (
             <Thumbnail source={{ uri: selfieImage }} />
           ) : (
-              <Ionicons
-                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-                size={40}
-              />
-            )}
+            <Ionicons
+              name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+              size={40}
+            />
+          )}
           <Text style={styles.userText}>{driver.driver_name}</Text>
         </View>
       </CardItem>
@@ -78,7 +81,7 @@ export const DetailedTrip = ({
         {renderLocation(trip.trip_route_points)}
       </CardItem>
       <CardItem>
-        <TimeInfo timestamp={Date.parse(trip.etd_info.etd)} isDate />
+        <TimeInfo timestamp={Date.parse(trip.etd_info.etd)} />
       </CardItem>
       {asDriver ? (
         <Button
@@ -95,10 +98,11 @@ export const DetailedTrip = ({
 }
 
 DetailedTrip.propTypes = {
-  trip: PropTypes.object,
-  asDriver: PropTypes.bool,
-  driver: PropTypes.object,
-  token: PropTypes.string,
+  trip: PropTypes.object.isRequired,
+  asDriver: PropTypes.bool.isRequired,
+  driver: PropTypes.object.isRequired,
+  token: PropTypes.string.isRequired,
+  onPressStartTrip: PropTypes.func.isRequired,
 }
 
 const styles = StyleSheet.create({

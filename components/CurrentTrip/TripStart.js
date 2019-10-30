@@ -1,45 +1,30 @@
 import React from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Alert } from 'react-native'
 import { View, Text, Button } from 'native-base'
 import PropTypes from 'prop-types'
 import StopsList from './StopsList'
-import { urls } from '../../config/api/index'
-import { client } from '../../redux/store'
 
-const TripStart = ({ stops = [], tripId, token, trip, onPressStartTrip }) => {
-  async function startTrip(token) {
-    await client
-      .request({
-        method: 'post',
-        url: urls.driver.trips.post.next(tripId),
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(resp => resp.data)
-    fetchManifest(trip)
-  }
-
-  async function fetchManifest(trip) {
-    await client
-      .request({
-        method: 'get',
-        url: urls.driver.trips.get.manifest(tripId),
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(resp => {
-        onPressStartTrip(trip, resp.data)
-      })
-  }
-
+const TripStart = ({ stops = [], onTripStart, nextTripView }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>#Llego en 5</Text>
       <Text>Paradas:</Text>
       <StopsList stops={stops} />
-      <Button style={styles.button} onPress={() => startTrip(token)}>
+      <Button
+        style={styles.button}
+        onPress={() => {
+          onTripStart().then(response => {
+            if (response.error) {
+              Alert.alert(
+                'Error de al iniciar Viaje',
+                'Hubo un problema inciando su viaje. Por favor intentalo de nuevo.'
+              )
+            } else {
+              nextTripView()
+            }
+          })
+        }}
+      >
         <Text>Iniciar viaje</Text>
       </Button>
     </View>
@@ -48,6 +33,8 @@ const TripStart = ({ stops = [], tripId, token, trip, onPressStartTrip }) => {
 
 TripStart.propTypes = {
   stops: PropTypes.array,
+  onTripStart: PropTypes.func.isRequired,
+  nextTripView: PropTypes.func.isRequired,
 }
 
 const styles = StyleSheet.create({

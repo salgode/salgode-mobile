@@ -24,8 +24,8 @@ const ChooseTrip = ({
 }) => {
   // const [loading, setLoading] = React.useState(true)
   let Avatar
-  if (driver.avatar) {
-    Avatar = <Thumbnail source={{ uri: driver.avatar }} />
+  if (driver.driver_avatar) {
+    Avatar = <Thumbnail source={{ uri: driver.driver_avatar }} />
   } else {
     Avatar = (
       <Ionicons
@@ -43,7 +43,7 @@ const ChooseTrip = ({
           <View style={styles.user}>
             <View style={styles.userData}>
               {Avatar}
-              <Text style={styles.userText}>{`${driver.name}`}</Text>
+              <Text style={styles.userText}>{`${driver.driver_name}`}</Text>
             </View>
             {/* <View style={styles.iconInfoGroup}>
               <View style={styles.iconContainer}>
@@ -54,8 +54,8 @@ const ChooseTrip = ({
           </View>
         </CardItem>
         <CardItem style={styles.locationContainer}>
-          <Location color={'#0000FF'} location={stops[0]} />
-          <Location color={'#33C534'} location={stops[stops.length - 1]} />
+          <Location color={'#0000FF'} location={stops[0].name} />
+          <Location color={'#33C534'} location={stops[stops.length - 1].name} />
         </CardItem>
         <CardItem style={styles.bottomSection}>
           <TimeInfo timestamp={timestamp} isDate />
@@ -69,12 +69,13 @@ const ChooseTrip = ({
 ChooseTrip.propTypes = {
   timestamp: PropTypes.instanceOf(Date).isRequired,
   driver: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    reputation: PropTypes.number.isRequired,
-    id: PropTypes.string.isRequired,
-    avatar: PropTypes.string.isRequired,
+    driver_name: PropTypes.string.isRequired,
+    // reputation: PropTypes.number.isRequired,
+    driver_id: PropTypes.string.isRequired,
+    driver_avatar: PropTypes.string.isRequired,
   }),
   tripId: PropTypes.string.isRequired,
+  onPress: PropTypes.func,
   onSend: PropTypes.func,
   stops: PropTypes.array,
 }

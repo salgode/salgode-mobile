@@ -352,13 +352,13 @@ const EditProfileScreen = props => {
 
   React.useEffect(() => {
     const { car } = props.user
-    if (car && car.vehicle_attributes && car.vehicle_identification) {
+    if (car && car.vehicle_attributes && car.vehicle_identifications) {
       const {
         vehicle_color,
         vehicle_make,
         vehicle_model,
       } = car.vehicle_attributes
-      const { identification_id } = car.vehicle_identification
+      const { identification_id } = car.vehicle_identifications
       setCarBrand(vehicle_make)
       setCarColor(vehicle_color)
       setCarModel(vehicle_model)
@@ -500,7 +500,7 @@ const EditProfileScreen = props => {
     setIsLoading(true)
     const response = await props.createVehicle(token, {
       alias: `Vehicle ${email}`,
-      vehicle_identification: {
+      vehicle_identifications: {
         type: 'license_plate',
         identification: carPlate.toUpperCase(),
         country: 'CL',

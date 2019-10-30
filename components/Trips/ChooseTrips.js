@@ -40,8 +40,10 @@ class ChooseTrips extends Component {
         first_name: selectedTrip.driver.name,
         last_name: 'TODO: lastName',
         phone: selectedTrip.driver.phone,
-        dniVerified: selectedTrip.vehicle.vehicle_identification.identification_verified,
-        licenseVerified: selectedTrip.vehicle.vehicle_identification.identification_verified,
+        dniVerified:
+          selectedTrip.vehicle.vehicle_identifications.identification_verified,
+        licenseVerified:
+          selectedTrip.vehicle.vehicle_identifications.identification_verified,
         trip_route_points: selectedTrip.trip_route_points,
         etd_info: selectedTrip.etd_info,
         isReserved: false, // TODO: need to obtain reservation status

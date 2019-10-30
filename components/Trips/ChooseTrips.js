@@ -30,16 +30,15 @@ class ChooseTrips extends Component {
     this.setState({ loading: false })
   }
 
-  handleOnPress(tripId) {
+  handleOnPress(trip_id) {
     const { trips } = this.props
-    const selectedTrip = trips.find(x => x.tripId == tripId)
+    const selectedTrip = trips.find(x => x.trip_id === trip_id)
 
     this.props.navigation.navigate('TripDetails', {
       userData: {
         avatar: selectedTrip.driver.avatar,
-        first_name: selectedTrip.driver.name,
-        last_name: 'TODO: lastName',
-        phone: selectedTrip.driver.phone,
+        first_name: selectedTrip.driver.driver_name,
+        phone: selectedTrip.driver.driver_phone,
         dniVerified:
           selectedTrip.vehicle.vehicle_identifications.identification_verified,
         licenseVerified:
@@ -59,7 +58,6 @@ class ChooseTrips extends Component {
         </View>
       )
     }
-
     return (
       <SafeAreaView>
         <FlatList
@@ -68,15 +66,15 @@ class ChooseTrips extends Component {
           refreshing={this.state.loading}
           renderItem={({ item }) => (
             <ChooseTrip
-              timestamp={item.timestamp}
+              timestamp={new Date(item.etd_info.etd)}
               driver={item.driver}
-              stops={item.stops}
+              stops={item.trip_route_points}
               onSend={this.props.onSend}
-              tripId={item.tripId}
-              onPress={() => this.handleOnPress(item.tripId)}
+              tripId={item.trip_id}
+              onPress={() => this.handleOnPress(item.trip_id)}
             />
           )}
-          keyExtractor={item => item.tripId}
+          keyExtractor={item => item.trip_id}
           style={styles.flatList}
         />
       </SafeAreaView>

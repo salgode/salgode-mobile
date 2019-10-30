@@ -5,17 +5,9 @@ import Location from './Location'
 import PropTypes from 'prop-types'
 import Colors from '../../../constants/Colors'
 import TimeInfo from './TimeInfo'
-import { urls } from '../../../config/api/index'
-import { client } from '../../../redux/store'
 import { Ionicons } from '@expo/vector-icons'
 
-export const DetailedTrip = ({
-  trip,
-  asDriver,
-  driver,
-  token,
-  onPressStartTrip,
-}) => {
+export const DetailedTrip = ({ trip, asDriver, driver, onPressStartTrip }) => {
   function renderLocation(locations) {
     return locations.map((location, index) => {
       let color
@@ -36,24 +28,9 @@ export const DetailedTrip = ({
     })
   }
 
-  async function startTrip(token) {
-    const { trip_id } = trip
-    await client
-      .request({
-        method: 'post',
-        url: urls.driver.trips.post.start(trip_id),
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(resp => resp.data)
-    const stops = trip.trip_route_points.map(r => r.name)
-    onPressStartTrip(stops, trip_id, token)
-  }
+  const selfieImage = driver != null ? driver.driver_avatar : 'placeholder'
 
-  const selfieImage = driver != null ? driver.avatar : 'placeholder'
-
-  return trip != null ? (
+  return trip !== null ? (
     <Card
       style={{
         ...styles.container,
@@ -83,13 +60,15 @@ export const DetailedTrip = ({
       <CardItem>
         <TimeInfo timestamp={Date.parse(trip.etd_info.etd)} />
       </CardItem>
-      {asDriver ? (
+      {asDriver && trip.trip_status === 'open' ? (
         <Button
           style={{ alignSelf: 'center', backgroundColor: '#0000FF' }}
-          onPress={() => startTrip(token)}
+          onPress={() => {
+            onPressStartTrip()
+          }}
         >
           <Text style={{ color: 'white', fontSize: 18, fontWeight: '800' }}>
-            Iniciar Viaje
+            Ir
           </Text>
         </Button>
       ) : null}

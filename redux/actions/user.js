@@ -33,24 +33,29 @@ export const actions = {
   USER_CREATE_VEHICLE: 'USER_CREATE_VEHICLE',
   USER_CREATE_VEHICLE_FAIL: 'USER_CREATE_VEHICLE_FAIL',
   USER_CREATE_VEHICLE_SUCCESS: 'USER_CREATE_VEHICLE_SUCCESS',
+  USER_SET_TOKEN: 'USER_SET_TOKEN',
 }
 
 const mapDataToUser = data => {
-  // console.log(data)
   const user = {
-    token: data.bearer_token,
     name: data.first_name,
     userId: data.user_id,
     lastName: data.last_name,
     email: data.email,
     phone: data.phone,
-    // user_verifications: {
-    //   driver_license: data.user_verifications.driver_license,
-    // },
-    vehicles: data.vehicles,
   }
-
-  const { user_identifications } = data
+  // TODO: refactor with lodash pick
+  if (data.bearer_token) {
+    Object.assign(user, {
+      token: data.bearer_token,
+    })
+  }
+  if (data.vehicles) {
+    Object.assign(user, {
+      vehicles: data.vehicles,
+    })
+  }
+  const { user_identifications, user_verifications } = data
   if (user_identifications) {
     const { selfie, identification, driver_license } = user_identifications
     Object.assign(user, {
@@ -62,6 +67,16 @@ const mapDataToUser = data => {
       license: {
         front: driver_license.front,
         back: driver_license.back,
+      },
+    })
+  }
+  if (user_verifications) {
+    const { driver_license, identity, phone } = user_verifications
+    Object.assign(user, {
+      verifications: {
+        license: driver_license,
+        dni: identity,
+        phone,
       },
     })
   }
@@ -123,7 +138,7 @@ export function signupUser(
   }
 }
 
-export function updateUser(authToken, data) {
+export function updateUser(authToken, data, extraData) {
   return {
     type: actions.USER_UPDATE,
     payload: {
@@ -133,6 +148,7 @@ export function updateUser(authToken, data) {
         headers: getBaseHeaders(authToken),
         data,
       },
+      extraData,
     },
   }
 }
@@ -159,7 +175,7 @@ export function fetchUser(authToken, id) {
   }
 }
 
-export function getOwnProfile(token, userId) {
+export function getOwnProfile(token) {
   return {
     type: actions.USER_LOGIN,
     payload: {
@@ -167,11 +183,7 @@ export function getOwnProfile(token, userId) {
         url: urls.user.info.get.own_profile(),
         method: 'get',
         headers: getBaseHeaders(token),
-        transformResponse: data => ({
-          ...mapDataToUser(data),
-          userId: userId,
-          token: token,
-        }),
+        transformResponse: mapDataToUser,
       },
     },
   }
@@ -283,6 +295,15 @@ export function createVehicle(authToken, data) {
         headers: getBaseHeaders(authToken),
         data,
       },
+    },
+  }
+}
+
+export function setToken(authToken) {
+  return {
+    type: actions.USER_SET_TOKEN,
+    payload: {
+      token: authToken,
     },
   }
 }

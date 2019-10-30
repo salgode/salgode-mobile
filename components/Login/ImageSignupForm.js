@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import * as ImagePicker from 'expo-image-picker'
 import { signupUser, getImageUrl } from '../../redux/actions/user'
-import { promiseXMLHttpRequest } from '../../utils/xmlhttprequest'
+import { uploadImageToS3 } from '../../utils/image'
 
 const getCameraType = destination => {
   if (destination === 'selfie') {
@@ -110,23 +110,6 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
     }
   }
 
-  const uploadImageToS3 = async (signedRequest, fileType, uri) => {
-    const response = await promiseXMLHttpRequest({
-      url: signedRequest,
-      method: 'put',
-      headers: {
-        'X-Amz-ACL': 'public-read',
-        'Content-Type': fileType.toUpperCase(),
-      },
-      body: {
-        uri,
-        type: fileType,
-        name: `picture.${fileType}`,
-      },
-    })
-    return response.status === 200
-  }
-
   const onSend = async () => {
     setLoading(true)
 
@@ -139,6 +122,7 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
         'Error de registro',
         'Hubo un problema registrandote. Por favor intentalo de nuevo.'
       )
+      return
     }
     const [frontFN, frontFT] = frontId.split('/').slice(-1)[0].split('.')
     const frontResponse = await uploadImage(frontFN, frontFT)
@@ -148,6 +132,7 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
         'Error de registro',
         'Hubo un problema registrandote. Por favor intentalo de nuevo.'
       )
+      return
     }
     const [backFN, backFT] = backId.split('/').slice(-1)[0].split('.')
     const backResponse = await uploadImage(backFN, backFT)
@@ -157,6 +142,7 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
         'Error de registro',
         'Hubo un problema registrandote. Por favor intentalo de nuevo.'
       )
+      return
     }
     const user = await signup(
       userData.name,
@@ -237,7 +223,7 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
           disabled={!validity()}
           onPress={onSend}
         >
-          <Text>Siguiente</Text>
+          <Text>Registrar</Text>
         </Button>
       )}
     </View>

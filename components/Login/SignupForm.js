@@ -73,11 +73,13 @@ class SignupForm extends Component {
   }
 
   onChangePhoneNumber(phoneNumber) {
-    const validity = validPhone(phoneNumber)
-    this.setState(oldState => ({
-      phoneNumber,
-      validity: { ...oldState.validity, phoneNumber: !!validity },
-    }))
+    if (notWrongPhone(phoneNumber)) {
+      const validity = validPhone(phoneNumber)
+      this.setState(oldState => ({
+        phoneNumber: formatPhone(phoneNumber),
+        validity: { ...oldState.validity, phoneNumber: !!validity },
+      }))
+    }
   }
 
   onChangePassword(password) {
@@ -205,8 +207,8 @@ class SignupForm extends Component {
             style={styles.input}
             onChangeText={this.onChangePhoneNumber}
             keyboardType="phone-pad"
+            maxLength={maxLengthPhone(this.state.phoneNumber)}
             value={this.state.phoneNumber}
-            autoCompleteType="tel"
           />
         </Item>
         <Item floatingLabel style={styles.item}>

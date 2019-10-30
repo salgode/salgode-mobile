@@ -1,7 +1,6 @@
 import { urls, getBaseHeaders } from '../config/api'
 
 const baseUrl = 'https://api.salgode.com'
-// const baseUrl = 'https://playground-api.salgode.com'
 
 export const getTripInfo = async (tripId, token) => {
   const response = await fetch(`${baseUrl}/trips/${tripId}`, {

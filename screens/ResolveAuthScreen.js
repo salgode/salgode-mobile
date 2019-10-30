@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { SafeAreaView, StyleSheet, AsyncStorage, Alert } from 'react-native'
 import { Spinner } from 'native-base'
 import { connect } from 'react-redux'
-import { getOwnProfile } from '../redux/actions/user'
+import { getOwnProfile, setToken } from '../redux/actions/user'
 import PropTypes from 'prop-types'
 
 class ResolveAuthScreen extends Component {
@@ -19,7 +19,6 @@ class ResolveAuthScreen extends Component {
   async loginHandler() {
     let userToken = await AsyncStorage.getItem('@userToken')
     let userId = await AsyncStorage.getItem('@userId')
-    // console.log(userToken, userId)
 
     if (
       !userToken ||
@@ -30,34 +29,33 @@ class ResolveAuthScreen extends Component {
       this.props.navigation.navigate('Login')
     } else {
       userToken = JSON.parse(userToken)
-      userId = JSON.parse(userId)
-      this.setState({
-        loading: true,
-      })
+      //userId = JSON.parse(userId)
+      await this.props.storeToken(userToken)
+      this.props.navigation.navigate('ResolveCurrentTripScreen')
 
-      const user = await this.props
-        .loadUser(userToken, userId)
-        .then(response => {
-          return response
-        })
-      if (user.error) {
-        Alert.alert(
-          'Error al iniciar sesión',
-          'Hubo un problema con iniciar sesión por favor intente de nuevo.',
-          [
-            {
-              text: 'Intentar de nuevo',
-              onPress: () => {
-                AsyncStorage.removeItem('@userToken')
-                AsyncStorage.removeItem('@userId')
-                this.props.navigation.navigate('Login')
-              },
-            },
-          ]
-        )
-      } else {
-        this.props.navigation.navigate('ResolveCurrentTripScreen')
-      }
+      // const user = await this.props
+      //   .loadUser(userToken)
+      //   .then(response => {
+      //     return response
+      //   })
+      // if (user.error) {
+      //   Alert.alert(
+      //     'Error al iniciar sesión',
+      //     'Hubo un problema con iniciar sesión por favor intente de nuevo.',
+      //     [
+      //       {
+      //         text: 'Intentar de nuevo',
+      //         onPress: () => {
+      //           AsyncStorage.removeItem('@userToken')
+      //           AsyncStorage.removeItem('@userId')
+      //           this.props.navigation.navigate('Login')
+      //         },
+      //       },
+      //     ]
+      //   )
+      // } else {
+      //   this.props.navigation.navigate('ResolveCurrentTripScreen')
+      // }
     }
   }
 
@@ -87,10 +85,12 @@ ResolveAuthScreen.propTypes = {
     navigate: PropTypes.func.isRequired,
   }).isRequired,
   loadUser: PropTypes.func.isRequired,
+  storeToken: PropTypes.func.isRequired,
 }
 
 const mapDispatchToProps = dispatch => ({
   loadUser: (token, id) => dispatch(getOwnProfile(token, id)),
+  storeToken: token => dispatch(setToken(token)),
 })
 
 export default connect(

@@ -38,7 +38,7 @@ import {
   updateUser,
   signoutUser,
   getUserCar,
-  uploadImageUser,
+  getImageUrl,
   createVehicle,
 } from '../redux/actions/user'
 import Layout from '../constants/Layout'
@@ -52,6 +52,8 @@ import {
   validPhone,
   notWrongPlate,
 } from '../utils/input'
+import { uploadImageToS3 } from '../utils/image'
+import { promiseXMLHttpRequest } from '../utils/xmlhttprequest'
 import * as ImagePicker from 'expo-image-picker'
 
 const getText = destination => {
@@ -428,7 +430,7 @@ const EditProfileScreen = props => {
       )
       if (status_roll !== 'granted') {
         alert(
-          'Necesitamos permiso para poder acceder a tus cámara y biblioteca de imágenes.'
+          'Necesitamos permiso para poder acceder a tu cámara y biblioteca de imágenes.'
         )
       }
     }
@@ -440,8 +442,35 @@ const EditProfileScreen = props => {
     })
 
     if (!result.cancelled) {
-      setAvatar(result.uri)
-      uploadImageUser(result.base64)
+      const { uri } = result
+      const { uploadImage } = props
+      if (uri) {
+        setAvatar(result.uri)
+
+        // TODO: refactor -> upload function & duplicate code on ImageSignupForm
+        const [fileName, fileType] = uri.split('/').slice(-1)[0].split('.')
+        const response = await uploadImage(fileName, fileType)
+        if (!await uploadImageToS3(response.payload.data.upload, fileType, uri)) {
+          Alert.alert(
+            'Error al actualizar foto',
+            'No hemos podido actualizar tu foto. Por favor intentalo de nuevo.'
+          )
+        } else {
+          const updateResponse = await props.updateUser(props.user.token, {
+            user_identifications: {
+              selfie_image: response.payload.data.image_id,
+            },
+          }, {
+            avatar: response.payload.data.fetch,
+          })
+          if (updateResponse.error) {
+            Alert.alert(
+              'Error al actualizar foto',
+              'No hemos podido actualizar tu foto. Por favor intentalo de nuevo.'
+            )
+          }
+        }
+      }
     }
   }
 
@@ -472,12 +501,41 @@ const EditProfileScreen = props => {
   const onPressSaveLicense = async () => {
     setIsUploadingLicense(true)
     setIsLoading(true)
-    const frontIdUrl = await props.uploadImage(frontSubmit)
-    const backIdUrl = await props.uploadImage(backSubmit)
+
+    // TODO: Refactor
+    const [frontName, frontType] = licenseFront.split('/').slice(-1)[0].split('.')
+    const frontResponse = await props.uploadImage(frontName, frontType)
+    if (!await uploadImageToS3(frontResponse.payload.data.upload, frontType, licenseFront)) {
+      setIsUploadingLicense(false)
+      setIsLoading(false)
+      Alert.alert(
+        'Error actualizando datos',
+        'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
+      )
+      return
+    }
+    const [backName, backType] = licenseBack.split('/').slice(-1)[0].split('.')
+    const backResponse = await props.uploadImage(backName, backType)
+    if (!await uploadImageToS3(backResponse.payload.data.upload, backType, licenseBack)) {
+      setIsUploadingLicense(false)
+      setIsLoading(false)
+      Alert.alert(
+        'Error actualizando datos',
+        'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
+      )
+      return
+    }
     const response = await props.updateUser(props.user.token, {
       user_identifications: {
-        driver_license_image_front: frontIdUrl,
-        driver_license_image_back: backIdUrl,
+        driver_license: {
+          front: frontResponse.payload.data.image_id,
+          back: backResponse.payload.data.image_id,
+        },
+      },
+    }, {
+      license: {
+        front: frontResponse.payload.data.fetch,
+        back: backResponse.payload.data.fetch,
       },
     })
     setIsLoading(false)
@@ -523,6 +581,32 @@ const EditProfileScreen = props => {
     } else {
       setCanSubmitCar(false)
       Alert.alert('Ingreso exitoso', 'Tu vehículo fue ingresado exitosamente')
+    }
+  }
+
+  const takePhoto = async dest => {
+    const photo = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+      base64: true,
+    })
+    if (!photo.cancelled) {
+      onTakePicture(photo.base64, photo.uri, dest)
+    }
+  }
+
+  const choosePhoto = async dest => {
+    const photo = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+      base64: true,
+    })
+    if (!photo.cancelled) {
+      onTakePicture(photo.base64, photo.uri, dest)
     }
   }
 
@@ -620,7 +704,8 @@ const EditProfileScreen = props => {
                     />
                   )}
                   <PhotoTaker
-                    openCamera={openCamera}
+                    takePhoto={takePhoto}
+                    choosePhoto={choosePhoto}
                     setImage={'licenseFront'}
                     selfie={licenseFront}
                     iconName="vcard-o"
@@ -629,7 +714,8 @@ const EditProfileScreen = props => {
                     buttonText="Tomar Frente de Licencia"
                   />
                   <PhotoTaker
-                    openCamera={openCamera}
+                    takePhoto={takePhoto}
+                    choosePhoto={choosePhoto}
                     setImage={'licenseBack'}
                     selfie={licenseBack}
                     iconName="vcard-o"
@@ -716,8 +802,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  updateUser: (authToken, data) => dispatch(updateUser(authToken, data)),
-  uploadImage: base64string => dispatch(uploadImageUser(base64string)),
+  updateUser: (authToken, data, ed) => dispatch(updateUser(authToken, data, ed)),
+  uploadImage: (name, type) => dispatch(getImageUrl(name, type)),
   signOut: () => dispatch(signoutUser()),
   getUserCar: (token, carId) => dispatch(getUserCar(token, carId)),
   createVehicle: (token, data) => dispatch(createVehicle(token, data)),

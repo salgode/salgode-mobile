@@ -66,11 +66,11 @@ export const DetailedTrip = ({
           {selfieImage && selfieImage !== 'placeholder' ? (
             <Thumbnail source={{ uri: selfieImage }} />
           ) : (
-            <Ionicons
-              name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-              size={40}
-            />
-          )}
+              <Ionicons
+                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                size={40}
+              />
+            )}
           <Text style={styles.userText}>{driver.driver_name}</Text>
         </View>
       </CardItem>
@@ -78,7 +78,7 @@ export const DetailedTrip = ({
         {renderLocation(trip.trip_route_points)}
       </CardItem>
       <CardItem>
-        <TimeInfo timestamp={Date.parse(trip.etd)} isDate />
+        <TimeInfo timestamp={Date.parse(trip.etd_info.etd)} isDate />
       </CardItem>
       {asDriver ? (
         <Button

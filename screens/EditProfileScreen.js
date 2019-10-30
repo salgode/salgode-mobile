@@ -185,6 +185,8 @@ const Field = ({ field }) => {
 Field.propTypes = {
   field: PropTypes.exact({
     label: PropTypes.string.isRequired,
+    maxLength: PropTypes.func,
+    placeholder: PropTypes.string,
     value: PropTypes.string.isRequired,
     setValue: PropTypes.func.isRequired,
     validate: PropTypes.func.isRequired,
@@ -425,7 +427,9 @@ const EditProfileScreen = props => {
         Permissions.CAMERA_ROLL
       )
       if (status_roll !== 'granted') {
-        alert('Necesitamos permiso para poder acceder a tus cámara y biblioteca de imágenes.')
+        alert(
+          'Necesitamos permiso para poder acceder a tus cámara y biblioteca de imágenes.'
+        )
       }
     }
     const result = await ImagePicker.launchImageLibraryAsync({

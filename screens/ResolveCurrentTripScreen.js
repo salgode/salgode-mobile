@@ -27,9 +27,16 @@ class ResolveCurrentTripScreen extends Component {
         const trip = await this.props
           .fetchTrip(userToken, data.payload.data.trip_id)
           .then(response => response.payload.data)
+          .catch(() => null)
         const manifest = await this.props
           .fetchManifest(userToken, data.payload.data.trip_id)
           .then(response => response.payload.data)
+          .catch(() => null)
+
+        if (!trip || !manifest) {
+          this.props.navigation.navigate('Main')
+          return
+        }
 
         this.props.navigation.navigate('StopTrip', {
           trip,

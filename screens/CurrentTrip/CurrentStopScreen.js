@@ -12,7 +12,6 @@ class CurrentStopScreen extends Component {
 
     this.state = {
       trip: this.props.navigation.getParam('trip', null),
-      tripManifest: this.props.navigation.getParam('manifest', null),
       asDriver: this.props.navigation.getParam('asDriver', false),
     }
 
@@ -28,7 +27,6 @@ class CurrentStopScreen extends Component {
     return (
       <CurrentStop
         trip={this.state.trip}
-        tripManifest={this.state.tripManifest}
         stopIndex={0}
         before={0} //todo revisar esto del before y el after, ahora esta todo malo
         after={1}

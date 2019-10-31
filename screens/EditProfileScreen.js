@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   Platform,
   AsyncStorage,
+  Modal,
 } from 'react-native'
 import {
   Button,
@@ -25,6 +26,7 @@ import {
   Icon,
   CheckBox,
   Thumbnail,
+  H2,
 } from 'native-base'
 import { withNavigation } from 'react-navigation'
 import * as Permissions from 'expo-permissions'
@@ -210,7 +212,9 @@ const EditProfileScreen = props => {
   const [name, setName] = React.useState('')
   const [lastName, setLastName] = React.useState('')
   const [phone, setPhone] = React.useState('')
-  // const [password, setPassword] = React.useState('')
+  const [isChangePasswordActive, setIsChangePasswordActive] = React.useState(false)
+  const [currentPassword, setCurrentPassword] = React.useState('')
+  const [newPassword, setNewPassword] = React.useState('')
   const [hasCar, setHasCar] = React.useState(false)
   const [carPlate, setCarPlate] = React.useState('')
   const [carColor, setCarColor] = React.useState('')
@@ -267,6 +271,26 @@ const EditProfileScreen = props => {
       validate: validPhone,
       keyboardType: 'phone-pad',
       placeholder: '+56 9 9999 9999',
+    },
+  ]
+  const passwordFields = [
+    {
+      label: 'Contraseña actual',
+      value: currentPassword,
+      setValue: setCurrentPassword,
+      isSecure: true,
+      validate: (password) => typeof password === 'string'
+        ? password.length > 3
+        : false
+    },
+    {
+      label: 'Nueva contraseña',
+      value: newPassword,
+      setValue: setNewPassword,
+      isSecure: true,
+      validate: (password) => typeof password === 'string'
+        ? password.length > 3
+        : false
     },
   ]
   const carFields = [
@@ -386,11 +410,15 @@ const EditProfileScreen = props => {
 
   const saveUser = async () => {
     setIsLoading(true)
+    const body = {
+      first_name: name,
+      last_name: lastName,
+      phone,
+    }
     const response = await props.updateUser(props.user.token, {
-      first_name: user.name,
-      last_name: user.lastName,
-      phone: user.phone,
-    })
+      ...body,
+      user_identifications: {},
+    }, body)
     setIsLoading(false)
     if (response.error) {
       Alert.alert(
@@ -552,6 +580,24 @@ const EditProfileScreen = props => {
     }
   }
 
+  const onPressUpdatePassword = async () => {
+    setIsLoading(true)
+    setIsChangePasswordActive(false)
+    const response = await props.updateUser(props.user.token, {
+      current_password: currentPassword,
+      new_password: newPassword,
+    })
+    if (response.error) {
+      Alert.alert(
+        'Error cambiando contraseña',
+        'Hubo un problema al intentar cambiar tu contraseña. Por favor intentalo de nuevo.'
+      )
+    } else {
+      Alert.alert('Actualización exitosa', 'Tu contraseña se ha cambiado con éxito')
+    }
+    setIsLoading(false)
+  }
+
   const onPressSaveCar = async () => {
     const { token, email } = props.user
     setIsSavingCar(true)
@@ -567,7 +613,7 @@ const EditProfileScreen = props => {
         brand: carBrand,
         model: carModel,
         type: 'car',
-        seats: 0,
+        seats: 1,
         color: carColor,
       },
     })
@@ -608,6 +654,16 @@ const EditProfileScreen = props => {
     if (!photo.cancelled) {
       onTakePicture(photo.base64, photo.uri, dest)
     }
+  }
+
+  const checkValidPasswords = () => {
+    const validCurrentPassword = typeof currentPassword === 'string'
+      ? currentPassword.length > 3
+      : false
+    const validNewPassword = typeof newPassword === 'string'
+      ? newPassword.length > 3
+      : false
+    return validCurrentPassword && validNewPassword
   }
 
   return (
@@ -656,11 +712,41 @@ const EditProfileScreen = props => {
                   block
                   borderRadius={10}
                   style={styles.button}
-                  disabled={true}
-                  onPress={() => {}}
+                  disabled={isChangePasswordActive}
+                  onPress={() => setIsChangePasswordActive(true)}
                 >
                   <Text style={styles.buttonText}>Cambiar contraseña</Text>
                 </Button>
+                <Modal
+                  animationType="slide"
+                  transparent={false}
+                  presentationStyle="fullScreen"
+                  visible={isChangePasswordActive}
+                  onRequestClose={() => setIsChangePasswordActive(false)}
+                >
+                  <View style={styles.updatePasswordModal}>
+                    <View style={styles.hiddenFlex}></View>
+                    <View>
+                      <H2>Actualiza tu contraseña</H2>
+                      <View style={styles.passwordFields}>
+                        {passwordFields.map(field => (
+                          <Field key={field.label} field={field} validity="partial" />
+                        ))}
+                      </View>
+                      <Button
+                        block
+                        borderRadius={10}
+                        style={styles.blueButton}
+                        disabled={isSaving || !checkValidPasswords()}
+                        onPress={onPressUpdatePassword}
+                        color={'#0000FF'}
+                      >
+                        <Text style={styles.buttonText}>Cambiar contraseña</Text>
+                      </Button>
+                    </View>
+                    <View style={styles.hiddenFlex}></View>
+                  </View>
+                </Modal>
               </View>
             </View>
             <Form style={styles.form}>
@@ -850,6 +936,9 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginTop: 30,
   },
+  hiddenFlex: {
+    flex: 1,
+  },
   input: {
     fontSize: 14,
     height: 40,
@@ -867,6 +956,10 @@ const styles = StyleSheet.create({
   },
   logout: {
     marginRight: 8,
+  },
+  passwordFields: {
+    marginTop: 30,
+    width: Layout.window.width * 0.9,
   },
   profilePhoto: {
     alignItems: 'center',
@@ -897,6 +990,13 @@ const styles = StyleSheet.create({
   rowCenter: {
     alignItems: 'center',
     flexDirection: 'row',
+  },
+  updatePasswordModal: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    height: Layout.window.height,
   },
   warning: {
     color: 'red',

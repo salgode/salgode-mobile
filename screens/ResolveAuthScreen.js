@@ -29,33 +29,8 @@ class ResolveAuthScreen extends Component {
       this.props.navigation.navigate('Login')
     } else {
       userToken = JSON.parse(userToken)
-      //userId = JSON.parse(userId)
       await this.props.storeToken(userToken)
-      this.props.navigation.navigate('ResolveCurrentTripScreen')
-
-      // const user = await this.props
-      //   .loadUser(userToken)
-      //   .then(response => {
-      //     return response
-      //   })
-      // if (user.error) {
-      //   Alert.alert(
-      //     'Error al iniciar sesión',
-      //     'Hubo un problema con iniciar sesión por favor intente de nuevo.',
-      //     [
-      //       {
-      //         text: 'Intentar de nuevo',
-      //         onPress: () => {
-      //           AsyncStorage.removeItem('@userToken')
-      //           AsyncStorage.removeItem('@userId')
-      //           this.props.navigation.navigate('Login')
-      //         },
-      //       },
-      //     ]
-      //   )
-      // } else {
-      //   this.props.navigation.navigate('ResolveCurrentTripScreen')
-      // }
+      this.props.navigation.navigate('ResolveUserScreen')
     }
   }
 

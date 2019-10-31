@@ -32,28 +32,6 @@ class ChooseTripsScreen extends Component {
   }
 
   async componentDidMount() {
-    if (!this.props.user.vehicles) {
-      const userResponse = await this.props.loadUser(
-        this.props.user.token,
-        this.props.user.userId
-      )
-      if (userResponse.error) {
-        Alert.alert(
-          'Error al iniciar sesión',
-          'Hubo un problema con iniciar sesión por favor intente de nuevo.',
-          [
-            {
-              text: 'Intentar de nuevo',
-              onPress: () => {
-                AsyncStorage.removeItem('@userToken')
-                AsyncStorage.removeItem('@userId')
-                this.props.navigation.navigate('Login')
-              },
-            },
-          ]
-        )
-      }
-    }
     this.props.getAllSpots(this.props.user.token)
   }
 
@@ -86,8 +64,8 @@ class ChooseTripsScreen extends Component {
           <CardInput
             onTouchablePress={() =>
               navigation.navigate('SpotSelectorScreen', {
-                title: 'Buscas #Desde',
-                text: '#Desde',
+                title: 'Buscas #SalgoDe',
+                text: '#SalgoDe',
                 onClearPress: this.props.cleanSearchStartPlace,
                 onItemPress: this.setSearchStartPlaceFetch,
                 data: this.props.spots,
@@ -95,7 +73,7 @@ class ChooseTripsScreen extends Component {
             }
             placeholder="Filtra por Comuna o Parada"
             value={startPlace ? startPlace.name : ''}
-            text="#Desde"
+            text="#SalgoDe"
             editable={false}
             onClearPress={this.props.cleanSearchStartPlace}
           />
@@ -126,7 +104,7 @@ class ChooseTripsScreen extends Component {
               trips={requestedTrips}
             />
           ) : (
-            <Text>No se ha encontrado ningun viaje segun lo solicitado</Text>
+            <Text>No se ha encontrado ningún viaje según lo solicitado</Text>
           )}
         </View>
       </View>

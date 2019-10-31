@@ -46,7 +46,7 @@ CardInput.defaultProps = {
 
 const styles = StyleSheet.create({
   text: {
-    flex: 0.22,
+    flex: 0.3,
     fontSize: 15,
     fontWeight: 'bold',
     margin: 10,

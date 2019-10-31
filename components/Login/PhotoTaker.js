@@ -12,43 +12,29 @@ const PhotoTaker = ({
   iconType = 'Ionicon',
   setImage,
   size = 80,
-  buttonText = 'Tomar foto',
+  buttonText = 'Abrir galería',
   disableLibrary = false,
+  title,
 }) => {
-  if (selfie) {
-    return (
-      <View style={styles.container}>
-        <Image style={styles.iconView} source={{ uri: selfie }} />
-        <View style={styles.buttonContainer}>
-          {disableLibrary ? null : (
-            <Button
-              block
-              borderRadius={10}
-              style={styles.button}
-              onPress={() => choosePhoto(setImage)}
-            >
-              <Text>{buttonText}</Text>
-            </Button>
-          )}
-
-          <Button
-            block
-            borderRadius={10}
-            style={styles.icon}
-            onPress={() => takePhoto(setImage)}
-          >
-            <Ionicons name="ios-camera" size={20} color="white" />
-          </Button>
+  return (
+    <>
+      {title ? (
+        <View style={styles.title}>
+          <Text>{title}</Text>
         </View>
-      </View>
-    )
-  } else {
-    const Icon = iconType === 'Ionicon' ? Ionicons : FontAwesome
-    return (
+      ) : (<></>)}
       <View style={styles.container}>
-        <View style={styles.iconView}>
-          <Icon name={iconName} size={size} />
-        </View>
+        {selfie ? (
+          <Image style={styles.iconView} source={{ uri: selfie }} />
+        ) : (iconType === 'Ionicon' ? (
+          <View style={styles.iconView}>
+            <Ionicons name={iconName} size={size} />
+          </View>
+        ) : (
+          <View style={styles.iconView}>
+            <FontAwesome name={iconName} size={size} />
+          </View>
+        ))}
         <View style={styles.buttonContainer}>
           {disableLibrary ? null : (
             <Button
@@ -70,8 +56,8 @@ const PhotoTaker = ({
           </Button>
         </View>
       </View>
-    )
-  }
+    </>
+  )
 }
 
 PhotoTaker.propTypes = {
@@ -112,6 +98,12 @@ const styles = StyleSheet.create({
     marginRight: 20,
     width: 100,
   },
+  title: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginTop: 8,
+  }
 })
 
 export default PhotoTaker

@@ -10,7 +10,9 @@ import { View, StyleSheet, Alert, AsyncStorage, Text } from 'react-native'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import ChooseTrips from '../components/Trips/ChooseTrips'
+import EmptyState from '../components/EmptyState/EmptyState'
 import { getOwnProfile } from '../redux/actions/user'
+import noTrips from '../assets/images/notrips.png'
 import Colors from '../constants/Colors'
 import CardInput from '../components/CardInput'
 import lang from '../languages/es'
@@ -95,18 +97,16 @@ class ChooseTripsScreen extends Component {
           /> */}
         </View>
 
-        <View>
-          {requestedTrips.length > 0 ? (
-            <ChooseTrips
-              onSend={this.onRequestTrip}
-              onReload={this.setSearchStartPlaceFetch}
-              // trips={requestedTrips.map(trip => parseTripInfo(trip))}
-              trips={requestedTrips}
-            />
-          ) : (
-            <Text>No se ha encontrado ningún viaje según lo solicitado</Text>
-          )}
-        </View>
+        {requestedTrips.length > 0 ? (
+          <ChooseTrips
+            onSend={this.onRequestTrip}
+            onReload={this.setSearchStartPlaceFetch}
+            // trips={requestedTrips.map(trip => parseTripInfo(trip))}
+            trips={requestedTrips}
+          />
+        ) : (
+          <EmptyState image={noTrips} text="No se ha encontrado ningún viaje según lo solicitado." />
+        )}
       </View>
     )
   }

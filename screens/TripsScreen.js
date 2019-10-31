@@ -5,6 +5,8 @@ import Trips from '../components/Trips/Trips'
 import { Spinner, Text } from 'native-base'
 import { connect } from 'react-redux'
 import { userTrips, driverTrips } from '../redux/actions/user'
+import EmptyState from '../components/EmptyState/EmptyState'
+import noTrips from '../assets/images/notrips.png'
 
 class TripsScreen extends Component {
   static navigationOptions = {
@@ -72,12 +74,7 @@ class TripsScreen extends Component {
     } else {
       //not verified driver
       return (
-        <View style={styles.viewContainer}>
-          <Text>
-            Para crear viajes debes registrar tu auto y enviar una foto por
-            ambos lados de tu licencia.
-          </Text>
-        </View>
+        <EmptyState image={noTrips} text="Para crear viajes debes registrar tu auto y enviar una foto por ambos lados de tu licencia." />
       )
     }
   }

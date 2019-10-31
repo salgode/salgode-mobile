@@ -80,7 +80,7 @@ export const urls = {
   user: {
     images: {
       post: {
-        upload: () => '/upload/image',
+        getLink: () => '/upload/image',
       },
     },
     info: {

@@ -31,7 +31,7 @@ export default function userReducer(state = {}, action) {
       return {
         ...state,
         loading: false,
-        ...action.payload.data.user,
+        ...action.meta.previousAction.payload.extraData,
       }
     case userActions.USER_UPDATE_FAIL:
       return {
@@ -65,6 +65,8 @@ export default function userReducer(state = {}, action) {
       return { ...state, loading: true }
     case userActions.USER_CREATE_VEHICLE_SUCCESS:
       return { ...state, loading: false }
+    case userActions.USER_SET_TOKEN:
+      return { ...state, token: action.payload.token }
     default:
       return state
   }

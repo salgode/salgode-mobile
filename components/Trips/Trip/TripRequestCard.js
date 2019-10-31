@@ -121,6 +121,7 @@ export default class TripRequestCard extends Component {
               reservation.reservation_route_places[
                 reservation.reservation_route_places.length - 1
               ].place_name
+              reservation.reservation_route_places.end.place_name || 'Fix me'
             }
           />
         </CardItem>

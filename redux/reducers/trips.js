@@ -6,8 +6,8 @@ export default function tripsReducer(state = {}, action) {
       return { ...state, startPlace: {} }
 
     case tripActions.SET_SEARCH_START_PLACE:
-      return { 
-        ...state, 
+      return {
+        ...state,
         loading: true,
         startPlace: action.payload.startPlace,
       }
@@ -41,12 +41,29 @@ export default function tripsReducer(state = {}, action) {
     case tripActions.TRIPS_FETCH_TRIP:
       return { ...state, loading: true }
     case tripActions.TRIPS_FETCH_TRIP_SUCCESS:
-      return { 
-        ...state, 
-        loading: false, 
-        trip: action.payload.data 
+      return {
+        ...state,
+        loading: false,
+        trip: action.payload.data,
       }
     case tripActions.TRIPS_FETCH_TRIP_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: 'Error while fetching trip',
+      }
+    case tripActions.TRIPS_FETCH_TRIP_MANIFEST:
+      return { ...state, loading: true }
+    case tripActions.TRIPS_FETCH_TRIP_MANIFEST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        trip: {
+          ...state.trip,
+          manifest: action.payload.data,
+        },
+      }
+    case tripActions.TRIPS_FETCH_TRIP_MANIFEST_FAIL:
       return {
         ...state,
         loading: false,

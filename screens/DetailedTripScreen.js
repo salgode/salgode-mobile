@@ -7,7 +7,11 @@ import TripRequestCard from '../components/Trips/Trip/TripRequestCard'
 import { ScrollView } from 'react-native-gesture-handler'
 import { connect } from 'react-redux'
 import { withNavigation } from 'react-navigation'
-import { fetchTrip, startJourney } from '../redux/actions/trips'
+import {
+  fetchTrip,
+  startJourney,
+  fetchTripManifest,
+} from '../redux/actions/trips'
 import { getTripReservations } from '../utils/getTripInfo'
 
 class DetailedTripScreen extends Component {
@@ -29,19 +33,18 @@ class DetailedTripScreen extends Component {
   }
 
   async componentDidMount() {
-    // TODO: get token from redux store
     this.setState({ loading: true })
     const asDriver = this.props.navigation.getParam('asDriver', null)
-    const trip = this.props.navigation.getParam('trip', null)
-    this.setState({ trip, asDriver })
+    const trip_id = this.props.navigation.getParam('trip_id', null)
+    this.props.fetchTrip(this.props.user.token, trip_id)
+    this.props.fetchManifest(this.props.user.token, trip_id)
+    this.setState({ ...this.state, asDriver })
 
     if (asDriver) {
       const reservations = await getTripReservations(
         this.props.user.token,
-        trip.trip_id
+        trip_id
       )
-      // console.log('Aca', reservations)
-      // console.log(asDriver)
       this.setState({ loading: false })
       if (!reservations || reservations.message) {
         alert(
@@ -54,7 +57,15 @@ class DetailedTripScreen extends Component {
       this.setState({ loading: false })
     }
   }
-
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.trip !== prevState.trip) {
+      return { trip: nextProps.trip }
+    }
+    if (nextProps.trip.manifest !== prevState.trip.manifest) {
+      return { trip: { ...prevState.trip, manifest: nextProps.trip.manifest } }
+    }
+    return null
+  }
   onPressStartTrip() {
     this.props.navigation.navigate('StartTrip', {
       stops: this.state.trip.trip_route_points,
@@ -67,7 +78,6 @@ class DetailedTripScreen extends Component {
         this.props.navigation.navigate('StopTrip', {
           token: this.props.user.token,
           trip: this.state.trip,
-          manifest: this.state.trip.manifest,
           asDriver: this.props.navigation.getParam('asDriver', null),
         })
       },
@@ -87,7 +97,6 @@ class DetailedTripScreen extends Component {
               key={`passenger-${index}`}
               reservation={reservation}
               finishStop={finishStop}
-              // slot={this.props.slots[index]}
               token={this.props.user.token}
             />
           )
@@ -125,9 +134,9 @@ DetailedTripScreen.propTypes = {
   user: PropTypes.shape({
     token: PropTypes.string.isRequired,
   }).isRequired,
-  // trip: PropTypes.object.isRequired,
-  // slots: PropTypes.object.isRequired,
+  trip: PropTypes.object.isRequired,
   fetchTrip: PropTypes.func.isRequired,
+  fetchManifest: PropTypes.func.isRequired,
   postTripStart: PropTypes.func.isRequired,
 }
 
@@ -146,13 +155,13 @@ const styles = StyleSheet.create({
 const mapPropsToState = state => ({
   user: state.user,
   trip: state.trips.trip,
-  // slots: state.trips.trip.slots,
+  manifest: state.trips.trip.manifest,
 })
 
 const mapDispatchToState = dispatch => ({
   fetchTrip: (token, id) => dispatch(fetchTrip(token, id)),
   postTripStart: (token, id) => dispatch(startJourney(token, id)),
-  // fetchSlots:()=>(),
+  fetchManifest: (token, id) => dispatch(fetchTripManifest(token, id)),
 })
 
 export default connect(

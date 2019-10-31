@@ -26,7 +26,7 @@ class TripsScreen extends Component {
   onPressTrip(asDriver = false, trip) {
     this.props.navigation.navigate('DetailedTrip', {
       asDriver: this.state.asDriver,
-      trip,
+      trip_id: trip.trip_id,
     })
   }
 
@@ -45,8 +45,7 @@ class TripsScreen extends Component {
 
   isVerifiedDriver = () => {
     return (
-      this.props.user.verifications.license &&
-      this.props.user.vehicles.length
+      this.props.user.verifications.license && this.props.user.vehicles.length
     )
   }
   render() {

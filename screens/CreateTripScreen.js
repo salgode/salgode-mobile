@@ -70,7 +70,10 @@ class CreateTripScreen extends Component {
       loading,
     } = this.props
 
-    const disabled = startStop && endStop && startTime ? false : true
+    // const disabled = startStop && endStop && startTime ? false : true
+    const startStopValid = startStop ? Object.keys(startStop).length !== 0 : false
+    const endStopValid = endStop ? Object.keys(endStop).length !== 0 : false
+    const disabled = !startStopValid || !endStopValid || !startTime
     const { pickedDate } = this.state
     let day
     let hours
@@ -95,8 +98,8 @@ class CreateTripScreen extends Component {
             <CardInput
               onTouchablePress={() =>
                 navigation.navigate('SpotSelectorScreen', {
-                  title: 'Seleccionar #Desde',
-                  text: '#Desde',
+                  title: 'Seleccionar #SalgoDe',
+                  text: '#SalgoDe',
                   onClearPress: clearStartStop,
                   onItemPress: setStartStop,
                   data: filteredSpots,
@@ -104,7 +107,7 @@ class CreateTripScreen extends Component {
               }
               placeholder="Filtra por Comuna o Parada"
               value={startStop.name}
-              text="#Desde"
+              text="#SalgoDe"
               editable={false}
               onClearPress={clearStartStop}
             />
@@ -112,8 +115,8 @@ class CreateTripScreen extends Component {
             <CardInput
               onTouchablePress={() =>
                 navigation.navigate('SpotSelectorScreen', {
-                  title: 'Seleccionar #A',
-                  text: '#A',
+                  title: 'Seleccionar #Hasta',
+                  text: '#Hasta',
                   onClearPress: clearStartStop,
                   onItemPress: setEndStop,
                   data: filteredSpots,
@@ -121,7 +124,7 @@ class CreateTripScreen extends Component {
               }
               placeholder="Filtra por Comuna o Parada"
               value={endStop.name}
-              text="#A"
+              text="#Hasta"
               editable={false}
               onClearPress={clearEndStop}
             />

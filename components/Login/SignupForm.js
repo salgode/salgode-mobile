@@ -42,7 +42,7 @@ class SignupForm extends Component {
     this.onChangePhoneNumber = this.onChangePhoneNumber.bind(this)
     this.onChangePassword = this.onChangePassword.bind(this)
     this.onChangePasswordRepeat = this.onChangePasswordRepeat.bind(this)
-
+    this.formatPhoneCL = this.formatPhoneCL.bind(this)
     this.getValidity = this.getValidity.bind(this)
     this.onPress = this.onPress.bind(this)
   }
@@ -94,6 +94,12 @@ class SignupForm extends Component {
       passwordRepeat: password,
       validity: { ...oldState.validity, passwordRepeat: password.length > 3 },
     }))
+  }
+
+  formatPhoneCL() {
+    if (!/^\+56 9/g.test(this.state.phoneNumber)) {
+      this.setState(oldState => ({ phoneNumber: '+56 9' }))
+    }
   }
 
   getValidity() {
@@ -206,6 +212,7 @@ class SignupForm extends Component {
           <Input
             style={styles.input}
             onChangeText={this.onChangePhoneNumber}
+            onFocus={this.formatPhoneCL}
             keyboardType="phone-pad"
             maxLength={maxLengthPhone(this.state.phoneNumber)}
             value={this.state.phoneNumber}

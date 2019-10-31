@@ -6,6 +6,7 @@ import LoginNavigator from './LoginNavigator'
 // import { store } from '../redux/store'
 import ResolveAuthScreen from '../screens/ResolveAuthScreen'
 import ResolveCurrentTripScreen from '../screens/ResolveCurrentTripScreen'
+import ResolveUserScreen from '../screens/ResolveUserScreen'
 
 const renderRoutes = () => {
   // Verify Session
@@ -23,6 +24,7 @@ const renderRoutes = () => {
 
   return {
     ResolveAuthScreen,
+    ResolveUserScreen,
     ResolveCurrentTripScreen,
     Main: MainTabNavigator,
     LoginNavigator,

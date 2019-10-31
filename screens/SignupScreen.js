@@ -4,6 +4,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Alert,
+  AsyncStorage,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { View } from 'native-base'
@@ -55,7 +56,10 @@ class SignupScreen extends Component {
     if (user.error) {
       Alert.alert(lang.signup.error.title, lang.signup.error.message)
     } else {
-      this.props.navigation.navigate('ChooseTrips')
+      const { data } = user.payload
+      AsyncStorage.setItem('@userToken', String(JSON.stringify(data.token)))
+      AsyncStorage.setItem('@userId', String(JSON.stringify(data.userId)))
+      this.props.navigation.navigate('ResolveUserScreen')
     }
   }
 

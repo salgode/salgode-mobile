@@ -7,6 +7,7 @@ import {
   Animated,
   Keyboard,
   AsyncStorage,
+  Alert,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Spinner } from 'native-base'
@@ -73,12 +74,12 @@ class LoginScreen extends Component {
     const user = await this.props.login(email, password)
     this.setState({ loading: false })
     if (user.error) {
-      alert(lang.signin.error)
+      Alert.alert('No se pudo iniciar sesión', 'Las credenciales ingresadas son incorrectas')
     } else {
       const { data } = user.payload
       AsyncStorage.setItem('@userToken', String(JSON.stringify(data.token)))
       AsyncStorage.setItem('@userId', String(JSON.stringify(data.userId)))
-      this.props.navigation.navigate('Main')
+      this.props.navigation.navigate('ResolveUserScreen')
     }
   }
 

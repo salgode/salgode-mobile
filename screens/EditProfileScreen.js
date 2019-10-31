@@ -1,6 +1,6 @@
 import React from 'react'
 import Constants from 'expo-constants'
-import { Entypo } from '@expo/vector-icons'
+import { Entypo, Octicons } from '@expo/vector-icons'
 import {
   StyleSheet,
   KeyboardAvoidingView,
@@ -27,6 +27,7 @@ import {
   CheckBox,
   Thumbnail,
   H2,
+  Spinner,
 } from 'native-base'
 import { withNavigation } from 'react-navigation'
 import * as Permissions from 'expo-permissions'
@@ -216,6 +217,7 @@ const EditProfileScreen = props => {
   const [currentPassword, setCurrentPassword] = React.useState('')
   const [newPassword, setNewPassword] = React.useState('')
   const [hasCar, setHasCar] = React.useState(false)
+  const [gettingCar, setGettingCar] = React.useState(false)
   const [carPlate, setCarPlate] = React.useState('')
   const [carColor, setCarColor] = React.useState('')
   const [carBrand, setCarBrand] = React.useState('')
@@ -230,9 +232,22 @@ const EditProfileScreen = props => {
   const [isSaving, setIsSaving] = React.useState(false)
   // eslint-disable-next-line no-unused-vars
   const [saveErr, setSaveErr] = React.useState(null)
-  const [isCameraOn, setIsCameraOn] = React.useState(false)
   const [hasCameraPermission, setHasCameraPermission] = React.useState(false)
-  const [destination, setDestination] = React.useState('licenseFront')
+  const [destination, setDestination] = React.useState('dniFront')
+
+  // TODO: minimal state
+  // DNI Identification
+  const [dniFront, setDniFront] = React.useState(
+    props.user.dni && props.user.dni.front
+  )
+  const [dniFrontSubmit, setDniFrontSubmit] = React.useState('')
+  const [dniBack, setDniBack] = React.useState(
+    props.user.dni && props.user.dni.back
+  )
+  const [dniBackSubmit, setDniBackSubmit] = React.useState('')
+  const [isUploadingDni, setIsUploadingDni] = React.useState(false)
+
+  // License
   const [licenseFront, setLicenseFront] = React.useState(
     props.user.license && props.user.license.front
   )
@@ -242,10 +257,11 @@ const EditProfileScreen = props => {
   )
   const [backSubmit, setBackSubmit] = React.useState('')
   const [isUploadingLicense, setIsUploadingLicense] = React.useState(false)
+
   const [isSavingCar, setIsSavingCar] = React.useState(false)
   const [canSubmitCar, setCanSubmitCar] = React.useState(false)
 
-  // duplicate code -> goes in utils
+  // TODO: duplicate code -> goes in utils
   const requestCameraPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA)
     setHasCameraPermission(status === 'granted')
@@ -366,7 +382,10 @@ const EditProfileScreen = props => {
       phone: stateUser.phone,
     }
     if (stateUser.vehicles && stateUser.vehicles.length !== 0) {
+      setGettingCar(true)
       props.getUserCar(stateUser.token, stateUser.vehicles[0].vehicle_id)
+        .then(() => setGettingCar(false))
+        .catch(() => setGettingCar(false))
     } else {
       setCanSubmitCar(true)
     }
@@ -512,18 +531,71 @@ const EditProfileScreen = props => {
         setLicenseBack(photoUri)
         setBackSubmit(photo)
         break
+      case 'dniFront':
+        setDniFront(photoUri)
+        setDniFrontSubmit(photo)
+        break
+      case 'dniBack':
+        setDniBack(photoUri)
+        setDniBackSubmit(photo)
+        break
       default:
         break
     }
   }
 
-  const openCamera = dest => {
-    setDestination(dest)
-    setIsCameraOn(true)
-  }
+  const onPressSaveDni = async () => {
+    setIsUploadingDni(true)
+    setIsLoading(true)
 
-  const closeCamera = () => {
-    setIsCameraOn(false)
+    // TODO: Refactor
+    const [frontName, frontType] = dniFront.split('/').slice(-1)[0].split('.')
+    const frontResponse = await props.uploadImage(frontName, frontType)
+    if (!await uploadImageToS3(frontResponse.payload.data.upload, frontType, dniFront)) {
+      setIsUploadingDni(false)
+      setIsLoading(false)
+      Alert.alert(
+        'Error actualizando datos',
+        'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
+      )
+      return
+    }
+    const [backName, backType] = dniBack.split('/').slice(-1)[0].split('.')
+    const backResponse = await props.uploadImage(backName, backType)
+    if (!await uploadImageToS3(backResponse.payload.data.upload, backType, dniBack)) {
+      setIsUploadingDni(false)
+      setIsLoading(false)
+      Alert.alert(
+        'Error actualizando datos',
+        'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
+      )
+      return
+    }
+    const response = await props.updateUser(props.user.token, {
+      user_identifications: {
+        identification: {
+          front: frontResponse.payload.data.image_id,
+          back: backResponse.payload.data.image_id,
+        },
+      },
+    }, {
+      dni: {
+        front: frontResponse.payload.data.fetch,
+        back: backResponse.payload.data.fetch,
+      },
+    })
+    setIsLoading(false)
+    setDniFrontSubmit('')
+    setDniBackSubmit('')
+    setIsUploadingDni(false)
+    if (response.error) {
+      Alert.alert(
+        'Error actualizando datos',
+        'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
+      )
+    } else {
+      Alert.alert('Actualización exitosa', 'Solicitud enviada con éxito')
+    }
   }
 
   const onPressSaveLicense = async () => {
@@ -666,11 +738,24 @@ const EditProfileScreen = props => {
     return validCurrentPassword && validNewPassword
   }
 
+  const renderVerification = (verified, title) => {
+    return (
+      <View style={styles.verifiedContainer}>
+        <Text style={styles.verifiedText}>{title}</Text>
+        <Octicons
+          name={verified ? 'verified' : 'unverified'}
+          color={verified ? 'green' : 'red'}
+          size={14}
+        />
+      </View>
+    )
+  }
+
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.flex1}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Content>
-          <View style={{ minHeight: Dimensions.get('window').height }}>
+          <View style={{ minHeight: 1200 }}>
             <View style={styles.row}>
               <TouchableWithoutFeedback
                 disabled={isSaving || !isValidUser()}
@@ -750,6 +835,9 @@ const EditProfileScreen = props => {
               </View>
             </View>
             <Form style={styles.form}>
+              <View style={styles.headerTextContainer}>
+                <Text style={styles.headerText}>Datos Personales</Text>
+              </View>
               {commonFields.map(field => (
                 <Field key={field.label} field={field} validity="partial" />
               ))}
@@ -763,32 +851,64 @@ const EditProfileScreen = props => {
               >
                 <Text style={styles.buttonText}>Guardar cambios</Text>
               </Button>
-              <TouchableOpacity
-                style={styles.rowCenter}
-                onPress={() => setHasCar(!hasCar)}
+
+              <View style={styles.headerTextContainer}>
+                <Text style={styles.headerText}>Identificación</Text>
+              </View>
+              <PhotoTaker
+                takePhoto={takePhoto}
+                choosePhoto={choosePhoto}
+                setImage={'dniFront'}
+                selfie={dniFront}
+                iconName="vcard-o"
+                iconType="FontAwesome"
+                size={60}
+                title="Foto frontal Carnet de Identidad"
+              />
+              <PhotoTaker
+                takePhoto={takePhoto}
+                choosePhoto={choosePhoto}
+                setImage={'dniBack'}
+                selfie={dniBack}
+                iconName="vcard-o"
+                iconType="FontAwesome"
+                size={60}
+                title="Foto trasera Carnet de Identidad"
+              />
+              {(dniFront && props.user.verifications)
+                ? renderVerification(props.user.verifications.dni, 'Estado verificación: ')
+                : (<></>)
+              }
+              <Button
+                block
+                borderRadius={10}
+                style={styles.blueButton}
+                disabled={isUploadingDni || !dniFrontSubmit || !dniBackSubmit}
+                onPress={onPressSaveDni}
+                color={'#0000FF'}
               >
-                <CheckBox
-                  color={Colors.textGray}
-                  checked={hasCar}
+                <Text style={styles.buttonText}>Solicitar revisión</Text>
+              </Button>
+
+              {gettingCar && <Spinner color={'#0000FF'} />}
+              {!gettingCar && (
+                <TouchableOpacity
+                  style={styles.rowCenter}
                   onPress={() => setHasCar(!hasCar)}
-                />
-                <Text style={styles.checkboxLabel}>Tengo Vehículo</Text>
-              </TouchableOpacity>
+                >
+                  <CheckBox
+                    color={Colors.textGray}
+                    checked={hasCar}
+                    onPress={() => setHasCar(!hasCar)}
+                  />
+                  <Text style={styles.checkboxLabel}>Tengo Vehículo</Text>
+                </TouchableOpacity>
+              )}
               {hasCar ? (
                 <>
                   <View style={styles.headerTextContainer}>
                     <Text style={styles.headerText}>Licencia de conducir</Text>
                   </View>
-                  {hasCameraPermission && (
-                    <CameraModal
-                      closeCamera={closeCamera}
-                      onGetSelfie={onTakePicture}
-                      isCameraOn={isCameraOn}
-                      destination={destination}
-                      cameraType={Camera.Constants.Type.back}
-                      text={getText(destination)}
-                    />
-                  )}
                   <PhotoTaker
                     takePhoto={takePhoto}
                     choosePhoto={choosePhoto}
@@ -797,7 +917,7 @@ const EditProfileScreen = props => {
                     iconName="vcard-o"
                     iconType="FontAwesome"
                     size={60}
-                    buttonText="Tomar Frente de Licencia"
+                    title="Foto frontal Licencia de conducir"
                   />
                   <PhotoTaker
                     takePhoto={takePhoto}
@@ -807,8 +927,12 @@ const EditProfileScreen = props => {
                     iconName="vcard-o"
                     iconType="FontAwesome"
                     size={60}
-                    buttonText="Tomar Atrás de Licencia"
+                    title="Foto trasera Licencia de conducir"
                   />
+                  {(licenseFront && props.user.verifications)
+                    ? renderVerification(props.user.verifications.license, 'Estado verificación: ')
+                    : (<></>)
+                  }
                   <Button
                     block
                     borderRadius={10}
@@ -819,6 +943,7 @@ const EditProfileScreen = props => {
                   >
                     <Text style={styles.buttonText}>Solicitar revisión</Text>
                   </Button>
+
                   <View style={styles.headerTextContainer}>
                     <Text style={styles.headerText}>Datos Vehículo</Text>
                   </View>
@@ -898,7 +1023,7 @@ const mapDispatchToProps = dispatch => ({
 const photoSize = 96
 
 const styles = StyleSheet.create({
-  artificialKeyboardPadding: { height: 600 },
+  artificialKeyboardPadding: { height: 900 },
   blueButton: {
     marginBottom: 30,
     marginTop: 20,
@@ -997,6 +1122,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
     height: Layout.window.height,
+  },
+  verifiedContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
   },
   warning: {
     color: 'red',

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert } from 'react-native'
+import { Alert, StyleSheet } from 'react-native'
 import axios from 'axios'
 import { View, Spinner, Button, Text } from 'native-base'
 import PhotoTaker from './PhotoTaker'
@@ -184,14 +184,14 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <PhotoTaker
         takePhoto={takePhoto}
         choosePhoto={choosePhoto}
         selfie={selfie}
         setImage={'selfie'}
-        buttonText="Subir Selfie"
         disableLibrary={true}
+        title="Subir selfie"
       />
       <PhotoTaker
         takePhoto={takePhoto}
@@ -201,7 +201,7 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
         iconName="vcard-o"
         iconType="FontAwesome"
         size={60}
-        buttonText="Subir Frente de Carnet"
+        title="Foto frontal Carnet de Identidad"
       />
       <PhotoTaker
         takePhoto={takePhoto}
@@ -211,7 +211,7 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
         iconName="vcard-o"
         iconType="FontAwesome"
         size={60}
-        buttonText="Subir Atras de Carnet"
+        title="Foto trasera Carnet de Identidad"
       />
 
       {loading && <Spinner color={'#0000FF'} />}
@@ -239,11 +239,14 @@ ImageSignupForm.propTypes = {
   signup: PropTypes.func.isRequired,
 }
 
-const styles = {
+const styles = StyleSheet.create({
   button: {
     margin: 20,
   },
-}
+  container: {
+    marginTop: 30,
+  },
+})
 
 const mapDispatchToProps = dispatch => ({
   uploadImage: (name, type) => dispatch(getImageUrl(name, type)),

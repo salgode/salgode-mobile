@@ -108,7 +108,7 @@ class AddStopsScreen extends Component {
           <View style={styles.group}>
             <View style={styles.stopContainer}>
               <Text style={{ fontWeight: 'bold', marginRight: 10 }}>
-                #Desde{' '}
+                #SalgoDe{' '}
               </Text>
               <Text>{startStop.name}</Text>
             </View>
@@ -135,7 +135,7 @@ class AddStopsScreen extends Component {
                 })
               }
               placeholder="Filtra por Comuna o Parada"
-              text="#Desde"
+              text="#PasoPor"
               editable={false}
             />
           </View>

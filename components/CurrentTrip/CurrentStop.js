@@ -13,7 +13,6 @@ class CurrentStop extends Component {
 
     this.state = {
       trip: this.props.trip,
-      tripManifest: this.props.tripManifest,
       stopIndex: this.props.stopIndex,
       before: this.props.before,
       after: this.props.after,
@@ -22,16 +21,20 @@ class CurrentStop extends Component {
     }
 
     this.goToNextStop = this.goToNextStop.bind(this)
+    this.getUsersToPickUp = this.getUsersToPickUp.bind(this)
+    this.goToLastStop = this.goToLastStop.bind(this)
   }
 
   getUsersToPickUp() {
-    return this.state.tripManifest.passengers.filter(passenger => {
-      return (
-        passenger.trip_route.start ===
-        this.state.trip.trip_route_points[this.state.stopIndex].name
-      )
-      //podria usarse el numero de parada, pero creo que este esto es mas general (y mas claro)
-    })
+    return this.state.trip.manifest
+      ? this.state.trip.manifest.passengers.filter(passenger => {
+          return (
+            passenger.trip_route.start ===
+            this.state.trip.trip_route_points[this.state.stopIndex].name
+          )
+          //podria usarse el numero de parada, pero creo que este esto es mas general (y mas claro)
+        })
+      : []
   }
 
   goToNextStop() {
@@ -127,7 +130,6 @@ CurrentStop.propTypes = {
   usersToPickUp: PropTypes.array,
   asDriver: PropTypes.bool.isRequired,
   trip: PropTypes.object.isRequired,
-  tripManifest: PropTypes.object.isRequired,
   stopIndex: PropTypes.number.isRequired,
   onPressCompleteTrip: PropTypes.func.isRequired,
 }

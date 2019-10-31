@@ -105,7 +105,7 @@ class ChooseTripsScreen extends Component {
             trips={requestedTrips}
           />
         ) : (
-          <EmptyState image={noTrips} text="No se ha encontrado ningún viaje según lo solicitado" />
+          <EmptyState image={noTrips} text="No se ha encontrado ningún viaje según lo solicitado." />
         )}
       </View>
     )

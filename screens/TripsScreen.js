@@ -38,7 +38,6 @@ class TripsScreen extends Component {
 
   async getTrips() {
     this.setState({ loading: true })
-
     await this.props.fetchTrips(this.props.user.token)
     await this.props.fetchDriverTrips(this.props.user.token)
     this.setState({ loading: false })
@@ -51,6 +50,9 @@ class TripsScreen extends Component {
     )
   }
   render() {
+    if (!this.props.user.email) {
+      return <></>
+    }
     const isConfirmedDriver = this.isVerifiedDriver()
 
     if (isConfirmedDriver || this.props.type === 'pedidos') {

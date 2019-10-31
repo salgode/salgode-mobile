@@ -85,10 +85,10 @@ export default class TripRequestCard extends Component {
     const { passenger } = this.props.reservation
     const selfieImage = passenger.avatar || 'placeholder'
 
-    // console.log(this.state.passenger)
-    if (!reservation) {
+    if (!reservation || reservation.reservation_route_places.length === 0) {
       return null
     }
+
     return (
       <Card style={styles.container}>
         <CardItem>
@@ -108,9 +108,7 @@ export default class TripRequestCard extends Component {
         <CardItem style={styles.locationContainer}>
           <Location
             color={'#0000FF'}
-            location={
-              reservation.reservation_route_places.start.place_name || 'Fix me'
-            }
+            location={reservation.reservation_route_places[0].place_name}
           />
           <Location
             color={
@@ -120,6 +118,9 @@ export default class TripRequestCard extends Component {
               '#33C534'
             }
             location={
+              reservation.reservation_route_places[
+                reservation.reservation_route_places.length - 1
+              ].place_name
               reservation.reservation_route_places.end.place_name || 'Fix me'
             }
           />

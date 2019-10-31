@@ -7,7 +7,7 @@ import TripRequestCard from '../components/Trips/Trip/TripRequestCard'
 import { ScrollView } from 'react-native-gesture-handler'
 import { connect } from 'react-redux'
 import { withNavigation } from 'react-navigation'
-import { fetchTrip } from '../redux/actions/trips'
+import { fetchTrip, startJourney } from '../redux/actions/trips'
 import { getTripReservations } from '../utils/getTripInfo'
 
 class DetailedTripScreen extends Component {
@@ -55,12 +55,22 @@ class DetailedTripScreen extends Component {
     }
   }
 
-  onPressStartTrip(tripStops, tripId, token, trip) {
+  onPressStartTrip() {
     this.props.navigation.navigate('StartTrip', {
-      tripStops,
-      tripId,
-      token,
-      trip,
+      stops: this.state.trip.trip_route_points,
+      onTripStart: () =>
+        this.props.postTripStart(
+          this.props.user.token,
+          this.state.trip.trip_id
+        ),
+      nextTripView: () => {
+        this.props.navigation.navigate('StopTrip', {
+          token: this.props.user.token,
+          trip: this.state.trip,
+          manifest: this.state.trip.manifest,
+          asDriver: this.props.navigation.getParam('asDriver', null),
+        })
+      },
     })
   }
 
@@ -68,16 +78,21 @@ class DetailedTripScreen extends Component {
     if (!this.state.trip) {
       return null
     }
+
     const finishStop = this.state.trip.trip_route.end.name
-    return this.state.reservations.map((reservation, index) => (
-      <TripRequestCard
-        key={`passenger-${index}`}
-        reservation={reservation}
-        finishStop={finishStop}
-        // slot={this.props.slots[index]}
-        token={this.props.user.token}
-      />
-    ))
+    return this.state.reservations.length > 0
+      ? this.state.reservations.map((reservation, index) => {
+          return (
+            <TripRequestCard
+              key={`passenger-${index}`}
+              reservation={reservation}
+              finishStop={finishStop}
+              // slot={this.props.slots[index]}
+              token={this.props.user.token}
+            />
+          )
+        })
+      : null
   }
 
   render() {
@@ -89,15 +104,7 @@ class DetailedTripScreen extends Component {
             asDriver={this.state.asDriver}
             trip={this.state.trip}
             driver={this.state.trip.driver}
-            token={this.props.user.token}
-            onPressStartTrip={() =>
-              this.onPressStartTrip(
-                this.state.trip.trip_route_points,
-                this.state.trip.trip_id,
-                this.props.user.token,
-                this.state.trip
-              )
-            }
+            onPressStartTrip={() => this.onPressStartTrip()}
           />
         )}
         {this.state.asDriver && !this.state.loading
@@ -121,6 +128,7 @@ DetailedTripScreen.propTypes = {
   // trip: PropTypes.object.isRequired,
   // slots: PropTypes.object.isRequired,
   fetchTrip: PropTypes.func.isRequired,
+  postTripStart: PropTypes.func.isRequired,
 }
 
 DetailedTripScreen.defaultProps = {
@@ -143,6 +151,7 @@ const mapPropsToState = state => ({
 
 const mapDispatchToState = dispatch => ({
   fetchTrip: (token, id) => dispatch(fetchTrip(token, id)),
+  postTripStart: (token, id) => dispatch(startJourney(token, id)),
   // fetchSlots:()=>(),
 })
 

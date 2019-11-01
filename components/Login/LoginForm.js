@@ -27,7 +27,7 @@ class LoginForm extends Component {
   }
 
   onChangePassword(password) {
-    this.setState({ password, passwordValidity: password.length > 3 })
+    this.setState({ password, passwordValidity: password.length >= 8 })
   }
 
   render() {

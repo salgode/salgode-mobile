@@ -296,7 +296,7 @@ const EditProfileScreen = props => {
       setValue: setCurrentPassword,
       isSecure: true,
       validate: (password) => typeof password === 'string'
-        ? password.length > 3
+        ? password.length >= 8
         : false
     },
     {
@@ -305,7 +305,7 @@ const EditProfileScreen = props => {
       setValue: setNewPassword,
       isSecure: true,
       validate: (password) => typeof password === 'string'
-        ? password.length > 3
+        ? password.length >= 8
         : false
     },
   ]
@@ -730,10 +730,10 @@ const EditProfileScreen = props => {
 
   const checkValidPasswords = () => {
     const validCurrentPassword = typeof currentPassword === 'string'
-      ? currentPassword.length > 3
+      ? currentPassword.length >= 8
       : false
     const validNewPassword = typeof newPassword === 'string'
-      ? newPassword.length > 3
+      ? newPassword.length >= 8
       : false
     return validCurrentPassword && validNewPassword
   }

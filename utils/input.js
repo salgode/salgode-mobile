@@ -26,6 +26,9 @@ export function notWrongPhone(phone) {
     return true
   }
   const phoneWithoutSpaces = phone.replace(/ /g, '')
+  if (phoneWithoutSpaces.length < 4) {
+    return /^(\+|\+5|\+56)$/g.test(phoneWithoutSpaces)
+  }
   return /^\+569[0-9]*$/g.test(phoneWithoutSpaces)
 }
 

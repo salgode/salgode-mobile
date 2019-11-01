@@ -4,6 +4,9 @@ import PropTypes from 'prop-types'
 import MyTrip from './Trip/Trip'
 import RequestedTrip from './Trip/RequestedTrip'
 import { View, Text } from 'native-base'
+import EmptyState from '../EmptyState/EmptyState'
+import noTrips from '../../assets/images/notrips.png'
+
 class MyTrips extends Component {
   constructor(props) {
     super(props)
@@ -16,9 +19,7 @@ class MyTrips extends Component {
 
   render() {
     const Trip = this.Trip
-    // console.log(this.props.trips.filter(t => t.etd_info))
-
-    if (this.props.trips) {
+    if (this.props.trips && this.props.trips.length) {
       return (
         <SafeAreaView>
           <FlatList
@@ -44,13 +45,12 @@ class MyTrips extends Component {
       )
     }
     return (
-      <View style={styles.viewContainer}>
-        {this.props.isRequestedTrips ? (
-          <Text>No haz agendado Viajes 🚗</Text>
-        ) : (
-            <Text>No tienes Viajes pendientes 🚘</Text>
-          )}
-      </View>
+      <EmptyState
+        image={noTrips}
+        text={this.props.isRequestedTrips
+          ? 'No has agendado viajes'
+          : 'No tienes viajes pendientes'}
+      />
     )
   }
 }

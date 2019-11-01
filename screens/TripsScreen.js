@@ -74,7 +74,10 @@ class TripsScreen extends Component {
     } else {
       //not verified driver
       return (
-        <EmptyState image={noTrips} text="Para crear viajes debes registrar tu auto y enviar una foto por ambos lados de tu licencia." />
+        <EmptyState
+          image={noTrips}
+          text="Para crear viajes debes registrar tu auto y enviar una foto por ambos lados de tu licencia"
+        />
       )
     }
   }

@@ -30,6 +30,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: Colors.white,
+    marginLeft: 20,
+    marginRight: 20,
   },
   emptyStateImage: {
     width: 79,
@@ -41,6 +43,7 @@ const styles = StyleSheet.create({
     color: Colors.textGray,
     marginTop: 20,
     opacity: 0.8,
+    textAlign: 'center',
   },
 })
 

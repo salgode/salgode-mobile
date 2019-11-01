@@ -16,6 +16,8 @@ import Colors from '../constants/Colors'
 import PropTypes from 'prop-types'
 import CardInput from '../components/CardInput'
 import { getUserCars } from '../redux/actions/user'
+import EmptyState from '../components/EmptyState/EmptyState'
+import noTrips from '../assets/images/notrips.png'
 
 const colorScheme = Appearance.getColorScheme()
 
@@ -160,12 +162,10 @@ class CreateTripScreen extends Component {
       )
     } else {
       return (
-        <View style={styles.viewContainer}>
-          <Text>
-            Para poder crear viajes debes tener un auto registrado y enviar una
-            foto por ambos lados de tu licencia.
-          </Text>
-        </View>
+        <EmptyState
+          image={noTrips}
+          text="Para crear viajes debes registrar tu auto y enviar una foto por ambos lados de tu licencia"
+        />
       )
     }
   }

@@ -30,7 +30,7 @@ class CurrentStop extends Component {
       ? this.state.trip.manifest.passengers.filter(passenger => {
           return (
             passenger.trip_route.start ===
-            this.state.trip.trip_route_points[this.state.stopIndex].name
+            this.state.trip.trip_route_points[this.state.stopIndex].place_name
           )
           //podria usarse el numero de parada, pero creo que este esto es mas general (y mas claro)
         })
@@ -78,21 +78,26 @@ class CurrentStop extends Component {
             <StopIcon type={this.state.after} />
           </View>
           <Text style={styles.location}>
-            {this.state.trip.trip_route_points[this.state.stopIndex].name}
+            {this.state.trip.trip_route_points[this.state.stopIndex].place_name}
           </Text>
           <View>
             <Text style={styles.pickup}>Recoge a:</Text>
             <ScrollView style={styles.userContainer}>
-              {this.getUsersToPickUp().map((passenger, i) => (
-                <UserToPickUp
-                  phone={passenger.passenger_phone}
-                  name={passenger.passenger_name}
-                  location={
-                    passenger.trip_route.start
-                  } /*la location no esta demas? porque solo se muestran las personas a recoger en la parada actual. o es la location a la cual quieren llegar?*/
-                  key={i}
-                />
-              ))}
+              {this.state.trip.manifest &&
+                (this.state.trip.manifest.passengers.length > 0 ? (
+                  this.getUsersToPickUp().map((passenger, i) => (
+                    <UserToPickUp
+                      phone={passenger.passenger_phone}
+                      name={passenger.passenger_name}
+                      location={
+                        passenger.trip_route.start
+                      } /*la location no esta demas? porque solo se muestran las personas a recoger en la parada actual. o es la location a la cual quieren llegar?*/
+                      key={i}
+                    />
+                  ))
+                ) : (
+                  <Text>No tienes que recoger a nadie</Text>
+                ))}
             </ScrollView>
             <Button style={styles.button} onPress={this.goToNextStop}>
               <Text>{this.state.nextStopText}</Text>

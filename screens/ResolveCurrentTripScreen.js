@@ -39,9 +39,15 @@ class ResolveCurrentTripScreen extends Component {
         }
 
         this.props.navigation.navigate('StopTrip', {
-          trip: { ...trip, manifest },
+          trip: {
+            ...trip,
+            manifest,
+            next_point: data.payload.data.next_point,
+            on_board: data.payload.data.on_board,
+            available_seats: data.payload.data.available_seats,
+          },
           userToken,
-          asDriver: JSON.parse(data.payload.data.is_driver),
+          asDriver: data.payload.data.is_driver,
         })
       } else {
         this.props.navigation.navigate('Main')

@@ -34,21 +34,28 @@ class ChooseTrips extends Component {
   handleOnPress(trip_id) {
     const { trips } = this.props
     const selectedTrip = trips.find(x => x.trip_id === trip_id)
-
-    this.props.navigation.navigate('TripDetails', {
-      userData: {
-        avatar: selectedTrip.driver.avatar,
-        first_name: selectedTrip.driver.driver_name,
-        phone: selectedTrip.driver.driver_phone,
-        dniVerified:
-          selectedTrip.vehicle.vehicle_identifications.identification_verified,
-        licenseVerified:
-          selectedTrip.vehicle.vehicle_identifications.identification_verified,
-        trip_route_points: selectedTrip.trip_route_points,
-        etd_info: selectedTrip.etd_info,
-        isReserved: false, // TODO: need to obtain reservation status
-      },
-    })
+    const { driver, trip_route_points, etd_info, trip_status } = selectedTrip
+    const { driver_verifications } = driver
+    if (
+      driver &&
+      driver_verifications &&
+      trip_route_points &&
+      etd_info &&
+      trip_status
+    ) {
+      this.props.navigation.navigate('TripDetails', {
+        userData: {
+          avatar: driver.driver_avatar,
+          first_name: driver.driver_name,
+          phone: driver.driver_phone,
+          dniVerified: driver_verifications.identity,
+          licenseVerified: driver_verifications.driver_license,
+          trip_route_points: trip_route_points,
+          etd_info: etd_info,
+          isReserved: trip_status !== 'open', // TODO: need to obtain reservation status
+        },
+      })
+    }
   }
 
   render() {
@@ -61,7 +68,7 @@ class ChooseTrips extends Component {
     }
 
     return (
-      <SafeAreaView>
+      <SafeAreaView style={{ paddingBottom: 50 }}>
         <FlatList
           data={this.props.trips}
           onRefresh={this.onReload}

@@ -78,6 +78,11 @@ export default function userReducer(state = {}, action) {
       return { ...state, loading: false }
     case userActions.USER_SET_TOKEN:
       return { ...state, token: action.payload.token }
+    case userActions.USER_REMOVE_TRIP:
+      return {
+        ...state,
+        trips: state.trips.filter(i => i.reservation_id !== action.payload.tripId),
+      }
     default:
       return state
   }

@@ -318,6 +318,7 @@ const EditProfileScreen = props => {
           setCarPlate(value)
         }
       },
+      maxLength: () => 6,
       validate: validatePlate,
       editable: canSubmitCar,
       placeholder: 'AABB99',

@@ -44,7 +44,7 @@ export const urls = {
       },
       post: {
         send: () => '/passenger/reservations',
-        cancel: id => `/passenger/reservations/${id}`,
+        cancel: id => `/passenger/reservations/${id}/cancel`,
       },
     },
     trips: {

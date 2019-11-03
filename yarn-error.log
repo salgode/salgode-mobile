@@ -1,5 +1,5 @@
 Arguments: 
-  /home/josemlira/.nvm/versions/node/v12.11.0/bin/node /usr/share/yarn/bin/yarn.js start
+  /home/josemlira/.nvm/versions/node/v12.11.0/bin/node /usr/share/yarn/bin/yarn.js
 
 PATH: 
   /home/josemlira/bin:/home/josemlira/.local/bin:/home/josemlira/.nvm/versions/node/v12.11.0/bin:/home/josemlira/.rbenv/plugins/ruby-build/bin:/home/josemlira/.rbenv/shims:/home/josemlira/.rbenv/bin:/home/josemlira/.rvm/gems/ruby-2.6.4/bin:/home/josemlira/.rvm/gems/ruby-2.6.4@global/bin:/usr/share/rvm/rubies/ruby-2.6.4/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/mnt/c/ProgramData/DockerDesktop/version-bin:/mnt/c/Program Files/Docker/Docker/resources/bin:/mnt/c/ProgramData/Oracle/Java/javapath_target_460187:/mnt/c/Program Files (x86)/Intel/iCLS Client:/mnt/c/Program Files/Intel/iCLS Client:/mnt/c/Windows/System32:/mnt/c/Windows:/mnt/c/Windows/System32/wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0:/mnt/c/Program Files (x86)/Intel/Intel(R) Management Engine Components/DAL:/mnt/c/Program Files/Intel/Intel(R) Management Engine Components/DAL:/mnt/c/Program Files (x86)/Intel/Intel(R) Management Engine Components/IPT:/mnt/c/Program Files/Intel/Intel(R) Management Engine Components/IPT:/mnt/c/Program Files/MiKTeX 2.9/miktex/bin/x64:/mnt/c/Program Files/Git/cmd:/mnt/c/Users/Jose/AppData/Local/Programs/Python/Python35:/mnt/c/Users/Jose/AppData/Local/Programs/Python/Python35/Scripts:/mnt/c/Program Files/nodejs:/mnt/c/Windows/System32/OpenSSH:/mnt/c/Users/Jose/AppData/Local/Microsoft/WindowsApps:/mnt/c/sqlite:/mnt/c/Users/Jose/AppData/Roaming/npm:/mnt/c/Program Files/MongoDB/Server/3.4/bin:/mnt/c/Users/Jose/AppData/Local/atom/bin:/mnt/c/Users/Jose/AppData/Local/Microsoft/WindowsApps:/snap/bin:/usr/share/rvm/bin
@@ -14,17 +14,7 @@ Platform:
   linux x64
 
 Trace: 
-  Error: write EIO
-      at afterWriteDispatched (internal/stream_base_commons.js:150:25)
-      at writeGeneric (internal/stream_base_commons.js:141:3)
-      at WriteStream.Socket._writeGeneric (net.js:768:11)
-      at WriteStream.Socket._write (net.js:780:8)
-      at doWrite (_stream_writable.js:431:12)
-      at writeOrBuffer (_stream_writable.js:415:5)
-      at WriteStream.Writable.write (_stream_writable.js:305:11)
-      at ConsoleReporter._log (/usr/share/yarn/lib/cli.js:96497:17)
-      at ConsoleReporter.log (/usr/share/yarn/lib/cli.js:96485:10)
-      at ConsoleReporter.footer (/usr/share/yarn/lib/cli.js:96476:10)
+  Error: EEXIST: file already exists, mkdir '/mnt/c/Users/Jose/Desktop/Me/Trabajo/Varus/salgode-mobile/node_modules/pkg-up/node_modules'
 
 npm manifest: 
   {

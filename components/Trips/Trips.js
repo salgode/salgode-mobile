@@ -13,27 +13,46 @@ class MyTrips extends Component {
   }
 
   render() {
-    const { isRequestedTrips, trips, driverTrips } = this.props
+    const {
+      isRequestedTrips,
+      trips,
+      driverTrips,
+      onPressTrip,
+      removeFromList,
+    } = this.props
     const Trip = isRequestedTrips ? RequestedTrip : MyTrip
     const tripsData = isRequestedTrips ? trips : driverTrips
+    let filteredData
+    if (isRequestedTrips) {
+      filteredData = tripsData
+        ? tripsData.filter(t =>
+            t.etd_info &&
+            t.etd_info.etd &&
+            ['accepted', 'pending', 'declined'].includes(t.reservation_status)
+          )
+        : tripsData
+    } else {
+      filteredData = tripsData
+    }
     const asDriver = !isRequestedTrips
-    if (tripsData && tripsData.length) {
+    if (filteredData && filteredData.length) {
       return (
         <SafeAreaView>
           <FlatList
-            data={tripsData.filter(t => t.etd_info)}
+            data={filteredData}
             renderItem={({ item }) => {
               return (
                 <Trip
                   timestamp={item.etd_info.etd}
                   spacesUsed={item.spacesUsed}
                   user={item.driver}
-                  status={item.trip_status}
+                  reservationStatus={item.reservation_status}
                   asDriver={this.asDriver}
-                  onPressTrip={this.props.onPressTrip}
+                  onPressTrip={onPressTrip}
                   trip={item}
                   startLocation={item.trip_route.start}
                   endLocation={item.trip_route.end}
+                  removeFromList={removeFromList}
                 />
               )
             }}

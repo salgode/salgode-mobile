@@ -22,7 +22,7 @@ class CurrentFinishScreen extends Component {
 
   render() {
     const trip = this.props.navigation.getParam('trip', null)
-    const location = trip.trip_route.end.name
+    const location = trip.trip_route.end.place_name
     const tripId = trip.trip_id
     const token = this.props.navigation.getParam('token', null)
     return (
@@ -30,7 +30,7 @@ class CurrentFinishScreen extends Component {
         location={location}
         token={token}
         tripId={tripId}
-        onPress={() => this.onPressFinishTrip()}
+        onPress={this.onPressFinishTrip}
       />
     )
   }

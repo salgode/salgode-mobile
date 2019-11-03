@@ -13,6 +13,7 @@ import {
   fetchTripManifest,
 } from '../redux/actions/trips'
 import { getTripReservations } from '../utils/getTripInfo'
+import { getCurrentTrip } from '../redux/actions/user'
 
 class DetailedTripScreen extends Component {
   static navigationOptions = {
@@ -30,6 +31,7 @@ class DetailedTripScreen extends Component {
 
     this.renderPassengers = this.renderPassengers.bind(this)
     this.onPressStartTrip = this.onPressStartTrip.bind(this)
+    this.toCurrentTrip = this.toCurrentTrip.bind(this)
   }
 
   async componentDidMount() {
@@ -83,6 +85,39 @@ class DetailedTripScreen extends Component {
       },
     })
   }
+  async toCurrentTrip() {
+    this.props.fetchCurrentTrip(this.props.user.token).then(async response => {
+      if (response.payload) {
+        const trip = await this.props
+          .fetchTrip(this.props.user.token, response.payload.data.trip_id)
+          .then(response => response.payload.data)
+          .catch(() => null)
+        const manifest = await this.props
+          .fetchManifest(this.props.user.token, response.payload.data.trip_id)
+          .then(response => response.payload.data)
+          .catch(() => null)
+
+        if (!trip || !manifest) {
+          this.props.navigation.navigate('Main')
+          return
+        }
+
+        this.props.navigation.navigate('StopTrip', {
+          trip: {
+            ...trip,
+            manifest,
+            next_point: response.payload.data.next_point,
+            on_board: response.payload.data.on_board,
+            available_seats: response.payload.data.available_seats,
+          },
+          userToken: this.props.user.token,
+          asDriver: response.payload.data.is_driver,
+        })
+      } else {
+        this.props.navigation.navigate('Main')
+      }
+    })
+  }
 
   renderPassengers() {
     if (!this.state.trip) {
@@ -115,6 +150,7 @@ class DetailedTripScreen extends Component {
             trip={this.state.trip}
             driver={this.state.trip.driver}
             onPressStartTrip={() => this.onPressStartTrip()}
+            toCurrentTrip={this.toCurrentTrip}
           />
         )}
         {this.state.asDriver && !this.state.loading
@@ -139,6 +175,7 @@ DetailedTripScreen.propTypes = {
   fetchTrip: PropTypes.func.isRequired,
   fetchManifest: PropTypes.func.isRequired,
   postTripStart: PropTypes.func.isRequired,
+  fetchCurrentTrip: PropTypes.func.isRequired,
 }
 
 DetailedTripScreen.defaultProps = {
@@ -163,6 +200,7 @@ const mapDispatchToState = dispatch => ({
   fetchTrip: (token, id) => dispatch(fetchTrip(token, id)),
   postTripStart: (token, id) => dispatch(startJourney(token, id)),
   fetchManifest: (token, id) => dispatch(fetchTripManifest(token, id)),
+  fetchCurrentTrip: token => dispatch(getCurrentTrip(token)),
 })
 
 export default connect(

@@ -24,7 +24,6 @@ class TripsScreen extends Component {
     this.onRefresh = this.onRefresh.bind(this)
     this.getTrips = this.getTrips.bind(this)
     this.onPressTrip = this.onPressTrip.bind(this)
-    this.renderScreen = this.renderScreen.bind(this)
   }
 
   async onRefresh() {
@@ -60,7 +59,7 @@ class TripsScreen extends Component {
     )
   }
 
-  renderScreen() {
+  render() {
     if (!this.props.user.email) {
       return <></>
     }
@@ -78,6 +77,8 @@ class TripsScreen extends Component {
               onPressTrip={this.onPressTrip}
               driverTrips={this.props.driverTrips}
               removeFromList={this.props.dispatchRemoveTrip}
+              onRefresh={this.onRefresh}
+              refreshing={this.state.reloading}
             />
           )}
         </View>
@@ -85,28 +86,22 @@ class TripsScreen extends Component {
     } else {
       //not verified driver
       return (
-        <EmptyState
-          image={noTrips}
-          text="Para crear viajes debes registrar tu auto y enviar una foto por ambos lados de tu licencia"
-        />
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.reloading}
+              onRefresh={this.onRefresh}
+            />
+          }
+          contentContainerStyle={{ flex: 1 }}
+        >
+          <EmptyState
+            image={noTrips}
+            text="Para crear viajes debes registrar tu auto y enviar una foto por ambos lados de tu licencia"
+          />
+        </ScrollView>
       )
     }
-  }
-
-  render() {
-    return (
-      <ScrollView
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.reloading}
-            onRefresh={this.onRefresh}
-          />
-        }
-        contentContainerStyle={{ flex: 1 }}
-      >
-        {this.renderScreen()}
-      </ScrollView>
-    )
   }
 }
 

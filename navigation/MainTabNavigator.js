@@ -31,6 +31,7 @@ const TripsStack = createStackNavigator(
     StartTrip: CurrentStartScreen,
     StopTrip: CurrentStopScreen,
     FinishTrip: CurrentFinishScreen,
+    ReservationDetails: TripDetailsScreen,
   },
   config
 )

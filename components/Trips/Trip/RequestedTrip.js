@@ -1,5 +1,6 @@
 import React from 'react'
 import { StyleSheet, Platform, Alert } from 'react-native'
+import { withNavigation } from 'react-navigation'
 import { connect } from 'react-redux'
 import Location from './Location'
 import Colors from '../../../constants/Colors'
@@ -21,6 +22,7 @@ const RequestedTrip = ({
   removeFromList,
   dispatchCancelSlot,
   token,
+  navigation,
 }) => {
   let statusColor
   let statusText
@@ -65,6 +67,29 @@ const RequestedTrip = ({
       })
   }
 
+  const pressTrip = () => {
+    if (user && user.driver_verifications && trip) {
+      const {
+        driver_avatar,
+        driver_name,
+        driver_phone,
+        driver_verifications
+      } = user
+      navigation.navigate('ReservationDetails', {
+        userData: {
+          avatar: driver_avatar,
+          first_name: driver_name,
+          phone: driver_phone,
+          dniVerified: driver_verifications.identity,
+          licenseVerified: driver_verifications.driver_license,
+          trip_route_points: trip.trip_route_points,
+          etd_info: trip.etd_info,
+          isReserved: ['accepted', 'completed'].includes(trip.reservation_status),
+        },
+      })
+    }
+  }
+
   return show ? (
     <Card style={styles.containerRequested} borderWidth={5}>
       <View style={{ ...styles.status, backgroundColor: statusColor }}>
@@ -96,7 +121,7 @@ const RequestedTrip = ({
         <Button
           borderRadius={10}
           style={styles.button}
-          onPress={() => onPressTrip(asDriver, trip)}
+          onPress={pressTrip}
         >
           <Text style={styles.blueText}>Ver Viaje</Text>
         </Button>
@@ -197,4 +222,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(RequestedTrip)
+)(withNavigation(RequestedTrip))

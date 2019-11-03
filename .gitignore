@@ -16,3 +16,6 @@ web-report/
 
 # ENV file
 .env
+
+# Yarn error
+yarn-error.log

@@ -19,6 +19,8 @@ class MyTrips extends Component {
       driverTrips,
       onPressTrip,
       removeFromList,
+      onRefresh,
+      refreshing,
     } = this.props
     const Trip = isRequestedTrips ? RequestedTrip : MyTrip
     const tripsData = isRequestedTrips ? trips : driverTrips
@@ -40,6 +42,8 @@ class MyTrips extends Component {
         <SafeAreaView>
           <FlatList
             data={filteredData}
+            onRefresh={onRefresh}
+            refreshing={refreshing}
             renderItem={({ item }) => {
               return (
                 <Trip

@@ -1,4 +1,5 @@
 import { actions as userActions } from '../actions/user'
+import { compareStrKeyAscending } from '../../utils/compare'
 
 export default function userReducer(state = {}, action) {
   // console.log('Here: ', action.type, action.payload)
@@ -48,11 +49,21 @@ export default function userReducer(state = {}, action) {
     case userActions.USER_GET_TRIPS:
       return { ...state, loading: true }
     case userActions.USER_GET_TRIPS_SUCCESS:
-      return { ...state, loading: false, trips: action.payload.data }
+      return {
+        ...state,
+        loading: false,
+        trips: action.payload.data.sort(compareStrKeyAscending('trip_status')),
+      }
     case userActions.USER_DRIVER_GET_TRIPS:
       return { ...state, loading: true }
     case userActions.USER_DRIVER_GET_TRIPS_SUCCESS:
-      return { ...state, loading: false, driverTrips: action.payload.data }
+      return {
+        ...state,
+        loading: false,
+        driverTrips: action.payload.data.sort(
+          compareStrKeyAscending('trip_status')
+        ),
+      }
     case userActions.USER_GET_CARS:
       return { ...state, loading: true }
     case userActions.USER_GET_CARS_SUCCESS:

@@ -49,8 +49,7 @@ export function clearCreateTripInfo() {
   return { type: actions.CLEAR_CREATE_TRIP_INFO }
 }
 
-export function createTrip(route_points, etd, userId, token) {
-  // missing car_i and driver_id. Checkoput backend repo to work with
+export function createTrip(route_points, etd, vehicleId, token) {
   return {
     type: actions.CREATE_TRIP,
     payload: {
@@ -59,9 +58,14 @@ export function createTrip(route_points, etd, userId, token) {
         method: 'post',
         headers: getBaseHeaders(token),
         data: {
+          available_seats: 4,
+          etd_info: {
+            etd,
+            etd_policy: 'strict',
+            max_wait: 5,
+          },
           route_points,
-          etd,
-          driver_id: userId,
+          vehicle_id: vehicleId,
         },
       },
     },

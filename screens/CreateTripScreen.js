@@ -54,7 +54,8 @@ class CreateTripScreen extends Component {
   isVerifiedDriver = () => {
     return (
       this.props.user.verifications.license &&
-      this.props.user.vehicles
+      this.props.user.vehicles &&
+      this.props.user.vehicles.length
     )
   }
 

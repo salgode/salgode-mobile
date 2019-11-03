@@ -8,7 +8,6 @@ import {
   ActivityIndicator,
 } from 'react-native'
 import { connect } from 'react-redux'
-import { loginUser } from '../redux/actions/user'
 import { createTrip } from '../redux/actions/createtrip'
 import { Button, Icon } from 'native-base'
 import { spotsFilter } from '../utils/spotsFilter'
@@ -41,16 +40,13 @@ class AddStopsScreen extends Component {
     const stops_ids = stops.map(stop => {
       return stop.id
     })
-
     const route_points = [startStop.id].concat(stops_ids, endStop.id)
-
-    const response = await this.props.createTrip(
+    const response = await this.props.dispatchCreateTrip(
       route_points,
       startTime,
-      user.userId,
+      user.vehicles[0].vehicle_id,
       user.token
     )
-
     this.setState({ loading: false })
     if (response.error) {
       Alert.alert(
@@ -58,7 +54,7 @@ class AddStopsScreen extends Component {
         'Hubo un problema al crear tu viaje. Por favor intentalo de nuevo.'
       )
     } else {
-      Alert.alert('Creación de exitosa', 'Tu viaje ha sido publicado!')
+      Alert.alert('Creación exitosa', 'Tu viaje ha sido publicado!')
       this.props.navigation.popToTop()
     }
   }
@@ -210,10 +206,10 @@ const mapStateToProps = ({ user, createTrip, spots }) => {
   }
 }
 
-const mapDispatchToProps = {
-  loginUser,
-  createTrip,
-}
+const mapDispatchToProps = dispatch => ({
+  dispatchCreateTrip: (rp, st, vid, token) => dispatch(createTrip(rp, st, vid, token)),
+})
+
 AddStopsScreen.navigationOptions = {
   title: 'Añadir paradas',
   headerBackTitle: '', // TODO: que no diga 'Back'

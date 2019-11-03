@@ -7,6 +7,7 @@ import {
 } from '../redux/actions/trips'
 import { getAllSpots } from '../redux/actions/spots'
 import { View, StyleSheet, Alert, AsyncStorage, Text } from 'react-native'
+import { Spinner } from 'native-base'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import ChooseTrips from '../components/Trips/ChooseTrips'
@@ -25,8 +26,9 @@ class ChooseTripsScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      avalibleTrips: null,
+      availableTrips: null,
       rerender: true,
+      loading: false,
     }
 
     this.onRequestTrip = this.onRequestTrip.bind(this)
@@ -39,23 +41,24 @@ class ChooseTripsScreen extends Component {
 
   onRequestTrip(stops, tripId) {
     this.props.navigation.navigate('RequestTrip', {
-      stops: stops,
+      stops,
       tripId,
     })
   }
 
   async setSearchStartPlaceFetch(item) {
+    this.setState({ loading: true })
     const response = await this.props.setSearchStartPlace(
       item,
       this.props.user.token
     )
-
     if (response.error) {
       Alert.alert(
         'Error obteniendo viajes',
         'Hubo un problema obteniendo los viajes. Por favor intentalo de nuevo.'
       )
     }
+    this.setState({ loading: false })
   }
 
   render() {
@@ -96,17 +99,19 @@ class ChooseTripsScreen extends Component {
             onClearPress={this.props.cleanSearchEndPlace}
           /> */}
         </View>
-
-        {requestedTrips.length > 0 ? (
-          <ChooseTrips
-            onSend={this.onRequestTrip}
-            onReload={this.setSearchStartPlaceFetch}
-            // trips={requestedTrips.map(trip => parseTripInfo(trip))}
-            trips={requestedTrips}
-          />
-        ) : (
-          <EmptyState image={noTrips} text="No se ha encontrado ningún viaje según lo solicitado." />
-        )}
+        {!this.state.loading ? (
+          <>
+            {requestedTrips.length > 0 ? (
+              <ChooseTrips
+                onSend={this.onRequestTrip}
+                onReload={this.setSearchStartPlaceFetch}
+                trips={requestedTrips}
+              />
+            ) : (
+              <EmptyState image={noTrips} text="No se ha encontrado ningún viaje según lo solicitado." />
+            )}
+          </>
+        ) : (<Spinner color={'#0000FF'} />)}
       </View>
     )
   }

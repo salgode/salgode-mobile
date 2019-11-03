@@ -29,6 +29,7 @@ export const DetailedTrip = ({ trip, asDriver, driver, onPressStartTrip }) => {
   }
 
   const selfieImage = driver != null ? driver.driver_avatar : 'placeholder'
+  console.log(asDriver)
 
   return trip !== null ? (
     <Card
@@ -42,17 +43,19 @@ export const DetailedTrip = ({ trip, asDriver, driver, onPressStartTrip }) => {
       </View>
       <CardItem>
         {/* TODO: if  as driver, don't show name and thumbnail*/}
-        <View style={styles.user}>
-          {selfieImage && selfieImage !== 'placeholder' ? (
-            <Thumbnail source={{ uri: selfieImage }} />
-          ) : (
-            <Ionicons
-              name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-              size={40}
-            />
-          )}
-          <Text style={styles.userText}>{driver.driver_name}</Text>
-        </View>
+        {!asDriver ? (
+          <View style={styles.user}>
+            {selfieImage && selfieImage !== 'placeholder' ? (
+              <Thumbnail source={{ uri: selfieImage }} />
+            ) : (
+              <Ionicons
+                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                size={40}
+              />
+            )}
+            <Text style={styles.userText}>{driver.driver_name}</Text>
+          </View>
+        ) : (<></>)}
       </CardItem>
       <CardItem style={styles.locationContainer}>
         {renderLocation(trip.trip_route_points)}
@@ -80,7 +83,6 @@ DetailedTrip.propTypes = {
   trip: PropTypes.object.isRequired,
   asDriver: PropTypes.bool.isRequired,
   driver: PropTypes.object.isRequired,
-  token: PropTypes.string.isRequired,
   onPressStartTrip: PropTypes.func.isRequired,
 }
 

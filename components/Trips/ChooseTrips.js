@@ -18,6 +18,7 @@ class ChooseTrips extends Component {
       stops: [],
     }
     this.onReload = this.onReload.bind(this)
+    this.handleOnPress = this.handleOnPress.bind(this)
   }
 
   componentDidMount() {
@@ -58,6 +59,7 @@ class ChooseTrips extends Component {
         </View>
       )
     }
+
     return (
       <SafeAreaView>
         <FlatList
@@ -85,7 +87,7 @@ class ChooseTrips extends Component {
 ChooseTrips.propTypes = {
   trips: PropTypes.array,
   isRequestedTrips: PropTypes.bool,
-  onSend: PropTypes.func,
+  onSend: PropTypes.func.isRequired,
   onReload: PropTypes.func.isRequired,
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,

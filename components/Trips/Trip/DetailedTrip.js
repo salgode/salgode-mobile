@@ -7,7 +7,13 @@ import Colors from '../../../constants/Colors'
 import TimeInfo from './TimeInfo'
 import { Ionicons } from '@expo/vector-icons'
 
-export const DetailedTrip = ({ trip, asDriver, driver, onPressStartTrip }) => {
+export const DetailedTrip = ({
+  trip,
+  asDriver,
+  driver,
+  onPressStartTrip,
+  toCurrentTrip,
+}) => {
   function renderLocation(locations) {
     return locations.map((location, index) => {
       let color
@@ -29,7 +35,6 @@ export const DetailedTrip = ({ trip, asDriver, driver, onPressStartTrip }) => {
   }
 
   const selfieImage = driver != null ? driver.driver_avatar : 'placeholder'
-  console.log(asDriver)
 
   return trip !== null ? (
     <Card
@@ -55,7 +60,9 @@ export const DetailedTrip = ({ trip, asDriver, driver, onPressStartTrip }) => {
             )}
             <Text style={styles.userText}>{driver.driver_name}</Text>
           </View>
-        ) : (<></>)}
+        ) : (
+          <></>
+        )}
       </CardItem>
       <CardItem style={styles.locationContainer}>
         {renderLocation(trip.trip_route_points)}
@@ -74,6 +81,17 @@ export const DetailedTrip = ({ trip, asDriver, driver, onPressStartTrip }) => {
             Ir
           </Text>
         </Button>
+      ) : trip.trip_status === 'in_progress' ? (
+        <Button
+          style={{ alignSelf: 'center', backgroundColor: '#0000FF' }}
+          onPress={() => {
+            toCurrentTrip()
+          }}
+        >
+          <Text style={{ color: 'white', fontSize: 18, fontWeight: '800' }}>
+            Ver
+          </Text>
+        </Button>
       ) : null}
     </Card>
   ) : null
@@ -84,6 +102,7 @@ DetailedTrip.propTypes = {
   asDriver: PropTypes.bool.isRequired,
   driver: PropTypes.object.isRequired,
   onPressStartTrip: PropTypes.func.isRequired,
+  toCurrentTrip: PropTypes.func.isRequired,
 }
 
 const styles = StyleSheet.create({

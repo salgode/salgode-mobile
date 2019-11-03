@@ -22,14 +22,14 @@ class ResolveCurrentTripScreen extends Component {
       JSON.parse(data)
     )
 
-    this.props.fetchCurrentTrip(userToken).then(async data => {
-      if (data.payload) {
+    this.props.fetchCurrentTrip(userToken).then(async response => {
+      if (response.payload) {
         const trip = await this.props
-          .fetchTrip(userToken, data.payload.data.trip_id)
+          .fetchTrip(userToken, response.payload.data.trip_id)
           .then(response => response.payload.data)
           .catch(() => null)
         const manifest = await this.props
-          .fetchManifest(userToken, data.payload.data.trip_id)
+          .fetchManifest(userToken, response.payload.data.trip_id)
           .then(response => response.payload.data)
           .catch(() => null)
 
@@ -42,12 +42,12 @@ class ResolveCurrentTripScreen extends Component {
           trip: {
             ...trip,
             manifest,
-            next_point: data.payload.data.next_point,
-            on_board: data.payload.data.on_board,
-            available_seats: data.payload.data.available_seats,
+            next_point: response.payload.data.next_point,
+            on_board: response.payload.data.on_board,
+            available_seats: response.payload.data.available_seats,
           },
           userToken,
-          asDriver: data.payload.data.is_driver,
+          asDriver: response.payload.data.is_driver,
         })
       } else {
         this.props.navigation.navigate('Main')

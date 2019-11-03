@@ -62,26 +62,11 @@ export default class TripRequestCard extends Component {
     if (status !== 'accepted') {
       requestObject.data = this.state.body
     }
-    // console.log(requestObject)
-    await client
-      .request(requestObject)
-      .then(resp => {
-        console.log(this.props.token)
-        console.log('RESERVATION')
-        console.log(resp)
-      })
-      .catch(err => {
-        console.log(this.props.token)
-        console.log('RESERVATION')
-        console.log(err)
-      })
-
-    // TODO: fix 403
+    await client.request(requestObject)
   }
 
   render() {
     const { reservation } = this.state
-    // console.log(reservation)
     const { passenger } = this.props.reservation
     const selfieImage = passenger.avatar || 'placeholder'
 
@@ -125,46 +110,47 @@ export default class TripRequestCard extends Component {
           />
         </CardItem>
 
-        {reservation.reservation_status === 'pending' && (
-          <CardItem style={styles.buttonsContainer}>
-            <Button
-              style={{
-                ...styles.buttonTrip,
-                backgroundColor: '#white',
-                borderColor: '#0000FF',
-                borderWidth: 1,
-              }}
-              onPress={() => this.handleChangeStatus('accepted')}
-            >
-              <Text
+        {reservation.reservation_status === 'pending' &&
+          this.props.tripStatus === 'open' && (
+            <CardItem style={styles.buttonsContainer}>
+              <Button
                 style={{
-                  color: '#0000FF',
-                  fontSize: 15,
-                  fontWeight: '700',
-                  alignSelf: 'center',
+                  ...styles.buttonTrip,
+                  backgroundColor: '#white',
+                  borderColor: '#0000FF',
+                  borderWidth: 1,
                 }}
+                onPress={() => this.handleChangeStatus('accepted')}
               >
-                Aceptar
-              </Text>
-            </Button>
-            <Button
-              bordered
-              style={{ ...styles.buttonTrip, borderColor: '#FF5242' }}
-              onPress={() => this.handleChangeStatus('rejected')}
-            >
-              <Text
-                style={{
-                  color: '#FF5242',
-                  fontSize: 15,
-                  fontWeight: '700',
-                  alignSelf: 'center',
-                }}
+                <Text
+                  style={{
+                    color: '#0000FF',
+                    fontSize: 15,
+                    fontWeight: '700',
+                    alignSelf: 'center',
+                  }}
+                >
+                  Aceptar
+                </Text>
+              </Button>
+              <Button
+                bordered
+                style={{ ...styles.buttonTrip, borderColor: '#FF5242' }}
+                onPress={() => this.handleChangeStatus('rejected')}
               >
-                Rechazar
-              </Text>
-            </Button>
-          </CardItem>
-        )}
+                <Text
+                  style={{
+                    color: '#FF5242',
+                    fontSize: 15,
+                    fontWeight: '700',
+                    alignSelf: 'center',
+                  }}
+                >
+                  Rechazar
+                </Text>
+              </Button>
+            </CardItem>
+          )}
 
         {reservation.reservation_status === 'accepted' && (
           <View style={styles.buttonsContainer}>
@@ -235,6 +221,7 @@ TripRequestCard.propTypes = {
   finalLocation: PropTypes.string,
   finishStop: PropTypes.string,
   token: PropTypes.string.isRequired,
+  tripStatus: PropTypes.string.isRequired,
 }
 
 const styles = StyleSheet.create({

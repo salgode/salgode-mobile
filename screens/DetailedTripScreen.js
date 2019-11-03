@@ -98,6 +98,7 @@ class DetailedTripScreen extends Component {
               reservation={reservation}
               finishStop={finishStop}
               token={this.props.user.token}
+              tripStatus={this.state.trip.trip_status}
             />
           )
         })

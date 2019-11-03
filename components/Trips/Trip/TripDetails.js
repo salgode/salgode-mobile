@@ -56,7 +56,7 @@ class TripDetails extends Component {
         <Location
           key={`location-${index}`}
           color={color}
-          location={location.name}
+          location={location.place_name}
         />
       )
     })
@@ -119,10 +119,10 @@ class TripDetails extends Component {
                     {phone}
                   </Text>
                 )}
-                {this.renderVerification(dniVerified, 'Usuario verificado')}
+                {this.renderVerification(dniVerified, 'Usuario verificado ')}
                 {this.renderVerification(
                   licenseVerified,
-                  'Conductor verificado'
+                  'Conductor verificado '
                 )}
               </View>
             </View>

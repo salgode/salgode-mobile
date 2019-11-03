@@ -5,9 +5,10 @@ import PropTypes from 'prop-types'
 import StopsList from './StopsList'
 
 const TripStart = ({ stops = [], onTripStart, nextTripView }) => {
+  console.log(stops)
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>#Llego en 5</Text>
+      <Text style={styles.title}>#Partimos</Text>
       <Text>Paradas:</Text>
       <StopsList stops={stops} />
       <Button
@@ -16,8 +17,8 @@ const TripStart = ({ stops = [], onTripStart, nextTripView }) => {
           onTripStart().then(response => {
             if (response.error) {
               Alert.alert(
-                'Error de al iniciar Viaje',
-                'Hubo un problema inciando su viaje. Por favor intentalo de nuevo.'
+                'Error al iniciar Viaje',
+                'Hubo un problema iniciando su viaje. Por favor intentalo de nuevo.'
               )
             } else {
               nextTripView()

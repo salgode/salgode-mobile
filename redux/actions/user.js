@@ -217,7 +217,7 @@ export function userTrips(authToken) {
     type: actions.USER_GET_TRIPS,
     payload: {
       request: {
-        url: urls.user.trips.get.all(),
+        url: urls.passenger.trips.get.all(),
         method: 'get',
         headers: {
           Authorization: `Bearer ${authToken}`,
@@ -249,9 +249,7 @@ export function getUserCars(authToken) {
       request: {
         url: urls.user.vehicles.get.all(),
         method: 'get',
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
+        headers: getBaseHeaders(authToken),
       },
     },
   }
@@ -264,9 +262,7 @@ export function getCurrentTrip(authToken) {
       request: {
         url: urls.user.trips.get.current(),
         method: 'get',
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
+        headers: getBaseHeaders(authToken),
       },
     },
   }

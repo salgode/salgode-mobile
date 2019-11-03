@@ -44,7 +44,7 @@ export function setSearchStartPlace(startPlace, authToken) {
       payload: {
         startPlace,
         request: {
-          url: `/trips/search/intersects/${startPlace.place_id}`, // TODO: request trips especificos
+          url: `/trips/search/intersects/${startPlace.place_id}`,
           method: 'get',
           headers: getBaseHeaders(authToken),
         },

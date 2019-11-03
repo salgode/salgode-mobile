@@ -28,7 +28,7 @@ const TripRequest = ({ stops, onSend, loading }) => {
         style={styles.picker}
       >
         {stops.slice(0, -1).map((stop, i) => (
-          <Picker.Item key={`PickerItem${i}`} label={stop.name} value={stop} />
+          <Picker.Item key={`PickerItem${i}`} label={stop.place_name} value={stop} />
         ))}
       </Picker>
       {loading && <Spinner color={Colors.mainBlue} />}
@@ -48,7 +48,7 @@ const TripRequest = ({ stops, onSend, loading }) => {
 TripRequest.propTypes = {
   stops: PropTypes.arrayOf(
     PropTypes.shape({
-      name: PropTypes.string.isRequired,
+      place_name: PropTypes.string.isRequired,
     }).isRequired
   ),
   onSend: PropTypes.func.isRequired,

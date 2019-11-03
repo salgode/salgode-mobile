@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native'
 import { connect } from 'react-redux'
-import { Icon } from 'native-base'
+import { Icon, Spinner } from 'native-base'
 
 import Colors from '../constants/Colors'
 import CardInput from '../components/CardInput'
@@ -15,21 +15,23 @@ import CardInput from '../components/CardInput'
 import { normalizeText } from '../utils/normalizeText'
 
 class SpotSelectorScreen extends Component {
-  state = {
-    filter: '',
+  constructor(props) {
+    super(props)
+    this.state = {
+      filter: '',
+    }
   }
+
   render() {
     const { navigation, spots } = this.props
     const { filter } = this.state
     const normalizedInput = normalizeText(filter)
     // console.log('Spots1:', spots[0])
-    const data = navigation.getParam('data', spots)
-    // console.log(data)
-    const filteredData = data.filter(
-      item =>
-        normalizeText(item.name).includes(normalizedInput) ||
-        normalizeText(item.address).includes(normalizedInput)
-    )
+    let data = navigation.getParam('data', spots)
+    if (data && data.length === 0) {
+      data = spots
+    }
+
     return (
       <View style={{ flex: 1, backgroundColor: Colors.lightBackground }}>
         <View>
@@ -43,32 +45,37 @@ class SpotSelectorScreen extends Component {
           />
         </View>
         <View style={styles.container}>
-          <FlatList
-            data={filteredData}
-            style={styles.flatList}
-            renderItem={({ item }) => (
-              <View style={styles.listItem}>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.getParam('onItemPress', '')(item)
-                    navigation.goBack()
-                  }}
-                  style={{ flexDirection: 'row' }}
-                >
-                  <Icon
-                    active
-                    name="navigate"
-                    style={{ marginRight: 10, color: '#8698ab' }}
-                  />
-                  <View style={styles.itemText}>
-                    <Text style={{ fontWeight: 'bold' }}>{item.name}</Text>
-                    <Text>{item.address}</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            )}
-            keyExtractor={item => item.id}
-          />
+          {data ? (
+            <FlatList
+              data={data.filter(item =>
+                normalizeText(item.name).includes(normalizedInput) ||
+                normalizeText(item.address).includes(normalizedInput)
+              )}
+              style={styles.flatList}
+              renderItem={({ item }) => (
+                <View style={styles.listItem}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.getParam('onItemPress', '')(item)
+                      navigation.goBack()
+                    }}
+                    style={{ flexDirection: 'row' }}
+                  >
+                    <Icon
+                      active
+                      name="navigate"
+                      style={{ marginRight: 10, color: '#8698ab' }}
+                    />
+                    <View style={styles.itemText}>
+                      <Text style={{ fontWeight: 'bold' }}>{item.name}</Text>
+                      <Text>{item.address}</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              )}
+              keyExtractor={item => item.id}
+            />
+          ) : (<Spinner color={'#0000FF'} />)}
         </View>
       </View>
     )

@@ -10,20 +10,18 @@ import noTrips from '../../assets/images/notrips.png'
 class MyTrips extends Component {
   constructor(props) {
     super(props)
-    this.Trip = this.props.isRequestedTrips ? RequestedTrip : MyTrip
-    this.tripsData = this.props.isRequestedTrips
-      ? this.props.driverTrips
-      : this.props.trips
-    this.asDriver = this.props.isRequestedTrips ? false : true
   }
 
   render() {
-    const Trip = this.Trip
-    if (this.props.trips && this.props.trips.length) {
+    const { isRequestedTrips, trips, driverTrips } = this.props
+    const Trip = isRequestedTrips ? RequestedTrip : MyTrip
+    const tripsData = isRequestedTrips ? trips : driverTrips
+    const asDriver = !isRequestedTrips
+    if (tripsData && tripsData.length) {
       return (
         <SafeAreaView>
           <FlatList
-            data={this.props.trips.filter(t => t.etd_info)}
+            data={tripsData.filter(t => t.etd_info)}
             renderItem={({ item }) => {
               return (
                 <Trip
@@ -47,7 +45,7 @@ class MyTrips extends Component {
     return (
       <EmptyState
         image={noTrips}
-        text={this.props.isRequestedTrips
+        text={isRequestedTrips
           ? 'No has agendado viajes'
           : 'No tienes viajes pendientes'}
       />

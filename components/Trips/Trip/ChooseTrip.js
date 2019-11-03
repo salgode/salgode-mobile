@@ -54,8 +54,8 @@ const ChooseTrip = ({
           </View>
         </CardItem>
         <CardItem style={styles.locationContainer}>
-          <Location color={'#0000FF'} location={stops[0].name} />
-          <Location color={'#33C534'} location={stops[stops.length - 1].name} />
+          <Location color={'#0000FF'} location={stops[0].place_name} />
+          <Location color={'#33C534'} location={stops[stops.length - 1].place_name} />
         </CardItem>
         <CardItem style={styles.bottomSection}>
           <TimeInfo timestamp={timestamp} isDate />

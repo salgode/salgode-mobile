@@ -7,7 +7,7 @@ import { client } from '../../redux/store'
 
 const FinishedTrip = ({
   // requerido: Nombre mostrado en la notificación
-  location = 'San Joaquin',
+  location,
   // opcional: Mensaje de la notificación
   message = 'Ha finalizado tu recorrido.',
   // opcional: Mensaje de la notificación
@@ -23,7 +23,7 @@ const FinishedTrip = ({
   // requerido: token del usuario
   token,
 }) => {
-  async function finishTrip() {
+  const finishTrip = async () => {
     await client
       .request({
         method: 'post',

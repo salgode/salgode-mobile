@@ -24,12 +24,14 @@ class CurrentStopScreen extends Component {
   }
 
   render() {
+    const nextStopIndex = this.state.trip.trip_route_points.findIndex(
+      element => this.state.trip.next_point === element.place_id
+    )
+
     return (
       <CurrentStop
         trip={this.state.trip}
-        stopIndex={0}
-        before={0} //todo revisar esto del before y el after, ahora esta todo malo
-        after={1}
+        stopIndex={nextStopIndex}
         onPressCompleteTrip={this.onPressCompleteTrip}
         asDriver={this.state.asDriver}
       />

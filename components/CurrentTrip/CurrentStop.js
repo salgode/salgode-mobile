@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { StyleSheet, ScrollView } from 'react-native'
 import { View, Text, Button } from 'native-base'
 import PropTypes from 'prop-types'
-import StopIcon, { STOP_ICON_TYPES } from './StopIcon'
+import StopIcon from './StopIcon'
 import Colors from '../../constants/Colors'
 import UserToPickUp from './UserToPickUp'
 import StopsList from './StopsList'
@@ -14,8 +14,6 @@ class CurrentStop extends Component {
     this.state = {
       trip: this.props.trip,
       stopIndex: this.props.stopIndex,
-      before: this.props.before,
-      after: this.props.after,
       onPressCompleteTrip: this.props.onPressCompleteTrip,
       nextStopText: 'Siguiente Parada',
     }
@@ -42,18 +40,13 @@ class CurrentStop extends Component {
     //if(is first stop) {}
     //if(stopIndex == 0) {
 
-    //}
-    //if(is last stop) {}
     if (this.state.stopIndex === this.state.trip.trip_route_points.length - 1) {
       this.goToLastStop()
-    }
-    //if(is mid stop) {}
-    else {
+    } else {
       const stopIndex = this.state.stopIndex
       this.setState({
         stopIndex: stopIndex + 1,
       })
-      // TODO: change with after variable to check end of trip
       if (stopIndex + 1 === this.state.trip.trip_route_points.length - 1) {
         this.setState({
           nextStopText: 'Terminar Viaje',
@@ -73,9 +66,16 @@ class CurrentStop extends Component {
         <View style={styles.container}>
           <Text style={styles.title}>#Llego en 5</Text>
           <View style={styles.roadContainer}>
-            <StopIcon type={this.state.before} />
+            <StopIcon type={this.state.stopIndex === 0 ? 0 : 1} />
             <View style={styles.bar} />
-            <StopIcon type={this.state.after} />
+            <StopIcon
+              type={
+                this.state.stopIndex ===
+                this.state.trip.trip_route_points.length - 1
+                  ? 2
+                  : 1
+              }
+            />
           </View>
           <Text style={styles.location}>
             {this.state.trip.trip_route_points[this.state.stopIndex].place_name}
@@ -129,9 +129,6 @@ class CurrentStop extends Component {
 }
 
 CurrentStop.propTypes = {
-  before: PropTypes.oneOf(Object.values(STOP_ICON_TYPES)).isRequired,
-  after: PropTypes.oneOf(Object.values(STOP_ICON_TYPES)).isRequired,
-  // location: PropTypes.string.isRequired,
   usersToPickUp: PropTypes.array,
   asDriver: PropTypes.bool.isRequired,
   trip: PropTypes.object.isRequired,

@@ -34,6 +34,7 @@ export const actions = {
   USER_CREATE_VEHICLE_FAIL: 'USER_CREATE_VEHICLE_FAIL',
   USER_CREATE_VEHICLE_SUCCESS: 'USER_CREATE_VEHICLE_SUCCESS',
   USER_SET_TOKEN: 'USER_SET_TOKEN',
+  USER_REMOVE_TRIP: 'USER_REMOVE_TRIP',
 }
 
 const mapDataToUser = data => {
@@ -213,15 +214,14 @@ export function getImageUrl(fileName, fileType) {
 }
 
 export function userTrips(authToken) {
+  // TODO: this action delivers the reservations NOT the trips
   return {
     type: actions.USER_GET_TRIPS,
     payload: {
       request: {
-        url: urls.passenger.trips.get.all(),
+        url: urls.passenger.reservations.get.all(),
         method: 'get',
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
+        headers: getBaseHeaders(authToken),
       },
     },
   }
@@ -300,6 +300,16 @@ export function setToken(authToken) {
     type: actions.USER_SET_TOKEN,
     payload: {
       token: authToken,
+    },
+  }
+}
+
+export function removeTrip(tripId) {
+  // This action removes a RESERVATION from the trip list
+  return {
+    type: actions.USER_REMOVE_TRIP,
+    payload: {
+      tripId,
     },
   }
 }

@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, RefreshControl, ScrollView } from 'react-native'
 import PropTypes from 'prop-types'
 import Trips from '../components/Trips/Trips'
 import { Spinner, Text } from 'native-base'
 import { connect } from 'react-redux'
-import { userTrips, driverTrips } from '../redux/actions/user'
+import { userTrips, driverTrips, removeTrip } from '../redux/actions/user'
 import EmptyState from '../components/EmptyState/EmptyState'
 import noTrips from '../assets/images/notrips.png'
 
@@ -19,10 +19,19 @@ class TripsScreen extends Component {
       loading: true,
       trips: [],
       asDriver: false,
+      reloading: false,
     }
-
+    this.onRefresh = this.onRefresh.bind(this)
     this.getTrips = this.getTrips.bind(this)
     this.onPressTrip = this.onPressTrip.bind(this)
+    this.renderScreen = this.renderScreen.bind(this)
+  }
+
+  async onRefresh() {
+    this.setState({ reloading: true })
+    await this.props.fetchTrips(this.props.user.token)
+    await this.props.fetchDriverTrips(this.props.user.token)
+    this.setState({ reloading: false })
   }
 
   onPressTrip(asDriver = false, trip) {
@@ -50,7 +59,8 @@ class TripsScreen extends Component {
       this.props.user.verifications.license && this.props.user.vehicles.length
     )
   }
-  render() {
+
+  renderScreen() {
     if (!this.props.user.email) {
       return <></>
     }
@@ -67,6 +77,7 @@ class TripsScreen extends Component {
               trips={this.props.trips}
               onPressTrip={this.onPressTrip}
               driverTrips={this.props.driverTrips}
+              removeFromList={this.props.dispatchRemoveTrip}
             />
           )}
         </View>
@@ -80,6 +91,22 @@ class TripsScreen extends Component {
         />
       )
     }
+  }
+
+  render() {
+    return (
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.reloading}
+            onRefresh={this.onRefresh}
+          />
+        }
+        contentContainerStyle={{ flex: 1 }}
+      >
+        {this.renderScreen()}
+      </ScrollView>
+    )
   }
 }
 
@@ -122,6 +149,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   fetchTrips: token => dispatch(userTrips(token)),
   fetchDriverTrips: token => dispatch(driverTrips(token)),
+  dispatchRemoveTrip: tripId => dispatch(removeTrip(tripId)),
 })
 
 export default connect(

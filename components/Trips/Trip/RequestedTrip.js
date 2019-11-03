@@ -1,38 +1,71 @@
 import React from 'react'
-import { StyleSheet, Platform } from 'react-native'
+import { StyleSheet, Platform, Alert } from 'react-native'
+import { connect } from 'react-redux'
 import Location from './Location'
 import Colors from '../../../constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
 import TimeInfo from './TimeInfo'
 import { Card, View, Text, CardItem, Button, Thumbnail } from 'native-base'
 import PropTypes from 'prop-types'
+import { cancelSlot } from '../../../redux/actions/slots'
 
 const RequestedTrip = ({
   timestamp,
   user,
-  status,
+  reservationStatus,
   startLocation,
   endLocation,
-  onSend,
   onPressTrip,
   asDriver,
   trip,
+  removeFromList,
+  dispatchCancelSlot,
+  token,
 }) => {
   let statusColor
   let statusText
-
-  if (status === 'accepted' || status === 'completed') {
-    statusColor = 'green'
-    statusText = 'Aceptado'
-  } else if (status === 'pending') {
-    statusColor = 'purple'
-    statusText = 'Pendiente'
-  } else {
-    statusColor = 'red'
-    statusText = 'Rechazado'
+  let show = true
+  switch (reservationStatus) {
+    case 'completed':
+      show = false
+      break
+    case 'accepted':
+      statusColor = 'green'
+      statusText = 'Aceptado'
+      break
+    case 'pending':
+      statusColor = 'purple'
+      statusText = 'Pendiente'
+      break
+    case 'declined':
+      statusColor = 'red'
+      statusText = 'Rechazado'
+      break
+    case 'cancelled':
+      show = false
+      break
+    default:
+      show = false
   }
 
-  return (
+  const onCancel = () => {
+    dispatchCancelSlot(token, trip.reservation_id)
+      .then(() => {
+        Alert.alert(
+          'Reserva cancelada',
+          'Su reserva ha sido cancelada con éxito',
+        )
+        removeFromList(trip.reservation_id)
+      })
+      .catch(() => {
+        Alert.alert(
+          'Error al cancelar',
+          'No se pudo cancelar con éxito su reservar. Por favor inténtelo de nuevo',
+        )
+      })
+  }
+
+  return show ? (
     <Card style={styles.containerRequested} borderWidth={5}>
       <View style={{ ...styles.status, backgroundColor: statusColor }}>
         <Text style={styles.statusText}>{statusText}</Text>
@@ -67,12 +100,12 @@ const RequestedTrip = ({
         >
           <Text style={styles.blueText}>Ver Viaje</Text>
         </Button>
-        <Button borderRadius={10} style={styles.cancelButton} onPress={onSend}>
+        <Button borderRadius={10} style={styles.cancelButton} onPress={onCancel}>
           <Text style={styles.cancelText}>Cancelar</Text>
         </Button>
       </CardItem>
     </Card>
-  )
+  ) : (<></>)
 }
 
 RequestedTrip.propTypes = {
@@ -81,13 +114,12 @@ RequestedTrip.propTypes = {
     driver_name: PropTypes.string.isRequired,
     driver_avatar: PropTypes.string,
   }).isRequired,
-  status: PropTypes.oneOf([
+  reservationStatus: PropTypes.oneOf([
     'accepted',
     'pending',
-    'rejected',
+    'declined',
+    'cancelled',
     'completed',
-    'open',
-    'in_progress',
   ]),
   startLocation: PropTypes.object.isRequired,
   endLocation: PropTypes.object.isRequired,
@@ -154,4 +186,15 @@ const styles = StyleSheet.create({
   },
 })
 
-export default RequestedTrip
+const mapStateToProps = state => ({
+  token: state.user.token,
+})
+
+const mapDispatchToProps = dispatch => ({
+  dispatchCancelSlot: (token, resId) => dispatch(cancelSlot(token, resId)),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(RequestedTrip)

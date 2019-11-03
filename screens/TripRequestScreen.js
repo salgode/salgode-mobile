@@ -9,7 +9,6 @@ import { connect } from 'react-redux'
 class TripRequestScreen extends Component {
   static navigationOptions = {
     title: 'Solicitud de viaje',
-    headerBackTitle: '', // TODO: que no diga 'Back'
   }
 
   constructor(props) {
@@ -31,18 +30,14 @@ class TripRequestScreen extends Component {
 
   async onRequestSlot(startStop, endStop) {
     const { user, createSlot } = this.props
-
     this.setState({ loading: true })
-    const response = await createSlot(
+    const response = await this.props.createSlot(
       user.token,
       this.state.tripId,
-      startStop.id,
-      endStop.id
+      startStop.place_id,
+      endStop.place_id
     )
-    // console.log(response)
-
     this.setState({ loading: false })
-
     if (!response || response.error || response.errorMessage) {
       Alert.alert(
         'Error de reserva',

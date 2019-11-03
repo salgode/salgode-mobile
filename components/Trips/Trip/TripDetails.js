@@ -64,7 +64,7 @@ class TripDetails extends Component {
 
   renderIdentification(identificationLink, altText = '') {
     if (identificationLink) {
-      return <Thumbnail square large source={{ uri: identificationLink }} />
+      return <Thumbnail large source={{ uri: identificationLink }} />
     } else {
       return (
         <View style={styles.identificationPlaceholder}>

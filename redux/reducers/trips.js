@@ -23,7 +23,6 @@ export default function tripsReducer(state = {}, action) {
         loading: false,
         error: 'Error while fetching requested trips',
       }
-
     case tripActions.CLEAN_SEARCH_END_PLACE:
       return { ...state, endPlace: {} }
     case tripActions.SET_SEARCH_END_PLACE:

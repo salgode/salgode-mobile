@@ -28,7 +28,6 @@ class ChooseTripsScreen extends Component {
     this.state = {
       availableTrips: null,
       rerender: true,
-      loading: false,
     }
 
     this.onRequestTrip = this.onRequestTrip.bind(this)
@@ -47,7 +46,6 @@ class ChooseTripsScreen extends Component {
   }
 
   async setSearchStartPlaceFetch(item) {
-    this.setState({ loading: true })
     const response = await this.props.setSearchStartPlace(
       item,
       this.props.user.token
@@ -58,7 +56,6 @@ class ChooseTripsScreen extends Component {
         'Hubo un problema obteniendo los viajes. Por favor intentalo de nuevo.'
       )
     }
-    this.setState({ loading: false })
   }
 
   render() {
@@ -77,7 +74,7 @@ class ChooseTripsScreen extends Component {
               })
             }
             placeholder="Filtra por Comuna o Parada"
-            value={startPlace ? startPlace.name : ''}
+            value={startPlace ? startPlace.place_name : ''}
             text="#SalgoDe"
             editable={false}
             onClearPress={this.props.cleanSearchStartPlace}
@@ -99,19 +96,15 @@ class ChooseTripsScreen extends Component {
             onClearPress={this.props.cleanSearchEndPlace}
           /> */}
         </View>
-        {!this.state.loading ? (
-          <>
-            {requestedTrips.length > 0 ? (
-              <ChooseTrips
-                onSend={this.onRequestTrip}
-                onReload={this.setSearchStartPlaceFetch}
-                trips={requestedTrips}
-              />
-            ) : (
-              <EmptyState image={noTrips} text="No se ha encontrado ningún viaje según lo solicitado." />
-            )}
-          </>
-        ) : (<Spinner color={'#0000FF'} />)}
+        {requestedTrips.length > 0 ? (
+          <ChooseTrips
+            onSend={this.onRequestTrip}
+            onReload={this.setSearchStartPlaceFetch}
+            trips={requestedTrips}
+          />
+        ) : (
+          <EmptyState image={noTrips} text="No se ha encontrado ningún viaje según lo solicitado." />
+        )}
       </View>
     )
   }

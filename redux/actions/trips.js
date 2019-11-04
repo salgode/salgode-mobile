@@ -29,6 +29,18 @@ export const actions = {
 
   SET_SEARCH_END_PLACE: 'SET_SEARCH_END_PLACE',
   CLEAN_SEARCH_END_PLACE: 'CLEAN_SEARCH_END_PLACE',
+
+  TRIPS_GET_RESERVATIONS: 'TRIPS_GET_RESERVATIONS',
+  TRIPS_GET_RESERVATIONS_SUCCESS: 'TRIPS_GET_RESERVATIONS_SUCCESS',
+  TRIPS_GET_RESERVATIONS_FAIL: 'TRIPS_GET_RESERVATIONS_FAIL',
+
+  TRIPS_ACCEPT_RESERVATION: 'TRIPS_ACCEPT_RESERVATION',
+  TRIPS_ACCEPT_RESERVATION_SUCCESS: 'TRIPS_ACCEPT_RESERVATION_SUCCESS',
+  TRIPS_ACCEPT_RESERVATION_FAIL: 'TRIPS_ACCEPT_RESERVATION_FAIL',
+
+  TRIPS_DECLINE_RESERVATION: 'TRIPS_DECLINE_RESERVATION',
+  TRIPS_DECLINE_RESERVATION_SUCCESS: 'TRIPS_DECLINE_RESERVATION_SUCCESS',
+  TRIPS_DECLINE_RESERVATION_FAIL: 'TRIPS_DECLINE_RESERVATION_FAIL',
 }
 
 export function cleanSearchStartPlace() {
@@ -103,9 +115,7 @@ export function fetchTrip(authToken, id) {
       request: {
         url: urls.driver.trips.get.single(id),
         method: 'get',
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
+        headers: getBaseHeaders(authToken),
       },
     },
   }
@@ -118,9 +128,47 @@ export function fetchTripManifest(authToken, id) {
       request: {
         url: urls.driver.trips.get.manifest(id),
         method: 'get',
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
+        headers: getBaseHeaders(authToken),
+      },
+    },
+  }
+}
+
+export function getTripReservations(authToken, id) {
+  return {
+    type: actions.TRIPS_GET_RESERVATIONS,
+    payload: {
+      request: {
+        url: urls.driver.reservations.get.all(id),
+        method: 'get',
+        headers: getBaseHeaders(authToken),
+      },
+    },
+  }
+}
+
+export function acceptReservation(authToken, tripId, resId) {
+  return {
+    type: actions.TRIPS_ACCEPT_RESERVATION,
+    payload: {
+      request: {
+        url: urls.driver.reservations.post.accept(tripId, resId),
+        method: 'post',
+        headers: getBaseHeaders(authToken),
+      },
+    },
+  }
+}
+
+export function declineReservation(authToken, tripId, resId, data) {
+  return {
+    type: actions.TRIPS_DECLINE_RESERVATION,
+    payload: {
+      request: {
+        url: urls.driver.reservations.post.decline(tripId, resId),
+        method: 'post',
+        headers: getBaseHeaders(authToken),
+        data,
       },
     },
   }

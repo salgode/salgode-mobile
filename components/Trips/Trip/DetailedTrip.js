@@ -47,7 +47,6 @@ export const DetailedTrip = ({
         <Text style={styles.userText}>Resumen Viaje</Text>
       </View>
       <CardItem>
-        {/* TODO: if  as driver, don't show name and thumbnail*/}
         {!asDriver ? (
           <View style={styles.user}>
             {selfieImage && selfieImage !== 'placeholder' ? (
@@ -70,6 +69,16 @@ export const DetailedTrip = ({
       <CardItem>
         <TimeInfo timestamp={Date.parse(trip.etd_info.etd)} />
       </CardItem>
+      {asDriver && trip.trip_status === 'in_progress' && (
+        <CardItem>
+          <Text>Tu viaje ya comenzó!</Text>
+        </CardItem>
+      )}
+      {asDriver && trip.trip_status === 'completed' && (
+        <CardItem>
+          <Text>Tu viaje ya finalizó</Text>
+        </CardItem>
+      )}
       {asDriver && trip.trip_status === 'open' ? (
         <Button
           style={{ alignSelf: 'center', backgroundColor: '#0000FF' }}

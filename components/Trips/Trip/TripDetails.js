@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { StyleSheet, Linking } from 'react-native'
-import { Card, CardItem, View, Text, Thumbnail } from 'native-base'
+import { StyleSheet, Platform, Linking } from 'react-native'
+import { Card, CardItem, View, Text, Thumbnail, Button } from 'native-base'
 import PropTypes from 'prop-types'
 import { MaterialCommunityIcons, AntDesign, Octicons } from '@expo/vector-icons'
 import TimeInfo from './TimeInfo'
@@ -16,6 +16,19 @@ class TripDetails extends Component {
     this.renderLocation = this.renderLocation.bind(this)
     this.renderIdentification = this.renderIdentification.bind(this)
     this.renderVerification = this.renderVerification.bind(this)
+    this.dialCall = this.dialCall.bind(this)
+  }
+
+  dialCall(phoneNumber) {
+    if (phoneNumber) {
+      let link = ''
+      if (Platform.OS === 'android') {
+        link = `tel:${phoneNumber}`
+      } else {
+        link = `telprompt:${phoneNumber}`
+      }
+      Linking.openURL(link)
+    }
   }
 
   readonlyField(label, data) {
@@ -97,6 +110,7 @@ class TripDetails extends Component {
       licenseVerified,
       tripRoutePoints,
       etd,
+      vehicle,
     } = this.props
     return (
       <View style={styles.container}>
@@ -114,7 +128,7 @@ class TripDetails extends Component {
                 {isReserved && (
                   <Text
                     style={styles.phoneText}
-                    onPress={() => Linking.openURL(`tel:${phone}`)}
+                    onPress={() => this.dialCall(phone)}
                   >
                     {phone}
                   </Text>
@@ -133,6 +147,40 @@ class TripDetails extends Component {
           <CardItem>
             <TimeInfo timestamp={Date.parse(etd)} isDate />
           </CardItem>
+          {(isReserved && vehicle) && (
+            <>
+              <CardItem>
+                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
+                  Datos del vehículo
+                </Text>
+              </CardItem>
+              <CardItem>
+                <Text>Patente: {vehicle.vehicle_identification}</Text>
+              </CardItem>
+              <CardItem>
+                <Text>Color: {vehicle.vehicle_color}</Text>
+              </CardItem>
+            </>
+          )}
+          {isReserved && (
+            <CardItem>
+              <Button
+                style={{ ...styles.buttonTrip, backgroundColor: 'green' }}
+                onPress={() => this.dialCall(phone)}
+              >
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 10,
+                    fontWeight: '700',
+                    alignSelf: 'center',
+                  }}
+                >
+                  Llamar
+                </Text>
+              </Button>
+            </CardItem>
+          )}
         </Card>
       </View>
     )
@@ -151,6 +199,13 @@ TripDetails.propTypes = {
 }
 
 const styles = StyleSheet.create({
+  buttonTrip: {
+    flex: 1,
+    marginHorizontal: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+  },
   cardContainer: {
     alignItems: 'flex-start',
     borderColor: 'white',

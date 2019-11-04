@@ -27,6 +27,8 @@ const RequestedTrip = ({
   let statusColor
   let statusText
   let show = true
+  let showDetailsButton = true
+  let showCancelButton = true
   switch (reservationStatus) {
     case 'completed':
       show = false
@@ -34,6 +36,7 @@ const RequestedTrip = ({
     case 'accepted':
       statusColor = 'green'
       statusText = 'Aceptado'
+      showCancelButton = false
       break
     case 'pending':
       statusColor = 'purple'
@@ -42,6 +45,7 @@ const RequestedTrip = ({
     case 'declined':
       statusColor = 'red'
       statusText = 'Rechazado'
+      showCancelButton = false
       break
     case 'cancelled':
       show = false
@@ -86,6 +90,7 @@ const RequestedTrip = ({
           etd_info: trip.etd_info,
           isReserved: ['accepted', 'completed'].includes(trip.reservation_status),
         },
+        vehicle: trip.vehicle,
       })
     }
   }
@@ -118,16 +123,20 @@ const RequestedTrip = ({
         <TimeInfo timestamp={timestamp} />
       </CardItem>
       <CardItem style={styles.containerBottom}>
-        <Button
-          borderRadius={10}
-          style={styles.button}
-          onPress={pressTrip}
-        >
-          <Text style={styles.blueText}>Ver Viaje</Text>
-        </Button>
-        <Button borderRadius={10} style={styles.cancelButton} onPress={onCancel}>
-          <Text style={styles.cancelText}>Cancelar</Text>
-        </Button>
+        {showDetailsButton && (
+          <Button
+            borderRadius={10}
+            style={styles.button}
+            onPress={pressTrip}
+          >
+            <Text style={styles.blueText}>Ver Viaje</Text>
+          </Button>
+        )}
+        {showCancelButton && (
+          <Button borderRadius={10} style={styles.cancelButton} onPress={onCancel}>
+            <Text style={styles.cancelText}>Cancelar</Text>
+          </Button>
+        )}
       </CardItem>
     </Card>
   ) : (<></>)

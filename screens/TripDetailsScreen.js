@@ -9,7 +9,7 @@ class TripDetailsScreen extends Component {
 
   render() {
     const { navigation } = this.props
-    const { userData } = navigation.state.params
+    const { userData, vehicle } = navigation.state.params
 
     return (
       <TripDetails
@@ -22,6 +22,7 @@ class TripDetailsScreen extends Component {
         isReserved={userData.isReserved}
         tripRoutePoints={userData.trip_route_points}
         etd={userData.etd_info.etd}
+        vehicle={vehicle}
       />
     )
   }

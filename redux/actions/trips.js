@@ -29,6 +29,10 @@ export const actions = {
 
   SET_SEARCH_END_PLACE: 'SET_SEARCH_END_PLACE',
   CLEAN_SEARCH_END_PLACE: 'CLEAN_SEARCH_END_PLACE',
+
+  TRIPS_GET_RESERVATIONS: 'TRIPS_GET_RESERVATIONS',
+  TRIPS_GET_RESERVATIONS_SUCCESS: 'TRIPS_GET_RESERVATIONS_SUCCESS',
+  TRIPS_GET_RESERVATIONS_FAIL: 'TRIPS_GET_RESERVATIONS_FAIL',
 }
 
 export function cleanSearchStartPlace() {
@@ -103,9 +107,7 @@ export function fetchTrip(authToken, id) {
       request: {
         url: urls.driver.trips.get.single(id),
         method: 'get',
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
+        headers: getBaseHeaders(authToken),
       },
     },
   }
@@ -118,9 +120,20 @@ export function fetchTripManifest(authToken, id) {
       request: {
         url: urls.driver.trips.get.manifest(id),
         method: 'get',
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
+        headers: getBaseHeaders(authToken),
+      },
+    },
+  }
+}
+
+export function getTripReservations(authToken, id) {
+  return {
+    type: actions.TRIPS_GET_RESERVATIONS,
+    payload: {
+      request: {
+        url: urls.driver.reservations.get.all(id),
+        method: 'get',
+        headers: getBaseHeaders(authToken),
       },
     },
   }

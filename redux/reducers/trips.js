@@ -68,6 +68,12 @@ export default function tripsReducer(state = {}, action) {
         loading: false,
         error: 'Error while fetching trip',
       }
+    case tripActions.TRIPS_GET_RESERVATIONS:
+      return { ...state, loading: true }
+    case tripActions.TRIPS_GET_RESERVATIONS_SUCCESS:
+      return { ...state, loading: false }
+    case tripActions.TRIPS_GET_RESERVATIONS_FAIL:
+      return { ...state, loading: false }
     default:
       return state
   }

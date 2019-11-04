@@ -6,21 +6,14 @@ import { Card, View, Text, Button, CardItem, Thumbnail } from 'native-base'
 import Location from './Location'
 import PropTypes from 'prop-types'
 /*import Colors from '../../../constants/Colors'*/
-import { Ionicons } from '@expo/vector-icons'
-import { client } from '../../../redux/store'
+import { Ionicons, Octicons } from '@expo/vector-icons'
+//import { client } from '../../../redux/store'
 import { getBaseHeaders, urls } from '../../../config/api'
 import { shareToWhatsApp } from '../../../utils/whatsappShare'
 
-export default class TripRequestCard extends Component {
+class TripRequestCard extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      reservation: props.reservation,
-      body: {
-        decline_reason: 'out_of_space',
-        decline_message: "I'm sorry, got a last minute friend on board",
-      },
-    }
     this.handleChangeStatus = this.handleChangeStatus.bind(this)
   }
 
@@ -48,7 +41,7 @@ export default class TripRequestCard extends Component {
 
     const { reservation } = this.state
     if (status === 'accepted') {
-      requestObject.url = urls.driver.reservations.post.acept(
+      requestObject.url = urls.driver.reservations.post.accept(
         reservation.trip_id,
         reservation.reservation_id
       )
@@ -66,51 +59,50 @@ export default class TripRequestCard extends Component {
   }
 
   render() {
-    const { reservation } = this.state
-    const { passenger } = this.props.reservation
-    const selfieImage = passenger.avatar || 'placeholder'
+    const { reservation, passenger, places, status, trip } = this.props
+    console.log(trip)
 
-    if (!reservation || reservation.reservation_route_places.length === 0) {
-      return null
+    if (!reservation || !places || places.length === 0 || !passenger) {
+      return <></>
     }
+
+    const { passenger_avatar, passenger_name, passenger_verifications } = passenger
 
     return (
       <Card style={styles.container}>
         <CardItem>
           <View style={styles.user}>
-            {selfieImage && selfieImage !== 'placeholder' ? (
-              <Thumbnail source={{ uri: selfieImage }} />
+            {passenger_avatar ? (
+              <Thumbnail source={{ uri: passenger_avatar }} />
             ) : (
               <Ionicons
                 name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
                 size={40}
               />
             )}
-            <Text style={styles.userText}>{passenger.passenger_name}</Text>
+            <View style={styles.userInfo}>
+              <Text style={styles.userText}>{passenger_name}</Text>
+              <View style={styles.verifiedContainer}>
+                <Text style={styles.verifiedText}>Usuario verificado </Text>
+                <Octicons
+                  name={passenger_verifications.identity ? 'verified' : 'unverified'}
+                  color={passenger_verifications.identity ? 'green' : 'red'}
+                  size={14}
+                />
+              </View>
+            </View>
           </View>
         </CardItem>
 
         <CardItem style={styles.locationContainer}>
+          <Text style={styles.subeEnText}>#Sube en</Text>
           <Location
             color={'#0000FF'}
             location={reservation.reservation_route_places[0].place_name}
           />
-          <Location
-            color={
-              /*finalLocation === this.state.passenger.finish
-                ? '#33C534'
-                : Colors.textGray*/
-              '#33C534'
-            }
-            location={
-              reservation.reservation_route_places[
-                reservation.reservation_route_places.length - 1
-              ].place_name
-            }
-          />
         </CardItem>
 
-        {reservation.reservation_status === 'pending' &&
+        {status === 'pending' &&
           this.props.tripStatus === 'open' && (
             <CardItem style={styles.buttonsContainer}>
               <Button
@@ -246,12 +238,31 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     flexDirection: 'column',
   },
+  subeEnText: {
+    marginBottom: 5,
+  },
   user: {
     alignItems: 'center',
     flexDirection: 'row',
+  },
+  userInfo: {
+    display: 'flex',
+    flexDirection: 'column',
   },
   userText: {
     fontSize: 17,
     marginLeft: 15,
   },
+  verifiedContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  verifiedText: {
+    color: 'black',
+    fontSize: 14,
+    marginLeft: 15,
+    marginTop: 3,
+  },
 })
+
+export default TripRequestCard

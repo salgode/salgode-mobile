@@ -1,28 +1,33 @@
 import React, { Component } from 'react'
-import { Text, Button } from 'native-base'
+import { Text, Button, View } from 'native-base'
 import {
   StyleSheet,
   KeyboardAvoidingView,
-  Alert,
   Dimensions,
   Animated,
   Keyboard,
+  AsyncStorage,
+  Alert,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Spinner } from 'native-base'
 import PropTypes from 'prop-types'
+
+import logo from '../assets/images/login_icon.png'
+
 import LoginForm from '../components/Login/LoginForm'
 import { loginUser } from '../redux/actions/user'
 
-const window = Dimensions.get('window')
-export const IMAGE_HEIGHT = window.width / 1.5
-export const IMAGE_HEIGHT_SMALL = window.width / 5
+import lang from '../languages/es'
 
-const logo = require('../assets/images/login_icon.png')
+const window = Dimensions.get('window')
+const IMAGE_HEIGHT = window.width / 1.5
+const IMAGE_HEIGHT_SMALL = window.width / 5
+
 class LoginScreen extends Component {
   static navigationOptions = {
     header: null,
-    headerBackTitle: 'Atrás',
+    headerBackTitle: lang.default.back,
   }
 
   constructor(props) {
@@ -32,6 +37,7 @@ class LoginScreen extends Component {
     }
     this.onSend = this.onSend.bind(this)
     this.onCreateAccountPress = this.onCreateAccountPress.bind(this)
+    this.onRecoverPasswordPress = this.onRecoverPasswordPress.bind(this)
     this.imageHeight = new Animated.Value(IMAGE_HEIGHT)
   }
 
@@ -51,35 +57,34 @@ class LoginScreen extends Component {
     this.keyboardWillHideSub.remove()
   }
 
-  keyboardWillShow = event => {
+  keyboardWillShow = event =>
     Animated.timing(this.imageHeight, {
       duration: event.duration,
       toValue: IMAGE_HEIGHT_SMALL,
     }).start()
-  }
 
-  keyboardWillHide = event => {
+  keyboardWillHide = event =>
     Animated.timing(this.imageHeight, {
       duration: event.duration,
       toValue: IMAGE_HEIGHT,
     }).start()
-  }
 
   async onSend(email, password) {
     this.setState({ loading: true })
-
-    const user = await this.props.login(email, password).then(response => {
-      return response
-    })
+    const user = await this.props.login(email, password)
     this.setState({ loading: false })
-
-    if (user.error || !user.payload.data.email) {
-      Alert.alert(
-        'Hubo un problema iniciando sesión. Por favor intentalo de nuevo.'
-      )
+    if (user.error) {
+      Alert.alert('No se pudo iniciar sesión', 'Las credenciales ingresadas son incorrectas')
     } else {
-      this.props.navigation.navigate('Main')
+      const { data } = user.payload
+      AsyncStorage.setItem('@userToken', String(JSON.stringify(data.token)))
+      AsyncStorage.setItem('@userId', String(JSON.stringify(data.userId)))
+      this.props.navigation.navigate('ResolveUserScreen')
     }
+  }
+
+  onRecoverPasswordPress() {
+    this.props.navigation.navigate('RecoverPassword')
   }
 
   onCreateAccountPress() {
@@ -87,20 +92,26 @@ class LoginScreen extends Component {
   }
 
   render() {
+    const { loading } = this.state
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <Animated.Image
           source={logo}
           style={[styles.logo, { height: this.imageHeight }]}
         />
-        {!this.state.loading && <LoginForm onSend={this.onSend} />}
-        {this.state.loading && <Spinner color="blue" />}
-        {!this.state.loading && (
-          <Button transparent onPress={this.onCreateAccountPress}>
-            <Text>No tienes una cuenta? Crea una aquí</Text>
-          </Button>
+        {!loading && <LoginForm onSend={this.onSend} />}
+        {loading && <Spinner color="blue" />}
+        {!loading && (
+          <View>
+            <Button transparent onPress={this.onCreateAccountPress}>
+              <Text>{lang.signin.create}</Text>
+            </Button>
+            {/* <Button transparent onPress={this.onRecoverPasswordPress}>
+              <Text>{lang.signin.forget}</Text>
+            </Button> */}
+          </View>
         )}
-        {this.state.loading && <Text>Comprobando datos</Text>}
+        {loading && <Text>{lang.signin.verifying}</Text>}
       </KeyboardAvoidingView>
     )
   }
@@ -128,11 +139,9 @@ const styles = StyleSheet.create({
   },
 })
 
-const mapStateToProps = state => {
-  return {
-    user: state.user,
-  }
-}
+const mapStateToProps = state => ({
+  user: state.user,
+})
 
 const mapDispatchToProps = dispatch => ({
   login: (email, password) => dispatch(loginUser(email, password)),

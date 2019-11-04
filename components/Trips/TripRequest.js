@@ -1,10 +1,11 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import { View, Text, Button, Picker } from 'native-base'
+import { View, Text, Button, Picker, Spinner } from 'native-base'
 import PropTypes from 'prop-types'
 import StopsList from '../CurrentTrip/StopsList'
+import Colors from '../../constants/Colors'
 
-const TripRequest = ({ stops, onSend }) => {
+const TripRequest = ({ stops, onSend, loading }) => {
   const [state, setState] = React.useState({
     selectedStop: 'Selecciona la parada',
     selected: false,
@@ -13,7 +14,7 @@ const TripRequest = ({ stops, onSend }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.stopsTitle}>Paradas:</Text>
-      <StopsList stops={stops.map(s => s.address)} />
+      <StopsList stops={stops} />
       <Text style={styles.pickerTitle}>
         Selecciona la parada en la que te subirás
       </Text>
@@ -27,20 +28,19 @@ const TripRequest = ({ stops, onSend }) => {
         style={styles.picker}
       >
         {stops.slice(0, -1).map((stop, i) => (
-          <Picker.Item
-            key={`PickerItem${i}`}
-            label={stop.address}
-            value={stop.address}
-          />
+          <Picker.Item key={`PickerItem${i}`} label={stop.place_name} value={stop} />
         ))}
       </Picker>
-      <Button
-        disabled={!state.selected}
-        style={state.selected ? styles.button : styles.unselectedButton}
-        onPress={() => onSend(state.selectedStop)}
-      >
-        <Text>Confirmar Solicitud</Text>
-      </Button>
+      {loading && <Spinner color={Colors.mainBlue} />}
+      {!loading && (
+        <Button
+          disabled={!state.selected}
+          style={state.selected ? styles.button : styles.unselectedButton}
+          onPress={() => onSend(state.selectedStop, stops[stops.length - 1])}
+        >
+          <Text>Confirmar Solicitud</Text>
+        </Button>
+      )}
     </View>
   )
 }
@@ -48,16 +48,17 @@ const TripRequest = ({ stops, onSend }) => {
 TripRequest.propTypes = {
   stops: PropTypes.arrayOf(
     PropTypes.shape({
-      address: PropTypes.string.isRequired,
+      place_name: PropTypes.string.isRequired,
     }).isRequired
   ),
   onSend: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({
   button: {
     alignSelf: 'center',
-    backgroundColor: '#33C534',
+    backgroundColor: Colors.mainBlue,
     borderRadius: 10,
     // height: '10%',
     justifyContent: 'center',
@@ -74,8 +75,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   pickerTitle: {
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: '500',
+    marginBottom: 10,
+    marginTop: 10,
   },
   stopsTitle: {
     fontSize: 20,
@@ -84,7 +87,7 @@ const styles = StyleSheet.create({
   },
   unselectedButton: {
     alignSelf: 'center',
-    backgroundColor: 'grey',
+    backgroundColor: Colors.mainGrey,
     borderRadius: 10,
     // height: '10%',
     justifyContent: 'center',

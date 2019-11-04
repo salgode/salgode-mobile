@@ -4,12 +4,16 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Alert,
+  AsyncStorage,
 } from 'react-native'
 import { connect } from 'react-redux'
-import { Spinner, View } from 'native-base'
+import { View } from 'native-base'
 import PropTypes from 'prop-types'
-import { signupUser } from '../redux/actions/user'
+
+import { signupUser, uploadImageUser } from '../redux/actions/user'
 import SignupForm from '../components/Login/SignupForm'
+
+import lang from '../languages/es'
 
 class SignupScreen extends Component {
   static navigationOptions = {
@@ -26,6 +30,13 @@ class SignupScreen extends Component {
 
   async onSend(userInfo) {
     this.setState({ loading: true })
+    const selfieUrl = await this.props.uploadImage(userInfo.selfieLink)
+    const frontIdUrl = await this.props.uploadImage(
+      userInfo.identification_image_front
+    )
+    const backIdUrl = await this.props.uploadImage(
+      userInfo.identification_image_back
+    )
     const user = await this.props
       .signup(
         userInfo.name,
@@ -33,29 +44,32 @@ class SignupScreen extends Component {
         userInfo.email,
         userInfo.phone,
         userInfo.password,
-        userInfo.passwordRepeat
+        userInfo.passwordRepeat,
+        selfieUrl,
+        frontIdUrl,
+        backIdUrl
       )
       .then(response => {
         return response
       })
     this.setState({ loading: false })
     if (user.error) {
-      Alert.alert(
-        'Error de registro',
-        'Hubo un problema registrandote. Por favor intentalo de nuevo.'
-      )
+      Alert.alert(lang.signup.error.title, lang.signup.error.message)
     } else {
-      this.props.navigation.navigate('ChooseTrips')
+      const { data } = user.payload
+      AsyncStorage.setItem('@userToken', String(JSON.stringify(data.token)))
+      AsyncStorage.setItem('@userId', String(JSON.stringify(data.userId)))
+      this.props.navigation.navigate('ResolveUserScreen')
     }
   }
 
   render() {
+    const { loading } = this.state
     return (
       <KeyboardAvoidingView behavior="padding" enabled>
         <ScrollView>
           <View style={styles.container}>
-            {this.state.loading && <Spinner />}
-            <SignupForm onSend={this.onSend} />
+            <SignupForm onSend={this.onSend} loading={loading} />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -64,6 +78,7 @@ class SignupScreen extends Component {
 }
 
 SignupScreen.propTypes = {
+  uploadImage: PropTypes.func.isRequired,
   signup: PropTypes.func.isRequired,
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
@@ -78,21 +93,22 @@ const styles = StyleSheet.create({
   },
 })
 
-const mapStateToProps = state => {
-  return {
-    user: state.user,
-  }
-}
+const mapStateToProps = state => ({
+  user: state.user,
+})
 
 const mapDispatchToProps = dispatch => ({
+  uploadImage: img => dispatch(uploadImageUser(img)),
   signup: (
     name,
     lastName,
     email,
     phone,
     password,
-    passwordRepeat
-    // selfieLink,
+    passwordRepeat,
+    selfieLink,
+    identification_image_front,
+    identification_image_back
     // driverLicenseLink,
     // dniLink,
     // carPlate,
@@ -107,8 +123,11 @@ const mapDispatchToProps = dispatch => ({
         email,
         phone,
         password,
-        passwordRepeat
-        // selfieLink,
+        passwordRepeat,
+        selfieLink,
+        identification_image_front,
+        identification_image_back
+        // driverLicenseLink,
         // driverLicenseLink,
         // dniLink,
         // carPlate,

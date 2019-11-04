@@ -1,83 +1,90 @@
 import React from 'react'
-import { StyleSheet, Platform } from 'react-native'
-import { Card, View, Text, CardItem } from 'native-base'
+import { StyleSheet, Platform, TouchableWithoutFeedback } from 'react-native'
+import { Card, View, Text, CardItem, Thumbnail } from 'native-base'
 import Location from './Location'
 import { Ionicons } from '@expo/vector-icons'
-import Icon from 'react-native-vector-icons/AntDesign'
+// import Icon from 'react-native-vector-icons/AntDesign'
 import TimeInfo from './TimeInfo'
 import PedirBoton from './PedirBoton'
 import PropTypes from 'prop-types'
-import { getTripInfo } from '../../../utils/getTripInfo'
 
 const ChooseTrip = ({
+  // The timestamp that indicates the start of the trip. Required.
   timestamp,
-  // spacesUsed,
-  user,
-  // stops,
+  // The driver information, including its name, reputation and id. Required.
+  driver,
+  // The stops of the trip, including their name and id. Required.
+  stops,
+  // Function called when "Solicitar Viaje" is pressed. Required.
   onSend,
-  token,
+  // The trip id. Required.
   tripId,
+  // Function called when the user tap on the whole card.
+  onPress,
 }) => {
-  const [loading, setLoading] = React.useState(true)
-  const [_stops, _setStops] = React.useState(['', ''])
-  const [stops, setStops] = React.useState(['', ''])
-
-  const parseStops = async () => {
-    const stps = await getTripInfo(tripId, token)
-    _setStops(stps.trip_route_points)
-    setStops(stps.trip_route_points.map(s => s.address))
+  // const [loading, setLoading] = React.useState(true)
+  let Avatar
+  if (driver.driver_avatar) {
+    Avatar = <Thumbnail source={{ uri: driver.driver_avatar }} />
+  } else {
+    Avatar = (
+      <Ionicons
+        color={'grey'}
+        name={`${Platform.OS === 'ios' ? 'ios' : 'md'}-contact`}
+        size={80}
+        style={styles.icon}
+      />
+    )
   }
-
-  React.useEffect(() => {
-    parseStops()
-    setLoading(false)
-  }, [])
-
-  return loading ? (
-    <View></View>
-  ) : (
+  return (
+    <TouchableWithoutFeedback onPress={() => onPress()}>
       <Card style={styles.containerRequested}>
         <CardItem style={styles.dataContainer}>
           <View style={styles.user}>
             <View style={styles.userData}>
-              <Ionicons
-                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-                size={80}
-              />
-              <Text style={styles.userText}>{user.name}</Text>
+              {Avatar}
+              <Text style={styles.userText}>{`${driver.driver_name}`}</Text>
             </View>
-            <View style={styles.iconInfoGroup}>
+            {/* <View style={styles.iconInfoGroup}>
               <View style={styles.iconContainer}>
                 <Icon name="like1" style={styles.infoIcon} />
-                <Text style={styles.iconText}>{user.reputation}</Text>
+                <Text style={styles.iconText}>{driver.reputation}</Text>
               </View>
-            </View>
+            </View> */}
           </View>
         </CardItem>
         <CardItem style={styles.locationContainer}>
-          <Location color={'#0000FF'} location={stops[0]} />
-          <Location color={'#33C534'} location={stops[stops.length - 1]} />
+          <Location color={'#0000FF'} location={stops[0].place_name} />
+          <Location color={'#33C534'} location={stops[stops.length - 1].place_name} />
         </CardItem>
         <CardItem style={styles.bottomSection}>
-          <TimeInfo timestamp={timestamp} />
-          <PedirBoton onSend={() => onSend(_stops, token)} disabled={loading} />
+          <TimeInfo timestamp={timestamp} isDate />
+          <PedirBoton onSend={() => onSend(stops, tripId)} />
         </CardItem>
       </Card>
-    )
+    </TouchableWithoutFeedback>
+  )
 }
 
 ChooseTrip.propTypes = {
-  timestamp: PropTypes.number.isRequired,
-  user: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    reputation: PropTypes.number.isRequired,
+  timestamp: PropTypes.instanceOf(Date).isRequired,
+  driver: PropTypes.shape({
+    driver_name: PropTypes.string.isRequired,
+    // reputation: PropTypes.number.isRequired,
+    driver_id: PropTypes.string.isRequired,
+    driver_avatar: PropTypes.string.isRequired,
   }),
-  token: PropTypes.string.isRequired,
   tripId: PropTypes.string.isRequired,
+  onPress: PropTypes.func,
   onSend: PropTypes.func,
+  stops: PropTypes.array,
 }
 
 const styles = StyleSheet.create({
+  avatar: {
+    height: 80,
+    width: 80,
+  },
   bottomSection: {
     alignSelf: 'stretch',
   },
@@ -88,7 +95,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 0,
     elevation: 1,
-    padding: 15,
+    paddingBottom: 15,
+    paddingRight: 15,
+    paddingTop: 15,
     shadowColor: '#bbb',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
@@ -97,22 +106,22 @@ const styles = StyleSheet.create({
   dataContainer: {
     alignSelf: 'stretch',
   },
-  iconContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  iconInfoGroup: {
-    position: 'absolute',
-    right: 5,
-  },
-  iconText: {
-    color: 'grey',
-  },
-  infoIcon: {
-    color: 'grey',
-    fontSize: 30,
-    paddingRight: 5,
-  },
+  // iconContainer: {
+  //   alignItems: 'center',
+  //   flexDirection: 'row',
+  // },
+  // iconInfoGroup: {
+  //   position: 'absolute',
+  //   right: 5,
+  // },
+  // iconText: {
+  //   color: 'grey',
+  // },
+  // infoIcon: {
+  //   color: 'grey',
+  //   fontSize: 30,
+  //   paddingRight: 5,
+  // },
   locationContainer: {
     alignItems: 'flex-start',
     flexDirection: 'column',

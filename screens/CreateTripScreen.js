@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
-import { ScrollView, StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Text } from 'react-native'
 import { Appearance } from 'react-native-appearance'
 import { connect } from 'react-redux'
-import { loginUser } from '../redux/actions/user'
-import { Button } from 'native-base'
-import CardInputSelector from '../components/CardInputSelector'
+import { Button, Spinner } from 'native-base'
 import {
   setStartStop,
   setEndStop,
@@ -14,7 +12,12 @@ import {
 } from '../redux/actions/createtrip'
 import { getAllSpots } from '../redux/actions/spots'
 import DateTimePicker from 'react-native-modal-datetime-picker'
-import { spotsFilter } from '../utils/spotsFilter'
+import Colors from '../constants/Colors'
+import PropTypes from 'prop-types'
+import CardInput from '../components/CardInput'
+import { getUserCars } from '../redux/actions/user'
+import EmptyState from '../components/EmptyState/EmptyState'
+import noTrips from '../assets/images/notrips.png'
 
 const colorScheme = Appearance.getColorScheme()
 
@@ -25,7 +28,13 @@ class CreateTripScreen extends Component {
   }
 
   componentDidMount = () => {
-    this.props.getAllSpots()
+    this.props.getAllSpots(this.props.user.token)
+    this.props.getUserCars(this.props.user.token)
+    // .then(response => {
+    // if (!response.payload.data.vehicle_id) {
+    //   this.props.navigation.navigate('EditProfile')
+    // }
+    // })
   }
 
   showDateTimePicker = () => {
@@ -42,9 +51,32 @@ class CreateTripScreen extends Component {
     this.hideDateTimePicker()
   }
 
+  isVerifiedDriver = () => {
+    return (
+      this.props.user.verifications.license &&
+      this.props.user.vehicles &&
+      this.props.user.vehicles.length
+    )
+  }
+
   render() {
-    const { navigation, startStop, endStop, startTime, spots } = this.props
-    const disabled = startStop && endStop && startTime ? false : true
+    const {
+      navigation,
+      startStop,
+      endStop,
+      startTime,
+      spots,
+      clearStartStop,
+      clearEndStop,
+      setStartStop,
+      setEndStop,
+      loading,
+    } = this.props
+
+    // const disabled = startStop && endStop && startTime ? false : true
+    const startStopValid = startStop ? Object.keys(startStop).length !== 0 : false
+    const endStopValid = endStop ? Object.keys(endStop).length !== 0 : false
+    const disabled = !startStopValid || !endStopValid || !startTime
     const { pickedDate } = this.state
     let day
     let hours
@@ -54,38 +86,59 @@ class CreateTripScreen extends Component {
       hours = pickedDate.getHours()
       minutes = pickedDate.getMinutes()
     }
-    const filteredSlots = spotsFilter(spots, [startStop, endStop])
+    const filteredSpots = spots // spotsFilter(spots, [startStop, endStop])
 
-    return (
-      <View style={styles.container}>
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}
-        >
-          <View style={styles.group}>
-            <CardInputSelector
-              text="#Desde"
-              placeHolder="Filtra por Comuna o Parada"
-              onSelect={item => this.props.setStartStop(item)}
-              onClear={this.props.clearStartStop}
-              data={filteredSlots}
+    if (loading) {
+      return <Spinner color={'#0000FF'} />
+    }
+
+    const isConfirmedDriver = this.isVerifiedDriver()
+
+    if (isConfirmedDriver) {
+      return (
+        <View style={styles.container}>
+          <View>
+            <CardInput
+              onTouchablePress={() =>
+                navigation.navigate('SpotSelectorScreen', {
+                  title: 'Seleccionar #SalgoDe',
+                  text: '#SalgoDe',
+                  onClearPress: clearStartStop,
+                  onItemPress: setStartStop,
+                  data: filteredSpots,
+                })
+              }
+              placeholder="Filtra por Comuna o Parada"
+              value={startStop.name}
+              text="#SalgoDe"
+              editable={false}
+              onClearPress={clearStartStop}
             />
 
-            <CardInputSelector
-              text="#A"
-              placeHolder="Filtra por Comuna o Parada"
-              onSelect={item => this.props.setEndStop(item)}
-              onClear={this.props.clearEndStop}
-              data={filteredSlots}
+            <CardInput
+              onTouchablePress={() =>
+                navigation.navigate('SpotSelectorScreen', {
+                  title: 'Seleccionar #Hasta',
+                  text: '#Hasta',
+                  onClearPress: clearStartStop,
+                  onItemPress: setEndStop,
+                  data: filteredSpots,
+                })
+              }
+              placeholder="Filtra por Comuna o Parada"
+              value={endStop.name}
+              text="#Hasta"
+              editable={false}
+              onClearPress={clearEndStop}
             />
           </View>
 
           <View style={styles.group}>
             <Button style={styles.dateButton} onPress={this.showDateTimePicker}>
-              <Text style={styles.whiteText}>
+              <Text>
                 {pickedDate
                   ? `${day} - ${hours}:${minutes < 10 ? '0' : ''}${minutes}`
-                  : 'Hora/Fecha de Salida'}
+                  : 'Selecciona Hora/Fecha de Salida'}
               </Text>
             </Button>
             <DateTimePicker
@@ -96,20 +149,26 @@ class CreateTripScreen extends Component {
               onCancel={this.hideDateTimePicker}
             />
           </View>
-        </ScrollView>
-
-        <View>
-          <Button
-            block
-            style={disabled ? styles.addButtonDisabled : styles.addButton}
-            disabled={disabled}
-            onPress={() => navigation.navigate('AddStopsScreen')}
-          >
-            <Text style={styles.whiteText}>Siguiente</Text>
-          </Button>
+          <View>
+            <Button
+              block
+              style={disabled ? styles.addButtonDisabled : styles.addButton}
+              disabled={disabled}
+              onPress={() => navigation.navigate('AddStopsScreen')}
+            >
+              <Text style={styles.whiteText}>Siguiente</Text>
+            </Button>
+          </View>
         </View>
-      </View>
-    )
+      )
+    } else {
+      return (
+        <EmptyState
+          image={noTrips}
+          text="Para crear viajes debes registrar tu auto y enviar una foto por ambos lados de tu licencia"
+        />
+      )
+    }
   }
 }
 
@@ -117,9 +176,26 @@ CreateTripScreen.navigationOptions = {
   header: null,
 }
 
+CreateTripScreen.propTypes = {
+  getAllSpots: PropTypes.func.isRequired,
+  getUserCars: PropTypes.func.isRequired,
+  setStartTime: PropTypes.func.isRequired,
+  setStartStop: PropTypes.func.isRequired,
+  setEndStop: PropTypes.func.isRequired,
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
+  clearStartStop: PropTypes.func.isRequired,
+  clearEndStop: PropTypes.func.isRequired,
+  spots: PropTypes.arrayOf(PropTypes.object).isRequired,
+  user: PropTypes.shape({
+    token: PropTypes.string.isRequired,
+  }).isRequired,
+}
+
 const styles = StyleSheet.create({
   addButton: {
-    backgroundColor: '#33C534',
+    backgroundColor: Colors.mainBlue,
     marginBottom: 25,
     marginLeft: 15,
     marginRight: 15,
@@ -133,22 +209,24 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.lightBackground,
     flex: 1,
-  },
-  contentContainer: {
     paddingTop: 30,
   },
-
   dateButton: {
-    backgroundColor: '#0000FF',
+    backgroundColor: 'white',
+    borderColor: Colors.mainGrey,
+    borderWidth: 1,
     justifyContent: 'center',
     marginTop: 20,
   },
   group: {
-    marginBottom: 40,
-    marginLeft: 20,
-    marginRight: 20,
+    margin: 10,
+  },
+  viewContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
   },
   whiteText: {
     color: 'white',
@@ -157,6 +235,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = ({ user, createTrip, spots }) => {
   return {
+    loading: spots.loading,
     user: user,
     startStop: createTrip.startStop,
     endStop: createTrip.endStop,
@@ -165,15 +244,16 @@ const mapStateToProps = ({ user, createTrip, spots }) => {
   }
 }
 
-const mapDispatchToProps = {
-  loginUser,
-  setStartStop,
-  setEndStop,
-  setStartTime,
-  clearStartStop,
-  clearEndStop,
-  getAllSpots,
-}
+const mapDispatchToProps = dispatch => ({
+  setStartStop: item => dispatch(setStartStop(item)),
+  setEndStop: item => dispatch(setEndStop(item)),
+  setStartTime: time => dispatch(setStartTime(time)),
+  clearStartStop: () => dispatch(clearStartStop()),
+  clearEndStop: () => dispatch(clearEndStop()),
+  getAllSpots: token => dispatch(getAllSpots(token)),
+  getUserCars: token => dispatch(getUserCars(token)),
+})
+
 CreateTripScreen.navigationOptions = {
   title: 'Crear un viaje',
 }

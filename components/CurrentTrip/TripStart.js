@@ -1,16 +1,31 @@
 import React from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Alert } from 'react-native'
 import { View, Text, Button } from 'native-base'
 import PropTypes from 'prop-types'
 import StopsList from './StopsList'
 
-const TripStart = ({ stops = [] }) => {
+const TripStart = ({ stops = [], onTripStart, nextTripView }) => {
+  console.log(stops)
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>#Llego en 5</Text>
+      <Text style={styles.title}>#Partimos</Text>
       <Text>Paradas:</Text>
       <StopsList stops={stops} />
-      <Button style={styles.button}>
+      <Button
+        style={styles.button}
+        onPress={() => {
+          onTripStart().then(response => {
+            if (response.error) {
+              Alert.alert(
+                'Error al iniciar Viaje',
+                'Hubo un problema iniciando su viaje. Por favor intentalo de nuevo.'
+              )
+            } else {
+              nextTripView()
+            }
+          })
+        }}
+      >
         <Text>Iniciar viaje</Text>
       </Button>
     </View>
@@ -19,6 +34,8 @@ const TripStart = ({ stops = [] }) => {
 
 TripStart.propTypes = {
   stops: PropTypes.array,
+  onTripStart: PropTypes.func.isRequired,
+  nextTripView: PropTypes.func.isRequired,
 }
 
 const styles = StyleSheet.create({

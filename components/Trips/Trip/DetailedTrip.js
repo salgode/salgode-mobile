@@ -1,15 +1,19 @@
 import React from 'react'
 import { StyleSheet, Platform } from 'react-native'
-import { Card, View, Text, CardItem, Button } from 'native-base'
+import { Card, View, Text, CardItem, Button, Thumbnail } from 'native-base'
 import Location from './Location'
 import PropTypes from 'prop-types'
 import Colors from '../../../constants/Colors'
 import TimeInfo from './TimeInfo'
 import { Ionicons } from '@expo/vector-icons'
 
-export const DetailedTrip = ({ trip, asDriver }) => {
-  const driver = trip ? trip.driver : null
-
+export const DetailedTrip = ({
+  trip,
+  asDriver,
+  driver,
+  onPressStartTrip,
+  toCurrentTrip,
+}) => {
   function renderLocation(locations) {
     return locations.map((location, index) => {
       let color
@@ -24,70 +28,68 @@ export const DetailedTrip = ({ trip, asDriver }) => {
         <Location
           key={`location-${index}`}
           color={color}
-          location={location.name}
+          location={location.place_name}
         />
       )
     })
   }
 
-  function startTrip() {
-    // TODO: connect to server
-    // TODO: navigate to current trip screen
-    // console.log('trip!')
-  }
+  const selfieImage = driver != null ? driver.driver_avatar : 'placeholder'
 
-  return trip != null ? (
+  return trip !== null ? (
     <Card
       style={{
         ...styles.container,
         ...styles.shadow,
       }}
     >
+      <View style={styles.userData}>
+        <Text style={styles.userText}>Resumen Viaje</Text>
+      </View>
       <CardItem>
-        <View style={styles.user}>
-          <View style={styles.userData}>
-            <Ionicons
-              name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-              size={40}
-            />
-            <Text style={styles.userText}>
-              {driver.name} {driver.lastName}
-            </Text>
+        {/* TODO: if  as driver, don't show name and thumbnail*/}
+        {!asDriver ? (
+          <View style={styles.user}>
+            {selfieImage && selfieImage !== 'placeholder' ? (
+              <Thumbnail source={{ uri: selfieImage }} />
+            ) : (
+              <Ionicons
+                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                size={40}
+              />
+            )}
+            <Text style={styles.userText}>{driver.driver_name}</Text>
           </View>
-          <View>
-            {/* TODO: thumbs <View style={styles.iconContainer}>
-                <Ionicons
-                name={Platform.OS === 'ios' ? 'ios-thumbs-up' : 'md-thumbs-up'}
-                size={30}
-                color={Colors.textGray}
-                />
-                <Text style={styles.iconText}>{driver.reputation}</Text>
-            </View>*/}
-            {/* <View style={styles.iconContainer}>
-                <Ionicons
-                name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'}
-                size={30}
-                color={Colors.textGray}
-                /> */}
-            {/* TODO: spacesUsed */}
-            {/* <Text style={styles.iconText}>{spacesUsed}</Text> */}
-            {/* </View> */}
-          </View>
-        </View>
+        ) : (
+          <></>
+        )}
       </CardItem>
       <CardItem style={styles.locationContainer}>
-        {renderLocation(trip.route_points)}
+        {renderLocation(trip.trip_route_points)}
       </CardItem>
       <CardItem>
-        <TimeInfo timestamp={trip.etd} isDate />
+        <TimeInfo timestamp={Date.parse(trip.etd_info.etd)} />
       </CardItem>
-      {asDriver ? (
+      {asDriver && trip.trip_status === 'open' ? (
         <Button
           style={{ alignSelf: 'center', backgroundColor: '#0000FF' }}
-          onPress={() => startTrip()}
+          onPress={() => {
+            onPressStartTrip()
+          }}
         >
           <Text style={{ color: 'white', fontSize: 18, fontWeight: '800' }}>
-            Iniciar Viaje
+            Ir
+          </Text>
+        </Button>
+      ) : trip.trip_status === 'in_progress' ? (
+        <Button
+          style={{ alignSelf: 'center', backgroundColor: '#0000FF' }}
+          onPress={() => {
+            toCurrentTrip()
+          }}
+        >
+          <Text style={{ color: 'white', fontSize: 18, fontWeight: '800' }}>
+            Ver
           </Text>
         </Button>
       ) : null}
@@ -96,8 +98,11 @@ export const DetailedTrip = ({ trip, asDriver }) => {
 }
 
 DetailedTrip.propTypes = {
-  trip: PropTypes.object,
-  asDriver: PropTypes.bool,
+  trip: PropTypes.object.isRequired,
+  asDriver: PropTypes.bool.isRequired,
+  driver: PropTypes.object.isRequired,
+  onPressStartTrip: PropTypes.func.isRequired,
+  toCurrentTrip: PropTypes.func.isRequired,
 }
 
 const styles = StyleSheet.create({
@@ -105,15 +110,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     borderColor: 'white',
     borderRadius: 20,
-    // flexDirection: 'row',
-    // justifyContent: 'space-between',
+    marginBottom: 25,
     padding: 15,
   },
   locationContainer: {
     alignItems: 'flex-start',
     flexDirection: 'column',
-    // height: 150,
-    // justifyContent: 'space-evenly',
   },
   shadow: {
     shadowColor: '#b3b3b3',
@@ -121,21 +123,21 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.5,
+    shadowOpacity: 0.8,
     shadowRadius: 5,
   },
   user: {
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 300,
   },
   userData: {
-    alignItems: 'center',
+    alignSelf: 'center',
     flexDirection: 'row',
+    justifyContent: 'center',
   },
   userText: {
     fontSize: 17,
+    fontWeight: 'bold',
     marginLeft: 15,
   },
 })

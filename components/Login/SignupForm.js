@@ -1,10 +1,19 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { Component } from 'react'
 import { StyleSheet } from 'react-native'
-import { Text, Form, Item, Input, Label, Button } from 'native-base'
+import { Text, Form, Item, Input, Label, Button, Spinner } from 'native-base'
 import Layout from '../../constants/Layout'
 import PropTypes from 'prop-types'
 import Colors from '../../constants/Colors'
+import * as Permissions from 'expo-permissions'
+import { withNavigation } from 'react-navigation'
+import {
+  formatPhone,
+  maxLengthPhone,
+  notWrongPhone,
+  validPhone,
+  notWrongPlate,
+} from '../../utils/input'
 
 class SignupForm extends Component {
   constructor(props) {
@@ -12,6 +21,7 @@ class SignupForm extends Component {
     this.state = {
       name: '',
       lastname: '',
+      modalVisible: false,
       email: '',
       phoneNumber: '',
       password: '',
@@ -32,7 +42,7 @@ class SignupForm extends Component {
     this.onChangePhoneNumber = this.onChangePhoneNumber.bind(this)
     this.onChangePassword = this.onChangePassword.bind(this)
     this.onChangePasswordRepeat = this.onChangePasswordRepeat.bind(this)
-
+    this.formatPhoneCL = this.formatPhoneCL.bind(this)
     this.getValidity = this.getValidity.bind(this)
     this.onPress = this.onPress.bind(this)
   }
@@ -63,25 +73,33 @@ class SignupForm extends Component {
   }
 
   onChangePhoneNumber(phoneNumber) {
-    const validity = phoneNumber.match(/^(\+56)?\d{9}$/)
-    this.setState(oldState => ({
-      phoneNumber,
-      validity: { ...oldState.validity, phoneNumber: !!validity },
-    }))
+    if (notWrongPhone(phoneNumber)) {
+      const validity = validPhone(phoneNumber)
+      this.setState(oldState => ({
+        phoneNumber: formatPhone(phoneNumber),
+        validity: { ...oldState.validity, phoneNumber: !!validity },
+      }))
+    }
   }
 
   onChangePassword(password) {
     this.setState(oldState => ({
       password,
-      validity: { ...oldState.validity, password: password.length > 3 },
+      validity: { ...oldState.validity, password: password.length >= 8 },
     }))
   }
 
   onChangePasswordRepeat(password) {
     this.setState(oldState => ({
       passwordRepeat: password,
-      validity: { ...oldState.validity, passwordRepeat: password.length > 3 },
+      validity: { ...oldState.validity, passwordRepeat: password.length >= 8 },
     }))
+  }
+
+  formatPhoneCL() {
+    if (!/^\+56 9/g.test(this.state.phoneNumber)) {
+      this.setState(oldState => ({ phoneNumber: '+56 9' }))
+    }
   }
 
   getValidity() {
@@ -96,17 +114,33 @@ class SignupForm extends Component {
   }
 
   onPress() {
-    this.props.onSend({
-      name: this.state.name,
-      lastName: this.state.lastname,
-      email: this.state.email,
-      phone: this.state.phoneNumber,
-      password: this.state.password,
-      passwordRepeat: this.state.passwordRepeat,
+    // this.props.onSend({
+    //   name: this.state.name,
+    //   lastName: this.state.lastname,
+    //   email: this.state.email,
+    //   phone: this.state.phoneNumber,
+    //   password: this.state.password,
+    //   passwordRepeat: this.state.passwordRepeat,
+    // })
+    this.props.navigation.navigate('SignupImages', {
+      userData: {
+        name: this.state.name,
+        lastName: this.state.lastname,
+        email: this.state.email,
+        phone: this.state.phoneNumber,
+        password: this.state.password,
+        passwordRepeat: this.state.passwordRepeat,
+      },
     })
   }
 
+  async componentDidMount() {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA)
+    this.setState({ hasCameraPermission: status === 'granted' })
+  }
+
   render() {
+    const { loading } = this.props
     return (
       <Form style={styles.form}>
         <Item floatingLabel style={styles.item}>
@@ -178,9 +212,10 @@ class SignupForm extends Component {
           <Input
             style={styles.input}
             onChangeText={this.onChangePhoneNumber}
+            onFocus={this.formatPhoneCL}
             keyboardType="phone-pad"
+            maxLength={maxLengthPhone(this.state.phoneNumber)}
             value={this.state.phoneNumber}
-            autoCompleteType="tel"
           />
         </Item>
         <Item floatingLabel style={styles.item}>
@@ -201,7 +236,7 @@ class SignupForm extends Component {
             value={this.state.password}
           />
         </Item>
-        <Item floatingLabel last style={styles.item}>
+        <Item floatingLabel style={styles.item}>
           <Label
             style={{
               color:
@@ -219,15 +254,19 @@ class SignupForm extends Component {
             value={this.state.passwordRepeat}
           />
         </Item>
-        <Button
-          block
-          borderRadius={10}
-          style={styles.button}
-          disabled={!this.getValidity()}
-          onPress={this.onPress}
-        >
-          <Text>Siguiente</Text>
-        </Button>
+
+        {loading && <Spinner color={'#0000FF'} />}
+        {!loading && (
+          <Button
+            block
+            borderRadius={10}
+            style={styles.button}
+            disabled={!this.getValidity()}
+            onPress={this.onPress}
+          >
+            <Text>Siguiente</Text>
+          </Button>
+        )}
       </Form>
     )
   }
@@ -235,6 +274,10 @@ class SignupForm extends Component {
 
 SignupForm.propTypes = {
   onSend: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }),
 }
 
 const styles = StyleSheet.create({
@@ -255,4 +298,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default SignupForm
+export default withNavigation(SignupForm)

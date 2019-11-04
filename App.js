@@ -5,31 +5,36 @@ import React, { useState } from 'react'
 import { Platform, StatusBar, StyleSheet, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Provider } from 'react-redux'
+import { SafeAreaView } from 'react-navigation'
 
 import AppNavigator from './navigation/AppNavigator'
 import { store } from './redux/store'
 
-export default function App(props) {
-  const [isLoadingComplete, setLoadingComplete] = useState(false)
+// Esto es para arreglar el ancho del header de react navigation
+// No es un bug, solución aca https://github.com/react-navigation/react-navigation/releases/tag/v1.0.0-beta.26
+if (Platform.OS === 'android') {
+  SafeAreaView.setStatusBarHeight(0)
+}
 
-  if (!isLoadingComplete && !props.skipLoadingScreen) {
+export default function App({ skipLoadingScreen }) {
+  const [isLoadingComplete, setLoadingComplete] = useState(false)
+  if (!isLoadingComplete && !skipLoadingScreen) {
     return (
       <AppLoading
         startAsync={loadResourcesAsync}
         onError={handleLoadingError}
-        onFinish={() => handleFinishLoading(setLoadingComplete)}
+        onFinish={() => setLoadingComplete(true)}
       />
     )
-  } else {
-    return (
-      <Provider store={store}>
-        <View style={styles.container}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <AppNavigator />
-        </View>
-      </Provider>
-    )
   }
+  return (
+    <Provider store={store}>
+      <View style={styles.container}>
+        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+        <AppNavigator />
+      </View>
+    </Provider>
+  )
 }
 
 async function loadResourcesAsync() {
@@ -56,10 +61,6 @@ function handleLoadingError(error) {
   // In this case, you might want to report the error to your error reporting
   // service, for example Sentry
   console.warn(error)
-}
-
-function handleFinishLoading(setLoadingComplete) {
-  setLoadingComplete(true)
 }
 
 const styles = StyleSheet.create({

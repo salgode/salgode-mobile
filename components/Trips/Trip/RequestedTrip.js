@@ -1,97 +1,173 @@
 import React from 'react'
-import { StyleSheet, Platform, TouchableOpacity } from 'react-native'
+import { StyleSheet, Platform, Alert } from 'react-native'
+import { withNavigation } from 'react-navigation'
+import { connect } from 'react-redux'
 import Location from './Location'
 import Colors from '../../../constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
 import TimeInfo from './TimeInfo'
-import { Card, View, Text, CardItem, Thumbnail, Button } from 'native-base'
+import { Card, View, Text, CardItem, Button, Thumbnail } from 'native-base'
 import PropTypes from 'prop-types'
+import { cancelSlot } from '../../../redux/actions/slots'
 
 const RequestedTrip = ({
   timestamp,
   user,
-  status = 'pending',
-  startLocation = 'Desde',
-  endLocation = 'Hasta',
-  onSend,
+  reservationStatus,
+  startLocation,
+  endLocation,
   onPressTrip,
   asDriver,
+  trip,
+  removeFromList,
+  dispatchCancelSlot,
+  token,
+  navigation,
 }) => {
   let statusColor
   let statusText
-
-  if (status === 'accepted') {
-    statusColor = 'green'
-    statusText = 'Aceptado'
-  } else if (status === 'pending') {
-    statusColor = 'purple'
-    statusText = 'Pendiente'
-  } else {
-    statusColor = 'red'
-    statusText = 'Rechazado'
+  let show = true
+  switch (reservationStatus) {
+    case 'completed':
+      show = false
+      break
+    case 'accepted':
+      statusColor = 'green'
+      statusText = 'Aceptado'
+      break
+    case 'pending':
+      statusColor = 'purple'
+      statusText = 'Pendiente'
+      break
+    case 'declined':
+      statusColor = 'red'
+      statusText = 'Rechazado'
+      break
+    case 'cancelled':
+      show = false
+      break
+    default:
+      show = false
   }
 
-  return (
-    <TouchableOpacity
-      onPress={() => {
-        onPressTrip(asDriver)
-      }}
-    >
-      <Card style={styles.containerRequested}>
-        <View style={{ ...styles.status, backgroundColor: statusColor }}>
-          <Text style={styles.statusText}>{statusText}</Text>
-        </View>
-        <CardItem>
-          <View style={styles.user}>
-            <View style={styles.userData}>
-              {user.selfieLink ? (
-                <Thumbnail source={{ uri: user.selfieLink }} />
-              ) : (
-                <Ionicons
-                  name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-                  size={40}
-                />
-              )}
-              <Text style={styles.userText}>{user.name}</Text>
-            </View>
+  const onCancel = () => {
+    dispatchCancelSlot(token, trip.reservation_id)
+      .then(() => {
+        Alert.alert(
+          'Reserva cancelada',
+          'Su reserva ha sido cancelada con éxito',
+        )
+        removeFromList(trip.reservation_id)
+      })
+      .catch(() => {
+        Alert.alert(
+          'Error al cancelar',
+          'No se pudo cancelar con éxito su reservar. Por favor inténtelo de nuevo',
+        )
+      })
+  }
+
+  const pressTrip = () => {
+    if (user && user.driver_verifications && trip) {
+      const {
+        driver_avatar,
+        driver_name,
+        driver_phone,
+        driver_verifications
+      } = user
+      navigation.navigate('ReservationDetails', {
+        userData: {
+          avatar: driver_avatar,
+          first_name: driver_name,
+          phone: driver_phone,
+          dniVerified: driver_verifications.identity,
+          licenseVerified: driver_verifications.driver_license,
+          trip_route_points: trip.trip_route_points,
+          etd_info: trip.etd_info,
+          isReserved: ['accepted', 'completed'].includes(trip.reservation_status),
+        },
+      })
+    }
+  }
+
+  return show ? (
+    <Card style={styles.containerRequested} borderWidth={5}>
+      <View style={{ ...styles.status, backgroundColor: statusColor }}>
+        <Text style={styles.statusText}>{statusText}</Text>
+      </View>
+      <CardItem>
+        <View style={styles.user}>
+          <View style={styles.userData}>
+            {user.driver_avatar ? (
+              <Thumbnail source={{ uri: user.driver_avatar }} />
+            ) : (
+              <Ionicons
+                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                size={40}
+              />
+            )}
+            <Text style={styles.userText}>{user.driver_name}</Text>
           </View>
-        </CardItem>
-        <CardItem style={styles.locationContainer}>
-          <Location color={'#0000FF'} location={startLocation} />
-          <Location color={'#33C534'} location={endLocation} />
-        </CardItem>
-        <CardItem>
-          <TimeInfo timestamp={timestamp} />
-        </CardItem>
-        <CardItem style={styles.containerBottom}>
-          <Button borderRadius={10} style={styles.button} onPress={onSend}>
-            <Text>Ver Viaje</Text>
-          </Button>
-          <Button borderRadius={10} style={styles.button} onPress={onSend}>
-            <Text>Cancelar</Text>
-          </Button>
-        </CardItem>
-      </Card>
-    </TouchableOpacity>
-  )
+        </View>
+      </CardItem>
+      <CardItem style={styles.locationContainer}>
+        <Location color={'#0000FF'} location={startLocation.place_name} />
+        <Location color={'#33C534'} location={endLocation.place_name} />
+      </CardItem>
+      <CardItem>
+        <TimeInfo timestamp={timestamp} />
+      </CardItem>
+      <CardItem style={styles.containerBottom}>
+        <Button
+          borderRadius={10}
+          style={styles.button}
+          onPress={pressTrip}
+        >
+          <Text style={styles.blueText}>Ver Viaje</Text>
+        </Button>
+        <Button borderRadius={10} style={styles.cancelButton} onPress={onCancel}>
+          <Text style={styles.cancelText}>Cancelar</Text>
+        </Button>
+      </CardItem>
+    </Card>
+  ) : (<></>)
 }
 
 RequestedTrip.propTypes = {
-  timestamp: PropTypes.number.isRequired,
+  timestamp: PropTypes.string.isRequired,
   user: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    selfieLink: PropTypes.string,
+    driver_name: PropTypes.string.isRequired,
+    driver_avatar: PropTypes.string,
   }).isRequired,
-  status: PropTypes.oneOf(['accepted', 'pending', 'rejected']),
-  startLocation: PropTypes.string,
-  endLocation: PropTypes.string,
+  reservationStatus: PropTypes.oneOf([
+    'accepted',
+    'pending',
+    'declined',
+    'cancelled',
+    'completed',
+  ]),
+  startLocation: PropTypes.object.isRequired,
+  endLocation: PropTypes.object.isRequired,
   onSend: PropTypes.func,
-  tripId: PropTypes.string,
+  trip: PropTypes.object.isRequired,
 }
 
 const styles = StyleSheet.create({
+  blueText: {
+    color: '#0000FF',
+  },
   button: {
-    backgroundColor: '#0000FF',
+    backgroundColor: 'white',
+    borderColor: '#0000FF',
+    borderWidth: 1,
+  },
+  cancelButton: {
+    backgroundColor: 'white',
+    borderColor: '#FF5242',
+    borderWidth: 1,
+  },
+  cancelText: {
+    color: '#FF5242',
   },
   containerBottom: {
     justifyContent: 'space-evenly',
@@ -99,9 +175,17 @@ const styles = StyleSheet.create({
   },
   containerRequested: {
     alignItems: 'flex-start',
-    borderColor: 'white',
+    // borderColor: Colors.lightBackground,
     borderRadius: 20,
+    // borderWidth: 10,
     padding: 15,
+    shadowColor: '#b3b3b3',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
   },
   locationContainer: {
     alignItems: 'flex-start',
@@ -127,13 +211,15 @@ const styles = StyleSheet.create({
   },
 })
 
-export default RequestedTrip
+const mapStateToProps = state => ({
+  token: state.user.token,
+})
 
-RequestedTrip.propTypes = {
-  timestamp: PropTypes.number.isRequired,
-  spacesUsed: PropTypes.number.isRequired,
-  user: PropTypes.object.isRequired,
-  status: PropTypes.string.isRequired,
-  onPressTrip: PropTypes.func.isRequired,
-  asDriver: PropTypes.bool.isRequired,
-}
+const mapDispatchToProps = dispatch => ({
+  dispatchCancelSlot: (token, resId) => dispatch(cancelSlot(token, resId)),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withNavigation(RequestedTrip))

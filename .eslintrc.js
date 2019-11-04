@@ -38,7 +38,7 @@ module.exports = {
     "no-var": "error",
     "eqeqeq": ["error", "smart"],
     "react-native/no-color-literals": "off",
-    "no-console": 1,
+    "no-console": ["error", { allow: ["warn", "error"] }],
     "react/display-name": 1,
     "react/prop-types": 1,
     "react-native/no-inline-styles": 1,

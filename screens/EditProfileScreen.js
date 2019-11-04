@@ -1,4 +1,6 @@
 import React from 'react'
+import Constants from 'expo-constants'
+import { Entypo, Octicons } from '@expo/vector-icons'
 import {
   StyleSheet,
   KeyboardAvoidingView,
@@ -8,6 +10,9 @@ import {
   Alert,
   ActivityIndicator,
   TouchableOpacity,
+  Platform,
+  AsyncStorage,
+  Modal,
 } from 'react-native'
 import {
   Button,
@@ -20,14 +25,50 @@ import {
   View,
   Icon,
   CheckBox,
+  Thumbnail,
+  H2,
+  Spinner,
 } from 'native-base'
 import { withNavigation } from 'react-navigation'
+import * as Permissions from 'expo-permissions'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { connect } from 'react-redux'
-import { updateUser, signoutUser } from '../redux/actions/user'
-import Layout from '../constants/Layout'
+import { Ionicons } from '@expo/vector-icons'
+import { Camera } from 'expo-camera'
 import PropTypes from 'prop-types'
+
+import {
+  updateUser,
+  signoutUser,
+  getUserCar,
+  getImageUrl,
+  createVehicle,
+} from '../redux/actions/user'
+import Layout from '../constants/Layout'
 import Colors from '../constants/Colors'
+import PhotoTaker from '../components/Login/PhotoTaker'
+import CameraModal from '../components/Login/CameraModal'
+import {
+  formatPhone,
+  maxLengthPhone,
+  notWrongPhone,
+  validPhone,
+  notWrongPlate,
+} from '../utils/input'
+import { uploadImageToS3 } from '../utils/image'
+import { promiseXMLHttpRequest } from '../utils/xmlhttprequest'
+import * as ImagePicker from 'expo-image-picker'
+
+const getText = destination => {
+  switch (destination) {
+    case 'licenseFront':
+      return 'Licencia de conducir frontal'
+    case 'licenseBack':
+      return 'Licencia de conducir trasera'
+    default:
+      return ''
+  }
+}
 
 function validateName(str) {
   if (typeof str !== 'string') {
@@ -35,7 +76,7 @@ function validateName(str) {
   }
   str = str.trim()
 
-  if (str.length < 'Ana'.length) {
+  if (str.length < 'Al'.length) {
     return false
   }
   if (str.length >= 256) {
@@ -43,7 +84,7 @@ function validateName(str) {
   }
 
   // letters, dash, space
-  return /^[- A-Za-zÁÉÍÓÚÑÜáéíóúñü]+$/g.test(str)
+  return /^[ A-Za-zÁÉÍÓÚÑÜáéíóúñü]+$/g.test(str)
 }
 
 function validatePlate(str) {
@@ -52,25 +93,9 @@ function validatePlate(str) {
   }
   str = str.trim()
 
-  // old format: XX1234
-  let firstLetter = 'ABCEFGHDKLNPRSTUVXYZWM'
-  let secondLetter = 'ABCDEFGHIJKLNPRSTUVXYZW'
-  firstLetter = '[' + firstLetter + firstLetter.toLowerCase() + ']'
-  secondLetter = '[' + secondLetter + secondLetter.toLowerCase() + ']'
-  const oldFormat = new RegExp(
-    '^' + firstLetter + secondLetter + '[1-9][0-9][0-9][0-9]$',
-    'g'
-  )
+  const pattern = new RegExp('\\b([A-Z]{2}([A-Z]|[0-9]){2}[0-9]{2})\\b', 'gi')
 
-  // new format: XXXX12
-  const whitelist = 'BCDFGHJKLPRSTVWXYZ'
-  const letter = '[' + whitelist + whitelist.toLowerCase() + ']'
-  const newFormat = new RegExp(
-    '^' + letter + letter + letter + letter + '[1-9][0-9]$',
-    'g'
-  )
-
-  return oldFormat.test(str) || newFormat.test(str)
+  return pattern.test(str)
 }
 
 function validateColor(str) {
@@ -128,7 +153,11 @@ const Field = ({ field }) => {
       key={field.label}
       inlineLabel
       regular
-      style={styles.item}
+      style={{
+        ...styles.item,
+        backgroundColor:
+          field.editable !== undefined && !field.editable ? '#C0C0C0' : '#FFF',
+      }}
       success={validity === 'valid'}
       error={validity === 'invalid'}
     >
@@ -144,8 +173,11 @@ const Field = ({ field }) => {
           setHasBeenBlurred(true)
         }}
         value={field.value}
+        placeholder={field.placeholder}
         secureTextEntry={field.isSecure}
         keyboardType={field.keyboardType || 'default'}
+        maxLength={field.maxLength ? field.maxLength(field.value) : undefined}
+        editable={field.editable}
       />
       {validity === 'valid' ? (
         <Icon name="checkmark-circle" style={styles.checkMark} />
@@ -158,6 +190,8 @@ const Field = ({ field }) => {
 Field.propTypes = {
   field: PropTypes.exact({
     label: PropTypes.string.isRequired,
+    maxLength: PropTypes.func,
+    placeholder: PropTypes.string,
     value: PropTypes.string.isRequired,
     setValue: PropTypes.func.isRequired,
     validate: PropTypes.func.isRequired,
@@ -174,17 +208,23 @@ Field.propTypes = {
 }
 
 const EditProfileScreen = props => {
-  const { navigation } = props
+  // const { navigation } = props
 
   const [name, setName] = React.useState('')
   const [lastName, setLastName] = React.useState('')
   const [phone, setPhone] = React.useState('')
-  // const [password, setPassword] = React.useState('')
-  const [hasCar, setHasCar] = React.useState(!!props.user.car)
-  const [carPlate, setCarPlate] = React.useState('BC2019')
-  const [carColor, setCarColor] = React.useState('Gris')
-  const [carBrand, setCarBrand] = React.useState('Nissan')
-  const [carModel, setCarModel] = React.useState('Sportage')
+  const [isChangePasswordActive, setIsChangePasswordActive] = React.useState(
+    false
+  )
+  const [currentPassword, setCurrentPassword] = React.useState('')
+  const [newPassword, setNewPassword] = React.useState('')
+  const [hasCar, setHasCar] = React.useState(false)
+  const [gettingCar, setGettingCar] = React.useState(false)
+  const [carPlate, setCarPlate] = React.useState('')
+  const [carColor, setCarColor] = React.useState('')
+  const [carBrand, setCarBrand] = React.useState('')
+  const [carModel, setCarModel] = React.useState('')
+  const [avatar, setAvatar] = React.useState(props.user.avatar)
 
   const [isLoading, setIsLoading] = React.useState(true)
   // eslint-disable-next-line no-unused-vars
@@ -194,6 +234,40 @@ const EditProfileScreen = props => {
   const [isSaving, setIsSaving] = React.useState(false)
   // eslint-disable-next-line no-unused-vars
   const [saveErr, setSaveErr] = React.useState(null)
+  const [hasCameraPermission, setHasCameraPermission] = React.useState(false)
+  const [destination, setDestination] = React.useState('dniFront')
+
+  // TODO: minimal state
+  // DNI Identification
+  const [dniFront, setDniFront] = React.useState(
+    props.user.dni && props.user.dni.front
+  )
+  const [dniFrontSubmit, setDniFrontSubmit] = React.useState('')
+  const [dniBack, setDniBack] = React.useState(
+    props.user.dni && props.user.dni.back
+  )
+  const [dniBackSubmit, setDniBackSubmit] = React.useState('')
+  const [isUploadingDni, setIsUploadingDni] = React.useState(false)
+
+  // License
+  const [licenseFront, setLicenseFront] = React.useState(
+    props.user.license && props.user.license.front
+  )
+  const [frontSubmit, setFrontSubmit] = React.useState('')
+  const [licenseBack, setLicenseBack] = React.useState(
+    props.user.license && props.user.license.back
+  )
+  const [backSubmit, setBackSubmit] = React.useState('')
+  const [isUploadingLicense, setIsUploadingLicense] = React.useState(false)
+
+  const [isSavingCar, setIsSavingCar] = React.useState(false)
+  const [canSubmitCar, setCanSubmitCar] = React.useState(false)
+
+  // TODO: duplicate code -> goes in utils
+  const requestCameraPermission = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA)
+    setHasCameraPermission(status === 'granted')
+  }
 
   const commonFields = [
     { label: 'Nombre', value: name, setValue: setName, validate: validateName },
@@ -206,42 +280,72 @@ const EditProfileScreen = props => {
     {
       label: 'Teléfono',
       value: phone,
-      setValue: setPhone,
-      validate: phone => phone.match(/^(\+56)?\d{9}$/),
+      maxLength: maxLengthPhone,
+      setValue: value => {
+        if (notWrongPhone(value)) {
+          setPhone(formatPhone(value))
+        }
+      },
+      validate: validPhone,
       keyboardType: 'phone-pad',
+      placeholder: '+56 9 9999 9999',
     },
-    // {
-    //   label: 'Contraseña',
-    //   value: password,
-    //   setValue: setPassword,
-    //   validate: pass => typeof pass === 'string' && pass.length > 3,
-    //   isSecure: true,
-    // },
+  ]
+  const passwordFields = [
+    {
+      label: 'Contraseña actual',
+      value: currentPassword,
+      setValue: setCurrentPassword,
+      isSecure: true,
+      validate: password =>
+        typeof password === 'string' ? password.length >= 8 : false,
+    },
+    {
+      label: 'Nueva contraseña',
+      value: newPassword,
+      setValue: setNewPassword,
+      isSecure: true,
+      validate: password =>
+        typeof password === 'string' ? password.length >= 8 : false,
+    },
   ]
   const carFields = [
     {
       label: 'Patente',
-      value: carPlate,
-      setValue: setCarPlate,
+      value: carPlate ? carPlate.toUpperCase() : carPlate,
+      setValue: value => {
+        if (notWrongPlate(value)) {
+          setCarPlate(value)
+        }
+      },
+      maxLength: () => 6,
       validate: validatePlate,
+      editable: canSubmitCar,
+      placeholder: 'AABB99',
     },
     {
       label: 'Color',
       value: carColor,
       setValue: setCarColor,
       validate: validateColor,
+      editable: canSubmitCar,
+      placeholder: 'Negro',
     },
     {
       label: 'Marca',
       value: carBrand,
       setValue: setCarBrand,
       validate: validateBrand,
+      editable: canSubmitCar,
+      placeholder: 'Toyota',
     },
     {
       label: 'Modelo',
       value: carModel,
       setValue: setCarModel,
       validate: validateModel,
+      editable: canSubmitCar,
+      placeholder: 'Corolla',
     },
   ]
 
@@ -258,54 +362,57 @@ const EditProfileScreen = props => {
   }
 
   const isValidUser = () => {
-    const isCarValid =
-      !hasCar ||
-      (validateBrand(user.car.brand) &&
-        validateColor(user.car.color) &&
-        validateModel(user.car.model) &&
-        validatePlate(user.car.plate))
     const validFields = [...commonFields].every(field =>
       field.validate(field.value)
     )
+    return validFields
+  }
 
-    return isCarValid && validFields
+  const isValidCar = () => {
+    const validFields = [...carFields].every(field =>
+      field.validate(field.value)
+    )
+    return validFields
   }
 
   React.useEffect(() => {
-    // console.log(props.user)
     const stateUser = props.user
     const user = {
       name: stateUser.name,
       lastName: stateUser.lastName,
       phone: stateUser.phone,
     }
-
-    if (stateUser.car) {
-      user.car = {
-        plate: stateUser.car.plate,
-        color: stateUser.car.color,
-        brand: stateUser.car.brand,
-        model: stateUser.car.model,
-      }
+    if (stateUser.vehicles && stateUser.vehicles.length !== 0) {
+      setGettingCar(true)
+      props
+        .getUserCar(stateUser.token, stateUser.vehicles[0].vehicle_id)
+        .then(() => setGettingCar(false))
+        .catch(() => setGettingCar(false))
     } else {
-      user.car = {
-        plate: '',
-        color: '',
-        brand: '',
-        model: '',
-      }
+      setCanSubmitCar(true)
     }
-
     setName(user.name)
     setLastName(user.lastName)
     setPhone(user.phone)
-    setCarPlate(user.car.plate)
-    setCarColor(user.car.color)
-    setCarBrand(user.car.brand)
-    setCarModel(user.car.model)
-
     setIsLoading(false)
   }, [])
+
+  React.useEffect(() => {
+    const { car } = props.user
+    if (car && car.vehicle_attributes && car.vehicle_identifications) {
+      const {
+        vehicle_color,
+        vehicle_make,
+        vehicle_model,
+      } = car.vehicle_attributes
+      const { identification_id } = car.vehicle_identifications
+      setCarBrand(vehicle_make)
+      setCarColor(vehicle_color)
+      setCarModel(vehicle_model)
+      setCarPlate(identification_id)
+      setHasCar(true)
+    }
+  }, [props.user.car])
 
   React.useEffect(() => {
     if (saveErr != null) {
@@ -316,25 +423,35 @@ const EditProfileScreen = props => {
     }
   }, [loadErr])
 
+  React.useEffect(() => {
+    if (hasCar) {
+      requestCameraPermission()
+    }
+  }, [hasCar])
+
   const saveUser = async () => {
     setIsLoading(true)
+    const body = {
+      first_name: name,
+      last_name: lastName,
+      phone,
+    }
     const response = await props.updateUser(
-      user.name,
-      user.lastName,
-      // props.user.email,
-      user.phone,
-      user.car,
-      props.user.userId,
-      props.user.token
+      props.user.token,
+      {
+        ...body,
+        user_identifications: {},
+      },
+      body
     )
     setIsLoading(false)
-    // console.log(response)
     if (response.error) {
-      alert(
+      Alert.alert(
+        'Error actualizando datos',
         'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
       )
     } else {
-      alert('Informacion actualizada con exito')
+      Alert.alert('Actualización exitosa', 'Informacion actualizada con exito')
     }
   }
 
@@ -359,24 +476,375 @@ const EditProfileScreen = props => {
     )
   }
 
-  const signOut = () => {
-    props.signOut()
-    navigation.navigate('LoginStack')
+  const _pickImage = async () => {
+    if (Constants.platform.ios) {
+      const { status_roll } = await Permissions.askAsync(
+        Permissions.CAMERA_ROLL
+      )
+      if (status_roll !== 'granted') {
+        alert(
+          'Necesitamos permiso para poder acceder a tu cámara y biblioteca de imágenes.'
+        )
+      }
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [3, 3],
+      base64: true,
+    })
+
+    if (!result.cancelled) {
+      const { uri } = result
+      const { uploadImage } = props
+      if (uri) {
+        setAvatar(result.uri)
+
+        // TODO: refactor -> upload function & duplicate code on ImageSignupForm
+        const [fileName, fileType] = uri
+          .split('/')
+          .slice(-1)[0]
+          .split('.')
+        const response = await uploadImage(fileName, fileType)
+        if (
+          !(await uploadImageToS3(response.payload.data.upload, fileType, uri))
+        ) {
+          Alert.alert(
+            'Error al actualizar foto',
+            'No hemos podido actualizar tu foto. Por favor intentalo de nuevo.'
+          )
+        } else {
+          const updateResponse = await props.updateUser(
+            props.user.token,
+            {
+              user_identifications: {
+                selfie_image: response.payload.data.image_id,
+              },
+            },
+            {
+              avatar: response.payload.data.fetch,
+            }
+          )
+          if (updateResponse.error) {
+            Alert.alert(
+              'Error al actualizar foto',
+              'No hemos podido actualizar tu foto. Por favor intentalo de nuevo.'
+            )
+          }
+        }
+      }
+    }
+  }
+
+  const onTakePicture = (photo, photoUri, dest) => {
+    switch (dest) {
+      case 'licenseFront':
+        setLicenseFront(photoUri)
+        setFrontSubmit(photo)
+        break
+      case 'licenseBack':
+        setLicenseBack(photoUri)
+        setBackSubmit(photo)
+        break
+      case 'dniFront':
+        setDniFront(photoUri)
+        setDniFrontSubmit(photo)
+        break
+      case 'dniBack':
+        setDniBack(photoUri)
+        setDniBackSubmit(photo)
+        break
+      default:
+        break
+    }
+  }
+
+  const onPressSaveDni = async () => {
+    setIsUploadingDni(true)
+    setIsLoading(true)
+
+    // TODO: Refactor
+    const [frontName, frontType] = dniFront
+      .split('/')
+      .slice(-1)[0]
+      .split('.')
+    const frontResponse = await props.uploadImage(frontName, frontType)
+    if (
+      !(await uploadImageToS3(
+        frontResponse.payload.data.upload,
+        frontType,
+        dniFront
+      ))
+    ) {
+      setIsUploadingDni(false)
+      setIsLoading(false)
+      Alert.alert(
+        'Error actualizando datos',
+        'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
+      )
+      return
+    }
+    const [backName, backType] = dniBack
+      .split('/')
+      .slice(-1)[0]
+      .split('.')
+    const backResponse = await props.uploadImage(backName, backType)
+    if (
+      !(await uploadImageToS3(
+        backResponse.payload.data.upload,
+        backType,
+        dniBack
+      ))
+    ) {
+      setIsUploadingDni(false)
+      setIsLoading(false)
+      Alert.alert(
+        'Error actualizando datos',
+        'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
+      )
+      return
+    }
+    const response = await props.updateUser(
+      props.user.token,
+      {
+        user_identifications: {
+          identification: {
+            front: frontResponse.payload.data.image_id,
+            back: backResponse.payload.data.image_id,
+          },
+        },
+      },
+      {
+        dni: {
+          front: frontResponse.payload.data.fetch,
+          back: backResponse.payload.data.fetch,
+        },
+      }
+    )
+    setIsLoading(false)
+    setDniFrontSubmit('')
+    setDniBackSubmit('')
+    setIsUploadingDni(false)
+    if (response.error) {
+      Alert.alert(
+        'Error actualizando datos',
+        'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
+      )
+    } else {
+      Alert.alert('Actualización exitosa', 'Solicitud enviada con éxito')
+    }
+  }
+
+  const onPressSaveLicense = async () => {
+    setIsUploadingLicense(true)
+    setIsLoading(true)
+
+    // TODO: Refactor
+    const [frontName, frontType] = licenseFront
+      .split('/')
+      .slice(-1)[0]
+      .split('.')
+    const frontResponse = await props.uploadImage(frontName, frontType)
+    if (
+      !(await uploadImageToS3(
+        frontResponse.payload.data.upload,
+        frontType,
+        licenseFront
+      ))
+    ) {
+      setIsUploadingLicense(false)
+      setIsLoading(false)
+      Alert.alert(
+        'Error actualizando datos',
+        'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
+      )
+      return
+    }
+    const [backName, backType] = licenseBack
+      .split('/')
+      .slice(-1)[0]
+      .split('.')
+    const backResponse = await props.uploadImage(backName, backType)
+    if (
+      !(await uploadImageToS3(
+        backResponse.payload.data.upload,
+        backType,
+        licenseBack
+      ))
+    ) {
+      setIsUploadingLicense(false)
+      setIsLoading(false)
+      Alert.alert(
+        'Error actualizando datos',
+        'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
+      )
+      return
+    }
+    const response = await props.updateUser(
+      props.user.token,
+      {
+        user_identifications: {
+          driver_license: {
+            front: frontResponse.payload.data.image_id,
+            back: backResponse.payload.data.image_id,
+          },
+        },
+      },
+      {
+        license: {
+          front: frontResponse.payload.data.fetch,
+          back: backResponse.payload.data.fetch,
+        },
+      }
+    )
+    setIsLoading(false)
+    setFrontSubmit('')
+    setBackSubmit('')
+    setIsUploadingLicense(false)
+    if (response.error) {
+      Alert.alert(
+        'Error actualizando datos',
+        'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
+      )
+    } else {
+      Alert.alert('Actualización exitosa', 'Solicitud enviada con éxito')
+    }
+  }
+
+  const onPressUpdatePassword = async () => {
+    setIsLoading(true)
+    setIsChangePasswordActive(false)
+    const response = await props.updateUser(props.user.token, {
+      current_password: currentPassword,
+      new_password: newPassword,
+    })
+    if (response.error) {
+      Alert.alert(
+        'Error cambiando contraseña',
+        'Hubo un problema al intentar cambiar tu contraseña. Por favor intentalo de nuevo.'
+      )
+    } else {
+      Alert.alert(
+        'Actualización exitosa',
+        'Tu contraseña se ha cambiado con éxito'
+      )
+    }
+    setIsLoading(false)
+  }
+
+  const onPressSaveCar = async () => {
+    const { token, email } = props.user
+    setIsSavingCar(true)
+    setIsLoading(true)
+    const response = await props.createVehicle(token, {
+      alias: `Vehicle ${email}`,
+      vehicle_identifications: {
+        type: 'license_plate',
+        identification: carPlate.toUpperCase(),
+        country: 'CL',
+      },
+      vehicle_attributes: {
+        brand: carBrand,
+        model: carModel,
+        type: 'car',
+        seats: 1,
+        color: carColor,
+      },
+    })
+    setIsLoading(false)
+    setIsSaving(false)
+    if (response.error) {
+      Alert.alert(
+        'Error ingresando el vehículo',
+        'Hubo un problema al intentar ingresar tu vehículo. Por favor intentalo de nuevo.'
+      )
+    } else {
+      setCanSubmitCar(false)
+      Alert.alert('Ingreso exitoso', 'Tu vehículo fue ingresado exitosamente')
+    }
+  }
+
+  const takePhoto = async dest => {
+    const photo = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+      base64: true,
+    })
+    if (!photo.cancelled) {
+      onTakePicture(photo.base64, photo.uri, dest)
+    }
+  }
+
+  const choosePhoto = async dest => {
+    const photo = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+      base64: true,
+    })
+    if (!photo.cancelled) {
+      onTakePicture(photo.base64, photo.uri, dest)
+    }
+  }
+
+  const checkValidPasswords = () => {
+    const validCurrentPassword =
+      typeof currentPassword === 'string' ? currentPassword.length >= 8 : false
+    const validNewPassword =
+      typeof newPassword === 'string' ? newPassword.length >= 8 : false
+    return validCurrentPassword && validNewPassword
+  }
+
+  const renderVerification = (verified, title) => {
+    return (
+      <View style={styles.verifiedContainer}>
+        <Text style={styles.verifiedText}>{title}</Text>
+        <Octicons
+          name={verified ? 'verified' : 'unverified'}
+          color={verified ? 'green' : 'red'}
+          size={14}
+        />
+      </View>
+    )
   }
 
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.flex1}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Content>
-          <View style={{ minHeight: Dimensions.get('window').height }}>
+          <View style={{ minHeight: 1200 }}>
             <View style={styles.row}>
-              <View style={styles.profilePhoto}>
-                <MaterialCommunityIcons
-                  name="face-profile"
-                  color="gray"
-                  size={photoSize}
-                />
-              </View>
+              <TouchableWithoutFeedback
+                disabled={isSaving || !isValidUser()}
+                onPress={_pickImage}
+              >
+                <View>
+                  <View style={styles.profilePhoto}>
+                    {avatar ? (
+                      <Thumbnail source={{ uri: avatar }} large />
+                    ) : (
+                      <MaterialCommunityIcons
+                        name="face-profile"
+                        color="gray"
+                        size={photoSize}
+                      />
+                    )}
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Text style={styles.buttonText}>Editar foto</Text>
+                    <Entypo name="edit" style={{ marginLeft: 4 }} />
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
               <View style={styles.readonlyFieldsContainer}>
                 <View style={styles.readonlyField}>
                   <Text style={[styles.label, styles.readonlyFieldText]}>
@@ -389,69 +857,208 @@ const EditProfileScreen = props => {
                   block
                   borderRadius={10}
                   style={styles.button}
-                  disabled={true}
-                  onPress={() => {}}
+                  disabled={isChangePasswordActive}
+                  onPress={() => setIsChangePasswordActive(true)}
                 >
                   <Text style={styles.buttonText}>Cambiar contraseña</Text>
                 </Button>
+                <Modal
+                  animationType="slide"
+                  transparent={false}
+                  presentationStyle="fullScreen"
+                  visible={isChangePasswordActive}
+                  onRequestClose={() => setIsChangePasswordActive(false)}
+                >
+                  <View style={styles.updatePasswordModal}>
+                    <View style={styles.hiddenFlex}></View>
+                    <View>
+                      <H2>Actualiza tu contraseña</H2>
+                      <View style={styles.passwordFields}>
+                        {passwordFields.map(field => (
+                          <Field
+                            key={field.label}
+                            field={field}
+                            validity="partial"
+                          />
+                        ))}
+                      </View>
+                      <Button
+                        block
+                        borderRadius={10}
+                        style={styles.blueButton}
+                        disabled={isSaving || !checkValidPasswords()}
+                        onPress={onPressUpdatePassword}
+                        color={'#0000FF'}
+                      >
+                        <Text style={styles.buttonText}>
+                          Cambiar contraseña
+                        </Text>
+                      </Button>
+                    </View>
+                    <View style={styles.hiddenFlex}></View>
+                  </View>
+                </Modal>
               </View>
             </View>
             <Form style={styles.form}>
+              <View style={styles.headerTextContainer}>
+                <Text style={styles.headerText}>Datos Personales</Text>
+              </View>
               {commonFields.map(field => (
                 <Field key={field.label} field={field} validity="partial" />
               ))}
-              <TouchableOpacity
-                style={styles.rowCenter}
-                onPress={() => setHasCar(!hasCar)}
-              >
-                <CheckBox
-                  color={Colors.textGray}
-                  checked={hasCar}
-                  onPress={() => setHasCar(!hasCar)}
-                />
-                <Text style={styles.checkboxLabel}>Tengo Auto</Text>
-              </TouchableOpacity>
-              {hasCar ? (
-                <>
-                  <View style={styles.headerTextContainer}>
-                    <Text style={styles.headerText}>Datos auto</Text>
-                  </View>
-                  {carFields.map(field => (
-                    <Field key={field.label} field={field} validity="partial" />
-                  ))}
-                </>
-              ) : null}
               <Button
                 block
                 borderRadius={10}
-                color="#0000FF"
                 style={styles.blueButton}
                 disabled={isSaving || !isValidUser()}
                 onPress={onPressSaveProfile}
+                color={'#0000FF'}
               >
-                <Text style={styles.buttonText}> Guardar cambios</Text>
+                <Text style={styles.buttonText}>Guardar cambios</Text>
               </Button>
+
+              <View style={styles.headerTextContainer}>
+                <Text style={styles.headerText}>Identificación</Text>
+              </View>
+              <PhotoTaker
+                takePhoto={takePhoto}
+                choosePhoto={choosePhoto}
+                setImage={'dniFront'}
+                selfie={dniFront}
+                iconName="vcard-o"
+                iconType="FontAwesome"
+                size={60}
+                title="Foto frontal Carnet de Identidad"
+              />
+              <PhotoTaker
+                takePhoto={takePhoto}
+                choosePhoto={choosePhoto}
+                setImage={'dniBack'}
+                selfie={dniBack}
+                iconName="vcard-o"
+                iconType="FontAwesome"
+                size={60}
+                title="Foto trasera Carnet de Identidad"
+              />
+              {dniFront && props.user.verifications ? (
+                renderVerification(
+                  props.user.verifications.dni,
+                  'Estado verificación: '
+                )
+              ) : (
+                <></>
+              )}
               <Button
                 block
                 borderRadius={10}
-                color="#FF5242"
-                style={styles.redButton}
-                disabled={isSaving || !isValidUser}
-                onPress={() => signOut()}
+                style={styles.blueButton}
+                disabled={isUploadingDni || !dniFrontSubmit || !dniBackSubmit}
+                onPress={onPressSaveDni}
+                color={'#0000FF'}
               >
-                <Text>Cerrar Sesión</Text>
+                <Text style={styles.buttonText}>Solicitar revisión</Text>
               </Button>
+
+              {gettingCar && <Spinner color={'#0000FF'} />}
+              {!gettingCar && (
+                <TouchableOpacity
+                  style={styles.rowCenter}
+                  onPress={() => setHasCar(!hasCar)}
+                >
+                  <CheckBox
+                    color={Colors.textGray}
+                    checked={hasCar}
+                    onPress={() => setHasCar(!hasCar)}
+                  />
+                  <Text style={styles.checkboxLabel}>Tengo Vehículo</Text>
+                </TouchableOpacity>
+              )}
+              {hasCar ? (
+                <>
+                  <View style={styles.headerTextContainer}>
+                    <Text style={styles.headerText}>Licencia de conducir</Text>
+                  </View>
+                  <PhotoTaker
+                    takePhoto={takePhoto}
+                    choosePhoto={choosePhoto}
+                    setImage={'licenseFront'}
+                    selfie={licenseFront}
+                    iconName="vcard-o"
+                    iconType="FontAwesome"
+                    size={60}
+                    title="Foto frontal Licencia de conducir"
+                  />
+                  <PhotoTaker
+                    takePhoto={takePhoto}
+                    choosePhoto={choosePhoto}
+                    setImage={'licenseBack'}
+                    selfie={licenseBack}
+                    iconName="vcard-o"
+                    iconType="FontAwesome"
+                    size={60}
+                    title="Foto trasera Licencia de conducir"
+                  />
+                  {licenseFront && props.user.verifications ? (
+                    renderVerification(
+                      props.user.verifications.license,
+                      'Estado verificación: '
+                    )
+                  ) : (
+                    <></>
+                  )}
+                  <Button
+                    block
+                    borderRadius={10}
+                    style={styles.blueButton}
+                    disabled={isUploadingLicense || !frontSubmit || !backSubmit}
+                    onPress={onPressSaveLicense}
+                    color={'#0000FF'}
+                  >
+                    <Text style={styles.buttonText}>Solicitar revisión</Text>
+                  </Button>
+
+                  <View style={styles.headerTextContainer}>
+                    <Text style={styles.headerText}>Datos Vehículo</Text>
+                  </View>
+                  {canSubmitCar ? (
+                    <View style={styles.headerTextContainer}>
+                      <Text style={styles.warning}>
+                        Advertencia: los datos del vehículo no podrán ser
+                        modificados una vez ingresados
+                      </Text>
+                    </View>
+                  ) : (
+                    <></>
+                  )}
+                  {carFields.map(field => (
+                    <Field key={field.label} field={field} validity="partial" />
+                  ))}
+                  {canSubmitCar ? (
+                    <Button
+                      block
+                      borderRadius={10}
+                      style={styles.blueButton}
+                      disabled={!canSubmitCar || !isValidCar()}
+                      onPress={onPressSaveCar}
+                      color={'#0000FF'}
+                    >
+                      <Text style={styles.buttonText}>Ingresar Vehículo</Text>
+                    </Button>
+                  ) : (
+                    <></>
+                  )}
+                </>
+              ) : (
+                <></>
+              )}
             </Form>
           </View>
-          <View style={styles.artificialKeyboardPadding} />
+          {hasCar && <View style={styles.artificialKeyboardPadding} />}
         </Content>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   )
-}
-
-EditProfileScreen.navigationOptions = {
-  title: 'Editar perfil',
 }
 
 EditProfileScreen.propTypes = {
@@ -475,30 +1082,26 @@ EditProfileScreen.propTypes = {
   signOut: PropTypes.func.isRequired,
 }
 
-const mapPropsToState = state => ({
+const mapStateToProps = state => ({
   user: state.user,
 })
 
-const mapDispatchToState = dispatch => ({
-  updateUser: (name, lastName, email, phone, password, car, id, authToken) =>
-    dispatch(
-      updateUser(name, lastName, email, phone, password, car, id, authToken)
-    ),
+const mapDispatchToProps = dispatch => ({
+  updateUser: (authToken, data, ed) =>
+    dispatch(updateUser(authToken, data, ed)),
+  uploadImage: (name, type) => dispatch(getImageUrl(name, type)),
   signOut: () => dispatch(signoutUser()),
+  getUserCar: (token, carId) => dispatch(getUserCar(token, carId)),
+  createVehicle: (token, data) => dispatch(createVehicle(token, data)),
 })
-
-export default connect(
-  mapPropsToState,
-  mapDispatchToState
-)(withNavigation(EditProfileScreen))
 
 const photoSize = 96
 
 const styles = StyleSheet.create({
-  artificialKeyboardPadding: { height: 128 },
+  artificialKeyboardPadding: { height: 900 },
   blueButton: {
-    // backgroundColor: '#0000FF',
-    marginTop: 30,
+    marginBottom: 30,
+    marginTop: 20,
   },
   button: {
     marginTop: 20,
@@ -529,7 +1132,13 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     marginLeft: 5,
   },
-  headerTextContainer: { alignSelf: 'flex-start', marginTop: 10 },
+  headerTextContainer: {
+    alignSelf: 'flex-start',
+    marginTop: 30,
+  },
+  hiddenFlex: {
+    flex: 1,
+  },
   input: {
     fontSize: 14,
     height: 40,
@@ -544,6 +1153,13 @@ const styles = StyleSheet.create({
   label: {
     color: '#8c8c8c',
     fontSize: 14,
+  },
+  logout: {
+    marginRight: 8,
+  },
+  passwordFields: {
+    marginTop: 30,
+    width: Layout.window.width * 0.9,
   },
   profilePhoto: {
     alignItems: 'center',
@@ -568,10 +1184,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingHorizontal: 12,
   },
-  redButton: {
-    // backgroundColor: '#FF5242',
-    marginTop: 20,
-  },
   row: {
     flexDirection: 'row',
   },
@@ -579,4 +1191,62 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
   },
+  updatePasswordModal: {
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "column",
+    height: Layout.window.height,
+    justifyContent: "space-around",
+  },
+  verifiedContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  warning: {
+    color: 'red',
+    marginBottom: 10,
+  },
 })
+
+const _SignOutC = props => (
+  <TouchableOpacity
+    onPress={() =>
+      Alert.alert('Salir', '¿Deseas cerrar sesión?', [
+        {
+          text: 'Si',
+          onPress: () => {
+            AsyncStorage.removeItem('@userToken')
+            AsyncStorage.removeItem('@userId')
+            // eslint-disable-next-line react/prop-types
+            props.navigation.navigate('Login')
+            // eslint-disable-next-line react/prop-types
+            props.signOut()
+          },
+        },
+        { text: 'No', style: 'cancel' },
+      ])
+    }
+  >
+    <View style={styles.logout}>
+      <Ionicons
+        name={Platform.OS === 'ios' ? 'ios-log-out' : 'md-log-out'}
+        size={25}
+      />
+    </View>
+  </TouchableOpacity>
+)
+
+const SignOutC = connect(
+  null,
+  mapDispatchToProps
+)(_SignOutC)
+
+EditProfileScreen.navigationOptions = ({ navigation }) => ({
+  title: 'Editar perfil',
+  headerRight: <SignOutC navigation={navigation} />,
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withNavigation(EditProfileScreen))

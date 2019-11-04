@@ -1,34 +1,47 @@
 import React from 'react'
 import { createMaterialTopTabNavigator } from 'react-navigation'
 import TripsScreen from '../screens/TripsScreen'
+import Colors from '../constants/Colors'
 
 export default createMaterialTopTabNavigator(
   {
     MisViajes: {
-      screen: props => <TripsScreen isRequestedTrips={false} {...props} />,
+      screen: props => (
+        <TripsScreen type={'misviajes'} isRequestedTrips={false} {...props} />
+      ),
       navigationOptions: () => ({
         tabBarOptions: {
+          labelStyle: {
+            fontWeight: 'bold',
+          },
           activeTintColor: 'white',
           indicatorStyle: { backgroundColor: 'white' },
           style: {
-            backgroundColor: 'black',
+            backgroundColor: Colors.mainGrey,
           },
         },
-        title: 'Mis Viajes',
+        title: '#Manejando',
       }),
+      params: { asDriver: true },
     },
     Pedidos: {
-      screen: props => <TripsScreen isRequestedTrips {...props} />,
+      screen: props => (
+        <TripsScreen type={'pedidos'} isRequestedTrips {...props} />
+      ),
       navigationOptions: () => ({
         tabBarOptions: {
+          labelStyle: {
+            fontWeight: 'bold',
+          },
           activeTintColor: 'white',
           indicatorStyle: { backgroundColor: 'white' },
           style: {
-            backgroundColor: 'black',
+            backgroundColor: Colors.mainGrey,
           },
         },
-        title: 'Pedidos',
+        title: '#DePasajero',
       }),
+      params: { asDriver: false },
     },
   },
   {

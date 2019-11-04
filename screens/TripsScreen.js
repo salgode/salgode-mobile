@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Alert } from 'react-native'
+import { View, StyleSheet, RefreshControl, ScrollView } from 'react-native'
 import PropTypes from 'prop-types'
 import Trips from '../components/Trips/Trips'
 import { Spinner, Text } from 'native-base'
+import { connect } from 'react-redux'
+import { userTrips, driverTrips, removeTrip } from '../redux/actions/user'
+import EmptyState from '../components/EmptyState/EmptyState'
+import noTrips from '../assets/images/notrips.png'
 
 class TripsScreen extends Component {
   static navigationOptions = {
-    title: 'Mis Viajes',
+    title: '#Manejando',
   }
 
   constructor(props) {
@@ -14,116 +18,90 @@ class TripsScreen extends Component {
     this.state = {
       loading: true,
       trips: [],
+      asDriver: false,
+      reloading: false,
     }
-
+    this.onRefresh = this.onRefresh.bind(this)
     this.getTrips = this.getTrips.bind(this)
-    this.fetchTrips = this.fetchTrips.bind(this)
     this.onPressTrip = this.onPressTrip.bind(this)
   }
 
-  onPressTrip(asDriver) {
-    this.props.navigation.navigate('DetailedTrip', { asDriver })
+  async onRefresh() {
+    this.setState({ reloading: true })
+    await this.props.fetchTrips(this.props.user.token)
+    await this.props.fetchDriverTrips(this.props.user.token)
+    this.setState({ reloading: false })
+  }
+
+  onPressTrip(asDriver = false, trip) {
+    this.props.navigation.navigate('DetailedTrip', {
+      asDriver: this.state.asDriver,
+      trip_id: trip.trip_id,
+    })
   }
 
   componentDidMount() {
-    this.getTrips(123)
+    this.getTrips()
+    const asDriver = this.props.navigation.getParam('asDriver', null)
+    this.setState({ asDriver })
   }
 
-  async fetchTrips(token) {
-    // eslint-disable-next-line no-console
-    console.log(token)
-    // fetch from server
-    return [
-      {
-        timestamp: 1571590002,
-        spacesUsed: 3,
-        tripId: '0',
-        user: {
-          name: 'Benjamin',
-          reputation: 17,
-        },
-        status: 'accepted',
-      },
-      {
-        timestamp: 1571503602,
-        spacesUsed: 3,
-        tripId: '1',
-        user: {
-          name: 'Benjamin',
-          reputation: 17,
-        },
-        status: 'pending',
-      },
-      {
-        timestamp: 1571586402,
-        spacesUsed: 3,
-        tripId: '2',
-        user: {
-          name: 'Benjamin',
-          reputation: 17,
-        },
-        status: 'rejected',
-      },
-      {
-        timestamp: 1570985202,
-        spacesUsed: 3,
-        tripId: '3',
-        user: {
-          name: 'Benjamin',
-          reputation: 17,
-        },
-        status: 'accepted',
-      },
-      {
-        timestamp: 1571593602,
-        spacesUsed: 3,
-        tripId: '4',
-        user: {
-          name: 'Benjamin',
-          reputation: 17,
-        },
-        status: 'accepted',
-      },
-      {
-        timestamp: 1571676402,
-        spacesUsed: 3,
-        tripId: '5',
-        user: {
-          name: 'Benjamin',
-          reputation: 17,
-        },
-        status: 'accepted',
-      },
-    ]
-  }
-
-  async getTrips(token) {
+  async getTrips() {
     this.setState({ loading: true })
-
-    await this.fetchTrips(token)
-      .then(trips => this.setState({ trips }))
-      .catch(err => {
-        this.setState({ loading: false })
-        Alert.alert('Hubo un error, intenta de nuevo más tarde', err)
-      })
-
+    await this.props.fetchTrips(this.props.user.token)
+    await this.props.fetchDriverTrips(this.props.user.token)
     this.setState({ loading: false })
   }
 
-  render() {
+  isVerifiedDriver = () => {
     return (
-      <View style={styles.container}>
-        <Text>{this.asDriver}</Text>
-        {this.state.loading && <Spinner color="blue" />}
-        {!this.state.loading && (
-          <Trips
-            isRequestedTrips={this.props.isRequestedTrips}
-            trips={this.state.trips}
-            onPressTrip={this.onPressTrip}
-          />
-        )}
-      </View>
+      this.props.user.verifications.license && this.props.user.vehicles.length
     )
+  }
+
+  render() {
+    if (!this.props.user.email) {
+      return <></>
+    }
+    const isConfirmedDriver = this.isVerifiedDriver()
+
+    if (isConfirmedDriver || this.props.type === 'pedidos') {
+      return (
+        <View style={styles.container}>
+          {this.state.loading && <Spinner color="blue" />}
+          {!this.state.loading && (
+            <Trips
+              key={`trips-${this.props.isRequestedTrips ? 'requested' : ''}`}
+              isRequestedTrips={this.props.isRequestedTrips}
+              trips={this.props.trips}
+              onPressTrip={this.onPressTrip}
+              driverTrips={this.props.driverTrips}
+              removeFromList={this.props.dispatchRemoveTrip}
+              onRefresh={this.onRefresh}
+              refreshing={this.state.reloading}
+            />
+          )}
+        </View>
+      )
+    } else {
+      //not verified driver
+      return (
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.reloading}
+              onRefresh={this.onRefresh}
+            />
+          }
+          contentContainerStyle={{ flex: 1 }}
+        >
+          <EmptyState
+            image={noTrips}
+            text="Para crear viajes debes registrar tu auto y enviar una foto por ambos lados de tu licencia"
+          />
+        </ScrollView>
+      )
+    }
   }
 }
 
@@ -131,6 +109,14 @@ TripsScreen.propTypes = {
   isRequestedTrips: PropTypes.bool,
   navigation: PropTypes.shape({ navigate: PropTypes.func.isRequired })
     .isRequired,
+  user: PropTypes.shape({
+    token: PropTypes.string.isRequired,
+    userId: PropTypes.string.isRequired,
+  }).isRequired,
+  fetchTrips: PropTypes.func.isRequired,
+  fetchDriverTrips: PropTypes.func.isRequired,
+  trips: PropTypes.array,
+  driverTrips: PropTypes.array,
 }
 
 TripsScreen.defaultProps = {
@@ -142,6 +128,26 @@ const styles = StyleSheet.create({
     padding: 15,
     ...StyleSheet.absoluteFill,
   },
+  viewContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
 })
 
-export default TripsScreen
+const mapStateToProps = state => ({
+  user: state.user,
+  trips: state.user.trips,
+  driverTrips: state.user.driverTrips,
+})
+
+const mapDispatchToProps = dispatch => ({
+  fetchTrips: token => dispatch(userTrips(token)),
+  fetchDriverTrips: token => dispatch(driverTrips(token)),
+  dispatchRemoveTrip: tripId => dispatch(removeTrip(tripId)),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TripsScreen)

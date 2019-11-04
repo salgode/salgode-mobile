@@ -11,7 +11,7 @@ export default class NotificationScreen extends Component {
           positionAbsolute={false}
           name={'Johny Doe'}
           message={'Comenzó su viaje!'}
-          onPress={() => console.log('Notification button pressed')}
+          onPress={() => console.warn('Notification button pressed')}
         />
       </View>
     )

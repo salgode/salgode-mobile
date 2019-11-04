@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { StyleSheet, Alert } from 'react-native'
-import { Spinner, View } from 'native-base'
+import { Alert } from 'react-native'
+import { View } from 'native-base'
 import PropTypes from 'prop-types'
 import TripRequest from '../components/Trips/TripRequest'
 import { createSlot } from '../redux/actions/slots'
@@ -9,7 +9,6 @@ import { connect } from 'react-redux'
 class TripRequestScreen extends Component {
   static navigationOptions = {
     title: 'Solicitud de viaje',
-    headerBackTitle: '', // TODO: que no diga 'Back'
   }
 
   constructor(props) {
@@ -29,26 +28,24 @@ class TripRequestScreen extends Component {
     this.setState({ stops, tripId, loading: false })
   }
 
-  async onRequestSlot() {
+  async onRequestSlot(startStop, endStop) {
     const { user, createSlot } = this.props
-    // console.log(user)
-
     this.setState({ loading: true })
-    const response = await createSlot(
+    const response = await this.props.createSlot(
       user.token,
       this.state.tripId,
-      user.userId
+      startStop.place_id,
+      endStop.place_id
     )
     this.setState({ loading: false })
-
-    if (!response || response.error) {
+    if (!response || response.error || response.errorMessage) {
       Alert.alert(
         'Error de reserva',
         'Hubo un error al reservar el puesto. Por favor inentelo de nuevo.'
       )
     } else {
       Alert.alert(
-        'Puesto reservado correctamente!',
+        'Solicitud enviada correctamente!',
         'Tu pedido está siendo revisado por el conductor.'
       )
       this.props.navigation.popToTop()
@@ -56,11 +53,13 @@ class TripRequestScreen extends Component {
   }
 
   render() {
+    const { loading, stops } = this.state
     return (
       <View>
-        {this.state.loading && <Spinner style={styles.loading} />}
+        {/* {loading && <Spinner style={styles.loading} />} */}
         <TripRequest
-          stops={this.state.stops || []}
+          loading={loading}
+          stops={stops || []}
           onSend={this.onRequestSlot}
         />
       </View>
@@ -81,19 +80,13 @@ TripRequestScreen.propTypes = {
   createSlot: PropTypes.func.isRequired,
 }
 
-const styles = StyleSheet.create({
-  loading: {
-    ...StyleSheet.absoluteFillObject,
-  },
-})
-
 const mapStateToProps = state => ({
   user: state.user,
 })
 
 const mapDispatchToProps = dispatch => ({
-  createSlot: (token, tripId, userId) =>
-    dispatch(createSlot(token, tripId, userId)),
+  createSlot: (token, tripId, startId, stopId) =>
+    dispatch(createSlot(token, tripId, startId, stopId)),
 })
 
 export default connect(

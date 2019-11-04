@@ -74,6 +74,18 @@ export default function tripsReducer(state = {}, action) {
       return { ...state, loading: false }
     case tripActions.TRIPS_GET_RESERVATIONS_FAIL:
       return { ...state, loading: false }
+    case tripActions.TRIPS_ACCEPT_RESERVATION:
+      return { ...state, loading: true }
+    case tripActions.TRIPS_ACCEPT_RESERVATION_SUCCESS:
+      return { ...state, loading: false }
+    case tripActions.TRIPS_ACCEPT_RESERVATION_FAIL:
+      return { ...state, loading: false }
+    case tripActions.TRIPS_DECLINE_RESERVATION:
+      return { ...state, loading: true }
+    case tripActions.TRIPS_DECLINE_RESERVATION_SUCCESS:
+      return { ...state, loading: false }
+    case tripActions.TRIPS_DECLINE_RESERVATION_FAIL:
+      return { ...state, loading: false }
     default:
       return state
   }

@@ -14,6 +14,7 @@ import {
 } from '../redux/actions/trips'
 import { getTripReservations } from '../redux/actions/trips'
 import { getCurrentTrip } from '../redux/actions/user'
+import PassengerDetails from '../components/Trips/Trip/PassengerDetails'
 
 class DetailedTripScreen extends Component {
   static navigationOptions = {
@@ -36,6 +37,7 @@ class DetailedTripScreen extends Component {
     this.renderReservations = this.renderReservations.bind(this)
     this.onPressStartTrip = this.onPressStartTrip.bind(this)
     this.toCurrentTrip = this.toCurrentTrip.bind(this)
+    this.updateReservations = this.updateReservations.bind(this)
   }
 
   async componentDidMount() {
@@ -62,6 +64,37 @@ class DetailedTripScreen extends Component {
         this.setState({ passengers: passengers.payload.data.passengers })
       }
       this.setState({ fetchingPassengers: false, fetchingReservations: false })
+    }
+  }
+
+  async updateReservations(status, reservationId) {
+    const { reservations, trip } = this.state
+    const { user } = this.props
+    switch (status) {
+      case 'accepted':
+        const params = [user.token, trip.trip_id]
+        this.setState({
+          reservations: reservations.filter(i => reservationId !== i.reservation_id),
+          fetchingPassengers: true,
+        })
+        const passengers = await this.props.fetchManifest(...params)
+        if (!passengers || passengers.error) {
+          Alert.alert(
+            'Problemas obteniendo detalles del viaje',
+            'Hubo un problema obteniendo algunos detalles de tu viaje. Por favor inténtalo de nuevo.',
+          )
+        } else {
+          this.setState({ passengers: passengers.payload.data.passengers })
+        }
+        this.setState({ fetchingPassengers: false })
+        break
+      case 'declined':
+        this.setState({
+          reservations: reservations.filter(i => reservationId !== i.reservation_id),
+        })
+        break
+      default:
+        console.warn('Invalid status')
     }
   }
 
@@ -133,7 +166,6 @@ class DetailedTripScreen extends Component {
     if (!trip || !trip.trip_route || !trip.trip_route.end) {
       return <></>
     }
-    const finishStop = trip.trip_route.end.name
     return (
       <View style={styles.sectionContainer}>
         <View style={styles.headerTitle}>
@@ -141,14 +173,23 @@ class DetailedTripScreen extends Component {
         </View>
         {fetchingPassengers && <Spinner color="blue" />}
         {!fetchingPassengers && (
-          <>
+          <View>
             {passengers.length ? passengers.map((reservation, index) => {
+              const {
+                passenger_avatar,
+                passenger_name,
+                passenger_phone,
+                passenger_verifications,
+                trip_route,
+              } = reservation
               return (
-                <TripRequestCard
+                <PassengerDetails
                   key={`passenger-${index}`}
-                  reservation={reservation}
-                  finishStop={finishStop}
-                  tripStatus={trip.trip_status}
+                  avatar={passenger_avatar}
+                  name={passenger_name}
+                  phone={'+56 9 7976 4722'}
+                  verified={passenger_verifications.identity}
+                  start={trip_route.start.place_name}
                 />
               )
             }) : (
@@ -156,7 +197,7 @@ class DetailedTripScreen extends Component {
                 Aún no tienes pasajeros para este viaje
               </Text>
             )}
-          </>
+          </View>
         )}
       </View>
     )
@@ -168,7 +209,9 @@ class DetailedTripScreen extends Component {
     if (!trip || !trip.trip_route || !trip.trip_route.end) {
       return <></>
     }
-    const finishStop = trip.trip_route.end.name
+    if (trip.trip_status !== 'open') {
+      return <></>
+    }
     return (
       <View style={styles.sectionContainer}>
         <View style={styles.headerTitle}>
@@ -176,7 +219,7 @@ class DetailedTripScreen extends Component {
         </View>
         {fetchingReservations && <Spinner color="blue" />}
         {!fetchingReservations && (
-          <>
+          <View>
             {reservations.length ? reservations.map((reservation, index) => {
               return (
                 <TripRequestCard
@@ -186,6 +229,7 @@ class DetailedTripScreen extends Component {
                   places={reservation.reservation_route_places}
                   status={reservation.reservation_status}
                   trip={trip}
+                  updateReservations={this.updateReservations}
                 />
               )
             }) : (
@@ -193,7 +237,7 @@ class DetailedTripScreen extends Component {
                 Aún no tienes solicitudes para este viaje
               </Text>
             )}
-          </>
+          </View>
         )}
       </View>
     )
@@ -255,6 +299,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   noContent: {
+    textAlign: 'center',
     color: 'gray',
   },
   sectionContainer: {

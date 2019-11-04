@@ -1,19 +1,27 @@
 /* eslint-disable no-console */
 /* eslint-disable react-native/no-inline-styles */
 import React, { Component } from 'react'
-import { StyleSheet, Platform, Linking } from 'react-native'
-import { Card, View, Text, Button, CardItem, Thumbnail } from 'native-base'
+import { StyleSheet, Platform, Linking, Alert } from 'react-native'
+import { connect } from 'react-redux'
+import { Card, View, Text, Button, CardItem, Thumbnail, Spinner } from 'native-base'
 import Location from './Location'
 import PropTypes from 'prop-types'
-/*import Colors from '../../../constants/Colors'*/
 import { Ionicons, Octicons } from '@expo/vector-icons'
-//import { client } from '../../../redux/store'
-import { getBaseHeaders, urls } from '../../../config/api'
-import { shareToWhatsApp } from '../../../utils/whatsappShare'
+import { acceptReservation, declineReservation } from '../../../redux/actions/trips'
 
 class TripRequestCard extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      loading: {
+        decline: false,
+        accept: false,
+      },
+    }
+    this.body = {
+      decline_reason: 'not implemented',
+      decline_message: 'not implemented',
+    }
     this.handleChangeStatus = this.handleChangeStatus.bind(this)
   }
 
@@ -28,39 +36,54 @@ class TripRequestCard extends Component {
   }
 
   async handleChangeStatus(status) {
-    this.setState(prevState => {
-      const reservation = { ...prevState.reservation }
-      reservation.reservation_status = status
-      return { reservation }
-    })
-
-    const requestObject = {
-      method: 'post',
-      headers: getBaseHeaders(this.props.token),
+    const {
+      fetchAcceptReservation,
+      fetchDeclineReservation,
+      trip,
+      reservation,
+      user,
+      updateReservations,
+    } = this.props
+    let response
+    let alertTitle = 'Problemas al procesar la solicitud'
+    let alertMessage = 'No se pudo completar con éxito la solicitud. Por favor intenta de nuevo'
+    switch (status) {
+      case 'accepted':
+        alertTitle = 'Problemas al aceptar la reserva'
+        alertMessage = 'No se pudo aceptar la reserva. Por favor intenta de nuevo.'
+        this.setState({ loading: { ...this.state.loading, accept: true } })
+        response = await fetchAcceptReservation(
+          user.token,
+          trip.trip_id,
+          reservation.reservation_id
+        )
+        this.setState({ loading: { ...this.state.loading, accept: false } })
+        break
+      case 'declined':
+        alertTitle = 'Problemas al rechazar la reserva'
+        alertMessage = 'No se pudo rechazar la reserva. Por favor intenta de nuevo.'
+        this.setState({ loading: { ...this.state.loading, decline: true } })
+        response = await fetchDeclineReservation(
+          user.token,
+          trip.trip_id,
+          reservation.reservation_id,
+          this.body
+        )
+        this.setState({ loading: { ...this.state.loading, decline: false } })
+        break
+      default:
+        console.warn('Invalid status')
     }
-
-    const { reservation } = this.state
-    if (status === 'accepted') {
-      requestObject.url = urls.driver.reservations.post.accept(
-        reservation.trip_id,
-        reservation.reservation_id
-      )
+    if (response && response.error) {
+      Alert.alert(alertTitle, alertMessage)
     } else {
-      requestObject.url = urls.driver.reservations.post.decline(
-        reservation.trip_id,
-        reservation.reservation_id
-      )
+      updateReservations(status, reservation.reservation_id)
     }
-
-    if (status !== 'accepted') {
-      requestObject.data = this.state.body
-    }
-    await client.request(requestObject)
   }
 
   render() {
-    const { reservation, passenger, places, status, trip } = this.props
-    console.log(trip)
+    const { reservation, passenger, places, status } = this.props
+    const { loading } = this.state
 
     if (!reservation || !places || places.length === 0 || !passenger) {
       return <></>
@@ -102,9 +125,13 @@ class TripRequestCard extends Component {
           />
         </CardItem>
 
-        {status === 'pending' &&
-          this.props.tripStatus === 'open' && (
-            <CardItem style={styles.buttonsContainer}>
+        {status === 'pending' && (
+          <CardItem style={styles.buttonsContainer}>
+            {loading.accept ? (
+              <View style={styles.buttonTrip}>
+                <Spinner color="blue" />
+              </View>
+            ) : (
               <Button
                 style={{
                   ...styles.buttonTrip,
@@ -125,10 +152,16 @@ class TripRequestCard extends Component {
                   Aceptar
                 </Text>
               </Button>
+            )}
+            {loading.decline ? (
+              <View style={styles.buttonTrip}>
+                <Spinner color="blue" />
+              </View>
+            ) : (
               <Button
                 bordered
                 style={{ ...styles.buttonTrip, borderColor: '#FF5242' }}
-                onPress={() => this.handleChangeStatus('rejected')}
+                onPress={() => this.handleChangeStatus('declined')}
               >
                 <Text
                   style={{
@@ -141,67 +174,8 @@ class TripRequestCard extends Component {
                   Rechazar
                 </Text>
               </Button>
-            </CardItem>
-          )}
-
-        {reservation.reservation_status === 'accepted' && (
-          <View style={styles.buttonsContainer}>
-            <Button
-              style={{ ...styles.buttonTrip, backgroundColor: 'green' }}
-              onPress={() =>
-                passenger.phone ? this.dialCall(passenger.phone) : null
-              }
-            >
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 15,
-                  fontWeight: '700',
-                  alignSelf: 'center',
-                }}
-              >
-                Contactar
-              </Text>
-            </Button>
-            <Button
-              style={{ ...styles.buttonTrip, backgroundColor: 'green' }}
-              onPress={() =>
-                passenger.phone && passenger.phone.includes('+')
-                  ? shareToWhatsApp(
-                      'Hola! Encontré tu viaje en #Salgode y me sirve mucho',
-                      passenger.phone
-                    )
-                  : null
-              }
-            >
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 15,
-                  fontWeight: '700',
-                  alignSelf: 'center',
-                }}
-              >
-                Whatsapp
-              </Text>
-            </Button>
-          </View>
-        )}
-        {reservation.reservation_status === 'rejected' && (
-          <View style={styles.buttonsContainer}>
-            <Button style={{ ...styles.buttonTrip, backgroundColor: 'red' }}>
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 15,
-                  fontWeight: '700',
-                  alignSelf: 'center',
-                }}
-              >
-                Rechazado
-              </Text>
-            </Button>
-          </View>
+            )}
+          </CardItem>
         )}
       </Card>
     )
@@ -218,13 +192,17 @@ TripRequestCard.propTypes = {
 
 const styles = StyleSheet.create({
   buttonTrip: {
+    flex: 1,
     marginHorizontal: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
     textAlign: 'center',
   },
   buttonsContainer: {
     alignItems: 'center',
     alignSelf: 'center',
     flex: 2,
+    display: 'flex',
     flexDirection: 'row',
   },
   container: {
@@ -265,4 +243,16 @@ const styles = StyleSheet.create({
   },
 })
 
-export default TripRequestCard
+const mapStateToProps = state => ({
+  user: state.user,
+})
+
+const mapDispatchToProps = dispatch => ({
+  fetchAcceptReservation: (token, tripId, resId) => dispatch(acceptReservation(token, tripId, resId)),
+  fetchDeclineReservation: (token, tripId, resId, data) => dispatch(declineReservation(token, tripId, resId, data)),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(TripRequestCard)

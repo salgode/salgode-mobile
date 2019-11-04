@@ -52,7 +52,7 @@ class ChooseTrips extends Component {
           licenseVerified: driver_verifications.driver_license,
           trip_route_points: trip_route_points,
           etd_info: etd_info,
-          isReserved: trip_status !== 'open', // TODO: need to obtain reservation status
+          isReserved: trip_status !== 'open',
         },
       })
     }

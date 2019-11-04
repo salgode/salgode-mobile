@@ -33,6 +33,14 @@ export const actions = {
   TRIPS_GET_RESERVATIONS: 'TRIPS_GET_RESERVATIONS',
   TRIPS_GET_RESERVATIONS_SUCCESS: 'TRIPS_GET_RESERVATIONS_SUCCESS',
   TRIPS_GET_RESERVATIONS_FAIL: 'TRIPS_GET_RESERVATIONS_FAIL',
+
+  TRIPS_ACCEPT_RESERVATION: 'TRIPS_ACCEPT_RESERVATION',
+  TRIPS_ACCEPT_RESERVATION_SUCCESS: 'TRIPS_ACCEPT_RESERVATION_SUCCESS',
+  TRIPS_ACCEPT_RESERVATION_FAIL: 'TRIPS_ACCEPT_RESERVATION_FAIL',
+
+  TRIPS_DECLINE_RESERVATION: 'TRIPS_DECLINE_RESERVATION',
+  TRIPS_DECLINE_RESERVATION_SUCCESS: 'TRIPS_DECLINE_RESERVATION_SUCCESS',
+  TRIPS_DECLINE_RESERVATION_FAIL: 'TRIPS_DECLINE_RESERVATION_FAIL',
 }
 
 export function cleanSearchStartPlace() {
@@ -134,6 +142,33 @@ export function getTripReservations(authToken, id) {
         url: urls.driver.reservations.get.all(id),
         method: 'get',
         headers: getBaseHeaders(authToken),
+      },
+    },
+  }
+}
+
+export function acceptReservation(authToken, tripId, resId) {
+  return {
+    type: actions.TRIPS_ACCEPT_RESERVATION,
+    payload: {
+      request: {
+        url: urls.driver.reservations.post.accept(tripId, resId),
+        method: 'post',
+        headers: getBaseHeaders(authToken),
+      },
+    },
+  }
+}
+
+export function declineReservation(authToken, tripId, resId, data) {
+  return {
+    type: actions.TRIPS_DECLINE_RESERVATION,
+    payload: {
+      request: {
+        url: urls.driver.reservations.post.decline(tripId, resId),
+        method: 'post',
+        headers: getBaseHeaders(authToken),
+        data,
       },
     },
   }

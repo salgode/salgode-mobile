@@ -82,26 +82,6 @@ Se aprecia el aporte al frontend de:
 - [Diego Silva](https://github.com/DiegoSilvaS)
 - [Gonzalo Caballero](https://github.com/Gonzalo9823)
 
-## Agradecimientos
-
-Se aprecia el aporte al frontend de:
-
-- [Matías Andrade](https://github.com/mandrade2)
-- [Franco Méndez Z.](https://github.com/fnmendez)
-- [José Morales Lira](https://github.com/josemlira)
-- [Martín Álamos](https://github.com/wayoalamos)
-- [Joaquín Ricci](https://github.com/jricci1)
-- [Benjamín Earle](https://github.com/MrEarle)
-- [Sebastián Cruz](https://github.com/sebacruzd)
-- [Daniel Leal](https://github.com/daleal)
-- [Carlos Knopel](https://github.com/buskerone)
-- [Robinson Castro](https://github.com/Robin40)
-- [Camila Olguín](https://github.com/camiolguin)
-- [Dante Mardones](https://github.com/DanteMa)
-- [Tomás Rivera](https://github.com/tomasrivera)
-- [Diego Silva](https://github.com/DiegoSilvaS)
-- [Gonzalo Caballero](https://github.com/Gonzalo9823)
-
 <!-- BADGES -->
 
 <!-- [travisB]:https://travis-ci.com/

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
+import { View, StyleSheet, Alert } from 'react-native'
 import PropTypes from 'prop-types'
 import DetailedTrip from '../components/Trips/Trip/DetailedTrip'
-import { Spinner } from 'native-base'
+import { Spinner, Text, H3 } from 'native-base'
 import TripRequestCard from '../components/Trips/Trip/TripRequestCard'
 import { ScrollView } from 'react-native-gesture-handler'
 import { connect } from 'react-redux'
@@ -12,8 +12,9 @@ import {
   startJourney,
   fetchTripManifest,
 } from '../redux/actions/trips'
-import { getTripReservations } from '../utils/getTripInfo'
+import { getTripReservations } from '../redux/actions/trips'
 import { getCurrentTrip } from '../redux/actions/user'
+import PassengerDetails from '../components/Trips/Trip/PassengerDetails'
 
 class DetailedTripScreen extends Component {
   static navigationOptions = {
@@ -27,38 +28,76 @@ class DetailedTripScreen extends Component {
       trip: null,
       reservations: [],
       asDriver: false,
+      fetchingPassengers: false,
+      fetchingReservations: false,
+      passengers: [],
     }
 
     this.renderPassengers = this.renderPassengers.bind(this)
+    this.renderReservations = this.renderReservations.bind(this)
     this.onPressStartTrip = this.onPressStartTrip.bind(this)
     this.toCurrentTrip = this.toCurrentTrip.bind(this)
+    this.updateReservations = this.updateReservations.bind(this)
   }
 
   async componentDidMount() {
     this.setState({ loading: true })
     const asDriver = this.props.navigation.getParam('asDriver', null)
     const trip_id = this.props.navigation.getParam('trip_id', null)
-    this.props.fetchTrip(this.props.user.token, trip_id)
-    this.props.fetchManifest(this.props.user.token, trip_id)
-    this.setState({ ...this.state, asDriver })
-
+    await this.props.fetchTrip(this.props.user.token, trip_id)
+    this.setState({ ...this.state, asDriver, loading: false })
     if (asDriver) {
-      const reservations = await getTripReservations(
-        this.props.user.token,
-        trip_id
-      )
-      this.setState({ loading: false })
-      if (!reservations || reservations.message) {
-        alert(
-          'Hubo un problema obteniendo las reservas. Por favor intentalo de nuevo.'
+      const params = [this.props.user.token, trip_id]
+      this.setState({ fetchingPassengers: true, fetchingReservations: true })
+      const passengers = await this.props.fetchManifest(...params)
+      const reservations = await this.props.fetchReservations(...params)
+      if (!reservations || !passengers || reservations.error || passengers.error) {
+        Alert.alert(
+          'Problemas obteniendo detalles del viaje',
+          'Hubo un problema obteniendo algunos detalles de tu viaje. Por favor inténtalo de nuevo.',
         )
-      } else {
-        this.setState({ reservations })
       }
-    } else {
-      this.setState({ loading: false })
+      if (reservations && !reservations.error) {
+        this.setState({ reservations: reservations.payload.data })
+      }
+      if (passengers && !passengers.error) {
+        this.setState({ passengers: passengers.payload.data.passengers })
+      }
+      this.setState({ fetchingPassengers: false, fetchingReservations: false })
     }
   }
+
+  async updateReservations(status, reservationId) {
+    const { reservations, trip } = this.state
+    const { user } = this.props
+    switch (status) {
+      case 'accepted':
+        const params = [user.token, trip.trip_id]
+        this.setState({
+          reservations: reservations.filter(i => reservationId !== i.reservation_id),
+          fetchingPassengers: true,
+        })
+        const passengers = await this.props.fetchManifest(...params)
+        if (!passengers || passengers.error) {
+          Alert.alert(
+            'Problemas obteniendo detalles del viaje',
+            'Hubo un problema obteniendo algunos detalles de tu viaje. Por favor inténtalo de nuevo.',
+          )
+        } else {
+          this.setState({ passengers: passengers.payload.data.passengers })
+        }
+        this.setState({ fetchingPassengers: false })
+        break
+      case 'declined':
+        this.setState({
+          reservations: reservations.filter(i => reservationId !== i.reservation_id),
+        })
+        break
+      default:
+        console.warn('Invalid status')
+    }
+  }
+
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.trip !== prevState.trip) {
       return { trip: nextProps.trip }
@@ -68,6 +107,7 @@ class DetailedTripScreen extends Component {
     }
     return null
   }
+
   onPressStartTrip() {
     this.props.navigation.navigate('StartTrip', {
       stops: this.state.trip.trip_route_points,
@@ -85,6 +125,7 @@ class DetailedTripScreen extends Component {
       },
     })
   }
+
   async toCurrentTrip() {
     this.props.fetchCurrentTrip(this.props.user.token).then(async response => {
       if (response.payload) {
@@ -120,24 +161,86 @@ class DetailedTripScreen extends Component {
   }
 
   renderPassengers() {
-    if (!this.state.trip) {
-      return null
+    const { trip, passengers, fetchingPassengers } = this.state
+    const { user } = this.props
+    if (!trip || !trip.trip_route || !trip.trip_route.end) {
+      return <></>
     }
+    return (
+      <View style={styles.sectionContainer}>
+        <View style={styles.headerTitle}>
+          <H3>Pasajeros</H3>
+        </View>
+        {fetchingPassengers && <Spinner color="blue" />}
+        {!fetchingPassengers && (
+          <View>
+            {passengers.length ? passengers.map((reservation, index) => {
+              const {
+                passenger_avatar,
+                passenger_name,
+                passenger_phone,
+                passenger_verifications,
+                trip_route,
+              } = reservation
+              return (
+                <PassengerDetails
+                  key={`passenger-${index}`}
+                  avatar={passenger_avatar}
+                  name={passenger_name}
+                  phone={'+56 9 7976 4722'}
+                  verified={passenger_verifications.identity}
+                  start={trip_route.start.place_name}
+                />
+              )
+            }) : (
+              <Text style={styles.noContent}>
+                Aún no tienes pasajeros para este viaje
+              </Text>
+            )}
+          </View>
+        )}
+      </View>
+    )
+  }
 
-    const finishStop = this.state.trip.trip_route.end.name
-    return this.state.reservations.length > 0
-      ? this.state.reservations.map((reservation, index) => {
-          return (
-            <TripRequestCard
-              key={`passenger-${index}`}
-              reservation={reservation}
-              finishStop={finishStop}
-              token={this.props.user.token}
-              tripStatus={this.state.trip.trip_status}
-            />
-          )
-        })
-      : null
+  renderReservations() {
+    const { trip, reservations, fetchingReservations } = this.state
+    const { user } = this.props
+    if (!trip || !trip.trip_route || !trip.trip_route.end) {
+      return <></>
+    }
+    if (trip.trip_status !== 'open') {
+      return <></>
+    }
+    return (
+      <View style={styles.sectionContainer}>
+        <View style={styles.headerTitle}>
+          <H3>Los siguientes usuarios quieren unirse a tu viaje</H3>
+        </View>
+        {fetchingReservations && <Spinner color="blue" />}
+        {!fetchingReservations && (
+          <View>
+            {reservations.length ? reservations.map((reservation, index) => {
+              return (
+                <TripRequestCard
+                  key={`reservation-${index}`}
+                  reservation={reservation}
+                  passenger={reservation.passenger}
+                  places={reservation.reservation_route_places}
+                  status={reservation.reservation_status}
+                  trip={trip}
+                  updateReservations={this.updateReservations}
+                />
+              )
+            }) : (
+              <Text style={styles.noContent}>
+                Aún no tienes solicitudes para este viaje
+              </Text>
+            )}
+          </View>
+        )}
+      </View>
+    )
   }
 
   render() {
@@ -155,6 +258,9 @@ class DetailedTripScreen extends Component {
         )}
         {this.state.asDriver && !this.state.loading
           ? this.renderPassengers()
+          : null}
+        {this.state.asDriver && !this.state.loading
+          ? this.renderReservations()
           : null}
       </ScrollView>
     )
@@ -188,6 +294,17 @@ const styles = StyleSheet.create({
     padding: 15,
     ...StyleSheet.absoluteFill,
   },
+  headerTitle: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  noContent: {
+    textAlign: 'center',
+    color: 'gray',
+  },
+  sectionContainer: {
+    margin: 20,
+  },
 })
 
 const mapPropsToState = state => ({
@@ -201,6 +318,7 @@ const mapDispatchToState = dispatch => ({
   postTripStart: (token, id) => dispatch(startJourney(token, id)),
   fetchManifest: (token, id) => dispatch(fetchTripManifest(token, id)),
   fetchCurrentTrip: token => dispatch(getCurrentTrip(token)),
+  fetchReservations: (token, id) => dispatch(getTripReservations(token, id))
 })
 
 export default connect(

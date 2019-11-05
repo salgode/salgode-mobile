@@ -1,5 +1,11 @@
 import React, { Component } from 'react'
-import { FlatList, SafeAreaView, StyleSheet } from 'react-native'
+import {
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  RefreshControl,
+  ScrollView
+} from 'react-native'
 import PropTypes from 'prop-types'
 import MyTrip from './Trip/Trip'
 import RequestedTrip from './Trip/RequestedTrip'
@@ -66,12 +72,22 @@ class MyTrips extends Component {
       )
     }
     return (
-      <EmptyState
-        image={noTrips}
-        text={isRequestedTrips
-          ? 'No has agendado viajes'
-          : 'No tienes viajes pendientes'}
-      />
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+        contentContainerStyle={{ flex: 1 }}
+      >
+        <EmptyState
+          image={noTrips}
+          text={isRequestedTrips
+            ? 'No has agendado viajes'
+            : 'No tienes viajes pendientes'}
+        />
+      </ScrollView>
     )
   }
 }

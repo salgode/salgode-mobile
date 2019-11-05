@@ -7,7 +7,7 @@ export const urls = {
         all: id => `/driver/trips/${id}/reservations`,
       },
       post: {
-        acept: (tripId, resId) =>
+        accept: (tripId, resId) =>
           `/driver/trips/${tripId}/reservations/${resId}/accept`,
         decline: (tripId, resId) =>
           `/driver/trips/${tripId}/reservations/${resId}/decline`,

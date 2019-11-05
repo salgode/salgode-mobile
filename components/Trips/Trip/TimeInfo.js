@@ -5,6 +5,13 @@ import Icon from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
 // import { showDate, showOnlyTime } from '../../../utils/time'
 
+const fillWithZero = value => {
+  if (value !== undefined && value.toString().length < 2) {
+    return `0${value}`
+  }
+  return `${value}`
+}
+
 const TimeInfo = ({ timestamp, displayAsRow = false }) => {
   const contaierStyle = {
     ...styles.container,
@@ -22,17 +29,13 @@ const TimeInfo = ({ timestamp, displayAsRow = false }) => {
       <View style={styles.rowElement}>
         <Icon name="calendar" style={styles.icon} />
         <Text style={styles.location}>
-          {datetime.getDate() +
-            '/' +
-            datetime.getMonth() +
-            '/' +
-            datetime.getFullYear()}
+          {`${datetime.getDate()}/${datetime.getMonth() + 1}/${datetime.getFullYear()}`}
         </Text>
       </View>
       <View style={styles.rowElement}>
         <Icon name="clockcircleo" style={styles.icon} />
         <Text style={styles.location}>
-          {datetime.getHours() + ':' + datetime.getMinutes()}
+          {`${fillWithZero(datetime.getHours())}:${fillWithZero(datetime.getMinutes())}`}
         </Text>
       </View>
     </View>

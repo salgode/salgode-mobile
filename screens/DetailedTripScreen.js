@@ -13,7 +13,6 @@ import {
   fetchTripManifest,
 } from '../redux/actions/trips'
 import { getTripReservations } from '../redux/actions/trips'
-import { getCurrentTrip } from '../redux/actions/user'
 import PassengerDetails from '../components/Trips/Trip/PassengerDetails'
 
 class DetailedTripScreen extends Component {
@@ -51,10 +50,15 @@ class DetailedTripScreen extends Component {
       this.setState({ fetchingPassengers: true, fetchingReservations: true })
       const passengers = await this.props.fetchManifest(...params)
       const reservations = await this.props.fetchReservations(...params)
-      if (!reservations || !passengers || reservations.error || passengers.error) {
+      if (
+        !reservations ||
+        !passengers ||
+        reservations.error ||
+        passengers.error
+      ) {
         Alert.alert(
           'Problemas obteniendo detalles del viaje',
-          'Hubo un problema obteniendo algunos detalles de tu viaje. Por favor inténtalo de nuevo.',
+          'Hubo un problema obteniendo algunos detalles de tu viaje. Por favor inténtalo de nuevo.'
         )
       }
       if (reservations && !reservations.error) {
@@ -74,14 +78,16 @@ class DetailedTripScreen extends Component {
       case 'accepted':
         const params = [user.token, trip.trip_id]
         this.setState({
-          reservations: reservations.filter(i => reservationId !== i.reservation_id),
+          reservations: reservations.filter(
+            i => reservationId !== i.reservation_id
+          ),
           fetchingPassengers: true,
         })
         const passengers = await this.props.fetchManifest(...params)
         if (!passengers || passengers.error) {
           Alert.alert(
             'Problemas obteniendo detalles del viaje',
-            'Hubo un problema obteniendo algunos detalles de tu viaje. Por favor inténtalo de nuevo.',
+            'Hubo un problema obteniendo algunos detalles de tu viaje. Por favor inténtalo de nuevo.'
           )
         } else {
           this.setState({ passengers: passengers.payload.data.passengers })
@@ -90,7 +96,9 @@ class DetailedTripScreen extends Component {
         break
       case 'declined':
         this.setState({
-          reservations: reservations.filter(i => reservationId !== i.reservation_id),
+          reservations: reservations.filter(
+            i => reservationId !== i.reservation_id
+          ),
         })
         break
       default:
@@ -127,42 +135,31 @@ class DetailedTripScreen extends Component {
   }
 
   async toCurrentTrip() {
-    this.props.fetchCurrentTrip(this.props.user.token).then(async response => {
-      if (response.payload) {
-        const trip = await this.props
-          .fetchTrip(this.props.user.token, response.payload.data.trip_id)
-          .then(response => response.payload.data)
-          .catch(() => null)
-        const manifest = await this.props
-          .fetchManifest(this.props.user.token, response.payload.data.trip_id)
-          .then(response => response.payload.data)
-          .catch(() => null)
+    const trip = await this.props
+      .fetchTrip(this.props.user.token, this.state.trip.trip_id)
+      .then(response => response.payload.data)
+      .catch(() => null)
+    const manifest = await this.props
+      .fetchManifest(this.props.user.token, this.state.trip.trip_id)
+      .then(response => response.payload.data)
+      .catch(() => null)
+    if (!trip || !manifest) {
+      this.props.navigation.navigate('Main')
+      return
+    }
 
-        if (!trip || !manifest) {
-          this.props.navigation.navigate('Main')
-          return
-        }
-
-        this.props.navigation.navigate('StopTrip', {
-          trip: {
-            ...trip,
-            manifest,
-            next_point: response.payload.data.next_point,
-            on_board: response.payload.data.on_board,
-            available_seats: response.payload.data.available_seats,
-          },
-          userToken: this.props.user.token,
-          asDriver: response.payload.data.is_driver,
-        })
-      } else {
-        this.props.navigation.navigate('Main')
-      }
+    this.props.navigation.navigate('StopTrip', {
+      trip: {
+        ...trip,
+        manifest,
+      },
+      userToken: this.props.user.token,
+      asDriver: true,
     })
   }
 
   renderPassengers() {
     const { trip, passengers, fetchingPassengers } = this.state
-    const { user } = this.props
     if (!trip || !trip.trip_route || !trip.trip_route.end) {
       return <></>
     }
@@ -174,25 +171,27 @@ class DetailedTripScreen extends Component {
         {fetchingPassengers && <Spinner color="blue" />}
         {!fetchingPassengers && (
           <View>
-            {passengers.length ? passengers.map((reservation, index) => {
-              const {
-                passenger_avatar,
-                passenger_name,
-                passenger_phone,
-                passenger_verifications,
-                trip_route,
-              } = reservation
-              return (
-                <PassengerDetails
-                  key={`passenger-${index}`}
-                  avatar={passenger_avatar}
-                  name={passenger_name}
-                  phone={'+56 9 7976 4722'}
-                  verified={passenger_verifications.identity}
-                  start={trip_route.start.place_name}
-                />
-              )
-            }) : (
+            {passengers.length ? (
+              passengers.map((reservation, index) => {
+                const {
+                  passenger_avatar,
+                  passenger_name,
+                  passenger_phone,
+                  passenger_verifications,
+                  trip_route,
+                } = reservation
+                return (
+                  <PassengerDetails
+                    key={`passenger-${index}`}
+                    avatar={passenger_avatar}
+                    name={passenger_name}
+                    phone={passenger_phone}
+                    verified={passenger_verifications.identity}
+                    start={trip_route.start.place_name}
+                  />
+                )
+              })
+            ) : (
               <Text style={styles.noContent}>
                 Aún no tienes pasajeros para este viaje
               </Text>
@@ -205,7 +204,6 @@ class DetailedTripScreen extends Component {
 
   renderReservations() {
     const { trip, reservations, fetchingReservations } = this.state
-    const { user } = this.props
     if (!trip || !trip.trip_route || !trip.trip_route.end) {
       return <></>
     }
@@ -220,19 +218,21 @@ class DetailedTripScreen extends Component {
         {fetchingReservations && <Spinner color="blue" />}
         {!fetchingReservations && (
           <View>
-            {reservations.length ? reservations.map((reservation, index) => {
-              return (
-                <TripRequestCard
-                  key={`reservation-${index}`}
-                  reservation={reservation}
-                  passenger={reservation.passenger}
-                  places={reservation.reservation_route_places}
-                  status={reservation.reservation_status}
-                  trip={trip}
-                  updateReservations={this.updateReservations}
-                />
-              )
-            }) : (
+            {reservations.length ? (
+              reservations.map((reservation, index) => {
+                return (
+                  <TripRequestCard
+                    key={`reservation-${index}`}
+                    reservation={reservation}
+                    passenger={reservation.passenger}
+                    places={reservation.reservation_route_places}
+                    status={reservation.reservation_status}
+                    trip={trip}
+                    updateReservations={this.updateReservations}
+                  />
+                )
+              })
+            ) : (
               <Text style={styles.noContent}>
                 Aún no tienes solicitudes para este viaje
               </Text>
@@ -281,7 +281,6 @@ DetailedTripScreen.propTypes = {
   fetchTrip: PropTypes.func.isRequired,
   fetchManifest: PropTypes.func.isRequired,
   postTripStart: PropTypes.func.isRequired,
-  fetchCurrentTrip: PropTypes.func.isRequired,
 }
 
 DetailedTripScreen.defaultProps = {
@@ -299,8 +298,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   noContent: {
-    textAlign: 'center',
     color: 'gray',
+    textAlign: 'center',
   },
   sectionContainer: {
     margin: 20,
@@ -317,8 +316,7 @@ const mapDispatchToState = dispatch => ({
   fetchTrip: (token, id) => dispatch(fetchTrip(token, id)),
   postTripStart: (token, id) => dispatch(startJourney(token, id)),
   fetchManifest: (token, id) => dispatch(fetchTripManifest(token, id)),
-  fetchCurrentTrip: token => dispatch(getCurrentTrip(token)),
-  fetchReservations: (token, id) => dispatch(getTripReservations(token, id))
+  fetchReservations: (token, id) => dispatch(getTripReservations(token, id)),
 })
 
 export default connect(

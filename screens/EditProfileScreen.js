@@ -400,15 +400,15 @@ const EditProfileScreen = props => {
     const { car } = props.user
     if (car && car.vehicle_attributes && car.vehicle_identifications) {
       const {
-        vehicle_color,
-        vehicle_make,
-        vehicle_model,
+        color,
+        brand,
+        model,
       } = car.vehicle_attributes
-      const { identification_id } = car.vehicle_identifications
-      setCarBrand(vehicle_make)
-      setCarColor(vehicle_color)
-      setCarModel(vehicle_model)
-      setCarPlate(identification_id)
+      const { identification } = car.vehicle_identifications
+      setCarBrand(brand)
+      setCarColor(color)
+      setCarModel(model)
+      setCarPlate(identification)
       setHasCar(true)
     }
   }, [props.user.car])

@@ -46,7 +46,7 @@ class ResolveCurrentTripScreen extends Component {
             on_board: response.payload.data.on_board,
             available_seats: response.payload.data.available_seats,
           },
-          userToken,
+          token: userToken,
           asDriver: response.payload.data.is_driver,
         })
       } else {

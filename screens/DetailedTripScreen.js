@@ -155,6 +155,7 @@ class DetailedTripScreen extends Component {
       },
       userToken: this.props.user.token,
       asDriver: true,
+      token: this.props.user.token,
     })
   }
 

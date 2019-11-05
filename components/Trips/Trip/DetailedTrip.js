@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, Platform } from 'react-native'
-import { Card, View, Text, CardItem, Button, Thumbnail } from 'native-base'
+import { Card, View, Text, CardItem, Button, Thumbnail, Spinner } from 'native-base'
 import Location from './Location'
 import PropTypes from 'prop-types'
 import Colors from '../../../constants/Colors'
@@ -13,6 +13,7 @@ export const DetailedTrip = ({
   driver,
   onPressStartTrip,
   toCurrentTrip,
+  fetchingPassengers,
 }) => {
   function renderLocation(locations) {
     return locations.map((location, index) => {
@@ -33,6 +34,8 @@ export const DetailedTrip = ({
       )
     })
   }
+
+  const [loadingButton, setLoadingButton] = React.useState(false)
 
   const selfieImage = driver != null ? driver.driver_avatar : 'placeholder'
 
@@ -80,27 +83,45 @@ export const DetailedTrip = ({
         </CardItem>
       )}
       {asDriver && trip.trip_status === 'open' ? (
-        <Button
-          style={{ alignSelf: 'center', backgroundColor: '#0000FF' }}
-          onPress={() => {
-            onPressStartTrip()
-          }}
-        >
-          <Text style={{ color: 'white', fontSize: 18, fontWeight: '800' }}>
-            Ir
-          </Text>
-        </Button>
+        <>
+          {loadingButton || fetchingPassengers ? (
+            <CardItem style={styles.spinner}>
+              <Spinner style={{ flex: 1 }} color="blue" />
+            </CardItem>
+          ) : (
+            <Button
+              style={{ alignSelf: 'center', backgroundColor: '#0000FF' }}
+              onPress={() => {
+                onPressStartTrip()
+              }}
+            >
+              <Text style={{ color: 'white', fontSize: 18, fontWeight: '800' }}>
+                Ir
+              </Text>
+            </Button>
+          )}
+        </>
       ) : trip.trip_status === 'in_progress' ? (
-        <Button
-          style={{ alignSelf: 'center', backgroundColor: '#0000FF' }}
-          onPress={() => {
-            toCurrentTrip()
-          }}
-        >
-          <Text style={{ color: 'white', fontSize: 18, fontWeight: '800' }}>
-            Ver
-          </Text>
-        </Button>
+        <>
+        {loadingButton ? (
+          <CardItem style={styles.spinner}>
+            <Spinner style={{ flex: 1 }} color="blue" />
+          </CardItem>
+        ) : (
+          <Button
+            style={{ alignSelf: 'center', backgroundColor: '#0000FF' }}
+            onPress={async () => {
+              setLoadingButton(true)
+              await toCurrentTrip()
+              setLoadingButton(false)
+            }}
+          >
+            <Text style={{ color: 'white', fontSize: 18, fontWeight: '800' }}>
+              Ver
+            </Text>
+          </Button>
+        )}
+        </>
       ) : null}
     </Card>
   ) : null
@@ -134,6 +155,11 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.8,
     shadowRadius: 5,
+  },
+  spinner: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   user: {
     alignItems: 'center',

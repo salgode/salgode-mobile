@@ -15,14 +15,17 @@ class CurrentStartScreen extends Component {
   }
 
   render() {
-    const stops = this.props.navigation.getParam('stops', null)
-    const onTripStart = this.props.navigation.getParam('onTripStart', null)
-    const nextTripView = this.props.navigation.getParam('nextTripView', null)
+    const { navigation } = this.props
+    const stops = navigation.getParam('stops', null)
+    const onTripStart = navigation.getParam('onTripStart', null)
+    const nextTripView = navigation.getParam('nextTripView', null)
+    const startPassengers = navigation.getParam('firstStopPassengers', null)
     return (
       <TripStart
         stops={stops}
         onTripStart={onTripStart}
         nextTripView={nextTripView}
+        startPassengers={startPassengers}
       />
     )
   }

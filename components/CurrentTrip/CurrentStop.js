@@ -24,11 +24,12 @@ class CurrentStop extends Component {
   }
 
   getUsersToPickUp() {
-    return this.state.trip.manifest
-      ? this.state.trip.manifest.passengers.filter(passenger => {
+    const { trip, stopIndex } = this.state
+    return trip.manifest
+      ? trip.manifest.passengers.filter(passenger => {
           return (
             passenger.trip_route.start ===
-            this.state.trip.trip_route_points[this.state.stopIndex].place_name
+            trip.trip_route_points[stopIndex].place_id
           )
           //podria usarse el numero de parada, pero creo que este esto es mas general (y mas claro)
         })
@@ -36,10 +37,6 @@ class CurrentStop extends Component {
   }
 
   goToNextStop() {
-    //pending before/after changes, see --> StopIcon for more details
-    //if(is first stop) {}
-    //if(stopIndex == 0) {
-
     if (this.state.stopIndex === this.state.trip.trip_route_points.length - 1) {
       this.goToLastStop()
     } else {
@@ -62,6 +59,7 @@ class CurrentStop extends Component {
 
   render() {
     if (this.props.asDriver) {
+      const passengers = this.getUsersToPickUp()
       return (
         <View style={styles.container}>
           <Text style={styles.title}>#Llego en 5</Text>
@@ -77,27 +75,25 @@ class CurrentStop extends Component {
               }
             />
           </View>
+          <Text style={styles.pickup}>Proxima parada:</Text>
           <Text style={styles.location}>
             {this.state.trip.trip_route_points[this.state.stopIndex].place_name}
           </Text>
           <View>
             <Text style={styles.pickup}>Recoge a:</Text>
             <ScrollView style={styles.userContainer}>
-              {this.state.trip.manifest &&
-                (this.state.trip.manifest.passengers.length > 0 ? (
-                  this.getUsersToPickUp().map((passenger, i) => (
-                    <UserToPickUp
-                      phone={passenger.passenger_phone}
-                      name={passenger.passenger_name}
-                      location={
-                        passenger.trip_route.start
-                      } /*la location no esta demas? porque solo se muestran las personas a recoger en la parada actual. o es la location a la cual quieren llegar?*/
-                      key={i}
-                    />
-                  ))
-                ) : (
-                  <Text>No tienes que recoger a nadie</Text>
-                ))}
+              {(passengers.length > 0) ? (
+                passengers.map((passenger, i) => (
+                  <UserToPickUp
+                    phone={passenger.passenger_phone}
+                    name={passenger.passenger_name}
+                    location={passenger.trip_route.start}
+                    key={i}
+                  />
+                ))
+              ) : (
+                <Text>No tienes que recoger a nadie</Text>
+              )}
             </ScrollView>
             <Button style={styles.button} onPress={this.goToNextStop}>
               <Text>{this.state.nextStopText}</Text>

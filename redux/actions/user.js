@@ -157,9 +157,7 @@ export function updateUser(authToken, data, extraData) {
 export function signoutUser() {
   return {
     type: actions.USER_SIGNOUT,
-    payload: {
-      user: {},
-    },
+    payload: {},
   }
 }
 

@@ -4,7 +4,7 @@ import {
   SafeAreaView,
   StyleSheet,
   RefreshControl,
-  ScrollView
+  ScrollView,
 } from 'react-native'
 import PropTypes from 'prop-types'
 import MyTrip from './Trip/Trip'
@@ -33,10 +33,11 @@ class MyTrips extends Component {
     let filteredData
     if (isRequestedTrips) {
       filteredData = tripsData
-        ? tripsData.filter(t =>
-            t.etd_info &&
-            t.etd_info.etd &&
-            ['accepted', 'pending', 'declined'].includes(t.reservation_status)
+        ? tripsData.filter(
+            t =>
+              t.etd_info &&
+              t.etd_info.etd &&
+              ['accepted', 'pending', 'declined'].includes(t.reservation_status)
           )
         : tripsData
     } else {
@@ -57,7 +58,7 @@ class MyTrips extends Component {
                   spacesUsed={item.spacesUsed}
                   user={item.driver}
                   reservationStatus={item.reservation_status}
-                  asDriver={this.asDriver}
+                  asDriver={asDriver}
                   onPressTrip={onPressTrip}
                   trip={item}
                   startLocation={item.trip_route.start}
@@ -74,18 +75,17 @@ class MyTrips extends Component {
     return (
       <ScrollView
         refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-          />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         contentContainerStyle={{ flex: 1 }}
       >
         <EmptyState
           image={noTrips}
-          text={isRequestedTrips
-            ? 'No has agendado viajes'
-            : 'No tienes viajes pendientes'}
+          text={
+            isRequestedTrips
+              ? 'No has agendado viajes'
+              : 'No tienes viajes pendientes'
+          }
         />
       </ScrollView>
     )

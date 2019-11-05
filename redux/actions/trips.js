@@ -42,7 +42,12 @@ export const actions = {
   TRIPS_DECLINE_RESERVATION_SUCCESS: 'TRIPS_DECLINE_RESERVATION_SUCCESS',
   TRIPS_DECLINE_RESERVATION_FAIL: 'TRIPS_DECLINE_RESERVATION_FAIL',
 
+  TRIPS_FINISH: 'TRIPS_FINISH',
+  TRIPS_FINISH_SUCCESS: 'TRIPS_FINISH_SUCCESS',
+  TRIPS_FINISH_FAIL: 'TRIPS_FINISH_FAIL',
+
   TRIPS_REMOVE_TRIP_FROM_LIST: 'TRIPS_REMOVE_TRIP_FROM_LIST',
+
 }
 
 export function cleanSearchStartPlace() {
@@ -182,6 +187,20 @@ export function declineReservation(authToken, tripId, resId, data) {
         method: 'post',
         headers: getBaseHeaders(authToken),
         data,
+      },
+    },
+  }
+}
+
+
+export function finishTrip(authToken, tripId) {
+  return {
+    type: actions.TRIPS_FINISH,
+    payload: {
+      request: {
+        url: urls.driver.trips.post.complete(tripId),
+        method: 'post',
+        headers: getBaseHeaders(authToken),
       },
     },
   }

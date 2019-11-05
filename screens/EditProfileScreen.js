@@ -214,7 +214,9 @@ const EditProfileScreen = props => {
   const [name, setName] = React.useState('')
   const [lastName, setLastName] = React.useState('')
   const [phone, setPhone] = React.useState('')
-  const [isChangePasswordActive, setIsChangePasswordActive] = React.useState(false)
+  const [isChangePasswordActive, setIsChangePasswordActive] = React.useState(
+    false
+  )
   const [currentPassword, setCurrentPassword] = React.useState('')
   const [newPassword, setNewPassword] = React.useState('')
   const [hasCar, setHasCar] = React.useState(false)
@@ -296,18 +298,16 @@ const EditProfileScreen = props => {
       value: currentPassword,
       setValue: setCurrentPassword,
       isSecure: true,
-      validate: (password) => typeof password === 'string'
-        ? password.length >= 8
-        : false
+      validate: password =>
+        typeof password === 'string' ? password.length >= 8 : false,
     },
     {
       label: 'Nueva contraseña',
       value: newPassword,
       setValue: setNewPassword,
       isSecure: true,
-      validate: (password) => typeof password === 'string'
-        ? password.length >= 8
-        : false
+      validate: password =>
+        typeof password === 'string' ? password.length >= 8 : false,
     },
   ]
   const carFields = [
@@ -385,7 +385,8 @@ const EditProfileScreen = props => {
     }
     if (stateUser.vehicles && stateUser.vehicles.length !== 0) {
       setGettingCar(true)
-      props.getUserCar(stateUser.token, stateUser.vehicles[0].vehicle_id)
+      props
+        .getUserCar(stateUser.token, stateUser.vehicles[0].vehicle_id)
         .then(() => setGettingCar(false))
         .catch(() => setGettingCar(false))
     } else {
@@ -436,10 +437,14 @@ const EditProfileScreen = props => {
       last_name: lastName,
       phone,
     }
-    const response = await props.updateUser(props.user.token, {
-      ...body,
-      user_identifications: {},
-    }, body)
+    const response = await props.updateUser(
+      props.user.token,
+      {
+        ...body,
+        user_identifications: {},
+      },
+      body
+    )
     setIsLoading(false)
     if (response.error) {
       Alert.alert(
@@ -497,21 +502,30 @@ const EditProfileScreen = props => {
         setAvatar(result.uri)
 
         // TODO: refactor -> upload function & duplicate code on ImageSignupForm
-        const [fileName, fileType] = uri.split('/').slice(-1)[0].split('.')
+        const [fileName, fileType] = uri
+          .split('/')
+          .slice(-1)[0]
+          .split('.')
         const response = await uploadImage(fileName, fileType)
-        if (!await uploadImageToS3(response.payload.data.upload, fileType, uri)) {
+        if (
+          !(await uploadImageToS3(response.payload.data.upload, fileType, uri))
+        ) {
           Alert.alert(
             'Error al actualizar foto',
             'No hemos podido actualizar tu foto. Por favor inténtalo de nuevo.'
           )
         } else {
-          const updateResponse = await props.updateUser(props.user.token, {
-            user_identifications: {
-              selfie_image: response.payload.data.image_id,
+          const updateResponse = await props.updateUser(
+            props.user.token,
+            {
+              user_identifications: {
+                selfie_image: response.payload.data.image_id,
+              },
             },
-          }, {
-            avatar: response.payload.data.fetch,
-          })
+            {
+              avatar: response.payload.data.fetch,
+            }
+          )
           if (updateResponse.error) {
             Alert.alert(
               'Error al actualizar foto',
@@ -551,9 +565,18 @@ const EditProfileScreen = props => {
     setIsLoading(true)
 
     // TODO: Refactor
-    const [frontName, frontType] = dniFront.split('/').slice(-1)[0].split('.')
+    const [frontName, frontType] = dniFront
+      .split('/')
+      .slice(-1)[0]
+      .split('.')
     const frontResponse = await props.uploadImage(frontName, frontType)
-    if (!await uploadImageToS3(frontResponse.payload.data.upload, frontType, dniFront)) {
+    if (
+      !(await uploadImageToS3(
+        frontResponse.payload.data.upload,
+        frontType,
+        dniFront
+      ))
+    ) {
       setIsUploadingDni(false)
       setIsLoading(false)
       Alert.alert(
@@ -562,9 +585,18 @@ const EditProfileScreen = props => {
       )
       return
     }
-    const [backName, backType] = dniBack.split('/').slice(-1)[0].split('.')
+    const [backName, backType] = dniBack
+      .split('/')
+      .slice(-1)[0]
+      .split('.')
     const backResponse = await props.uploadImage(backName, backType)
-    if (!await uploadImageToS3(backResponse.payload.data.upload, backType, dniBack)) {
+    if (
+      !(await uploadImageToS3(
+        backResponse.payload.data.upload,
+        backType,
+        dniBack
+      ))
+    ) {
       setIsUploadingDni(false)
       setIsLoading(false)
       Alert.alert(
@@ -573,19 +605,23 @@ const EditProfileScreen = props => {
       )
       return
     }
-    const response = await props.updateUser(props.user.token, {
-      user_identifications: {
-        identification: {
-          front: frontResponse.payload.data.image_id,
-          back: backResponse.payload.data.image_id,
+    const response = await props.updateUser(
+      props.user.token,
+      {
+        user_identifications: {
+          identification: {
+            front: frontResponse.payload.data.image_id,
+            back: backResponse.payload.data.image_id,
+          },
         },
       },
-    }, {
-      dni: {
-        front: frontResponse.payload.data.fetch,
-        back: backResponse.payload.data.fetch,
-      },
-    })
+      {
+        dni: {
+          front: frontResponse.payload.data.fetch,
+          back: backResponse.payload.data.fetch,
+        },
+      }
+    )
     setIsLoading(false)
     setDniFrontSubmit('')
     setDniBackSubmit('')
@@ -605,9 +641,18 @@ const EditProfileScreen = props => {
     setIsLoading(true)
 
     // TODO: Refactor
-    const [frontName, frontType] = licenseFront.split('/').slice(-1)[0].split('.')
+    const [frontName, frontType] = licenseFront
+      .split('/')
+      .slice(-1)[0]
+      .split('.')
     const frontResponse = await props.uploadImage(frontName, frontType)
-    if (!await uploadImageToS3(frontResponse.payload.data.upload, frontType, licenseFront)) {
+    if (
+      !(await uploadImageToS3(
+        frontResponse.payload.data.upload,
+        frontType,
+        licenseFront
+      ))
+    ) {
       setIsUploadingLicense(false)
       setIsLoading(false)
       Alert.alert(
@@ -616,9 +661,18 @@ const EditProfileScreen = props => {
       )
       return
     }
-    const [backName, backType] = licenseBack.split('/').slice(-1)[0].split('.')
+    const [backName, backType] = licenseBack
+      .split('/')
+      .slice(-1)[0]
+      .split('.')
     const backResponse = await props.uploadImage(backName, backType)
-    if (!await uploadImageToS3(backResponse.payload.data.upload, backType, licenseBack)) {
+    if (
+      !(await uploadImageToS3(
+        backResponse.payload.data.upload,
+        backType,
+        licenseBack
+      ))
+    ) {
       setIsUploadingLicense(false)
       setIsLoading(false)
       Alert.alert(
@@ -627,19 +681,23 @@ const EditProfileScreen = props => {
       )
       return
     }
-    const response = await props.updateUser(props.user.token, {
-      user_identifications: {
-        driver_license: {
-          front: frontResponse.payload.data.image_id,
-          back: backResponse.payload.data.image_id,
+    const response = await props.updateUser(
+      props.user.token,
+      {
+        user_identifications: {
+          driver_license: {
+            front: frontResponse.payload.data.image_id,
+            back: backResponse.payload.data.image_id,
+          },
         },
       },
-    }, {
-      license: {
-        front: frontResponse.payload.data.fetch,
-        back: backResponse.payload.data.fetch,
-      },
-    })
+      {
+        license: {
+          front: frontResponse.payload.data.fetch,
+          back: backResponse.payload.data.fetch,
+        },
+      }
+    )
     setIsLoading(false)
     setFrontSubmit('')
     setBackSubmit('')
@@ -667,7 +725,10 @@ const EditProfileScreen = props => {
         'Hubo un problema al intentar cambiar tu contraseña. Por favor inténtalo de nuevo.'
       )
     } else {
-      Alert.alert('Actualización exitosa', 'Tu contraseña se ha cambiado con éxito')
+      Alert.alert(
+        'Actualización exitosa',
+        'Tu contraseña se ha cambiado con éxito'
+      )
     }
     setIsLoading(false)
   }
@@ -731,12 +792,10 @@ const EditProfileScreen = props => {
   }
 
   const checkValidPasswords = () => {
-    const validCurrentPassword = typeof currentPassword === 'string'
-      ? currentPassword.length >= 8
-      : false
-    const validNewPassword = typeof newPassword === 'string'
-      ? newPassword.length >= 8
-      : false
+    const validCurrentPassword =
+      typeof currentPassword === 'string' ? currentPassword.length >= 8 : false
+    const validNewPassword =
+      typeof newPassword === 'string' ? newPassword.length >= 8 : false
     return validCurrentPassword && validNewPassword
   }
 
@@ -817,7 +876,11 @@ const EditProfileScreen = props => {
                       <H2>Actualiza tu contraseña</H2>
                       <View style={styles.passwordFields}>
                         {passwordFields.map(field => (
-                          <Field key={field.label} field={field} validity="partial" />
+                          <Field
+                            key={field.label}
+                            field={field}
+                            validity="partial"
+                          />
                         ))}
                       </View>
                       <Button
@@ -828,7 +891,9 @@ const EditProfileScreen = props => {
                         onPress={onPressUpdatePassword}
                         color={'#0000FF'}
                       >
-                        <Text style={styles.buttonText}>Cambiar contraseña</Text>
+                        <Text style={styles.buttonText}>
+                          Cambiar contraseña
+                        </Text>
                       </Button>
                     </View>
                     <View style={styles.hiddenFlex}></View>
@@ -877,10 +942,14 @@ const EditProfileScreen = props => {
                 size={60}
                 title="Foto trasera Carnet de Identidad"
               />
-              {(dniFront && props.user.verifications)
-                ? renderVerification(props.user.verifications.dni, 'Estado verificación: ')
-                : (<></>)
-              }
+              {dniFront && props.user.verifications ? (
+                renderVerification(
+                  props.user.verifications.dni,
+                  'Estado verificación: '
+                )
+              ) : (
+                <></>
+              )}
               <Button
                 block
                 borderRadius={10}
@@ -931,10 +1000,14 @@ const EditProfileScreen = props => {
                     size={60}
                     title="Foto trasera Licencia de conducir"
                   />
-                  {(licenseFront && props.user.verifications)
-                    ? renderVerification(props.user.verifications.license, 'Estado verificación: ')
-                    : (<></>)
-                  }
+                  {licenseFront && props.user.verifications ? (
+                    renderVerification(
+                      props.user.verifications.license,
+                      'Estado verificación: '
+                    )
+                  ) : (
+                    <></>
+                  )}
                   <Button
                     block
                     borderRadius={10}
@@ -1015,7 +1088,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  updateUser: (authToken, data, ed) => dispatch(updateUser(authToken, data, ed)),
+  updateUser: (authToken, data, ed) =>
+    dispatch(updateUser(authToken, data, ed)),
   uploadImage: (name, type) => dispatch(getImageUrl(name, type)),
   signOut: () => dispatch(signoutUser()),
   getUserCar: (token, carId) => dispatch(getUserCar(token, carId)),
@@ -1119,11 +1193,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   updatePasswordModal: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'space-around',
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "column",
     height: Layout.window.height,
+    justifyContent: "space-around",
   },
   verifiedContainer: {
     alignItems: 'center',

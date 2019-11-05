@@ -4,6 +4,7 @@ import { View } from 'native-base'
 import PropTypes from 'prop-types'
 import TripRequest from '../components/Trips/TripRequest'
 import { createSlot } from '../redux/actions/slots'
+import { removeTripFromList } from '../redux/actions/trips'
 import { connect } from 'react-redux'
 
 class TripRequestScreen extends Component {
@@ -44,6 +45,7 @@ class TripRequestScreen extends Component {
         'Hubo un error al reservar el puesto. Por favor inentelo de nuevo.'
       )
     } else {
+      this.props.removeTrip(this.state.tripId)
       Alert.alert(
         'Solicitud enviada correctamente!',
         'Tu pedido está siendo revisado por el conductor.'
@@ -87,6 +89,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   createSlot: (token, tripId, startId, stopId) =>
     dispatch(createSlot(token, tripId, startId, stopId)),
+  removeTrip: tripId => dispatch(removeTripFromList(tripId)),
 })
 
 export default connect(

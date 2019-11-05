@@ -41,6 +41,8 @@ export const actions = {
   TRIPS_DECLINE_RESERVATION: 'TRIPS_DECLINE_RESERVATION',
   TRIPS_DECLINE_RESERVATION_SUCCESS: 'TRIPS_DECLINE_RESERVATION_SUCCESS',
   TRIPS_DECLINE_RESERVATION_FAIL: 'TRIPS_DECLINE_RESERVATION_FAIL',
+
+  TRIPS_REMOVE_TRIP_FROM_LIST: 'TRIPS_REMOVE_TRIP_FROM_LIST',
 }
 
 export function cleanSearchStartPlace() {
@@ -50,23 +52,34 @@ export function cleanSearchStartPlace() {
 }
 
 export function setSearchStartPlace(startPlace, authToken) {
-  if (startPlace) {
-    return {
-      type: actions.SET_SEARCH_START_PLACE,
-      payload: {
-        startPlace,
-        request: {
-          url: `/trips/search/intersects/${startPlace.place_id}`,
-          method: 'get',
-          headers: getBaseHeaders(authToken),
-        },
-      },
-    }
-  }
   return {
     type: actions.SET_SEARCH_START_PLACE,
-    payload: { startPlace },
+    payload: {
+      startPlace,
+      request: {
+        url: `/trips/search/intersects/${startPlace.place_id}`,
+        method: 'get',
+        headers: getBaseHeaders(authToken),
+      },
+    },
   }
+  // if (startPlace) {
+  //   return {
+  //     type: actions.SET_SEARCH_START_PLACE,
+  //     payload: {
+  //       startPlace,
+  //       request: {
+  //         url: `/trips/search/intersects/${startPlace.place_id}`,
+  //         method: 'get',
+  //         headers: getBaseHeaders(authToken),
+  //       },
+  //     },
+  //   }
+  // }
+  // return {
+  //   type: actions.SET_SEARCH_START_PLACE,
+  //   payload: { startPlace },
+  // }
 }
 
 export function cleanSearchEndPlace() {
@@ -170,6 +183,15 @@ export function declineReservation(authToken, tripId, resId, data) {
         headers: getBaseHeaders(authToken),
         data,
       },
+    },
+  }
+}
+
+export function removeTripFromList(tripId) {
+  return {
+    type: actions.TRIPS_REMOVE_TRIP_FROM_LIST,
+    payload: {
+      trip_id: tripId,
     },
   }
 }

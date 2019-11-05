@@ -18,7 +18,7 @@ const TripStart = ({ stops = [], onTripStart, nextTripView }) => {
             if (response.error) {
               Alert.alert(
                 'Error al iniciar Viaje',
-                'Hubo un problema iniciando su viaje. Por favor intentalo de nuevo.'
+                'Hubo un problema iniciando su viaje. Por favor inténtalo de nuevo.'
               )
             } else {
               nextTripView()

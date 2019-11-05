@@ -26,12 +26,12 @@ class ChooseTripsScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      availableTrips: null,
-      rerender: true,
+      loading: false,
     }
 
     this.onRequestTrip = this.onRequestTrip.bind(this)
     this.setSearchStartPlaceFetch = this.setSearchStartPlaceFetch.bind(this)
+    this.onReload = this.onReload.bind(this)
   }
 
   async componentDidMount() {
@@ -45,16 +45,32 @@ class ChooseTripsScreen extends Component {
     })
   }
 
-  async setSearchStartPlaceFetch(item) {
-    const response = await this.props.setSearchStartPlace(
-      item,
-      this.props.user.token
-    )
-    if (response.error) {
-      Alert.alert(
-        'Error obteniendo viajes',
-        'Hubo un problema obteniendo los viajes. Por favor intentalo de nuevo.'
+  async setSearchStartPlaceFetch(item, reset) {
+    if (item && Object.keys(item).length > 0) {
+      const { requestedTrips } = this.props
+      if (reset) {
+        this.setState({ loading: true })
+      }
+      const response = await this.props.setSearchStartPlace(
+        item,
+        this.props.user.token,
       )
+      if (reset) {
+        this.setState({ loading: false })
+      }
+      if (response.error) {
+        Alert.alert(
+          'Error obteniendo viajes',
+          'Hubo un problema obteniendo los viajes. Por favor inténtalo de nuevo.'
+        )
+      }
+    }
+  }
+
+  onReload() {
+    const { startPlace } = this.props
+    if (startPlace && Object.keys(startPlace).length > 0) {
+      this.setSearchStartPlaceFetch(startPlace, false)
     }
   }
 
@@ -69,7 +85,7 @@ class ChooseTripsScreen extends Component {
                 title: 'Buscas #SalgoDe',
                 text: '#SalgoDe',
                 onClearPress: this.props.cleanSearchStartPlace,
-                onItemPress: this.setSearchStartPlaceFetch,
+                onItemPress: (i) => this.setSearchStartPlaceFetch(i, true),
                 data: this.props.spots,
               })
             }
@@ -96,14 +112,19 @@ class ChooseTripsScreen extends Component {
             onClearPress={this.props.cleanSearchEndPlace}
           /> */}
         </View>
-        {requestedTrips.length > 0 ? (
-          <ChooseTrips
-            onSend={this.onRequestTrip}
-            onReload={this.setSearchStartPlaceFetch}
-            trips={requestedTrips}
-          />
-        ) : (
-          <EmptyState image={noTrips} text="No se ha encontrado ningún viaje según lo solicitado." />
+        {this.state.loading && <Spinner color="blue" />}
+        {!this.state.loading && (
+          <>
+            {requestedTrips.length > 0 ? (
+              <ChooseTrips
+                onSend={this.onRequestTrip}
+                onReload={this.onReload}
+                trips={requestedTrips}
+              />
+            ) : (
+              <EmptyState image={noTrips} text="No se ha encontrado ningún viaje según lo solicitado." />
+            )}
+          </>
         )}
       </View>
     )

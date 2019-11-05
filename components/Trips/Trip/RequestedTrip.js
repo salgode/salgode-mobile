@@ -6,7 +6,7 @@ import Location from './Location'
 import Colors from '../../../constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
 import TimeInfo from './TimeInfo'
-import { Card, View, Text, CardItem, Button, Thumbnail } from 'native-base'
+import { Card, View, Text, CardItem, Button, Thumbnail, Spinner } from 'native-base'
 import PropTypes from 'prop-types'
 import { cancelSlot } from '../../../redux/actions/slots'
 
@@ -24,6 +24,7 @@ const RequestedTrip = ({
   token,
   navigation,
 }) => {
+  const [loadingCancel, setLoadingCancel] = React.useState(false)
   let statusColor
   let statusText
   let show = true
@@ -55,12 +56,14 @@ const RequestedTrip = ({
   }
 
   const onCancel = () => {
+    setLoadingCancel(true)
     dispatchCancelSlot(token, trip.reservation_id)
       .then(() => {
         Alert.alert(
           'Reserva cancelada',
           'Su reserva ha sido cancelada con éxito',
         )
+        // setLoadingCancel(false)
         removeFromList(trip.reservation_id)
       })
       .catch(() => {
@@ -68,6 +71,7 @@ const RequestedTrip = ({
           'Error al cancelar',
           'No se pudo cancelar con éxito su reservar. Por favor inténtelo de nuevo',
         )
+        setLoadingCancel(false)
       })
   }
 
@@ -133,9 +137,17 @@ const RequestedTrip = ({
           </Button>
         )}
         {showCancelButton && (
-          <Button borderRadius={10} style={styles.cancelButton} onPress={onCancel}>
-            <Text style={styles.cancelText}>Cancelar</Text>
-          </Button>
+          <>
+            {loadingCancel ? (
+              <View style={styles.spinner}>
+                <Spinner color="blue"/>
+              </View>
+            ) : (
+              <Button borderRadius={10} style={styles.cancelButton} onPress={onCancel}>
+                <Text style={styles.cancelText}>Cancelar</Text>
+              </Button>
+            )}
+          </>
         )}
       </CardItem>
     </Card>
@@ -169,18 +181,30 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderColor: '#0000FF',
     borderWidth: 1,
+    flex: 1,
+    marginHorizontal: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   cancelButton: {
     backgroundColor: 'white',
     borderColor: '#FF5242',
     borderWidth: 1,
+    flex: 1,
+    marginHorizontal: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   cancelText: {
     color: '#FF5242',
   },
   containerBottom: {
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-around',
     width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
   },
   containerRequested: {
     alignItems: 'flex-start',
@@ -200,6 +224,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     flexDirection: 'column',
   },
+  spinner: { flex: 1 },
   status: { borderRadius: 15, paddingHorizontal: 10, paddingVertical: 2 },
   statusText: { color: 'white', fontSize: 12, fontWeight: '700' },
   user: {

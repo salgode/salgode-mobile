@@ -42,8 +42,10 @@ export const Trip = ({
     >
       <Card style={[styles.container, styles.shadow]}>
         <View style={styles.locationContainer}>
-          <View style={{ ...styles.status, backgroundColor: statusColor }}>
-            <Text style={styles.statusText}>{statusText}</Text>
+          <View style={styles.labelContainer}>
+            <View style={{ ...styles.status, backgroundColor: statusColor }}>
+              <Text style={styles.statusText}>{statusText}</Text>
+            </View>
           </View>
           <Text>{user.driver_name}</Text>
           <Location color={'#0000FF'} location={startLocation.place_name} />
@@ -99,6 +101,11 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     height: 150,
     justifyContent: 'space-between',
+  },
+  labelContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
   },
   locationContainer: {
     height: 150,

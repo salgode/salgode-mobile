@@ -40,8 +40,6 @@ export default function userReducer(state = {}, action) {
         loading: false,
         error: 'Error while updating user',
       }
-    case userActions.USER_SIGNOUT:
-      return { ...action.payload.user }
     case userActions.USER_UPLOAD_IMAGE:
       return { ...state, loading: true }
     case userActions.USER_UPLOAD_IMAGE_SUCCESS:

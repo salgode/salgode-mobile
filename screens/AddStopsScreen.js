@@ -51,7 +51,7 @@ class AddStopsScreen extends Component {
     if (response.error) {
       Alert.alert(
         'Error de creación',
-        'Hubo un problema al crear tu viaje. Por favor intentalo de nuevo.'
+        'Hubo un problema al crear tu viaje. Por favor inténtalo de nuevo.'
       )
     } else {
       Alert.alert('Creación exitosa', 'Tu viaje ha sido publicado!')

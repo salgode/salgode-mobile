@@ -28,9 +28,16 @@ const TripRequest = ({ stops, onSend, loading }) => {
         style={styles.picker}
       >
         {stops.slice(0, -1).map((stop, i) => (
-          <Picker.Item key={`PickerItem${i}`} label={stop.place_name} value={stop} />
+          <Picker.Item
+            key={`PickerItem${i}`}
+            label={stop.place_name}
+            value={stop}
+          />
         ))}
       </Picker>
+      <Text style={styles.smallTitle}>
+        Puedes bajar en cualquiera de estas paradas.
+      </Text>
       {loading && <Spinner color={Colors.mainBlue} />}
       {!loading && (
         <Button
@@ -77,6 +84,12 @@ const styles = StyleSheet.create({
   pickerTitle: {
     fontSize: 15,
     fontWeight: '500',
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  smallTitle: {
+    fontSize: 15,
+    fontWeight: '300',
     marginBottom: 10,
     marginTop: 10,
   },

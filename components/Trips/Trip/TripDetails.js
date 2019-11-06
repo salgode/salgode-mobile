@@ -182,6 +182,7 @@ class TripDetails extends Component {
             </CardItem>
           )}
         </Card>
+        <View style={{ height: 30 }} />
       </ScrollView>
     )
   }

@@ -1099,7 +1099,7 @@ const mapDispatchToProps = dispatch => ({
 const photoSize = 96
 
 const styles = StyleSheet.create({
-  artificialKeyboardPadding: { height: 900 },
+  artificialKeyboardPadding: { height: 1000 },
   blueButton: {
     marginBottom: 30,
     marginTop: 20,

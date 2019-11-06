@@ -311,7 +311,7 @@ const styles = StyleSheet.create({
 
 const mapPropsToState = state => ({
   user: state.user,
-  trip: state.trips.trip,
+  trip: state.trips.trip || {},
   manifest: state.trips.trip ? state.trips.trip.manifest : {},
 })
 

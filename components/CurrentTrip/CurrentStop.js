@@ -37,6 +37,8 @@ class CurrentStop extends Component {
   }
 
   goToNextStop() {
+    this.props.onPressNextStop(this.state.trip.trip_id)
+
     if (this.state.stopIndex === this.state.trip.trip_route_points.length - 1) {
       this.goToLastStop()
     } else {
@@ -61,7 +63,7 @@ class CurrentStop extends Component {
     if (this.props.asDriver) {
       const passengers = this.getUsersToPickUp()
       return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
           <Text style={styles.title}>#Llego en 5</Text>
           <View style={styles.roadContainer}>
             <StopIcon type={this.state.stopIndex === 0 ? 0 : 1} />
@@ -82,7 +84,7 @@ class CurrentStop extends Component {
           <View>
             <Text style={styles.pickup}>Recoge a:</Text>
             <ScrollView style={styles.userContainer}>
-              {(passengers.length > 0) ? (
+              {passengers.length > 0 ? (
                 passengers.map((passenger, i) => (
                   <UserToPickUp
                     phone={passenger.passenger_phone}
@@ -99,7 +101,7 @@ class CurrentStop extends Component {
               <Text>{this.state.nextStopText}</Text>
             </Button>
           </View>
-        </View>
+        </ScrollView>
       )
     }
 
@@ -130,6 +132,7 @@ CurrentStop.propTypes = {
   trip: PropTypes.object.isRequired,
   stopIndex: PropTypes.number.isRequired,
   onPressCompleteTrip: PropTypes.func.isRequired,
+  onPressNextStop: PropTypes.func.isRequired,
 }
 
 const styles = StyleSheet.create({
@@ -172,6 +175,7 @@ const styles = StyleSheet.create({
   userContainer: {
     height: '40%',
     margin: '10%',
+    // marginBottom: '0%',
   },
 })
 

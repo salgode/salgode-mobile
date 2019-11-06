@@ -5,6 +5,8 @@ import {
   NavigationActions,
 } from 'react-navigation'
 import FinishedTrip from '../../components/CurrentTrip/FinishedTrip'
+import { connect } from 'react-redux'
+import { finishTrip } from '../../redux/actions/trips'
 
 class CurrentFinishScreen extends Component {
   constructor(props) {
@@ -12,7 +14,13 @@ class CurrentFinishScreen extends Component {
     this.onPressFinishTrip = this.onPressFinishTrip.bind(this)
   }
 
-  onPressFinishTrip() {
+  async onPressFinishTrip() {
+    const trip = this.props.navigation.getParam('trip', null)
+    const token = this.props.navigation.getParam('token', null)
+
+    const resp = await this.props.finishTrip(token, trip.trip_id)
+    console.log(resp)
+
     const resetAction = StackActions.reset({
       index: 0,
       actions: [NavigationActions.navigate({ routeName: 'Trips' })],
@@ -38,4 +46,13 @@ class CurrentFinishScreen extends Component {
 
 CurrentFinishScreen.propTypes = {}
 
-export default withNavigation(CurrentFinishScreen)
+const mapStateToProps = () => ({})
+
+const mapDispatchToProps = dispatch => ({
+  finishTrip: (token, id) => dispatch(finishTrip(token, id)),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withNavigation(CurrentFinishScreen))

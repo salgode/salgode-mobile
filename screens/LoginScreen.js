@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, Button, View } from 'native-base'
+import { Text, Button, View, Spinner } from 'native-base'
 import {
   StyleSheet,
   KeyboardAvoidingView,
@@ -10,7 +10,6 @@ import {
   Alert,
 } from 'react-native'
 import { connect } from 'react-redux'
-import { Spinner } from 'native-base'
 import PropTypes from 'prop-types'
 
 import logo from '../assets/images/login_icon.png'

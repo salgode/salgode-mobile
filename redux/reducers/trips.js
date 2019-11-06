@@ -4,7 +4,6 @@ export default function tripsReducer(state = {}, action) {
   switch (action.type) {
     case tripActions.CLEAN_SEARCH_START_PLACE:
       return { ...state, startPlace: {} }
-
     case tripActions.SET_SEARCH_START_PLACE:
       return {
         ...state,
@@ -86,6 +85,12 @@ export default function tripsReducer(state = {}, action) {
       return { ...state, loading: false }
     case tripActions.TRIPS_DECLINE_RESERVATION_FAIL:
       return { ...state, loading: false }
+    case tripActions.TRIPS_REMOVE_TRIP_FROM_LIST:
+      const { trip_id } = action.payload
+      return {
+        ...state,
+        requestedTrips: state.requestedTrips.filter(i => i.trip_id !== trip_id),
+      }
     default:
       return state
   }

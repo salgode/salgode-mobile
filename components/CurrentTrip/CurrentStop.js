@@ -111,7 +111,7 @@ class CurrentStop extends Component {
       <View style={styles.container}>
         <Text style={styles.title}>#BuenViaje</Text>
         <Text style={styles.pickup}>La ruta:</Text>
-        <StopsList stops={this.props.trip.trip_trip_route_points} />
+        <StopsList stops={this.props.trip.trip_route_points} />
 
         <View>
           <Text style={styles.pickup}>Te lleva:</Text>

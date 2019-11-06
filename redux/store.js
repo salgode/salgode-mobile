@@ -2,6 +2,7 @@ import { applyMiddleware, combineReducers, createStore } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import axiosMiddleware from 'redux-axios-middleware'
 import axios from 'axios'
+import { actions as userActions } from './actions/user'
 import {
   createTripReducer,
   slotsReducer,
@@ -40,8 +41,15 @@ const reducer = combineReducers({
   loading: false,
 })
 
+const rootReducer = (state, action) => {
+  if (action.type === userActions.USER_SIGNOUT) {
+    return reducer({}, action)
+  }
+  return reducer(state, action)
+}
+
 export const store = createStore(
-  reducer,
+  rootReducer,
   {
     user: userModel,
     createTrip: createTripModel,

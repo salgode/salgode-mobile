@@ -58,6 +58,7 @@ import {
 import { uploadImageToS3 } from '../utils/image'
 import { promiseXMLHttpRequest } from '../utils/xmlhttprequest'
 import * as ImagePicker from 'expo-image-picker'
+import { store } from '../redux/store'
 
 const getText = destination => {
   switch (destination) {
@@ -401,15 +402,15 @@ const EditProfileScreen = props => {
     const { car } = props.user
     if (car && car.vehicle_attributes && car.vehicle_identifications) {
       const {
-        vehicle_color,
-        vehicle_make,
-        vehicle_model,
+        color,
+        brand,
+        model,
       } = car.vehicle_attributes
-      const { identification_id } = car.vehicle_identifications
-      setCarBrand(vehicle_make)
-      setCarColor(vehicle_color)
-      setCarModel(vehicle_model)
-      setCarPlate(identification_id)
+      const { identification } = car.vehicle_identifications
+      setCarBrand(brand)
+      setCarColor(color)
+      setCarModel(model)
+      setCarPlate(identification)
       setHasCar(true)
     }
   }, [props.user.car])
@@ -448,7 +449,7 @@ const EditProfileScreen = props => {
     if (response.error) {
       Alert.alert(
         'Error actualizando datos',
-        'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
+        'Hubo un problema actualizando tu informacion. Por favor inténtalo de nuevo.'
       )
     } else {
       Alert.alert('Actualización exitosa', 'Informacion actualizada con exito')
@@ -511,7 +512,7 @@ const EditProfileScreen = props => {
         ) {
           Alert.alert(
             'Error al actualizar foto',
-            'No hemos podido actualizar tu foto. Por favor intentalo de nuevo.'
+            'No hemos podido actualizar tu foto. Por favor inténtalo de nuevo.'
           )
         } else {
           const updateResponse = await props.updateUser(
@@ -528,7 +529,7 @@ const EditProfileScreen = props => {
           if (updateResponse.error) {
             Alert.alert(
               'Error al actualizar foto',
-              'No hemos podido actualizar tu foto. Por favor intentalo de nuevo.'
+              'No hemos podido actualizar tu foto. Por favor inténtalo de nuevo.'
             )
           }
         }
@@ -580,7 +581,7 @@ const EditProfileScreen = props => {
       setIsLoading(false)
       Alert.alert(
         'Error actualizando datos',
-        'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
+        'Hubo un problema actualizando tu informacion. Por favor inténtalo de nuevo.'
       )
       return
     }
@@ -600,7 +601,7 @@ const EditProfileScreen = props => {
       setIsLoading(false)
       Alert.alert(
         'Error actualizando datos',
-        'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
+        'Hubo un problema actualizando tu informacion. Por favor inténtalo de nuevo.'
       )
       return
     }
@@ -628,7 +629,7 @@ const EditProfileScreen = props => {
     if (response.error) {
       Alert.alert(
         'Error actualizando datos',
-        'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
+        'Hubo un problema actualizando tu informacion. Por favor inténtalo de nuevo.'
       )
     } else {
       Alert.alert('Actualización exitosa', 'Solicitud enviada con éxito')
@@ -656,7 +657,7 @@ const EditProfileScreen = props => {
       setIsLoading(false)
       Alert.alert(
         'Error actualizando datos',
-        'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
+        'Hubo un problema actualizando tu informacion. Por favor inténtalo de nuevo.'
       )
       return
     }
@@ -676,7 +677,7 @@ const EditProfileScreen = props => {
       setIsLoading(false)
       Alert.alert(
         'Error actualizando datos',
-        'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
+        'Hubo un problema actualizando tu informacion. Por favor inténtalo de nuevo.'
       )
       return
     }
@@ -704,7 +705,7 @@ const EditProfileScreen = props => {
     if (response.error) {
       Alert.alert(
         'Error actualizando datos',
-        'Hubo un problema actualizando tu informacion. Por favor intentalo de nuevo.'
+        'Hubo un problema actualizando tu informacion. Por favor inténtalo de nuevo.'
       )
     } else {
       Alert.alert('Actualización exitosa', 'Solicitud enviada con éxito')
@@ -721,7 +722,7 @@ const EditProfileScreen = props => {
     if (response.error) {
       Alert.alert(
         'Error cambiando contraseña',
-        'Hubo un problema al intentar cambiar tu contraseña. Por favor intentalo de nuevo.'
+        'Hubo un problema al intentar cambiar tu contraseña. Por favor inténtalo de nuevo.'
       )
     } else {
       Alert.alert(
@@ -756,7 +757,7 @@ const EditProfileScreen = props => {
     if (response.error) {
       Alert.alert(
         'Error ingresando el vehículo',
-        'Hubo un problema al intentar ingresar tu vehículo. Por favor intentalo de nuevo.'
+        'Hubo un problema al intentar ingresar tu vehículo. Por favor inténtalo de nuevo.'
       )
     } else {
       setCanSubmitCar(false)
@@ -1238,7 +1239,7 @@ const _SignOutC = props => (
 
 const SignOutC = connect(
   null,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(_SignOutC)
 
 EditProfileScreen.navigationOptions = ({ navigation }) => ({
@@ -1248,5 +1249,5 @@ EditProfileScreen.navigationOptions = ({ navigation }) => ({
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(withNavigation(EditProfileScreen))

@@ -23,19 +23,6 @@ const FinishedTrip = ({
   // requerido: token del usuario
   token,
 }) => {
-  const finishTrip = async () => {
-    await client
-      .request({
-        method: 'post',
-        url: urls.driver.trips.post.complete(tripId),
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(resp => {
-        onPress()
-      })
-  }
   return (
     <Card
       style={{
@@ -54,7 +41,7 @@ const FinishedTrip = ({
         <Text>{thankYouMessage}</Text>
       </CardItem>
       <CardItem style={styles.buttonSection}>
-        <Button style={styles.button} onPress={() => finishTrip()}>
+        <Button style={styles.button} onPress={onPress}>
           <Text style={styles.buttonText} uppercase={false}>
             {buttonText}
           </Text>

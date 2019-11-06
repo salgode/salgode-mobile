@@ -120,7 +120,7 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
       setLoading(false)
       Alert.alert(
         'Error de registro',
-        'Hubo un problema registrandote. Por favor intentalo de nuevo.'
+        'Hubo un problema registrandote. Por favor inténtalo de nuevo.'
       )
       return
     }
@@ -130,7 +130,7 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
       setLoading(false)
       Alert.alert(
         'Error de registro',
-        'Hubo un problema registrandote. Por favor intentalo de nuevo.'
+        'Hubo un problema registrandote. Por favor inténtalo de nuevo.'
       )
       return
     }
@@ -140,7 +140,7 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
       setLoading(false)
       Alert.alert(
         'Error de registro',
-        'Hubo un problema registrandote. Por favor intentalo de nuevo.'
+        'Hubo un problema registrandote. Por favor inténtalo de nuevo.'
       )
       return
     }
@@ -159,7 +159,7 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
     if (user.error) {
       Alert.alert(
         'Error de registro',
-        'Hubo un problema registrandote. Por favor intentalo de nuevo.'
+        'Hubo un problema registrandote. Por favor inténtalo de nuevo.'
       )
     } else {
       navigation.navigate('ChooseTrips')

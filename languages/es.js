@@ -5,14 +5,14 @@ export default {
   },
   signin: {
     create: '¿No tienes una cuenta? Crea una aquí',
-    error: 'Hubo un problema iniciando sesión. Por favor intentalo de nuevo.',
+    error: 'Hubo un problema iniciando sesión. Por favor inténtalo de nuevo.',
     forget: '¿Olvidaste tu contraseña? Recupérala aquí',
     verifying: 'Comprobando datos',
   },
   signup: {
     error: {
       title: 'Error de registro',
-      message: 'Hubo un problema registrandote. Por favor intentalo de nuevo.',
+      message: 'Hubo un problema registrandote. Por favor inténtalo de nuevo.',
     },
   },
   camera: {

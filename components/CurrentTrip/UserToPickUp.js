@@ -5,7 +5,9 @@ import { Ionicons } from '@expo/vector-icons'
 import PropTypes from 'prop-types'
 import Colors from '../../constants/Colors'
 import { Linking } from 'react-native'
+
 const UserToPickUp = ({ name, location, phone }) => {
+  console.log('dasdas')
   return (
     <View style={styles.container}>
       <Ionicons

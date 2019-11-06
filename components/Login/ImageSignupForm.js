@@ -159,7 +159,7 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
     if (user.error) {
       Alert.alert(
         'Error de registro',
-        'Hubo un problema registrandote. Por favor inténtalo de nuevo.'
+        'El correo que has ingresado ya está en uso. Por lo que podrías ya estar registrado en la app. De no ser así, por favor inténtalo ingresando un correo distinto.'
       )
     } else {
       navigation.navigate('ChooseTrips')

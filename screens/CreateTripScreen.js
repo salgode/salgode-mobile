@@ -147,6 +147,7 @@ class CreateTripScreen extends Component {
               isVisible={this.state.isDateTimePickerVisible}
               onConfirm={this.handleDatePicked}
               onCancel={this.hideDateTimePicker}
+              minimumDate={new Date()}
             />
           </View>
           <View>

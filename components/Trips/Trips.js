@@ -27,6 +27,7 @@ class MyTrips extends Component {
       removeFromList,
       onRefresh,
       refreshing,
+      token,
     } = this.props
     const Trip = isRequestedTrips ? RequestedTrip : MyTrip
     const tripsData = isRequestedTrips ? trips : driverTrips
@@ -64,6 +65,8 @@ class MyTrips extends Component {
                   startLocation={item.trip_route.start}
                   endLocation={item.trip_route.end}
                   removeFromList={removeFromList}
+                  tripStatus={item.trip_status}
+                  token={token}
                 />
               )
             }}
@@ -97,6 +100,9 @@ MyTrips.propTypes = {
   driverTrips: PropTypes.array,
   isRequestedTrips: PropTypes.bool,
   onPressTrip: PropTypes.func.isRequired,
+  removeFromList: PropTypes.func.isRequired,
+  onRefresh: PropTypes.func.isRequired,
+  refreshing: PropTypes.bool.isRequired,
 }
 
 MyTrips.defaultProps = {
@@ -104,13 +110,5 @@ MyTrips.defaultProps = {
   driverTrips: [],
   isRequestedTrips: false,
 }
-
-const styles = StyleSheet.create({
-  viewContainer: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-  },
-})
 
 export default MyTrips

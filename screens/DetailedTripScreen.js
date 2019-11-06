@@ -117,20 +117,22 @@ class DetailedTripScreen extends Component {
   }
 
   onPressStartTrip() {
+    const { passengers, trip } = this.state
     this.props.navigation.navigate('StartTrip', {
-      stops: this.state.trip.trip_route_points,
+      stops: trip.trip_route_points,
       onTripStart: () =>
         this.props.postTripStart(
           this.props.user.token,
-          this.state.trip.trip_id
+          trip.trip_id
         ),
       nextTripView: () => {
         this.props.navigation.navigate('StopTrip', {
           token: this.props.user.token,
-          trip: this.state.trip,
+          trip,
           asDriver: this.props.navigation.getParam('asDriver', null),
         })
       },
+      firstStopPassengers: passengers.filter(p => p.trip_route.start.place_id === trip.trip_route.start.place_id),
     })
   }
 
@@ -255,6 +257,7 @@ class DetailedTripScreen extends Component {
             driver={this.state.trip.driver}
             onPressStartTrip={() => this.onPressStartTrip()}
             toCurrentTrip={this.toCurrentTrip}
+            fetchingPassengers={this.state.fetchingPassengers}
           />
         )}
         {this.state.asDriver && !this.state.loading

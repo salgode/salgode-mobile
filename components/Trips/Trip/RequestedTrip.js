@@ -120,9 +120,19 @@ const RequestedTrip = ({
         </View>
       </CardItem>
       <CardItem style={styles.locationContainer}>
+        <Text>#Parte en</Text>
+        <Location color={'#0000FF'} location={startLocation.place_name} />
+      </CardItem>
+      {(trip && trip.reservation_route) && (
+        <CardItem style={styles.locationContainer}>
+          <Text>#Subo en</Text>
+          <Location color="gray" location={trip.reservation_route.start.place_name} />
+        </CardItem>
+      )}
+      {/*<CardItem style={styles.locationContainer}>
         <Location color={'#0000FF'} location={startLocation.place_name} />
         <Location color={'#33C534'} location={endLocation.place_name} />
-      </CardItem>
+      </CardItem>*/}
       <CardItem>
         <TimeInfo timestamp={timestamp} />
       </CardItem>

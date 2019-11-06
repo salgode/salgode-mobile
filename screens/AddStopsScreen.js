@@ -100,7 +100,6 @@ class AddStopsScreen extends Component {
           style={styles.container}
           contentContainerStyle={styles.contentContainer}
         >
-          {this.state.loading && <ActivityIndicator />}
           <View style={styles.group}>
             <View style={styles.stopContainer}>
               <Text style={{ fontWeight: 'bold', marginRight: 10 }}>
@@ -136,12 +135,14 @@ class AddStopsScreen extends Component {
             />
           </View>
         </ScrollView>
-
-        <View>
-          <Button block style={styles.addButton} onPress={this.createTrip}>
-            <Text style={styles.whiteText}>Crear Viaje</Text>
-          </Button>
-        </View>
+        {this.state.loading && <ActivityIndicator />}
+        {!this.state.loading && (
+          <View>
+            <Button block style={styles.addButton} onPress={this.createTrip}>
+              <Text style={styles.whiteText}>Crear Viaje</Text>
+            </Button>
+          </View>
+        )}
       </View>
     )
   }

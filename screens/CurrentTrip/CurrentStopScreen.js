@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { withNavigation } from 'react-navigation'
 import CurrentStop from '../../components/CurrentTrip/CurrentStop'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { nextJourneyPlace } from '../../redux/actions/trips'
 
 class CurrentStopScreen extends Component {
   static navigationOptions = {
@@ -16,11 +18,16 @@ class CurrentStopScreen extends Component {
     }
 
     this.onPressCompleteTrip = this.onPressCompleteTrip.bind(this)
+    this.onPressNextStop = this.onPressNextStop.bind(this)
   }
 
   onPressCompleteTrip(trip) {
     const token = this.props.navigation.getParam('token', null)
     this.props.navigation.navigate('FinishTrip', { trip, token })
+  }
+  onPressNextStop(trip) {
+    const token = this.props.navigation.getParam('token', null)
+    return this.props.onNextStop(token, trip)
   }
 
   render() {
@@ -33,6 +40,7 @@ class CurrentStopScreen extends Component {
         trip={this.state.trip}
         stopIndex={nextStopIndex}
         onPressCompleteTrip={this.onPressCompleteTrip}
+        onPressNextStop={this.onPressNextStop}
         asDriver={this.state.asDriver}
       />
     )
@@ -43,6 +51,16 @@ CurrentStopScreen.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
   }).isRequired,
+  onNextStop: PropTypes.func.isRequired,
 }
 
-export default withNavigation(CurrentStopScreen)
+const mapPropsToState = () => ({})
+
+const mapDispatchToState = dispatch => ({
+  onNextStop: (token, id) => dispatch(nextJourneyPlace(token, id)),
+})
+
+export default connect(
+  mapPropsToState,
+  mapDispatchToState
+)(withNavigation(CurrentStopScreen))

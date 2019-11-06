@@ -24,6 +24,10 @@ class ResolveCurrentTripScreen extends Component {
 
     this.props.fetchCurrentTrip(userToken).then(async response => {
       if (response.payload) {
+        if (response.payload.data.is_driver === false) {
+          return this.props.navigation.navigate('Main')
+        }
+
         const trip = await this.props
           .fetchTrip(userToken, response.payload.data.trip_id)
           .then(response => response.payload.data)
@@ -34,8 +38,7 @@ class ResolveCurrentTripScreen extends Component {
           .catch(() => null)
 
         if (!trip || !manifest) {
-          this.props.navigation.navigate('Main')
-          return
+          return this.props.navigation.navigate('Main')
         }
 
         this.props.navigation.navigate('StopTrip', {

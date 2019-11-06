@@ -6,7 +6,15 @@ import Location from './Location'
 import Colors from '../../../constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
 import TimeInfo from './TimeInfo'
-import { Card, View, Text, CardItem, Button, Thumbnail, Spinner } from 'native-base'
+import {
+  Card,
+  View,
+  Text,
+  CardItem,
+  Button,
+  Thumbnail,
+  Spinner,
+} from 'native-base'
 import PropTypes from 'prop-types'
 import { cancelSlot } from '../../../redux/actions/slots'
 
@@ -15,20 +23,18 @@ const RequestedTrip = ({
   user,
   reservationStatus,
   startLocation,
-  endLocation,
-  onPressTrip,
-  asDriver,
   trip,
   removeFromList,
   dispatchCancelSlot,
   token,
   navigation,
+  tripStatus,
 }) => {
   const [loadingCancel, setLoadingCancel] = React.useState(false)
   let statusColor
   let statusText
   let show = true
-  let showDetailsButton = true
+  const showDetailsButton = true
   let showCancelButton = true
   switch (reservationStatus) {
     case 'completed':
@@ -54,14 +60,30 @@ const RequestedTrip = ({
     default:
       show = false
   }
+  if (trip.trip_status === 'completed') {
+    return null
+  }
 
+  let tripStatusColor
+  let tripStatusText
+
+  if (tripStatus === 'open') {
+    tripStatusColor = 'green'
+    tripStatusText = 'Por iniciar'
+  } else if (tripStatus === 'in_progress') {
+    tripStatusColor = 'purple'
+    tripStatusText = 'En curso'
+  } else {
+    tripStatusColor = 'blue'
+    tripStatusText = 'Completado'
+  }
   const onCancel = () => {
     setLoadingCancel(true)
     dispatchCancelSlot(token, trip.reservation_id)
       .then(() => {
         Alert.alert(
           'Reserva cancelada',
-          'Su reserva ha sido cancelada con éxito',
+          'Su reserva ha sido cancelada con éxito'
         )
         // setLoadingCancel(false)
         removeFromList(trip.reservation_id)
@@ -69,7 +91,7 @@ const RequestedTrip = ({
       .catch(() => {
         Alert.alert(
           'Error al cancelar',
-          'No se pudo cancelar con éxito su reservar. Por favor inténtelo de nuevo',
+          'No se pudo cancelar con éxito su reservar. Por favor inténtelo de nuevo'
         )
         setLoadingCancel(false)
       })
@@ -81,7 +103,7 @@ const RequestedTrip = ({
         driver_avatar,
         driver_name,
         driver_phone,
-        driver_verifications
+        driver_verifications,
       } = user
       navigation.navigate('ReservationDetails', {
         userData: {
@@ -92,7 +114,9 @@ const RequestedTrip = ({
           licenseVerified: driver_verifications.driver_license,
           trip_route_points: trip.trip_route_points,
           etd_info: trip.etd_info,
-          isReserved: ['accepted', 'completed'].includes(trip.reservation_status),
+          isReserved: ['accepted', 'completed'].includes(
+            trip.reservation_status
+          ),
         },
         vehicle: trip.vehicle,
       })
@@ -101,9 +125,17 @@ const RequestedTrip = ({
 
   return show ? (
     <Card style={styles.containerRequested} borderWidth={5}>
-      <View style={{ ...styles.status, backgroundColor: statusColor }}>
-        <Text style={styles.statusText}>{statusText}</Text>
+      <View style={styles.statusContainer}>
+        <View style={{ ...styles.status, backgroundColor: statusColor }}>
+          <Text style={styles.statusText}>{statusText}</Text>
+        </View>
+        <View
+          style={{ ...styles.statusRight, backgroundColor: tripStatusColor }}
+        >
+          <Text style={styles.tripStatusText}>{tripStatusText}</Text>
+        </View>
       </View>
+
       <CardItem>
         <View style={styles.user}>
           <View style={styles.userData}>
@@ -123,26 +155,21 @@ const RequestedTrip = ({
         <Text>#Parte en</Text>
         <Location color={'#0000FF'} location={startLocation.place_name} />
       </CardItem>
-      {(trip && trip.reservation_route) && (
+      {trip && trip.reservation_route && (
         <CardItem style={styles.locationContainer}>
           <Text>#Subo en</Text>
-          <Location color="gray" location={trip.reservation_route.start.place_name} />
+          <Location
+            color="gray"
+            location={trip.reservation_route.start.place_name}
+          />
         </CardItem>
       )}
-      {/*<CardItem style={styles.locationContainer}>
-        <Location color={'#0000FF'} location={startLocation.place_name} />
-        <Location color={'#33C534'} location={endLocation.place_name} />
-      </CardItem>*/}
       <CardItem>
         <TimeInfo timestamp={timestamp} />
       </CardItem>
       <CardItem style={styles.containerBottom}>
         {showDetailsButton && (
-          <Button
-            borderRadius={10}
-            style={styles.button}
-            onPress={pressTrip}
-          >
+          <Button borderRadius={10} style={styles.button} onPress={pressTrip}>
             <Text style={styles.blueText}>Ver Viaje</Text>
           </Button>
         )}
@@ -150,10 +177,14 @@ const RequestedTrip = ({
           <>
             {loadingCancel ? (
               <View style={styles.spinner}>
-                <Spinner color="blue"/>
+                <Spinner color="blue" />
               </View>
             ) : (
-              <Button borderRadius={10} style={styles.cancelButton} onPress={onCancel}>
+              <Button
+                borderRadius={10}
+                style={styles.cancelButton}
+                onPress={onCancel}
+              >
                 <Text style={styles.cancelText}>Cancelar</Text>
               </Button>
             )}
@@ -161,14 +192,18 @@ const RequestedTrip = ({
         )}
       </CardItem>
     </Card>
-  ) : (<></>)
+  ) : (
+    <></>
+  )
 }
 
 RequestedTrip.propTypes = {
   timestamp: PropTypes.string.isRequired,
   user: PropTypes.shape({
     driver_name: PropTypes.string.isRequired,
-    driver_avatar: PropTypes.string,
+    driver_avatar: PropTypes.string.isRequired,
+    driver_phone: PropTypes.string.isRequired,
+    driver_verifications: PropTypes.object,
   }).isRequired,
   reservationStatus: PropTypes.oneOf([
     'accepted',
@@ -179,8 +214,12 @@ RequestedTrip.propTypes = {
   ]),
   startLocation: PropTypes.object.isRequired,
   endLocation: PropTypes.object.isRequired,
-  onSend: PropTypes.func,
+  onSend: PropTypes.func.isRequired,
+  removeFromList: PropTypes.func.isRequired,
+  dispatchCancelSlot: PropTypes.func.isRequired,
   trip: PropTypes.object.isRequired,
+  token: PropTypes.string.isRequired,
+  tripStatus: PropTypes.string.isRequired,
 }
 
 const styles = StyleSheet.create({
@@ -191,30 +230,30 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderColor: '#0000FF',
     borderWidth: 1,
-    flex: 1,
-    marginHorizontal: 10,
     display: 'flex',
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
+    marginHorizontal: 10,
   },
   cancelButton: {
     backgroundColor: 'white',
     borderColor: '#FF5242',
     borderWidth: 1,
-    flex: 1,
-    marginHorizontal: 10,
     display: 'flex',
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
+    marginHorizontal: 10,
   },
   cancelText: {
     color: '#FF5242',
   },
   containerBottom: {
-    justifyContent: 'space-around',
-    width: '100%',
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
   },
   containerRequested: {
     alignItems: 'flex-start',
@@ -235,8 +274,29 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   spinner: { flex: 1 },
-  status: { borderRadius: 15, paddingHorizontal: 10, paddingVertical: 2 },
+  status: {
+    borderRadius: 15,
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+  },
+  statusContainer: {
+    flexDirection: 'row',
+    width: '100%',
+  },
+  statusRight: {
+    borderRadius: 15,
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    position: 'absolute',
+    right: 0,
+  },
   statusText: { color: 'white', fontSize: 12, fontWeight: '700' },
+  tripStatusText: {
+    // alignSelf: 'flex-end',
+    color: 'white',
+    fontSize: 12,
+    fontWeight: '700',
+  },
   user: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -265,5 +325,5 @@ const mapDispatchToProps = dispatch => ({
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(withNavigation(RequestedTrip))

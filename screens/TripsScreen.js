@@ -79,6 +79,7 @@ class TripsScreen extends Component {
               removeFromList={this.props.dispatchRemoveTrip}
               onRefresh={this.onRefresh}
               refreshing={this.state.reloading}
+              token={this.props.user.token}
             />
           )}
         </View>
@@ -117,6 +118,7 @@ TripsScreen.propTypes = {
   fetchDriverTrips: PropTypes.func.isRequired,
   trips: PropTypes.array,
   driverTrips: PropTypes.array,
+  dispatchRemoveTrip: PropTypes.func.isRequired,
 }
 
 TripsScreen.defaultProps = {
@@ -127,11 +129,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 15,
     ...StyleSheet.absoluteFill,
-  },
-  viewContainer: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
   },
 })
 

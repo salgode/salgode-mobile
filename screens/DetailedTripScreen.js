@@ -110,7 +110,7 @@ class DetailedTripScreen extends Component {
     if (nextProps.trip !== prevState.trip) {
       return { trip: nextProps.trip }
     }
-    if (nextProps.trip.manifest !== prevState.trip.manifest) {
+    if (nextProps.trip && nextProps.trip.manifest !== prevState.trip.manifest) {
       return { trip: { ...prevState.trip, manifest: nextProps.trip.manifest } }
     }
     return null
@@ -121,10 +121,7 @@ class DetailedTripScreen extends Component {
     this.props.navigation.navigate('StartTrip', {
       stops: trip.trip_route_points,
       onTripStart: () =>
-        this.props.postTripStart(
-          this.props.user.token,
-          trip.trip_id
-        ),
+        this.props.postTripStart(this.props.user.token, trip.trip_id),
       nextTripView: () => {
         this.props.navigation.navigate('StopTrip', {
           token: this.props.user.token,
@@ -132,7 +129,9 @@ class DetailedTripScreen extends Component {
           asDriver: this.props.navigation.getParam('asDriver', null),
         })
       },
-      firstStopPassengers: passengers.filter(p => p.trip_route.start.place_id === trip.trip_route.start.place_id),
+      firstStopPassengers: passengers.filter(
+        p => p.trip_route.start.place_id === trip.trip_route.start.place_id
+      ),
     })
   }
 
@@ -312,8 +311,8 @@ const styles = StyleSheet.create({
 
 const mapPropsToState = state => ({
   user: state.user,
-  trip: state.trips.trip,
-  manifest: state.trips.trip.manifest,
+  trip: state.trips.trip || {},
+  manifest: state.trips.trip ? state.trips.trip.manifest : {},
 })
 
 const mapDispatchToState = dispatch => ({

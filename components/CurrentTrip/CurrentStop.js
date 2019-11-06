@@ -6,6 +6,7 @@ import StopIcon from './StopIcon'
 import Colors from '../../constants/Colors'
 import UserToPickUp from './UserToPickUp'
 import StopsList from './StopsList'
+import UserCard from './UserCard'
 
 class CurrentStop extends Component {
   constructor(props) {
@@ -13,7 +14,7 @@ class CurrentStop extends Component {
 
     this.state = {
       trip: this.props.trip,
-      stopIndex: this.props.stopIndex,
+      stopIndex: this.props.stopIndex > 0 ? this.props.stopIndex - 1 : 0,
       onPressCompleteTrip: this.props.onPressCompleteTrip,
       nextStopText: 'Siguiente Parada',
     }
@@ -28,7 +29,7 @@ class CurrentStop extends Component {
     return trip.manifest
       ? trip.manifest.passengers.filter(passenger => {
           return (
-            passenger.trip_route.start ===
+            passenger.trip_route.start.place_id ===
             trip.trip_route_points[stopIndex].place_id
           )
           //podria usarse el numero de parada, pero creo que este esto es mas general (y mas claro)
@@ -40,6 +41,8 @@ class CurrentStop extends Component {
     if (this.state.stopIndex === this.state.trip.trip_route_points.length - 1) {
       this.goToLastStop()
     } else {
+      this.props.onPressNextStop(this.state.trip.trip_id)
+
       const stopIndex = this.state.stopIndex
       this.setState({
         stopIndex: stopIndex + 1,
@@ -61,7 +64,7 @@ class CurrentStop extends Component {
     if (this.props.asDriver) {
       const passengers = this.getUsersToPickUp()
       return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
           <Text style={styles.title}>#Llego en 5</Text>
           <View style={styles.roadContainer}>
             <StopIcon type={this.state.stopIndex === 0 ? 0 : 1} />
@@ -82,12 +85,12 @@ class CurrentStop extends Component {
           <View>
             <Text style={styles.pickup}>Recoge a:</Text>
             <ScrollView style={styles.userContainer}>
-              {(passengers.length > 0) ? (
+              {passengers.length > 0 ? (
                 passengers.map((passenger, i) => (
-                  <UserToPickUp
+                  <UserCard
+                    avatar={passenger.passenger_avatar}
                     phone={passenger.passenger_phone}
                     name={passenger.passenger_name}
-                    location={passenger.trip_route.start}
                     key={i}
                   />
                 ))
@@ -99,7 +102,7 @@ class CurrentStop extends Component {
               <Text>{this.state.nextStopText}</Text>
             </Button>
           </View>
-        </View>
+        </ScrollView>
       )
     }
 
@@ -130,6 +133,7 @@ CurrentStop.propTypes = {
   trip: PropTypes.object.isRequired,
   stopIndex: PropTypes.number.isRequired,
   onPressCompleteTrip: PropTypes.func.isRequired,
+  onPressNextStop: PropTypes.func.isRequired,
 }
 
 const styles = StyleSheet.create({
@@ -171,7 +175,8 @@ const styles = StyleSheet.create({
   },
   userContainer: {
     height: '40%',
-    margin: '10%',
+    margin: '2%',
+    // marginBottom: '0%',
   },
 })
 

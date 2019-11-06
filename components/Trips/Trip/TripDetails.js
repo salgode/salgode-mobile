@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, Platform, Linking } from 'react-native'
+import { StyleSheet, Platform, Linking, ScrollView } from 'react-native'
 import { Card, CardItem, View, Text, Thumbnail, Button } from 'native-base'
 import PropTypes from 'prop-types'
 import { MaterialCommunityIcons, AntDesign, Octicons } from '@expo/vector-icons'
@@ -113,7 +113,7 @@ class TripDetails extends Component {
       vehicle,
     } = this.props
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Card
           style={{
             ...styles.cardContainer,
@@ -147,7 +147,7 @@ class TripDetails extends Component {
           <CardItem>
             <TimeInfo timestamp={Date.parse(etd)} isDate />
           </CardItem>
-          {(isReserved && vehicle) && (
+          {isReserved && vehicle && (
             <>
               <CardItem>
                 <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
@@ -182,7 +182,7 @@ class TripDetails extends Component {
             </CardItem>
           )}
         </Card>
-      </View>
+      </ScrollView>
     )
   }
 }
@@ -200,10 +200,10 @@ TripDetails.propTypes = {
 
 const styles = StyleSheet.create({
   buttonTrip: {
-    flex: 1,
-    marginHorizontal: 10,
-    justifyContent: 'center',
     alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    marginHorizontal: 10,
     textAlign: 'center',
   },
   cardContainer: {
@@ -235,11 +235,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.8,
     shadowRadius: 5,
-  },
-  thumbnail: {
-    height: photoSize,
-    resizeMode: 'center',
-    width: photoSize,
   },
   user: {
     alignItems: 'center',

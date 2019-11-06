@@ -36,6 +36,7 @@ const RequestedTrip = ({
   let show = true
   const showDetailsButton = true
   let showCancelButton = true
+  let showInProgress = false
   switch (reservationStatus) {
     case 'completed':
       show = false
@@ -44,6 +45,9 @@ const RequestedTrip = ({
       statusColor = 'green'
       statusText = 'Aceptado'
       showCancelButton = false
+      if (trip && trip.trip_status === 'in_progress') {
+        showInProgress = true
+      }
       break
     case 'pending':
       statusColor = 'purple'
@@ -269,6 +273,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 5,
   },
+  labels: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
   locationContainer: {
     alignItems: 'flex-start',
     flexDirection: 'column',
@@ -278,6 +287,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     paddingHorizontal: 10,
     paddingVertical: 2,
+    marginHorizontal: 8,
   },
   statusContainer: {
     flexDirection: 'row',

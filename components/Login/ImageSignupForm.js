@@ -162,7 +162,11 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
         'El correo que has ingresado ya está en uso. Por lo que podrías ya estar registrado en la app. De no ser así, por favor inténtalo ingresando un correo distinto.'
       )
     } else {
-      navigation.navigate('ChooseTrips')
+      Alert.alert(
+        'Registro exitoso',
+        'Se ha enviado un correo de confirmación a tu cuenta'
+      )
+      navigation.navigate('Login')
     }
   }
 

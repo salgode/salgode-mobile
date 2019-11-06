@@ -50,7 +50,7 @@ export default function userReducer(state = {}, action) {
       return {
         ...state,
         loading: false,
-        trips: action.payload.data.sort(compareStrKeyAscending('trip_status')),
+        trips: action.payload.data,
       }
     case userActions.USER_DRIVER_GET_TRIPS:
       return { ...state, loading: true }

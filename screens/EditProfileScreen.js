@@ -269,7 +269,9 @@ const EditProfileScreen = props => {
   // TODO: duplicate code -> goes in utils
   const requestCameraPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA)
-    setHasCameraPermission(status === 'granted')
+    const { status2 } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+
+    setHasCameraPermission(status === 'granted' && status2 === 'granted')
   }
 
   const commonFields = [
@@ -1155,8 +1157,8 @@ const styles = StyleSheet.create({
   label: {
     color: '#8c8c8c',
     fontSize: 14,
-    width: Layout.window.width * 0.21,
     paddingRight: 10,
+    width: Layout.window.width * 0.21,
   },
   logout: {
     marginRight: 8,

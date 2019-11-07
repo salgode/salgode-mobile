@@ -140,15 +140,11 @@ const styles = StyleSheet.create({
   bar: {
     backgroundColor: Colors.textGray,
     height: 5,
-    marginRight: '8%',
-    width: '80%',
+    marginRight: '-2%',
+    width: '65%',
   },
   button: {
-    alignSelf: 'center',
-    borderRadius: 10,
-    height: '10%',
     justifyContent: 'center',
-    width: '70%',
   },
   container: {
     padding: '10%',

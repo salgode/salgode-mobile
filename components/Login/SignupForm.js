@@ -136,7 +136,11 @@ class SignupForm extends Component {
 
   async componentDidMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA)
-    this.setState({ hasCameraPermission: status === 'granted' })
+    const { status2 } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+
+    this.setState({
+      hasCameraPermission: status === 'granted' && status2 === 'granted',
+    })
   }
 
   render() {

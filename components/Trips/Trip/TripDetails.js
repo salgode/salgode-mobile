@@ -89,16 +89,19 @@ class TripDetails extends Component {
   }
 
   renderVerification(verified, title) {
-    return (
-      <View style={styles.verifiedContainer}>
-        <Text style={styles.verifiedText}>{title}</Text>
-        <Octicons
-          name={verified ? 'verified' : 'unverified'}
-          color={verified ? 'green' : 'red'}
-          size={14}
-        />
-      </View>
-    )
+    if (verified) {
+      return (
+        <View style={styles.verifiedContainer}>
+          <Text style={styles.verifiedText}>{title}</Text>
+          <Octicons
+            name={verified ? 'verified' : 'unverified'}
+            color={verified ? 'green' : 'red'}
+            size={14}
+          />
+        </View>
+      )
+    }
+    return null
   }
 
   render() {

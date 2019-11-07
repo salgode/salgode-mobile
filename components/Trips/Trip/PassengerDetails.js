@@ -44,16 +44,19 @@ class PassengerDetails extends Component {
   }
 
   renderVerification(verified, title) {
-    return (
-      <View style={styles.verifiedContainer}>
-        <Text style={styles.verifiedText}>{title}</Text>
-        <Octicons
-          name={verified ? 'verified' : 'unverified'}
-          color={verified ? 'green' : 'red'}
-          size={14}
-        />
-      </View>
-    )
+    if (verified) {
+      return (
+        <View style={styles.verifiedContainer}>
+          <Text style={styles.verifiedText}>{title}</Text>
+          <Octicons
+            name={verified ? 'verified' : 'unverified'}
+            color={verified ? 'green' : 'red'}
+            size={14}
+          />
+        </View>
+      )
+    }
+    return null
   }
 
   render() {
@@ -118,17 +121,17 @@ PassengerDetails.propTypes = {
 
 const styles = StyleSheet.create({
   buttonTrip: {
-    flex: 1,
-    marginHorizontal: 10,
-    justifyContent: 'center',
     alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    marginHorizontal: 10,
     textAlign: 'center',
   },
   cardContainer: {
     alignItems: 'flex-start',
     borderColor: 'white',
-    flexDirection: 'column',
     borderRadius: 20,
+    flexDirection: 'column',
     padding: 15,
   },
   container: {

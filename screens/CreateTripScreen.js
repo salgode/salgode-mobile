@@ -58,6 +58,9 @@ class CreateTripScreen extends Component {
       this.props.user.vehicles.length
     )
   }
+  onMapPress() {
+    this.props.navigation.navigate('SpotsMap')
+  }
 
   render() {
     const {
@@ -74,7 +77,9 @@ class CreateTripScreen extends Component {
     } = this.props
 
     // const disabled = startStop && endStop && startTime ? false : true
-    const startStopValid = startStop ? Object.keys(startStop).length !== 0 : false
+    const startStopValid = startStop
+      ? Object.keys(startStop).length !== 0
+      : false
     const endStopValid = endStop ? Object.keys(endStop).length !== 0 : false
     const disabled = !startStopValid || !endStopValid || !startTime
     const { pickedDate } = this.state
@@ -160,6 +165,13 @@ class CreateTripScreen extends Component {
               <Text style={styles.whiteText}>Siguiente</Text>
             </Button>
           </View>
+          <Button
+            transparent
+            onPress={() => this.props.navigation.navigate('SpotsMap')}
+            style={{ alignSelf: 'center' }}
+          >
+            <Text>Ve el mapa de puntos de Salgode</Text>
+          </Button>
         </View>
       )
     } else {

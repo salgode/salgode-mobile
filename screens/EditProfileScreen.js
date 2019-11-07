@@ -198,6 +198,7 @@ Field.propTypes = {
     editable: PropTypes.bool,
     validate: PropTypes.func.isRequired,
     isSecure: PropTypes.bool,
+    editable: PropTypes.bool,
     keyboardType: PropTypes.oneOf([
       'default',
       'number-pad',
@@ -1149,11 +1150,13 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderRadius: 10,
     marginBottom: 15,
-    paddingHorizontal: 10,
+    paddingLeft: 10,
   },
   label: {
     color: '#8c8c8c',
     fontSize: 14,
+    width: Layout.window.width * 0.21,
+    paddingRight: 10,
   },
   logout: {
     marginRight: 8,

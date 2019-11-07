@@ -82,9 +82,9 @@ class CurrentStop extends Component {
           <Text style={styles.location}>
             {this.state.trip.trip_route_points[this.state.stopIndex].place_name}
           </Text>
-          <View>
+          <View style={{ marginBottom: 100 }}>
             <Text style={styles.pickup}>Recoge a:</Text>
-            <ScrollView style={styles.userContainer}>
+            <View style={styles.userContainer}>
               {passengers.length > 0 ? (
                 passengers.map((passenger, i) => (
                   <UserCard
@@ -97,7 +97,7 @@ class CurrentStop extends Component {
               ) : (
                 <Text>No tienes que recoger a nadie</Text>
               )}
-            </ScrollView>
+            </View>
             <Button style={styles.button} onPress={this.goToNextStop}>
               <Text>{this.state.nextStopText}</Text>
             </Button>
@@ -140,15 +140,11 @@ const styles = StyleSheet.create({
   bar: {
     backgroundColor: Colors.textGray,
     height: 5,
-    marginRight: '8%',
-    width: '80%',
+    marginRight: '-2%',
+    width: '65%',
   },
   button: {
-    alignSelf: 'center',
-    borderRadius: 10,
-    height: '10%',
     justifyContent: 'center',
-    width: '70%',
   },
   container: {
     padding: '10%',
@@ -174,7 +170,7 @@ const styles = StyleSheet.create({
     marginBottom: '10%',
   },
   userContainer: {
-    height: '40%',
+    minHeight: 100,
     margin: '2%',
     // marginBottom: '0%',
   },

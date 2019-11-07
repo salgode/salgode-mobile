@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Alert, ScrollView } from 'react-native'
+import { StyleSheet, ScrollView } from 'react-native'
 import { View, Text, Button, Spinner } from 'native-base'
 import PropTypes from 'prop-types'
 import StopsList from './StopsList'
@@ -10,6 +10,7 @@ const TripStart = ({
   onTripStart,
   nextTripView,
   startPassengers,
+  canStart,
 }) => {
   const [loadingStart, setLoadingStart] = React.useState(false)
   return (
@@ -45,17 +46,32 @@ const TripStart = ({
       {loadingStart ? (
         <Spinner color="blue" />
       ) : (
-        <Button
-          style={styles.button}
-          onPress={() => {
-            setLoadingStart(true)
-            onTripStart()
-            setLoadingStart(false)
-            nextTripView()
-          }}
-        >
-          <Text>Iniciar viaje</Text>
-        </Button>
+        <View>
+          <Button
+            style={styles.button}
+            onPress={() => {
+              setLoadingStart(true)
+              onTripStart()
+              setLoadingStart(false)
+              nextTripView()
+            }}
+            disabled={!canStart}
+          >
+            <Text>Iniciar viaje</Text>
+          </Button>
+          {canStart ? null : (
+            <Text
+              style={{
+                fontWeight: '200',
+                fontSize: 12,
+                paddingTop: 10,
+                alignSelf: 'center',
+              }}
+            >
+              No puedes inicar viajes mientras tengas uno en progreso
+            </Text>
+          )}
+        </View>
       )}
       <View style={{ height: 180 }} />
     </ScrollView>
@@ -66,6 +82,8 @@ TripStart.propTypes = {
   stops: PropTypes.array,
   onTripStart: PropTypes.func.isRequired,
   nextTripView: PropTypes.func.isRequired,
+  canStart: PropTypes.bool.isRequired,
+  startPassengers: PropTypes.array.isRequired,
 }
 
 const styles = StyleSheet.create({

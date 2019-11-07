@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Alert, ScrollView } from 'react-native'
+import { StyleSheet, ScrollView } from 'react-native'
 import { View, Text, Button, Spinner } from 'native-base'
 import PropTypes from 'prop-types'
 import StopsList from './StopsList'
@@ -10,6 +10,7 @@ const TripStart = ({
   onTripStart,
   nextTripView,
   startPassengers,
+  canStart,
 }) => {
   const [loadingStart, setLoadingStart] = React.useState(false)
   return (
@@ -53,6 +54,7 @@ const TripStart = ({
             setLoadingStart(false)
             nextTripView()
           }}
+          disabled={!canStart}
         >
           <Text>Iniciar viaje</Text>
         </Button>
@@ -66,6 +68,8 @@ TripStart.propTypes = {
   stops: PropTypes.array,
   onTripStart: PropTypes.func.isRequired,
   nextTripView: PropTypes.func.isRequired,
+  canStart: PropTypes.bool.isRequired,
+  startPassengers: PropTypes.array.isRequired,
 }
 
 const styles = StyleSheet.create({

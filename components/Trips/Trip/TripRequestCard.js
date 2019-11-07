@@ -3,11 +3,22 @@
 import React, { Component } from 'react'
 import { StyleSheet, Platform, Linking, Alert } from 'react-native'
 import { connect } from 'react-redux'
-import { Card, View, Text, Button, CardItem, Thumbnail, Spinner } from 'native-base'
+import {
+  Card,
+  View,
+  Text,
+  Button,
+  CardItem,
+  Thumbnail,
+  Spinner,
+} from 'native-base'
 import Location from './Location'
 import PropTypes from 'prop-types'
 import { Ionicons, Octicons } from '@expo/vector-icons'
-import { acceptReservation, declineReservation } from '../../../redux/actions/trips'
+import {
+  acceptReservation,
+  declineReservation,
+} from '../../../redux/actions/trips'
 
 class TripRequestCard extends Component {
   constructor(props) {
@@ -46,11 +57,13 @@ class TripRequestCard extends Component {
     } = this.props
     let response
     let alertTitle = 'Problemas al procesar la solicitud'
-    let alertMessage = 'No se pudo completar con éxito la solicitud. Por favor intenta de nuevo'
+    let alertMessage =
+      'No se pudo completar con éxito la solicitud. Por favor intenta de nuevo'
     switch (status) {
       case 'accepted':
         alertTitle = 'Problemas al aceptar la reserva'
-        alertMessage = 'No se pudo aceptar la reserva. Por favor intenta de nuevo.'
+        alertMessage =
+          'No se pudo aceptar la reserva. Por favor intenta de nuevo.'
         this.setState({ loading: { ...this.state.loading, accept: true } })
         response = await fetchAcceptReservation(
           user.token,
@@ -61,7 +74,8 @@ class TripRequestCard extends Component {
         break
       case 'declined':
         alertTitle = 'Problemas al rechazar la reserva'
-        alertMessage = 'No se pudo rechazar la reserva. Por favor intenta de nuevo.'
+        alertMessage =
+          'No se pudo rechazar la reserva. Por favor intenta de nuevo.'
         this.setState({ loading: { ...this.state.loading, decline: true } })
         response = await fetchDeclineReservation(
           user.token,
@@ -89,7 +103,11 @@ class TripRequestCard extends Component {
       return <></>
     }
 
-    const { passenger_avatar, passenger_name, passenger_verifications } = passenger
+    const {
+      passenger_avatar,
+      passenger_name,
+      passenger_verifications,
+    } = passenger
 
     return (
       <Card style={styles.container}>
@@ -105,14 +123,20 @@ class TripRequestCard extends Component {
             )}
             <View style={styles.userInfo}>
               <Text style={styles.userText}>{passenger_name}</Text>
-              <View style={styles.verifiedContainer}>
-                <Text style={styles.verifiedText}>Usuario verificado </Text>
-                <Octicons
-                  name={passenger_verifications.identity ? 'verified' : 'unverified'}
-                  color={passenger_verifications.identity ? 'green' : 'red'}
-                  size={14}
-                />
-              </View>
+              {passenger_verifications.identity ? (
+                <View style={styles.verifiedContainer}>
+                  <Text style={styles.verifiedText}>Usuario verificado </Text>
+                  <Octicons
+                    name={
+                      passenger_verifications.identity
+                        ? 'verified'
+                        : 'unverified'
+                    }
+                    color={passenger_verifications.identity ? 'green' : 'red'}
+                    size={14}
+                  />
+                </View>
+              ) : null}
             </View>
           </View>
         </CardItem>
@@ -192,17 +216,17 @@ TripRequestCard.propTypes = {
 
 const styles = StyleSheet.create({
   buttonTrip: {
+    alignItems: "center",
     flex: 1,
+    justifyContent: "center",
     marginHorizontal: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
     textAlign: 'center',
   },
   buttonsContainer: {
     alignItems: 'center',
     alignSelf: 'center',
+    display: "flex",
     flex: 2,
-    display: 'flex',
     flexDirection: 'row',
   },
   container: {
@@ -248,11 +272,13 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  fetchAcceptReservation: (token, tripId, resId) => dispatch(acceptReservation(token, tripId, resId)),
-  fetchDeclineReservation: (token, tripId, resId, data) => dispatch(declineReservation(token, tripId, resId, data)),
+  fetchAcceptReservation: (token, tripId, resId) =>
+    dispatch(acceptReservation(token, tripId, resId)),
+  fetchDeclineReservation: (token, tripId, resId, data) =>
+    dispatch(declineReservation(token, tripId, resId, data)),
 })
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(TripRequestCard)

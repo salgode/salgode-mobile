@@ -5,7 +5,7 @@
 [![prettierB]][prettierl]
 [![Maintainability](https://api.codeclimate.com/v1/badges/9b55f4098e14ace073e5/maintainability)](https://codeclimate.com/github/salgode/salgode-mobile/maintainability)
 
-# Salgode
+# SalgoDe
 
 Aplicación móvil para compartir viajes construida con [Expo](https://expo.io/) para web, iOS y Android. Backend se encuentra [aquí](https://github.com/Varuscl/salgode-api)
 
@@ -13,7 +13,7 @@ Sigue el desarrollo en [nuestro Trello](https://trello.com/b/GCTJ1iMU/salgode).
 
 ## Indice
 
-- [Salgode](#salgode)
+- [SalgoDe](#salgoDe)
   - [Indice](#indice)
   - [Scripts](#scripts)
   - [Workflow](#workflow)

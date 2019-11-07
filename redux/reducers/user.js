@@ -69,7 +69,7 @@ export default function userReducer(state = {}, action) {
     case userActions.USER_GET_CAR:
       return { ...state, loading: true }
     case userActions.USER_GET_CAR_SUCCESS:
-      return { ...state, loading: false, car: action.payload.data }
+      return { ...state, loading: false, vehicles: [action.payload.data] }
     case userActions.USER_CREATE_VEHICLE:
       return { ...state, loading: true }
     case userActions.USER_CREATE_VEHICLE_SUCCESS:
@@ -79,7 +79,9 @@ export default function userReducer(state = {}, action) {
     case userActions.USER_REMOVE_TRIP:
       return {
         ...state,
-        trips: state.trips.filter(i => i.reservation_id !== action.payload.tripId),
+        trips: state.trips.filter(
+          i => i.reservation_id !== action.payload.tripId
+        ),
       }
     default:
       return state

@@ -195,6 +195,7 @@ Field.propTypes = {
     placeholder: PropTypes.string,
     value: PropTypes.string.isRequired,
     setValue: PropTypes.func.isRequired,
+    editable: PropTypes.bool,
     validate: PropTypes.func.isRequired,
     isSecure: PropTypes.bool,
     keyboardType: PropTypes.oneOf([
@@ -401,11 +402,7 @@ const EditProfileScreen = props => {
   React.useEffect(() => {
     const { car } = props.user
     if (car && car.vehicle_attributes && car.vehicle_identifications) {
-      const {
-        color,
-        brand,
-        model,
-      } = car.vehicle_attributes
+      const { color, brand, model } = car.vehicle_attributes
       const { identification } = car.vehicle_identifications
       setCarBrand(brand)
       setCarColor(color)
@@ -800,23 +797,26 @@ const EditProfileScreen = props => {
   }
 
   const renderVerification = (verified, title) => {
-    return (
-      <View style={styles.verifiedContainer}>
-        <Text style={styles.verifiedText}>{title}</Text>
-        <Octicons
-          name={verified ? 'verified' : 'unverified'}
-          color={verified ? 'green' : 'red'}
-          size={14}
-        />
-      </View>
-    )
+    if (verified) {
+      return (
+        <View style={styles.verifiedContainer}>
+          <Text style={styles.verifiedText}>{title}</Text>
+          <Octicons
+            name={verified ? 'verified' : 'unverified'}
+            color={verified ? 'green' : 'red'}
+            size={14}
+          />
+        </View>
+      )
+    }
+    return null
   }
 
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.flex1}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Content>
-          <View style={{ minHeight: 1200 }}>
+          <View style={{ minHeight: 2900 }}>
             <View style={styles.row}>
               <TouchableWithoutFeedback
                 disabled={isSaving || !isValidUser()}
@@ -976,7 +976,7 @@ const EditProfileScreen = props => {
                 </TouchableOpacity>
               )}
               {hasCar ? (
-                <>
+                <View>
                   <View style={styles.headerTextContainer}>
                     <Text style={styles.headerText}>Licencia de conducir</Text>
                   </View>
@@ -1049,7 +1049,7 @@ const EditProfileScreen = props => {
                   ) : (
                     <></>
                   )}
-                </>
+                </View>
               ) : (
                 <></>
               )}
@@ -1193,11 +1193,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   updatePasswordModal: {
-    alignItems: "center",
-    display: "flex",
-    flexDirection: "column",
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
     height: Layout.window.height,
-    justifyContent: "space-around",
+    justifyContent: 'space-around',
   },
   verifiedContainer: {
     alignItems: 'center',
@@ -1239,7 +1239,7 @@ const _SignOutC = props => (
 
 const SignOutC = connect(
   null,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(_SignOutC)
 
 EditProfileScreen.navigationOptions = ({ navigation }) => ({
@@ -1249,5 +1249,5 @@ EditProfileScreen.navigationOptions = ({ navigation }) => ({
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(withNavigation(EditProfileScreen))

@@ -53,9 +53,10 @@ class CreateTripScreen extends Component {
 
   isVerifiedDriver = () => {
     return (
-      this.props.user.verifications.license &&
       this.props.user.vehicles &&
-      this.props.user.vehicles.length
+      this.props.user.vehicles.length &&
+      this.props.user.license.front &&
+      this.props.user.license.back
     )
   }
   onMapPress() {
@@ -170,7 +171,7 @@ class CreateTripScreen extends Component {
             onPress={() => this.props.navigation.navigate('SpotsMap')}
             style={{ alignSelf: 'center' }}
           >
-            <Text>Ve el mapa de puntos de Salgode</Text>
+            <Text>Ve el mapa de puntos de SalgoDe</Text>
           </Button>
         </View>
       )

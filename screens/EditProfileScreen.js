@@ -298,7 +298,7 @@ const EditProfileScreen = props => {
   ]
   const passwordFields = [
     {
-      label: 'Contraseña actual',
+      label: 'Actual',
       value: currentPassword,
       setValue: setCurrentPassword,
       isSecure: true,
@@ -306,7 +306,7 @@ const EditProfileScreen = props => {
         typeof password === 'string' ? password.length >= 8 : false,
     },
     {
-      label: 'Nueva contraseña',
+      label: 'Nueva',
       value: newPassword,
       setValue: setNewPassword,
       isSecure: true,

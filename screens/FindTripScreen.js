@@ -11,7 +11,7 @@ class FindTripScreen extends Component {
   render() {
     return (
       <KeyboardAvoidingView style={styles.container} behavior="height" enabled>
-        <Text style={styles.title}>#Salgode</Text>
+        <Text style={styles.title}>#SalgoDe</Text>
         <FindTripForm items={items} />
       </KeyboardAvoidingView>
     )

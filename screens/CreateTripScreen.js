@@ -171,7 +171,7 @@ class CreateTripScreen extends Component {
             onPress={() => this.props.navigation.navigate('SpotsMap')}
             style={{ alignSelf: 'center' }}
           >
-            <Text>Ve el mapa de puntos de Salgode</Text>
+            <Text>Ve el mapa de puntos de SalgoDe</Text>
           </Button>
         </View>
       )

@@ -7,7 +7,7 @@ import {
 } from '../redux/actions/trips'
 import { getAllSpots } from '../redux/actions/spots'
 import { View, StyleSheet, Alert, AsyncStorage, Text } from 'react-native'
-import { Spinner } from 'native-base'
+import { Spinner, Button } from 'native-base'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import ChooseTrips from '../components/Trips/ChooseTrips'
@@ -53,7 +53,7 @@ class ChooseTripsScreen extends Component {
       }
       const response = await this.props.setSearchStartPlace(
         item,
-        this.props.user.token,
+        this.props.user.token
       )
       if (reset) {
         this.setState({ loading: false })
@@ -85,7 +85,7 @@ class ChooseTripsScreen extends Component {
                 title: 'Buscas #SalgoDe',
                 text: '#SalgoDe',
                 onClearPress: this.props.cleanSearchStartPlace,
-                onItemPress: (i) => this.setSearchStartPlaceFetch(i, true),
+                onItemPress: i => this.setSearchStartPlaceFetch(i, true),
                 data: this.props.spots,
               })
             }
@@ -122,10 +122,22 @@ class ChooseTripsScreen extends Component {
                 trips={requestedTrips}
               />
             ) : (
-              <EmptyState image={noTrips} text="No se ha encontrado ningún viaje según lo solicitado." />
+              <EmptyState
+                image={noTrips}
+                text="No se ha encontrado ningún viaje según lo solicitado."
+              />
             )}
           </>
         )}
+        {/* <View> */}
+        <Button
+          transparent
+          onPress={() => this.props.navigation.navigate('SpotsMap')}
+          style={{ alignSelf: 'center' }}
+        >
+          <Text>Ve el mapa de puntos de Salgode</Text>
+        </Button>
+        {/* </View> */}
       </View>
     )
   }

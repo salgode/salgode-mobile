@@ -813,7 +813,7 @@ const EditProfileScreen = props => {
     <KeyboardAvoidingView behavior="padding" style={styles.flex1}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Content>
-          <View style={{ minHeight: 1900 }}>
+          <View style={{ minHeight: 2900 }}>
             <View style={styles.row}>
               <TouchableWithoutFeedback
                 disabled={isSaving || !isValidUser()}

@@ -46,18 +46,32 @@ const TripStart = ({
       {loadingStart ? (
         <Spinner color="blue" />
       ) : (
-        <Button
-          style={styles.button}
-          onPress={() => {
-            setLoadingStart(true)
-            onTripStart()
-            setLoadingStart(false)
-            nextTripView()
-          }}
-          disabled={!canStart}
-        >
-          <Text>Iniciar viaje</Text>
-        </Button>
+        <View>
+          <Button
+            style={styles.button}
+            onPress={() => {
+              setLoadingStart(true)
+              onTripStart()
+              setLoadingStart(false)
+              nextTripView()
+            }}
+            disabled={!canStart}
+          >
+            <Text>Iniciar viaje</Text>
+          </Button>
+          {canStart ? null : (
+            <Text
+              style={{
+                fontWeight: '200',
+                fontSize: 12,
+                paddingTop: 10,
+                alignSelf: 'center',
+              }}
+            >
+              No puedes inicar viajes mientras tengas uno en progreso
+            </Text>
+          )}
+        </View>
       )}
       <View style={{ height: 180 }} />
     </ScrollView>

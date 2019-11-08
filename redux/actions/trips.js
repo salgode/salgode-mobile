@@ -47,7 +47,6 @@ export const actions = {
   TRIPS_FINISH_FAIL: 'TRIPS_FINISH_FAIL',
 
   TRIPS_REMOVE_TRIP_FROM_LIST: 'TRIPS_REMOVE_TRIP_FROM_LIST',
-
 }
 
 export function cleanSearchStartPlace() {
@@ -68,23 +67,6 @@ export function setSearchStartPlace(startPlace, authToken) {
       },
     },
   }
-  // if (startPlace) {
-  //   return {
-  //     type: actions.SET_SEARCH_START_PLACE,
-  //     payload: {
-  //       startPlace,
-  //       request: {
-  //         url: `/trips/search/intersects/${startPlace.place_id}`,
-  //         method: 'get',
-  //         headers: getBaseHeaders(authToken),
-  //       },
-  //     },
-  //   }
-  // }
-  // return {
-  //   type: actions.SET_SEARCH_START_PLACE,
-  //   payload: { startPlace },
-  // }
 }
 
 export function cleanSearchEndPlace() {
@@ -115,7 +97,7 @@ export function startJourney(authToken, trip_id) {
 
 export function nextJourneyPlace(authToken, trip_id) {
   return {
-    type: actions.TRIPS_START_JOURNEY,
+    type: actions.TRIPS_NEXT_JOURNEY,
     payload: {
       request: {
         url: urls.driver.trips.post.next(trip_id),
@@ -191,7 +173,6 @@ export function declineReservation(authToken, tripId, resId, data) {
     },
   }
 }
-
 
 export function finishTrip(authToken, tripId) {
   return {

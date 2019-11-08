@@ -73,6 +73,20 @@ export default function tripsReducer(state = {}, action) {
       return { ...state, loading: false }
     case tripActions.TRIPS_GET_RESERVATIONS_FAIL:
       return { ...state, loading: false }
+    case tripActions.TRIPS_NEXT_JOURNEY_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        trip: {
+          ...state.trip,
+          trip_next_point: {
+            place_id:
+              action.payload.data.next_point === null
+                ? state.trip.trip_route_points.lenght - 1
+                : action.payload.data.next_point,
+          },
+        },
+      }
     case tripActions.TRIPS_ACCEPT_RESERVATION:
       return { ...state, loading: true }
     case tripActions.TRIPS_ACCEPT_RESERVATION_SUCCESS:

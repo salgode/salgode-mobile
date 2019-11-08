@@ -31,9 +31,12 @@ class CurrentStopScreen extends Component {
   }
 
   render() {
-    const nextStopIndex = this.state.trip.trip_route_points.findIndex(
+    let nextStopIndex = this.state.trip.trip_route_points.findIndex(
       element => this.state.trip.trip_next_point.place_id === element.place_id
     )
+    if (this.state.trip.current_point === this.state.trip.trip_route_points.length - 1) {
+      nextStopIndex = this.state.trip.trip_route_points.length
+    }
 
     return (
       <CurrentStop

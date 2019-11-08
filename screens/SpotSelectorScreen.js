@@ -5,10 +5,11 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
+  KeyboardAvoidingView,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Icon, Spinner } from 'native-base'
-
+import { Header } from 'react-navigation'
 import Colors from '../constants/Colors'
 import CardInput from '../components/CardInput'
 
@@ -26,14 +27,17 @@ class SpotSelectorScreen extends Component {
     const { navigation, spots } = this.props
     const { filter } = this.state
     const normalizedInput = normalizeText(filter)
-    // console.log('Spots1:', spots[0])
     let data = navigation.getParam('data', spots)
     if (data && data.length === 0) {
       data = spots
     }
 
     return (
-      <View style={{ flex: 1, backgroundColor: Colors.lightBackground }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1, backgroundColor: Colors.lightBackground }}
+        keyboardVerticalOffset={Header.HEIGHT + 16}
+        behavior="padding"
+      >
         <View>
           <CardInput
             placeholder="Filtra por Comuna o Parada"
@@ -47,9 +51,10 @@ class SpotSelectorScreen extends Component {
         <View style={styles.container}>
           {data ? (
             <FlatList
-              data={data.filter(item =>
-                normalizeText(item.name).includes(normalizedInput) ||
-                normalizeText(item.address).includes(normalizedInput)
+              data={data.filter(
+                item =>
+                  normalizeText(item.name).includes(normalizedInput) ||
+                  normalizeText(item.address).includes(normalizedInput)
               )}
               style={styles.flatList}
               renderItem={({ item }) => (
@@ -75,9 +80,11 @@ class SpotSelectorScreen extends Component {
               )}
               keyExtractor={item => item.id}
             />
-          ) : (<Spinner color={'#0000FF'} />)}
+          ) : (
+            <Spinner color={'#0000FF'} />
+          )}
         </View>
-      </View>
+      </KeyboardAvoidingView>
     )
   }
 }

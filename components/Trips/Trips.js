@@ -49,6 +49,7 @@ class MyTrips extends Component {
       return (
         <SafeAreaView>
           <FlatList
+            style={{ minHeight: 300 }}
             data={filteredData}
             onRefresh={onRefresh}
             refreshing={refreshing}

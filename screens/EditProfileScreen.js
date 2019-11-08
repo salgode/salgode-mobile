@@ -4,7 +4,6 @@ import { Entypo, Octicons } from '@expo/vector-icons'
 import {
   StyleSheet,
   KeyboardAvoidingView,
-  Dimensions,
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
@@ -34,7 +33,6 @@ import * as Permissions from 'expo-permissions'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { connect } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons'
-import { Camera } from 'expo-camera'
 import PropTypes from 'prop-types'
 
 import {
@@ -47,7 +45,6 @@ import {
 import Layout from '../constants/Layout'
 import Colors from '../constants/Colors'
 import PhotoTaker from '../components/Login/PhotoTaker'
-import CameraModal from '../components/Login/CameraModal'
 import {
   formatPhone,
   maxLengthPhone,
@@ -56,20 +53,7 @@ import {
   notWrongPlate,
 } from '../utils/input'
 import { uploadImageToS3 } from '../utils/image'
-import { promiseXMLHttpRequest } from '../utils/xmlhttprequest'
 import * as ImagePicker from 'expo-image-picker'
-import { store } from '../redux/store'
-
-const getText = destination => {
-  switch (destination) {
-    case 'licenseFront':
-      return 'Licencia de conducir frontal'
-    case 'licenseBack':
-      return 'Licencia de conducir trasera'
-    default:
-      return ''
-  }
-}
 
 function validateName(str) {
   if (typeof str !== 'string') {
@@ -237,7 +221,6 @@ const EditProfileScreen = props => {
   const [isSaving, setIsSaving] = React.useState(false)
   // eslint-disable-next-line no-unused-vars
   const [saveErr, setSaveErr] = React.useState(null)
-  const [hasCameraPermission, setHasCameraPermission] = React.useState(false)
   const [destination, setDestination] = React.useState('dniFront')
 
   // TODO: minimal state
@@ -265,14 +248,6 @@ const EditProfileScreen = props => {
 
   const [isSavingCar, setIsSavingCar] = React.useState(false)
   const [canSubmitCar, setCanSubmitCar] = React.useState(false)
-
-  // TODO: duplicate code -> goes in utils
-  const requestCameraPermission = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA)
-    const { status2 } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
-
-    setHasCameraPermission(status === 'granted' && status2 === 'granted')
-  }
 
   const commonFields = [
     { label: 'Nombre', value: name, setValue: setName, validate: validateName },
@@ -379,6 +354,29 @@ const EditProfileScreen = props => {
     )
     return validFields
   }
+  const alertIfCamPermissionsDisabledAsync = async () => {
+    const { status } = await Permissions.getAsync(Permissions.CAMERA)
+    if (status !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA)
+      if (status !== 'granted') {
+        alert(
+          'Debes habilitar los permisos para usar la cámara en configuración'
+        )
+      }
+    }
+  }
+
+  const alertIfRollPermissionsDisabledAsync = async () => {
+    const { status } = await Permissions.getAsync(Permissions.CAMERA_ROLL)
+    if (status !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+      if (status !== 'granted') {
+        alert(
+          'Debes habilitar los permisos a la biblioteca de imágenes en configuración'
+        )
+      }
+    }
+  }
 
   React.useEffect(() => {
     const stateUser = props.user
@@ -430,11 +428,12 @@ const EditProfileScreen = props => {
     }
   }, [loadErr])
 
-  React.useEffect(() => {
-    if (hasCar) {
-      requestCameraPermission()
-    }
-  }, [hasCar])
+  // React.useEffect(() => {
+  //   if (hasCar) {
+  //     alertIfCamPermissionsDisabledAsync()
+  //     alertIfRollPermissionsDisabledAsync()
+  //   }
+  // }, [hasCar])
 
   const saveUser = async () => {
     setIsLoading(true)
@@ -772,6 +771,7 @@ const EditProfileScreen = props => {
   }
 
   const takePhoto = async dest => {
+    alertIfCamPermissionsDisabledAsync()
     const photo = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -785,6 +785,7 @@ const EditProfileScreen = props => {
   }
 
   const choosePhoto = async dest => {
+    alertIfRollPermissionsDisabledAsync()
     const photo = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -821,6 +822,8 @@ const EditProfileScreen = props => {
     return null
   }
 
+  alertIfCamPermissionsDisabledAsync()
+  alertIfRollPermissionsDisabledAsync()
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.flex1}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

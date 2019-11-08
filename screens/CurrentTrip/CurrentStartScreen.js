@@ -7,12 +7,6 @@ import PropTypes from 'prop-types'
 class CurrentStartScreen extends Component {
   constructor(props) {
     super(props)
-    this.onPressStartTrip = this.onPressStartTrip.bind(this)
-  }
-
-  onPressStartTrip(trip, manifest) {
-    const token = this.props.navigation.getParam('token', null)
-    this.props.navigation.navigate('StopTrip', { trip, manifest, token })
   }
 
   render() {

@@ -5,14 +5,12 @@ import { Text, Form, Item, Input, Label, Button, Spinner } from 'native-base'
 import Layout from '../../constants/Layout'
 import PropTypes from 'prop-types'
 import Colors from '../../constants/Colors'
-import * as Permissions from 'expo-permissions'
 import { withNavigation } from 'react-navigation'
 import {
   formatPhone,
   maxLengthPhone,
   notWrongPhone,
   validPhone,
-  notWrongPlate,
 } from '../../utils/input'
 
 class SignupForm extends Component {
@@ -134,17 +132,9 @@ class SignupForm extends Component {
     })
   }
 
-  async componentDidMount() {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA)
-    const { status2 } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
-
-    this.setState({
-      hasCameraPermission: status === 'granted' && status2 === 'granted',
-    })
-  }
-
   render() {
     const { loading } = this.props
+
     return (
       <Form style={styles.form}>
         <Item floatingLabel style={styles.item}>

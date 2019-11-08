@@ -1,6 +1,5 @@
 import React from 'react'
 import { Alert, StyleSheet } from 'react-native'
-import axios from 'axios'
 import { View, Spinner, Button, Text } from 'native-base'
 import PhotoTaker from './PhotoTaker'
 import PropTypes from 'prop-types'
@@ -8,26 +7,7 @@ import { connect } from 'react-redux'
 import * as ImagePicker from 'expo-image-picker'
 import { signupUser, getImageUrl } from '../../redux/actions/user'
 import { uploadImageToS3 } from '../../utils/image'
-
-const getCameraType = destination => {
-  if (destination === 'selfie') {
-    return Camera.Constants.Type.front
-  }
-  return Camera.Constants.Type.back
-}
-
-const getText = destination => {
-  switch (destination) {
-    case 'selfie':
-      return 'Sonríe'
-    case 'frontId':
-      return 'Cédula de identidad frontal'
-    case 'backId':
-      return 'Cédula de identidad trasera'
-    default:
-      return ''
-  }
-}
+import * as Permissions from 'expo-permissions'
 
 const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
   const [selfie, setSelfie] = React.useState(null)
@@ -46,7 +26,33 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
     setUserData(userData)
   }, [])
 
+  const alertIfCamPermissionsDisabledAsync = async () => {
+    const { status } = await Permissions.getAsync(Permissions.CAMERA)
+    if (status !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA)
+      if (status !== 'granted') {
+        alert(
+          'Debes habilitar los permisos para usar la cámara en configuración'
+        )
+      }
+    }
+  }
+
+  const alertIfRollPermissionsDisabledAsync = async () => {
+    const { status } = await Permissions.getAsync(Permissions.CAMERA_ROLL)
+    if (status !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+      if (status !== 'granted') {
+        alert(
+          'Debes habilitar los permisos a la biblioteca de imágenes en configuración'
+        )
+      }
+    }
+  }
+
   const takePhoto = async dest => {
+    alertIfCamPermissionsDisabledAsync()
+
     const photo = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -60,6 +66,8 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
   }
 
   const choosePhoto = async dest => {
+    alertIfRollPermissionsDisabledAsync()
+
     const photo = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -114,9 +122,18 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
     setLoading(true)
 
     // TODO: Refactor -> upload function
-    const [selfieFN, selfieFT] = selfie.split('/').slice(-1)[0].split('.')
+    const [selfieFN, selfieFT] = selfie
+      .split('/')
+      .slice(-1)[0]
+      .split('.')
     const selfieResponse = await uploadImage(selfieFN, selfieFT)
-    if (!await uploadImageToS3(selfieResponse.payload.data.upload, selfieFT, selfie)) {
+    if (
+      !(await uploadImageToS3(
+        selfieResponse.payload.data.upload,
+        selfieFT,
+        selfie
+      ))
+    ) {
       setLoading(false)
       Alert.alert(
         'Error de registro',
@@ -124,7 +141,10 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
       )
       return
     }
-    const [frontFN, frontFT] = frontId.split('/').slice(-1)[0].split('.')
+    const [frontFN, frontFT] = frontId
+      .split('/')
+      .slice(-1)[0]
+      .split('.')
     const frontResponse = await uploadImage(frontFN, frontFT)
     if (!uploadImageToS3(frontResponse.payload.data.upload, frontFT, frontId)) {
       setLoading(false)
@@ -134,7 +154,10 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
       )
       return
     }
-    const [backFN, backFT] = backId.split('/').slice(-1)[0].split('.')
+    const [backFN, backFT] = backId
+      .split('/')
+      .slice(-1)[0]
+      .split('.')
     const backResponse = await uploadImage(backFN, backFT)
     if (!uploadImageToS3(backResponse.payload.data.upload, backFT, backId)) {
       setLoading(false)
@@ -153,7 +176,7 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
       userData.passwordRepeat,
       selfieResponse.payload.data.image_id,
       frontResponse.payload.data.image_id,
-      backResponse.payload.data.image_id,
+      backResponse.payload.data.image_id
     )
     setLoading(false)
     if (user.error) {
@@ -174,6 +197,7 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
     if (!userData) {
       return false
     }
+
     const validity =
       userData.name &&
       userData.lastName &&
@@ -186,7 +210,8 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
       userData.user_identifications.identification_image_back
     return validity
   }
-
+  alertIfCamPermissionsDisabledAsync()
+  alertIfRollPermissionsDisabledAsync()
   return (
     <View style={styles.container}>
       <PhotoTaker

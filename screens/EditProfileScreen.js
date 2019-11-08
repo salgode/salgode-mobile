@@ -403,17 +403,23 @@ const EditProfileScreen = props => {
   }, [])
 
   React.useEffect(() => {
-    const { car } = props.user
-    if (car && car.vehicle_attributes && car.vehicle_identifications) {
-      const { color, brand, model } = car.vehicle_attributes
-      const { identification } = car.vehicle_identifications
+    const { vehicles } = props.user
+    if (
+      vehicles &&
+      vehicles.length &&
+      vehicles[0].vehicle_attributes &&
+      vehicles[0].vehicle_identifications
+    ) {
+      const vehicle = vehicles[0]
+      const { color, brand, model } = vehicle.vehicle_attributes
+      const { identification } = vehicle.vehicle_identifications
       setCarBrand(brand)
       setCarColor(color)
       setCarModel(model)
       setCarPlate(identification)
       setHasCar(true)
     }
-  }, [props.user.car])
+  }, [props.user.vehicles])
 
   React.useEffect(() => {
     if (saveErr != null) {

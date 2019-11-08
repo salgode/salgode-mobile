@@ -18,6 +18,7 @@ import CardInput from '../components/CardInput'
 import { getUserCars } from '../redux/actions/user'
 import EmptyState from '../components/EmptyState/EmptyState'
 import noTrips from '../assets/images/notrips.png'
+import { spotsFilter } from '../utils/spotsFilter'
 
 const colorScheme = Appearance.getColorScheme()
 
@@ -30,11 +31,6 @@ class CreateTripScreen extends Component {
   componentDidMount = () => {
     this.props.getAllSpots(this.props.user.token)
     this.props.getUserCars(this.props.user.token)
-    // .then(response => {
-    // if (!response.payload.data.vehicle_id) {
-    //   this.props.navigation.navigate('EditProfile')
-    // }
-    // })
   }
 
   showDateTimePicker = () => {
@@ -92,7 +88,7 @@ class CreateTripScreen extends Component {
       hours = pickedDate.getHours()
       minutes = pickedDate.getMinutes()
     }
-    const filteredSpots = spots // spotsFilter(spots, [startStop, endStop])
+    const filteredSpots = spotsFilter(spots, [startStop, endStop])
 
     if (loading) {
       return <Spinner color={'#0000FF'} />

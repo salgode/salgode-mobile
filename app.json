@@ -20,7 +20,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "cl.salgode.salgode",
-      "buildNumber": "2",
+      "buildNumber": "3",
       "infoPlist": {
         "NSCameraUsageDescription": "Esta app utiliza tu cámara para poder sacar una selfie.",
         "NSPhotoLibraryUsageDescription": "Esta app requiere acceso a tu biblioteca de imágenes para poder subir una imagen a tu perfil de usuario."

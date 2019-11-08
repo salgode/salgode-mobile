@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Alert } from 'react-native'
+import { View, StyleSheet, Alert, RefreshControl } from 'react-native'
 import PropTypes from 'prop-types'
 import DetailedTrip from '../components/Trips/Trip/DetailedTrip'
 import { Spinner, Text, H3 } from 'native-base'
@@ -25,11 +25,13 @@ class DetailedTripScreen extends Component {
     this.state = {
       loading: true,
       trip: null,
+      tripId: '',
       reservations: [],
       asDriver: false,
       fetchingPassengers: false,
       fetchingReservations: false,
       passengers: [],
+      reloading: false,
     }
 
     this.renderPassengers = this.renderPassengers.bind(this)
@@ -37,6 +39,8 @@ class DetailedTripScreen extends Component {
     this.onPressStartTrip = this.onPressStartTrip.bind(this)
     this.toCurrentTrip = this.toCurrentTrip.bind(this)
     this.updateReservations = this.updateReservations.bind(this)
+    this.onReload = this.onReload.bind(this)
+    this.getDataAsDriver = this.getDataAsDriver.bind(this)
   }
 
   async componentDidMount() {
@@ -44,31 +48,47 @@ class DetailedTripScreen extends Component {
     const asDriver = this.props.navigation.getParam('asDriver', null)
     const trip_id = this.props.navigation.getParam('trip_id', null)
     await this.props.fetchTrip(this.props.user.token, trip_id)
-    this.setState({ ...this.state, asDriver, loading: false })
+    this.setState({ ...this.state, asDriver, tripId: trip_id, loading: false })
     if (asDriver) {
-      const params = [this.props.user.token, trip_id]
-      this.setState({ fetchingPassengers: true, fetchingReservations: true })
-      const passengers = await this.props.fetchManifest(...params)
-      const reservations = await this.props.fetchReservations(...params)
-      if (
-        !reservations ||
-        !passengers ||
-        reservations.error ||
-        passengers.error
-      ) {
-        Alert.alert(
-          'Problemas obteniendo detalles del viaje',
-          'Hubo un problema obteniendo algunos detalles de tu viaje. Por favor inténtalo de nuevo.'
-        )
-      }
-      if (reservations && !reservations.error) {
-        this.setState({ reservations: reservations.payload.data })
-      }
-      if (passengers && !passengers.error) {
-        this.setState({ passengers: passengers.payload.data.passengers })
-      }
-      this.setState({ fetchingPassengers: false, fetchingReservations: false })
+      this.getDataAsDriver(trip_id)
     }
+  }
+
+  async onReload() {
+    const { user } = this.props
+    const { tripId, asDriver } = this.state
+    this.setState({ reloading: true })
+    await this.props.fetchTrip(user.token, tripId)
+    if (asDriver) {
+      await this.getDataAsDriver(tripId)
+    }
+    this.setState({ reloading: false })
+  }
+
+  async getDataAsDriver(tripId) {
+    const { user, fetchManifest, fetchReservations } = this.props
+    const params = [user.token, tripId]
+    this.setState({ fetchingPassengers: true, fetchingReservations: true })
+    const passengers = await fetchManifest(...params)
+    const reservations = await fetchReservations(...params)
+    if (
+      !reservations ||
+      !passengers ||
+      reservations.error ||
+      passengers.error
+    ) {
+      Alert.alert(
+        'Problemas obteniendo detalles del viaje',
+        'Hubo un problema obteniendo algunos detalles de tu viaje. Por favor inténtalo de nuevo.'
+      )
+    }
+    if (reservations && !reservations.error) {
+      this.setState({ reservations: reservations.payload.data })
+    }
+    if (passengers && !passengers.error) {
+      this.setState({ passengers: passengers.payload.data.passengers })
+    }
+    this.setState({ fetchingPassengers: false, fetchingReservations: false })
   }
 
   async updateReservations(status, reservationId) {
@@ -246,8 +266,18 @@ class DetailedTripScreen extends Component {
   }
 
   render() {
+    const { loading, reloading } = this.state
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={reloading}
+            onRefresh={this.onReload}
+          />
+        }
+        contentContainerStyle={{ padding: 15 }}
+        style={{ ...StyleSheet.absoluteFill }}
+      >
         {this.state.loading && <Spinner color="blue" />}
         {!this.state.loading && (
           <DetailedTrip

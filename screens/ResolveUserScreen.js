@@ -18,7 +18,7 @@ class ResolveUserScreen extends Component {
       if (response.error) {
         Alert.alert(
           'Error al iniciar sesión',
-          'Hubo un problema con iniciar sesión por favor intente de nuevo.',
+          'Hubo un problema al iniciar sesión por favor intente de nuevo.',
           [
             {
               text: 'Intentar de nuevo',

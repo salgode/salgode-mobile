@@ -250,7 +250,7 @@ const mapStateToProps = ({ user, createTrip, spots }) => {
     startStop: createTrip.startStop || {},
     endStop: createTrip.endStop || {},
     startTime: createTrip.startTime,
-    spots: spots.spots,
+    spots: spots.spots || [],
   }
 }
 

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "SALGODE",
+    "name": "SalgoDe",
     "slug": "SalgoDe",
     "privacy": "public",
     "sdkVersion": "35.0.0",
@@ -20,7 +20,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "cl.salgode.salgode",
-      "buildNumber": "4",
+      "buildNumber": "5",
       "infoPlist": {
         "NSCameraUsageDescription": "Esta app utiliza tu cámara para poder sacar una selfie.",
         "NSPhotoLibraryUsageDescription": "Esta app requiere acceso a tu biblioteca de imágenes para poder subir una imagen a tu perfil de usuario."

@@ -69,7 +69,7 @@ ChooseTripsStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-car' : 'md-car'}
+      name={Platform.OS === 'ios' ? 'ios-thumbs-up' : 'md-thumbs-up'}
     />
   ),
 }

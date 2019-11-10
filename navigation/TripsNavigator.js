@@ -5,25 +5,6 @@ import Colors from '../constants/Colors'
 
 export default createMaterialTopTabNavigator(
   {
-    MisViajes: {
-      screen: props => (
-        <TripsScreen type={'misviajes'} isRequestedTrips={false} {...props} />
-      ),
-      navigationOptions: () => ({
-        tabBarOptions: {
-          labelStyle: {
-            fontWeight: 'bold',
-          },
-          activeTintColor: 'white',
-          indicatorStyle: { backgroundColor: 'white' },
-          style: {
-            backgroundColor: Colors.mainGrey,
-          },
-        },
-        title: '#Manejando',
-      }),
-      params: { asDriver: true },
-    },
     Pedidos: {
       screen: props => (
         <TripsScreen type={'pedidos'} isRequestedTrips {...props} />
@@ -43,10 +24,29 @@ export default createMaterialTopTabNavigator(
       }),
       params: { asDriver: false },
     },
+    MisViajes: {
+      screen: props => (
+        <TripsScreen type={'misviajes'} isRequestedTrips={false} {...props} />
+      ),
+      navigationOptions: () => ({
+        tabBarOptions: {
+          labelStyle: {
+            fontWeight: 'bold',
+          },
+          activeTintColor: 'white',
+          indicatorStyle: { backgroundColor: 'white' },
+          style: {
+            backgroundColor: Colors.mainGrey,
+          },
+        },
+        title: '#Conduciendo',
+      }),
+      params: { asDriver: true },
+    },
   },
   {
     navigationOptions: () => ({
-      title: 'Viajes',
+      title: 'Mis Viajes',
     }),
   }
 )

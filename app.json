@@ -27,7 +27,8 @@
       }
     },
     "android": {
-      "package": "cl.salgode.salgode"
+      "package": "cl.salgode.salgode",
+      "versionCode": 2
     },
     "description": "",
     "githubUrl": "https://github.com/salgode/salgode-mobile"

@@ -1,5 +1,3 @@
-<!-- [![travisB]][travisL] -->
-
 [![stdVersionB]][stdversionl]
 [![commitsB]][commitsl]
 [![prettierB]][prettierl]
@@ -7,7 +5,9 @@
 
 # SalgoDe
 
-Aplicación móvil para compartir viajes construida con [Expo](https://expo.io/) para web, iOS y Android. Backend se encuentra [aquí](https://github.com/Varuscl/salgode-api)
+Aplicación móvil para compartir viajes construida con [Expo](https://expo.io/) para iOS y Android.<br/>
+La app web se encuentra [aquí](https://github.com/salgode/salgode-web).<br/>
+El backend se encuentra [aquí](https://github.com/salgode/salgode-backend).
 
 Sigue el desarrollo en [nuestro Trello](https://trello.com/b/GCTJ1iMU/salgode).
 
@@ -64,14 +64,26 @@ Sigue el desarrollo en [nuestro Trello](https://trello.com/b/GCTJ1iMU/salgode).
 
 ## Agradecimientos
 
-Se aprecia el aporte al frontend de:
+Se aprecia el aporte por gestionar el equipo de desarrollo a:
 
 - [Matías Andrade](https://github.com/mandrade2)
-- [Franco Méndez Z.](https://github.com/fnmendez)
 - [José Morales Lira](https://github.com/josemlira)
+- [Franco Méndez Z.](https://github.com/fnmendez)
+
+Se aprecia el aporte por código a:
+
+- [Matías Andrade](https://github.com/mandrade2)
+- [José Morales Lira](https://github.com/josemlira)
+- [Franco Méndez Z.](https://github.com/fnmendez)
+- [Benjamín Earle](https://github.com/MrEarle)
 - [Martín Álamos](https://github.com/wayoalamos)
 - [Joaquín Ricci](https://github.com/jricci1)
-- [Benjamín Earle](https://github.com/MrEarle)
+- [Verner Codoceo](https://github.com/vacodoceo)
+- [Isidora Palma](https://github.com/isipalma)
+- [Lesly Reyes](https://github.com/lareyes2)
+- [Alejandro Quiñones](https://github.com/Aiquinones)
+- [Tomás Tapia](https://github.com/ttapia)
+- [Valentina Barrera](https://github.com/vbarreradg)
 - [Sebastián Cruz](https://github.com/sebacruzd)
 - [Daniel Leal](https://github.com/daleal)
 - [Carlos Knopel](https://github.com/buskerone)
@@ -81,31 +93,6 @@ Se aprecia el aporte al frontend de:
 - [Tomás Rivera](https://github.com/tomasrivera)
 - [Diego Silva](https://github.com/DiegoSilvaS)
 - [Gonzalo Caballero](https://github.com/Gonzalo9823)
-
-## Agradecimientos
-
-Se aprecia el aporte al frontend de:
-
-- [Matías Andrade](https://github.com/mandrade2)
-- [Franco Méndez Z.](https://github.com/fnmendez)
-- [José Morales Lira](https://github.com/josemlira)
-- [Martín Álamos](https://github.com/wayoalamos)
-- [Joaquín Ricci](https://github.com/jricci1)
-- [Benjamín Earle](https://github.com/MrEarle)
-- [Sebastián Cruz](https://github.com/sebacruzd)
-- [Daniel Leal](https://github.com/daleal)
-- [Carlos Knopel](https://github.com/buskerone)
-- [Robinson Castro](https://github.com/Robin40)
-- [Camila Olguín](https://github.com/camiolguin)
-- [Dante Mardones](https://github.com/DanteMa)
-- [Tomás Rivera](https://github.com/tomasrivera)
-- [Diego Silva](https://github.com/DiegoSilvaS)
-- [Gonzalo Caballero](https://github.com/Gonzalo9823)
-
-<!-- BADGES -->
-
-<!-- [travisB]:https://travis-ci.com/
-[travisL]:https://travis-ci.com/ -->
 
 [stdversionb]: https://img.shields.io/badge/release-standard%20version-blue.svg
 [stdversionl]: https://github.com/conventional-changelog/standard-version

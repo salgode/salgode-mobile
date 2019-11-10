@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { Component } from 'react'
 import { StyleSheet } from 'react-native'
-import { Text, Form, Item, Input, Label, Button, Spinner } from 'native-base'
+import { View, Text, Form, Item, Input, Label, Button, Spinner } from 'native-base'
 import Layout from '../../constants/Layout'
 import PropTypes from 'prop-types'
 import Colors from '../../constants/Colors'
@@ -12,6 +12,7 @@ import {
   notWrongPhone,
   validPhone,
 } from '../../utils/input'
+import Legal from './Legal'
 
 class SignupForm extends Component {
   constructor(props) {
@@ -24,6 +25,7 @@ class SignupForm extends Component {
       phoneNumber: '',
       password: '',
       passwordRepeat: '',
+      termsChecked: false,
       validity: {
         name: false,
         lastname: false,
@@ -107,7 +109,8 @@ class SignupForm extends Component {
       this.state.validity.email &&
       this.state.validity.phoneNumber &&
       this.state.validity.password &&
-      this.state.validity.passwordRepeat
+      this.state.validity.passwordRepeat &&
+      this.state.termsChecked
     return validity && this.state.password === this.state.passwordRepeat
   }
 
@@ -248,6 +251,15 @@ class SignupForm extends Component {
             value={this.state.passwordRepeat}
           />
         </Item>
+
+        <View>
+          <Legal
+            termsChecked={this.state.termsChecked}
+            setTermsChecked={
+              () => this.setState({ termsChecked: !this.state.termsChecked })
+            }
+          />
+        </View>
 
         {loading && <Spinner color={'#0000FF'} />}
         {!loading && (

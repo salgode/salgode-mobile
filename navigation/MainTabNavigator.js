@@ -38,7 +38,7 @@ const TripsStack = createStackNavigator(
 )
 
 TripsStack.navigationOptions = {
-  tabBarLabel: 'Viajes',
+  tabBarLabel: 'Mis Viajes',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}

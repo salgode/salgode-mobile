@@ -13,14 +13,11 @@ Sigue el desarrollo en [nuestro Trello](https://trello.com/b/GCTJ1iMU/salgode).
 
 ## Indice
 
-- [SalgoDe](#salgoDe)
-  - [Indice](#indice)
-  - [Scripts](#scripts)
-  - [Workflow](#workflow)
-    - [Development](#development)
-    - [Release](#release)
-  - [Motores](#motores)
-  - [Agradecimientos](#agradecimientos)
+- [Scripts](#scripts)
+- [Desarrollo](#desarrollo)
+- [Release](#release)
+- [Motores](#motores)
+- [Agradecimientos](#agradecimientos)
 
 ## Scripts
 
@@ -41,15 +38,13 @@ Sigue el desarrollo en [nuestro Trello](https://trello.com/b/GCTJ1iMU/salgode).
 
   Corre los tests.
 
-## Workflow
-
-### Development
+## Desarrollo
 
 - Las ramas `feat/*`, `fix/*`, `chore/*`, `hotfix/*` and `docs/*` se ven bien con `dash-case`.
 
 - Usamos **squash and merge** a `dev` usando [conventional commits](https://conventionalcommits.org).
 
-### Release
+## Release
 
 - Hacemos **merge** de `dev` a `master` localmente.
 

@@ -1,7 +1,7 @@
 {
   "name": "salgode-mobile-app",
   "main": "node_modules/expo/AppEntry.js",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/salgode/salgode-mobile.git"

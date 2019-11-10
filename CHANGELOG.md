@@ -1,3 +1,86 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [1.0.0](https://github.com/salgode/salgode-mobile/compare/v0.0.1...v1.0.0) (2019-11-10)
+
+
+### Bug Fixes
+
+* **create-trip:** remove selected places ([#146](https://github.com/salgode/salgode-mobile/issues/146)) ([35dd4b5](https://github.com/salgode/salgode-mobile/commit/35dd4b5))
+* api integration fixes ([#120](https://github.com/salgode/salgode-mobile/issues/120)) ([fec6738](https://github.com/salgode/salgode-mobile/commit/fec6738))
+* CardInputSelector no longer duplicate input text ([#56](https://github.com/salgode/salgode-mobile/issues/56)) ([97a6968](https://github.com/salgode/salgode-mobile/commit/97a6968))
+* CardInputSelector no longer duplicate input text ([#56](https://github.com/salgode/salgode-mobile/issues/56)) ([4d30cbc](https://github.com/salgode/salgode-mobile/commit/4d30cbc))
+* change password min length to 8 ([#127](https://github.com/salgode/salgode-mobile/issues/127)) ([9989fd8](https://github.com/salgode/salgode-mobile/commit/9989fd8))
+* change some api body requests ([#115](https://github.com/salgode/salgode-mobile/issues/115)) ([037d53c](https://github.com/salgode/salgode-mobile/commit/037d53c))
+* changes to trip summary ([#133](https://github.com/salgode/salgode-mobile/issues/133)) ([b58890e](https://github.com/salgode/salgode-mobile/commit/b58890e))
+* create trip no longer breaks app ([#87](https://github.com/salgode/salgode-mobile/issues/87)) ([bed96ea](https://github.com/salgode/salgode-mobile/commit/bed96ea))
+* current stop ([#123](https://github.com/salgode/salgode-mobile/issues/123)) ([0c39c2f](https://github.com/salgode/salgode-mobile/commit/0c39c2f))
+* current trip ([#130](https://github.com/salgode/salgode-mobile/issues/130)) ([2ffaed1](https://github.com/salgode/salgode-mobile/commit/2ffaed1))
+* current trip details ([#136](https://github.com/salgode/salgode-mobile/issues/136)) ([49e7133](https://github.com/salgode/salgode-mobile/commit/49e7133))
+* detail on passenger reservation ([#132](https://github.com/salgode/salgode-mobile/issues/132)) ([995874a](https://github.com/salgode/salgode-mobile/commit/995874a))
+* dont allow dashes as username ([#67](https://github.com/salgode/salgode-mobile/issues/67)) ([22dc316](https://github.com/salgode/salgode-mobile/commit/22dc316))
+* Enable react native debugger in order to check redux store. ([#83](https://github.com/salgode/salgode-mobile/issues/83)) ([e6035f4](https://github.com/salgode/salgode-mobile/commit/e6035f4))
+* integration changes ([#128](https://github.com/salgode/salgode-mobile/issues/128)) ([5966457](https://github.com/salgode/salgode-mobile/commit/5966457))
+* last trip fixes ([#138](https://github.com/salgode/salgode-mobile/issues/138)) ([526d42f](https://github.com/salgode/salgode-mobile/commit/526d42f))
+* miscellaneous ([#118](https://github.com/salgode/salgode-mobile/issues/118)) ([fee3277](https://github.com/salgode/salgode-mobile/commit/fee3277))
+* my trips ([#129](https://github.com/salgode/salgode-mobile/issues/129)) ([2e3b5ed](https://github.com/salgode/salgode-mobile/commit/2e3b5ed))
+* refactor + new stuffs + fixes ([#113](https://github.com/salgode/salgode-mobile/issues/113)) ([63dc4fd](https://github.com/salgode/salgode-mobile/commit/63dc4fd))
+* Se añade nav bar en SignUpScreen y se modifica back bar title. ([#26](https://github.com/salgode/salgode-mobile/issues/26)) ([7d45324](https://github.com/salgode/salgode-mobile/commit/7d45324))
+* Se añade nav bar en SignUpScreen y se modifica back bar title. ([#26](https://github.com/salgode/salgode-mobile/issues/26)) ([551ee5f](https://github.com/salgode/salgode-mobile/commit/551ee5f))
+* search tab fixes ([#135](https://github.com/salgode/salgode-mobile/issues/135)) ([7f1dcab](https://github.com/salgode/salgode-mobile/commit/7f1dcab))
+* search trip fetch and current trip fetch ([#116](https://github.com/salgode/salgode-mobile/issues/116)) ([6fc0a6b](https://github.com/salgode/salgode-mobile/commit/6fc0a6b))
+* sign in endpoint ([#78](https://github.com/salgode/salgode-mobile/issues/78)) ([915b1be](https://github.com/salgode/salgode-mobile/commit/915b1be))
+* upload image ([#119](https://github.com/salgode/salgode-mobile/issues/119)) ([628dcad](https://github.com/salgode/salgode-mobile/commit/628dcad))
+* UX & edit profile screen bugs ([#144](https://github.com/salgode/salgode-mobile/issues/144)) ([5a42193](https://github.com/salgode/salgode-mobile/commit/5a42193))
+
+
+### Chore
+
+* change production api url ([f952036](https://github.com/salgode/salgode-mobile/commit/f952036))
+* remove 'yarn-error.log' ([2e8a57e](https://github.com/salgode/salgode-mobile/commit/2e8a57e))
+
+
+### Docs
+
+* add contributions ([#34](https://github.com/salgode/salgode-mobile/issues/34)) ([dc2ee47](https://github.com/salgode/salgode-mobile/commit/dc2ee47))
+* add contributions ([#34](https://github.com/salgode/salgode-mobile/issues/34)) ([77ff409](https://github.com/salgode/salgode-mobile/commit/77ff409))
+
+
+### Features
+
+* add autocomplete to sign up and log in ([#52](https://github.com/salgode/salgode-mobile/issues/52)) ([7d025ce](https://github.com/salgode/salgode-mobile/commit/7d025ce))
+* add autocomplete to sign up and log in ([#52](https://github.com/salgode/salgode-mobile/issues/52)) ([3fbb218](https://github.com/salgode/salgode-mobile/commit/3fbb218))
+* add EmptyState to other views ([#126](https://github.com/salgode/salgode-mobile/issues/126)) ([e054ef1](https://github.com/salgode/salgode-mobile/commit/e054ef1))
+* add signup images ([#84](https://github.com/salgode/salgode-mobile/issues/84)) ([0cc1c86](https://github.com/salgode/salgode-mobile/commit/0cc1c86))
+* add terms link + checkbox ([#148](https://github.com/salgode/salgode-mobile/issues/148)) ([5c6cd7d](https://github.com/salgode/salgode-mobile/commit/5c6cd7d))
+* cancel reservation ([#131](https://github.com/salgode/salgode-mobile/issues/131)) ([2a434e8](https://github.com/salgode/salgode-mobile/commit/2a434e8))
+* car validations ([#98](https://github.com/salgode/salgode-mobile/issues/98)) ([a2e1f78](https://github.com/salgode/salgode-mobile/commit/a2e1f78))
+* change image to thumbnail ([#106](https://github.com/salgode/salgode-mobile/issues/106)) ([59c4dbe](https://github.com/salgode/salgode-mobile/commit/59c4dbe))
+* change password ([#122](https://github.com/salgode/salgode-mobile/issues/122)) ([bf9d85a](https://github.com/salgode/salgode-mobile/commit/bf9d85a))
+* current trip ([#94](https://github.com/salgode/salgode-mobile/issues/94)) ([35621ba](https://github.com/salgode/salgode-mobile/commit/35621ba))
+* driver license submit ([#110](https://github.com/salgode/salgode-mobile/issues/110)) ([89691da](https://github.com/salgode/salgode-mobile/commit/89691da))
+* edit dni photos ([#124](https://github.com/salgode/salgode-mobile/issues/124)) ([e44a034](https://github.com/salgode/salgode-mobile/commit/e44a034))
+* edit profile photo ([#111](https://github.com/salgode/salgode-mobile/issues/111)) ([d1f6e1a](https://github.com/salgode/salgode-mobile/commit/d1f6e1a))
+* empty state screen ([#125](https://github.com/salgode/salgode-mobile/issues/125)) ([7b86469](https://github.com/salgode/salgode-mobile/commit/7b86469))
+* improve naming and tabs order ([#149](https://github.com/salgode/salgode-mobile/issues/149)) ([4631de2](https://github.com/salgode/salgode-mobile/commit/4631de2))
+* in progress label ([#137](https://github.com/salgode/salgode-mobile/issues/137)) ([9c99454](https://github.com/salgode/salgode-mobile/commit/9c99454))
+* internationalization ([#92](https://github.com/salgode/salgode-mobile/issues/92)) ([897eb08](https://github.com/salgode/salgode-mobile/commit/897eb08))
+* nicolas cage photo ([#86](https://github.com/salgode/salgode-mobile/issues/86)) ([324346b](https://github.com/salgode/salgode-mobile/commit/324346b))
+* phone validations ([#99](https://github.com/salgode/salgode-mobile/issues/99)) ([3ade70f](https://github.com/salgode/salgode-mobile/commit/3ade70f))
+* start current trip ([#88](https://github.com/salgode/salgode-mobile/issues/88)) ([75817f3](https://github.com/salgode/salgode-mobile/commit/75817f3))
+* **style-unification:** most main tabs done ([#28](https://github.com/salgode/salgode-mobile/issues/28)) ([b9007fc](https://github.com/salgode/salgode-mobile/commit/b9007fc))
+* **style-unification:** most main tabs done ([#28](https://github.com/salgode/salgode-mobile/issues/28)) ([363ca4b](https://github.com/salgode/salgode-mobile/commit/363ca4b))
+* **styles:** last style unification for current views ([#50](https://github.com/salgode/salgode-mobile/issues/50)) ([9c9ef8d](https://github.com/salgode/salgode-mobile/commit/9c9ef8d))
+* **styles:** last style unification for current views ([#50](https://github.com/salgode/salgode-mobile/issues/50)) ([19a1034](https://github.com/salgode/salgode-mobile/commit/19a1034))
+* **styles-unification:** more logic to deduce what color a circle should be ([#59](https://github.com/salgode/salgode-mobile/issues/59)) ([4199378](https://github.com/salgode/salgode-mobile/commit/4199378))
+* **styles-unification:** more logic to deduce what color a circle should be ([#59](https://github.com/salgode/salgode-mobile/issues/59)) ([1a41977](https://github.com/salgode/salgode-mobile/commit/1a41977))
+
+
+### Refactor
+
+* add new endpoints ([#81](https://github.com/salgode/salgode-mobile/issues/81)) ([253eda3](https://github.com/salgode/salgode-mobile/commit/253eda3))
+
 # Change Log
 
 ## [Unreleased](https://github.com/salgode/salgode-mobile/tree/HEAD)

@@ -19,6 +19,8 @@ import CurrentStopScreen from '../screens/CurrentTrip/CurrentStopScreen'
 import CurrentFinishScreen from '../screens/CurrentTrip/CurrentFinishScreen'
 import TripDetailsScreen from '../screens/TripDetailsScreen'
 import MapScreen from '../screens/MapScreen'
+import TermScreen from '../screens/TermScreen'
+import PrivacyScreen from '../screens/PrivacyScreen'
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -60,6 +62,8 @@ const ChooseTripsStack = createStackNavigator({
 const EditProfileStack = createStackNavigator(
   {
     EditProfile: EditProfileScreen,
+    TermsProfile: TermScreen,
+    PrivacyProfile: PrivacyScreen,
   },
   config
 )

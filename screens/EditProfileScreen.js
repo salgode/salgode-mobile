@@ -182,7 +182,6 @@ Field.propTypes = {
     editable: PropTypes.bool,
     validate: PropTypes.func.isRequired,
     isSecure: PropTypes.bool,
-    editable: PropTypes.bool,
     keyboardType: PropTypes.oneOf([
       'default',
       'number-pad',
@@ -912,6 +911,26 @@ const EditProfileScreen = props => {
                   </View>
                 </Modal>
               </View>
+            </View>
+            <View>
+              <Button
+                transparent
+                onPress={() => {
+                  props.navigation.navigate('TermsProfile')
+                }}
+              >
+                <Text style={styles.buttonText}>
+                  Términos y Condiciones de uso
+                </Text>
+              </Button>
+              <Button
+                transparent
+                onPress={() => {
+                  props.navigation.navigate('PrivacyProfile')
+                }}
+              >
+                <Text style={styles.buttonText}>Política de Privacidad</Text>
+              </Button>
             </View>
             <Form style={styles.form}>
               <View style={styles.headerTextContainer}>

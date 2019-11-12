@@ -39,7 +39,7 @@ export default createMaterialTopTabNavigator(
             backgroundColor: Colors.mainGrey,
           },
         },
-        title: '#Conduciendo',
+        title: '#DeConductor',
       }),
       params: { asDriver: true },
     },

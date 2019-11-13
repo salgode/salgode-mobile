@@ -7,6 +7,8 @@ import {
 import FinishedTrip from '../../components/CurrentTrip/FinishedTrip'
 import { connect } from 'react-redux'
 import { finishTrip } from '../../redux/actions/trips'
+import { analytics, ANALYTICS_CATEGORIES } from '../../utils/analytics'
+import PropTypes from 'prop-types'
 
 class CurrentFinishScreen extends Component {
   constructor(props) {
@@ -20,6 +22,12 @@ class CurrentFinishScreen extends Component {
 
     const resp = await this.props.finishTrip(token, trip.trip_id)
     console.log(resp)
+
+    analytics.newEvent(
+      ANALYTICS_CATEGORIES.AsDriver.name,
+      ANALYTICS_CATEGORIES.AsDriver.actions.End,
+      this.props.user.userId
+    )
 
     const resetAction = StackActions.reset({
       index: 0,
@@ -44,9 +52,15 @@ class CurrentFinishScreen extends Component {
   }
 }
 
-CurrentFinishScreen.propTypes = {}
+CurrentFinishScreen.propTypes = {
+  user: PropTypes.shape({
+    userId: PropTypes.any.isRequired,
+  }).isRequired,
+}
 
-const mapStateToProps = () => ({})
+const mapStateToProps = state => ({
+  user: state.user,
+})
 
 const mapDispatchToProps = dispatch => ({
   finishTrip: (token, id) => dispatch(finishTrip(token, id)),

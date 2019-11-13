@@ -14,6 +14,7 @@ import { signupUser, uploadImageUser } from '../redux/actions/user'
 import SignupForm from '../components/Login/SignupForm'
 
 import lang from '../languages/es'
+import { analytics, ANALYTICS_CATEGORIES } from '../utils/analytics'
 
 class SignupScreen extends Component {
   static navigationOptions = {
@@ -59,6 +60,11 @@ class SignupScreen extends Component {
       const { data } = user.payload
       AsyncStorage.setItem('@userToken', String(JSON.stringify(data.token)))
       AsyncStorage.setItem('@userId', String(JSON.stringify(data.userId)))
+      analytics.newEvent(
+        ANALYTICS_CATEGORIES.LogIn.name,
+        ANALYTICS_CATEGORIES.LogIn.actions.SignUp,
+        data.userId
+      )
       this.props.navigation.navigate('ResolveUserScreen')
     }
   }

@@ -14,6 +14,7 @@ import {
 } from '../redux/actions/trips'
 import { getTripReservations } from '../redux/actions/trips'
 import PassengerDetails from '../components/Trips/Trip/PassengerDetails'
+import { analytics, ANALYTICS_CATEGORIES } from '../utils/analytics'
 
 class DetailedTripScreen extends Component {
   static navigationOptions = {
@@ -140,8 +141,14 @@ class DetailedTripScreen extends Component {
     const { passengers, trip } = this.state
     this.props.navigation.navigate('StartTrip', {
       stops: trip.trip_route_points,
-      onTripStart: () =>
-        this.props.postTripStart(this.props.user.token, trip.trip_id),
+      onTripStart: () => {
+        analytics.newEvent(
+          ANALYTICS_CATEGORIES.AsDriver.name,
+          ANALYTICS_CATEGORIES.AsDriver.actions.Start,
+          this.props.user.userId
+        )
+        this.props.postTripStart(this.props.user.token, trip.trip_id)
+      },
       nextTripView: () => {
         this.props.navigation.navigate('StopTrip', {
           token: this.props.user.token,
@@ -214,10 +221,10 @@ class DetailedTripScreen extends Component {
                 )
               })
             ) : (
-              <Text style={styles.noContent}>
-                Aún no tienes pasajeros para este viaje
+                <Text style={styles.noContent}>
+                  Aún no tienes pasajeros para este viaje
               </Text>
-            )}
+              )}
           </View>
         )}
       </View>
@@ -255,10 +262,10 @@ class DetailedTripScreen extends Component {
                 )
               })
             ) : (
-              <Text style={styles.noContent}>
-                Aún no tienes solicitudes para este viaje
+                <Text style={styles.noContent}>
+                  Aún no tienes solicitudes para este viaje
               </Text>
-            )}
+              )}
           </View>
         )}
       </View>
@@ -309,6 +316,7 @@ DetailedTripScreen.propTypes = {
   }).isRequired,
   user: PropTypes.shape({
     token: PropTypes.string.isRequired,
+    id: PropTypes.any.isRequired,
   }).isRequired,
   trip: PropTypes.object.isRequired,
   fetchTrip: PropTypes.func.isRequired,

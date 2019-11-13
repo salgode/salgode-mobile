@@ -55,6 +55,7 @@ import {
 } from '../utils/input'
 import { uploadImageToS3 } from '../utils/image'
 import * as ImagePicker from 'expo-image-picker'
+import { analytics, ANALYTICS_CATEGORIES } from '../utils/analytics'
 
 function validateName(str) {
   if (typeof str !== 'string') {
@@ -129,10 +130,10 @@ const Field = ({ field }) => {
   const validity = field.validate(field.value)
     ? 'valid'
     : isEditing
-    ? 'partial'
-    : hasBeenBlurred
-    ? 'invalid'
-    : 'partial'
+      ? 'partial'
+      : hasBeenBlurred
+        ? 'invalid'
+        : 'partial'
 
   return (
     <Item
@@ -844,12 +845,12 @@ const EditProfileScreen = props => {
                     {avatar ? (
                       <Thumbnail source={{ uri: avatar }} large />
                     ) : (
-                      <MaterialCommunityIcons
-                        name="face-profile"
-                        color="gray"
-                        size={photoSize}
-                      />
-                    )}
+                        <MaterialCommunityIcons
+                          name="face-profile"
+                          color="gray"
+                          size={photoSize}
+                        />
+                      )}
                   </View>
                   <View
                     style={{
@@ -985,8 +986,8 @@ const EditProfileScreen = props => {
                   'Estado verificación: '
                 )
               ) : (
-                <></>
-              )}
+                  <></>
+                )}
               <Button
                 block
                 borderRadius={10}
@@ -1043,8 +1044,8 @@ const EditProfileScreen = props => {
                       'Estado verificación: '
                     )
                   ) : (
-                    <></>
-                  )}
+                      <></>
+                    )}
                   <Button
                     block
                     borderRadius={10}
@@ -1067,8 +1068,8 @@ const EditProfileScreen = props => {
                       </Text>
                     </View>
                   ) : (
-                    <></>
-                  )}
+                      <></>
+                    )}
                   {carFields.map(field => (
                     <Field key={field.label} field={field} validity="partial" />
                   ))}
@@ -1084,12 +1085,12 @@ const EditProfileScreen = props => {
                       <Text style={styles.buttonText}>Ingresar Vehículo</Text>
                     </Button>
                   ) : (
-                    <></>
-                  )}
+                      <></>
+                    )}
                 </View>
               ) : (
-                <></>
-              )}
+                  <></>
+                )}
             </Form>
           </View>
           {hasCar && <View style={styles.artificialKeyboardPadding} />}
@@ -1255,9 +1256,15 @@ const _SignOutC = props => (
       Alert.alert('Salir', '¿Deseas cerrar sesión?', [
         {
           text: 'Si',
-          onPress: () => {
+          onPress: async () => {
+            const userId = await AsyncStorage.getItem('@userId')
             AsyncStorage.removeItem('@userToken')
             AsyncStorage.removeItem('@userId')
+            analytics.newEvent(
+              ANALYTICS_CATEGORIES.LogIn.name,
+              ANALYTICS_CATEGORIES.LogIn.actions.LogOut,
+              userId
+            )
             // eslint-disable-next-line react/prop-types
             props.navigation.navigate('Login')
             // eslint-disable-next-line react/prop-types

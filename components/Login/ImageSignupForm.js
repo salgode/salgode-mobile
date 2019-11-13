@@ -137,7 +137,7 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
       setLoading(false)
       Alert.alert(
         'Error de registro',
-        'Hubo un problema registrandote. Por favor inténtalo de nuevo.'
+        'Hubo un problema en el proceso de registro. Por favor inténtalo de nuevo.'
       )
       return
     }
@@ -146,11 +146,17 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
       .slice(-1)[0]
       .split('.')
     const frontResponse = await uploadImage(frontFN, frontFT)
-    if (!uploadImageToS3(frontResponse.payload.data.upload, frontFT, frontId)) {
+    if (
+      !(await uploadImageToS3(
+        frontResponse.payload.data.upload,
+        frontFT,
+        frontId
+      ))
+    ) {
       setLoading(false)
       Alert.alert(
         'Error de registro',
-        'Hubo un problema registrandote. Por favor inténtalo de nuevo.'
+        'Hubo un problema en el proceso de registro. Por favor inténtalo de nuevo.'
       )
       return
     }
@@ -159,11 +165,17 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
       .slice(-1)[0]
       .split('.')
     const backResponse = await uploadImage(backFN, backFT)
-    if (!uploadImageToS3(backResponse.payload.data.upload, backFT, backId)) {
+    if (
+      !(await uploadImageToS3(
+        backResponse.payload.data.upload,
+        backFT,
+        backId
+      ))
+    ) {
       setLoading(false)
       Alert.alert(
         'Error de registro',
-        'Hubo un problema registrandote. Por favor inténtalo de nuevo.'
+        'Hubo un problema en el proceso de registro. Por favor inténtalo de nuevo.'
       )
       return
     }

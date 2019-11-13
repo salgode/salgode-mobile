@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert, StyleSheet } from 'react-native'
+import { Alert, StyleSheet, ScrollView } from 'react-native'
 import { View, Spinner, Button, Text } from 'native-base'
 import PhotoTaker from './PhotoTaker'
 import PropTypes from 'prop-types'
@@ -225,49 +225,52 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
   alertIfCamPermissionsDisabledAsync()
   alertIfRollPermissionsDisabledAsync()
   return (
-    <View style={styles.container}>
-      <PhotoTaker
-        takePhoto={takePhoto}
-        choosePhoto={choosePhoto}
-        selfie={selfie}
-        setImage={'selfie'}
-        disableLibrary={true}
-        title="Subir selfie"
-      />
-      <PhotoTaker
-        takePhoto={takePhoto}
-        choosePhoto={choosePhoto}
-        setImage={'frontId'}
-        selfie={frontId}
-        iconName="vcard-o"
-        iconType="FontAwesome"
-        size={60}
-        title="Foto frontal Carnet de Identidad"
-      />
-      <PhotoTaker
-        takePhoto={takePhoto}
-        choosePhoto={choosePhoto}
-        setImage={'backId'}
-        selfie={backId}
-        iconName="vcard-o"
-        iconType="FontAwesome"
-        size={60}
-        title="Foto trasera Carnet de Identidad"
-      />
+    <ScrollView>
+      <View style={styles.container}>
+        <PhotoTaker
+          takePhoto={takePhoto}
+          choosePhoto={choosePhoto}
+          selfie={selfie}
+          setImage={'selfie'}
+          disableLibrary={true}
+          title="Subir selfie"
+        />
+        <PhotoTaker
+          takePhoto={takePhoto}
+          choosePhoto={choosePhoto}
+          setImage={'frontId'}
+          selfie={frontId}
+          iconName="vcard-o"
+          iconType="FontAwesome"
+          size={60}
+          title="Foto frontal Carnet de Identidad"
+        />
+        <PhotoTaker
+          takePhoto={takePhoto}
+          choosePhoto={choosePhoto}
+          setImage={'backId'}
+          selfie={backId}
+          iconName="vcard-o"
+          iconType="FontAwesome"
+          size={60}
+          title="Foto trasera Carnet de Identidad"
+        />
 
-      {loading && <Spinner color={'#0000FF'} />}
-      {!loading && (
-        <Button
-          block
-          borderRadius={10}
-          style={styles.button}
-          disabled={!validity()}
-          onPress={onSend}
-        >
-          <Text>Registrar</Text>
-        </Button>
-      )}
-    </View>
+        {loading && <Spinner color={'#0000FF'} />}
+        {!loading && (
+          <Button
+            block
+            borderRadius={10}
+            style={styles.button}
+            disabled={!validity()}
+            onPress={onSend}
+          >
+            <Text>Registrar</Text>
+          </Button>
+        )}
+        <View style={{ marginBottom: 50 }} />
+      </View>
+    </ScrollView>
   )
 }
 

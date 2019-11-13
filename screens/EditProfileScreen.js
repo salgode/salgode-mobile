@@ -41,6 +41,7 @@ import {
   getUserCar,
   getImageUrl,
   createVehicle,
+  getOwnProfile,
 } from '../redux/actions/user'
 import Layout from '../constants/Layout'
 import Colors from '../constants/Colors'
@@ -449,7 +450,6 @@ const EditProfileScreen = props => {
       },
       body
     )
-    setIsLoading(false)
     if (response.error) {
       Alert.alert(
         'Error actualizando datos',
@@ -458,6 +458,8 @@ const EditProfileScreen = props => {
     } else {
       Alert.alert('Actualización exitosa', 'Informacion actualizada con exito')
     }
+    await props.loadUser(props.user.token)
+    setIsLoading(false)
   }
 
   const onPressSaveProfile = React.useCallback(() => {
@@ -626,7 +628,6 @@ const EditProfileScreen = props => {
         },
       }
     )
-    setIsLoading(false)
     setDniFrontSubmit('')
     setDniBackSubmit('')
     setIsUploadingDni(false)
@@ -638,6 +639,8 @@ const EditProfileScreen = props => {
     } else {
       Alert.alert('Actualización exitosa', 'Solicitud enviada con éxito')
     }
+    await props.loadUser(props.user.token)
+    setIsLoading(false)
   }
 
   const onPressSaveLicense = async () => {
@@ -702,7 +705,6 @@ const EditProfileScreen = props => {
         },
       }
     )
-    setIsLoading(false)
     setFrontSubmit('')
     setBackSubmit('')
     setIsUploadingLicense(false)
@@ -714,6 +716,8 @@ const EditProfileScreen = props => {
     } else {
       Alert.alert('Actualización exitosa', 'Solicitud enviada con éxito')
     }
+    await props.loadUser(props.user.token)
+    setIsLoading(false)
   }
 
   const onPressUpdatePassword = async () => {
@@ -734,6 +738,7 @@ const EditProfileScreen = props => {
         'Tu contraseña se ha cambiado con éxito'
       )
     }
+    await props.loadUser(props.user.token)
     setIsLoading(false)
   }
 
@@ -756,7 +761,6 @@ const EditProfileScreen = props => {
         color: carColor,
       },
     })
-    setIsLoading(false)
     setIsSaving(false)
     if (response.error) {
       Alert.alert(
@@ -767,6 +771,8 @@ const EditProfileScreen = props => {
       setCanSubmitCar(false)
       Alert.alert('Ingreso exitoso', 'Tu vehículo fue ingresado exitosamente')
     }
+    await props.loadUser(token)
+    setIsLoading(false)
   }
 
   const takePhoto = async dest => {
@@ -1125,6 +1131,7 @@ const mapDispatchToProps = dispatch => ({
   signOut: () => dispatch(signoutUser()),
   getUserCar: (token, carId) => dispatch(getUserCar(token, carId)),
   createVehicle: (token, data) => dispatch(createVehicle(token, data)),
+  loadUser: token => dispatch(getOwnProfile(token)),
 })
 
 const photoSize = 96

@@ -8,6 +8,7 @@ import * as ImagePicker from 'expo-image-picker'
 import { signupUser, getImageUrl } from '../../redux/actions/user'
 import { uploadImageToS3 } from '../../utils/image'
 import * as Permissions from 'expo-permissions'
+import { analytics, ANALYTICS_CATEGORIES } from '../../utils/analytics'
 
 const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
   const [selfie, setSelfie] = React.useState(null)
@@ -197,6 +198,11 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
         'El correo que has ingresado ya está en uso. Por lo que podrías ya estar registrado en la app. De no ser así, por favor inténtalo ingresando un correo distinto.'
       )
     } else {
+      analytics.newEvent(
+        ANALYTICS_CATEGORIES.LogIn.name,
+        ANALYTICS_CATEGORIES.LogIn.actions.SignUp
+      )
+
       Alert.alert(
         'Registro exitoso',
         'Se ha enviado un correo de confirmación a tu cuenta'

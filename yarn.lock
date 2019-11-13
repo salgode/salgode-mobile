@@ -3267,6 +3267,13 @@ expect@^24.9.0:
     jest-message-util "^24.9.0"
     jest-regex-util "^24.9.0"
 
+expo-analytics@^1.0.13:
+  version "1.0.13"
+  resolved "https://registry.yarnpkg.com/expo-analytics/-/expo-analytics-1.0.13.tgz#71e26ebe5bc112678cb7af701f7c973f7088f0a7"
+  integrity sha512-kbz7llKmBcMBJXWyD+e+A/ClNzD2FvfJplMYPx8KyT3EsrUToAOvHpY+9GRw/kMRoG4/uR+ShES5qoD4LiIJ7g==
+  dependencies:
+    expo-constants "^5.0.1"
+
 expo-app-loader-provider@~7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/expo-app-loader-provider/-/expo-app-loader-provider-7.0.0.tgz#9bfff831a204d0a8896e0120bce2209c4304ef03"
@@ -3293,6 +3300,13 @@ expo-constants@*, expo-constants@^7.0.0, expo-constants@~7.0.0:
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-7.0.1.tgz#87be02b6dae5c44a3246537452a0d77af15d46bf"
   integrity sha512-n9S6lsEfTAhLY+x/Yrtc1rvVUhuEF+CcSWr/reAIGtk35+PYrAKfV4pbetRtqX9tl947bJv7kBQX6jpwYpeIpQ==
+  dependencies:
+    ua-parser-js "^0.7.19"
+
+expo-constants@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-5.0.1.tgz#597263397f269d7fe37d9cd6b30e305c16635a00"
+  integrity sha512-Ny3teALKaE/jFzBg6DHr2GOoHpwQ/OLs3q3VugZOoR6hXCeVcCEP9MyNvhgn/cheeBDAa6UIgarv2Yufb5RMqQ==
   dependencies:
     ua-parser-js "^0.7.19"
 

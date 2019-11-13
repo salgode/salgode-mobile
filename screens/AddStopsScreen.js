@@ -13,6 +13,7 @@ import { Button, Icon } from 'native-base'
 import { spotsFilter } from '../utils/spotsFilter'
 import Colors from '../constants/Colors'
 import CardInput from '../components/CardInput'
+import { analytics, ANALYTICS_CATEGORIES } from '../utils/analytics'
 
 class AddStopsScreen extends Component {
   constructor(props) {
@@ -55,6 +56,11 @@ class AddStopsScreen extends Component {
       )
     } else {
       Alert.alert('Creación exitosa', 'Tu viaje ha sido publicado!')
+      analytics.newEvent(
+        ANALYTICS_CATEGORIES.AsDriver.name,
+        ANALYTICS_CATEGORIES.AsDriver.actions.Create,
+        user.userId
+      )
       this.props.navigation.popToTop()
     }
   }

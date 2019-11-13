@@ -18,6 +18,7 @@ import LoginForm from '../components/Login/LoginForm'
 import { loginUser } from '../redux/actions/user'
 
 import lang from '../languages/es'
+import { analytics, ANALYTICS_CATEGORIES } from '../utils/analytics'
 
 const window = Dimensions.get('window')
 const IMAGE_HEIGHT = window.width / 1.5
@@ -73,12 +74,20 @@ class LoginScreen extends Component {
     const user = await this.props.login(email, password)
     this.setState({ loading: false })
     if (user.error) {
-      Alert.alert('No se pudo iniciar sesión', 'Las credenciales ingresadas son incorrectas')
+      Alert.alert(
+        'No se pudo iniciar sesión',
+        'Las credenciales ingresadas son incorrectas'
+      )
     } else {
       const { data } = user.payload
       AsyncStorage.setItem('@userToken', String(JSON.stringify(data.token)))
       AsyncStorage.setItem('@userId', String(JSON.stringify(data.userId)))
       this.props.navigation.navigate('ResolveUserScreen')
+      analytics.newEvent(
+        ANALYTICS_CATEGORIES.LogIn.name,
+        ANALYTICS_CATEGORIES.LogIn.actions.LogIn,
+        data.userId
+      )
     }
   }
 

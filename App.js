@@ -6,16 +6,22 @@ import { Platform, StatusBar, StyleSheet, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Provider } from 'react-redux'
 import { SafeAreaView } from 'react-navigation'
-
+import * as Sentry from 'sentry-expo'
 import AppNavigator from './navigation/AppNavigator'
 import { store } from './redux/store'
-
+import Constants from 'expo-constants'
 // Esto es para arreglar el ancho del header de react navigation
 // No es un bug, solución aca https://github.com/react-navigation/react-navigation/releases/tag/v1.0.0-beta.26
 if (Platform.OS === 'android') {
   SafeAreaView.setStatusBarHeight(0)
 }
 
+Sentry.init({
+  dsn: 'https://3b65a5c913f649f8a31690cd68f82ebb@sentry.io/1811743',
+  enableInExpoDevelopment: true,
+  debug: true,
+})
+Sentry.setRelease(Constants.manifest.revisionId)
 export default function App({ skipLoadingScreen }) {
   const [isLoadingComplete, setLoadingComplete] = useState(false)
   if (!isLoadingComplete && !skipLoadingScreen) {

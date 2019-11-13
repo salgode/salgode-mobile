@@ -85,7 +85,7 @@ const mapDataToUser = data => {
   return user
 }
 
-export function loginUser(email, password) {
+export function loginUser(email, password, notificationToken = null) {
   return {
     type: actions.USER_LOGIN,
     payload: {
@@ -96,6 +96,7 @@ export function loginUser(email, password) {
         data: {
           email,
           password,
+          expoPushToken: notificationToken,
         },
         transformResponse: mapDataToUser,
       },

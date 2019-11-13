@@ -60,6 +60,10 @@
           }
         }
       ]
+    },
+    "notification": {
+      "icon": "./assets/images/icon.png",
+      "iosDisplayInForeground": true
     }
   }
 }

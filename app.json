@@ -31,6 +31,18 @@
       "versionCode": 3
     },
     "description": "",
-    "githubUrl": "https://github.com/salgode/salgode-mobile"
+    "githubUrl": "https://github.com/salgode/salgode-mobile",
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "varus",
+            "project": "salgode",
+            "authToken": "8cc5519b7a4e4c6b9511f2f2139c660c751df6c6af674f5abbed5c442b369375"
+          }
+        }
+      ]
+    }
   }
 }

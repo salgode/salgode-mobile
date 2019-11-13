@@ -80,14 +80,21 @@ class LoginScreen extends Component {
       )
     } else {
       const { data } = user.payload
-      AsyncStorage.setItem('@userToken', String(JSON.stringify(data.token)))
-      AsyncStorage.setItem('@userId', String(JSON.stringify(data.userId)))
-      this.props.navigation.navigate('ResolveUserScreen')
-      analytics.newEvent(
-        ANALYTICS_CATEGORIES.LogIn.name,
-        ANALYTICS_CATEGORIES.LogIn.actions.LogIn,
-        data.userId
-      )
+      if (data.verifications.email) {
+        AsyncStorage.setItem('@userToken', String(JSON.stringify(data.token)))
+        AsyncStorage.setItem('@userId', String(JSON.stringify(data.userId)))
+        this.props.navigation.navigate('ResolveUserScreen')
+        analytics.newEvent(
+          ANALYTICS_CATEGORIES.LogIn.name,
+          ANALYTICS_CATEGORIES.LogIn.actions.LogIn,
+          data.userId
+        )
+      } else {
+        Alert.alert(
+          'No has confirmado tu cuenta',
+          'Por favor revisa el correo que te enviamos para verificar tu cuenta'
+        )
+      }
     }
   }
 

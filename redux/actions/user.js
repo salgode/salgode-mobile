@@ -72,12 +72,13 @@ const mapDataToUser = data => {
     })
   }
   if (user_verifications) {
-    const { driver_license, identity, phone } = user_verifications
+    const { driver_license, identity, phone, email } = user_verifications
     Object.assign(user, {
       verifications: {
         license: driver_license,
         dni: identity,
         phone,
+        email,
       },
     })
   }

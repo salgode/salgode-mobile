@@ -62,6 +62,7 @@
     "redux-axios-middleware": "^4.0.1",
     "redux-devtools-extension": "^2.13.8",
     "redux-persist": "^6.0.0",
+    "sentry-expo": "^2.0.1",
     "styled-components": "^4.4.0"
   },
   "devDependencies": {

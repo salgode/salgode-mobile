@@ -4,9 +4,10 @@ import {
   cleanSearchStartPlace,
   setSearchEndPlace,
   cleanSearchEndPlace,
+  getOpenTrips,
 } from '../redux/actions/trips'
 import { getAllSpots } from '../redux/actions/spots'
-import { View, StyleSheet, Alert, AsyncStorage, Text } from 'react-native'
+import { View, StyleSheet, Alert, Text } from 'react-native'
 import { Spinner, Button } from 'native-base'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
@@ -35,7 +36,11 @@ class ChooseTripsScreen extends Component {
   }
 
   async componentDidMount() {
+    this.setState({ loading: true })
     this.props.getAllSpots(this.props.user.token)
+    this.props.getOpenTrips(this.props.user.token).then(() => {
+      this.setState({ loading: false })
+    })
   }
 
   onRequestTrip(stops, tripId) {
@@ -47,7 +52,6 @@ class ChooseTripsScreen extends Component {
 
   async setSearchStartPlaceFetch(item, reset) {
     if (item && Object.keys(item).length > 0) {
-      const { requestedTrips } = this.props
       if (reset) {
         this.setState({ loading: true })
       }
@@ -75,7 +79,7 @@ class ChooseTripsScreen extends Component {
   }
 
   render() {
-    const { navigation, startPlace, endPlace, requestedTrips } = this.props
+    const { navigation, startPlace, requestedTrips } = this.props
     return (
       <View style={styles.container}>
         <View>
@@ -95,22 +99,6 @@ class ChooseTripsScreen extends Component {
             editable={false}
             onClearPress={this.props.cleanSearchStartPlace}
           />
-          {/* <CardInput
-            onTouchablePress={() =>
-              navigation.navigate('SpotSelectorScreen', {
-                title: 'Buscas #A',
-                text: '#A',
-                onClearPress: this.props.cleanSearchEndPlace,
-                onItemPress: this.props.setSearchEndPlace,
-                data: this.props.spots,
-              })
-            }
-            placeholder="Filtra por Comuna o Parada"
-            value={endPlace ? endPlace.name : ''}
-            text="#A"
-            editable={false}
-            onClearPress={this.props.cleanSearchEndPlace}
-          /> */}
         </View>
         {this.state.loading && <Spinner color="blue" />}
         {!this.state.loading && (
@@ -122,22 +110,24 @@ class ChooseTripsScreen extends Component {
                 trips={requestedTrips}
               />
             ) : (
-              <EmptyState
-                image={noTrips}
-                text="No se ha encontrado ningún viaje según lo solicitado."
-              />
+              <>
+                <EmptyState
+                  image={noTrips}
+                  text="No se ha encontrado ningún viaje según lo solicitado."
+                />
+                <Button
+                  transparent
+                  onPress={() => this.props.navigation.navigate('SpotsMap')}
+                  style={{ alignSelf: 'center' }}
+                >
+                  <Text>
+                    No sabes donde buscar? Ve el mapa de puntos de SalgoDe
+                  </Text>
+                </Button>
+              </>
             )}
           </>
         )}
-        {/* <View> */}
-        <Button
-          transparent
-          onPress={() => this.props.navigation.navigate('SpotsMap')}
-          style={{ alignSelf: 'center' }}
-        >
-          <Text>Ve el mapa de puntos de SalgoDe</Text>
-        </Button>
-        {/* </View> */}
       </View>
     )
   }
@@ -158,6 +148,8 @@ ChooseTripsScreen.propTypes = {
   setSearchEndPlace: PropTypes.func.isRequired,
   cleanSearchEndPlace: PropTypes.func.isRequired,
   getAllSpots: PropTypes.func.isRequired,
+  startPTlace: PropTypes.object,
+  getOpenTrips: PropTypes.func,
 }
 
 ChooseTripsScreen.defaultProps = {
@@ -190,12 +182,19 @@ const mapDispatchToProps = dispatch => ({
   cleanSearchEndPlace: () => dispatch(cleanSearchEndPlace()),
   getAllSpots: token => dispatch(getAllSpots(token)),
   loadUser: (token, id) => dispatch(getOwnProfile(token, id)),
+  getOpenTrips: token => dispatch(getOpenTrips(token)),
 })
 
-ChooseTripsScreen.navigationOptions = {
+ChooseTripsScreen.navigationOptions = ({ navigation }) => ({
   title: 'Busca tu viaje',
   headerBackTitle: lang.default.back,
-}
+  headerRightContainerStyle: { marginRight: '3%' },
+  headerRight: (
+    <Button transparent onPress={() => navigation.navigate('SpotsMap')}>
+      <Text>Mapa</Text>
+    </Button>
+  ),
+})
 export default connect(
   mapStateToProps,
   mapDispatchToProps

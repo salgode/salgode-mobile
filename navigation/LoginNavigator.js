@@ -2,8 +2,8 @@ import { createStackNavigator } from 'react-navigation'
 
 import { LoginScreen, RecoverPasswordScreen, SignupScreen } from '../screens'
 import ImageSignupForm from '../components/Login/ImageSignupForm'
-import TermScreen from '../screens/TermScreen'
-import PrivacyScreen from '../screens/PrivacyScreen'
+import TermScreen from '../screens/Webviews/TermScreen'
+import PrivacyScreen from '../screens/Webviews/PrivacyScreen'
 
 export default createStackNavigator(
   {

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 import {
   setSearchStartPlace,
   cleanSearchStartPlace,
@@ -36,6 +37,7 @@ class ChooseTripsScreen extends Component {
 
   async componentDidMount() {
     this.props.getAllSpots(this.props.user.token)
+    this.getLocationFromAddress()
   }
 
   onRequestTrip(stops, tripId) {
@@ -78,40 +80,79 @@ class ChooseTripsScreen extends Component {
     const { navigation, startPlace, endPlace, requestedTrips } = this.props
     return (
       <View style={styles.container}>
-        <View>
-          <CardInput
-            onTouchablePress={() =>
-              navigation.navigate('SpotSelectorScreen', {
-                title: 'Buscas #SalgoDe',
-                text: '#SalgoDe',
-                onClearPress: this.props.cleanSearchStartPlace,
-                onItemPress: i => this.setSearchStartPlaceFetch(i, true),
-                data: this.props.spots,
-              })
-            }
-            placeholder="Filtra por Comuna o Parada"
-            value={startPlace ? startPlace.place_name : ''}
-            text="#SalgoDe"
-            editable={false}
-            onClearPress={this.props.cleanSearchStartPlace}
-          />
-          {/* <CardInput
-            onTouchablePress={() =>
-              navigation.navigate('SpotSelectorScreen', {
-                title: 'Buscas #A',
-                text: '#A',
-                onClearPress: this.props.cleanSearchEndPlace,
-                onItemPress: this.props.setSearchEndPlace,
-                data: this.props.spots,
-              })
-            }
-            placeholder="Filtra por Comuna o Parada"
-            value={endPlace ? endPlace.name : ''}
-            text="#A"
-            editable={false}
-            onClearPress={this.props.cleanSearchEndPlace}
-          /> */}
-        </View>
+        {/*<CardInput
+          onTouchablePress={() =>
+            navigation.navigate('SpotSelectorScreen', {
+              title: 'Buscas #SalgoDe',
+              text: '#SalgoDe',
+              onClearPress: this.props.cleanSearchStartPlace,
+              onItemPress: i => this.setSearchStartPlaceFetch(i, true),
+              data: this.props.spots,
+            })
+          }
+          placeholder="Filtra por Comuna o Parada"
+          value={startPlace ? startPlace.place_name : ''}
+          text="#SalgoDe"
+          editable={false}
+          onClearPress={this.props.cleanSearchStartPlace}
+        />*/}
+        <GooglePlacesAutocomplete
+          placeholder="Buscar"
+          minLength={2} // minimum length of text to search
+          autoFocus={false}
+          returnKeyType={'search'}
+          listViewDisplayed="auto"
+          fetchDetails={true}
+          renderDescription={row => row.description} // custom description render
+          onPress={(data, details = null) => {
+            console.log(data);
+            console.log(details);
+          }}
+          getDefaultValue={() => {
+            return ''; // text input default value
+          }}
+          query={{
+            // available options: https://developers.google.com/places/web-service/autocomplete
+            key: 'AIzaSyA2E5Qx-fs1XYDyi6tiYGOWD8LS7dp1uag',
+            language: 'es', // language of the results
+            types: 'address', // default: 'geocode'
+          }}
+          styles={{
+            description: {
+              fontWeight: 'bold',
+            },
+            predefinedPlacesDescription: {
+              color: '#1faadb',
+            },
+          }}
+          currentLocation={true}
+          currentLocationLabel="Posición Actual"
+          nearbyPlacesAPI="GoogleReverseGeocoding" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+          GoogleReverseGeocodingQuery={{
+            // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+          }}
+          GooglePlacesSearchQuery={{
+            // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+            rankby: 'distance',
+          }}
+          debounce={200}
+        />
+        {/* <CardInput
+          onTouchablePress={() =>
+            navigation.navigate('SpotSelectorScreen', {
+              title: 'Buscas #A',
+              text: '#A',
+              onClearPress: this.props.cleanSearchEndPlace,
+              onItemPress: this.props.setSearchEndPlace,
+              data: this.props.spots,
+            })
+          }
+          placeholder="Filtra por Comuna o Parada"
+          value={endPlace ? endPlace.name : ''}
+          text="#A"
+          editable={false}
+          onClearPress={this.props.cleanSearchEndPlace}
+        /> */}
         {this.state.loading && <Spinner color="blue" />}
         {!this.state.loading && (
           <>

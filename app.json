@@ -6,7 +6,7 @@
     "scheme": "salgode",
     "sdkVersion": "35.0.0",
     "platforms": ["ios", "android", "web"],
-    "version": "1.2.5",
+    "version": "1.2.6",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "splash": {
@@ -21,7 +21,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "app.salgode.salgode",
-      "buildNumber": "12",
+      "buildNumber": "13",
       "infoPlist": {
         "NSCameraUsageDescription": "Esta app utiliza tu cámara para poder sacar una selfie.",
         "NSPhotoLibraryUsageDescription": "Esta app requiere acceso a tu biblioteca de imágenes para poder subir una imagen a tu perfil de usuario."
@@ -29,7 +29,7 @@
     },
     "android": {
       "package": "cl.salgode.salgode",
-      "versionCode": 7,
+      "versionCode": 8,
       "permissions": ["CAMERA_ROLL", "CAMERA"],
       "playStoreUrl": "https://play.google.com/store/apps/details?id=cl.salgode.salgode"
     },

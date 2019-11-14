@@ -3,6 +3,7 @@
     "name": "SalgoDe",
     "slug": "SalgoDe",
     "privacy": "public",
+    "scheme": "salgode",
     "sdkVersion": "35.0.0",
     "platforms": ["ios", "android", "web"],
     "version": "1.2.5",

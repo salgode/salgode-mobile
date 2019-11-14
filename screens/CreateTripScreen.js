@@ -233,11 +233,6 @@ const styles = StyleSheet.create({
   group: {
     margin: 10,
   },
-  viewContainer: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-  },
   whiteText: {
     color: 'white',
   },
@@ -264,9 +259,15 @@ const mapDispatchToProps = dispatch => ({
   getUserCars: token => dispatch(getUserCars(token)),
 })
 
-CreateTripScreen.navigationOptions = {
+CreateTripScreen.navigationOptions = ({ navigation }) => ({
   title: 'Crear un viaje',
-}
+  headerRightContainerStyle: { marginRight: '3%' },
+  headerRight: (
+    <Button transparent onPress={() => navigation.navigate('SpotsMap')}>
+      <Text>Mapa</Text>
+    </Button>
+  ),
+})
 export default connect(
   mapStateToProps,
   mapDispatchToProps

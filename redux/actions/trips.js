@@ -46,6 +46,10 @@ export const actions = {
   TRIPS_FINISH_SUCCESS: 'TRIPS_FINISH_SUCCESS',
   TRIPS_FINISH_FAIL: 'TRIPS_FINISH_FAIL',
 
+  TRIPS_OPEN: 'TRIPS_OPEN',
+  TRIPS_OPEN_SUCCESS: 'TRIPS_OPEN_SUCCESS',
+  TRIPS_OPEN_FAIL: 'TRIPS_OPEN_FAIL',
+
   TRIPS_REMOVE_TRIP_FROM_LIST: 'TRIPS_REMOVE_TRIP_FROM_LIST',
 }
 
@@ -181,6 +185,18 @@ export function finishTrip(authToken, tripId) {
       request: {
         url: urls.driver.trips.post.complete(tripId),
         method: 'post',
+        headers: getBaseHeaders(authToken),
+      },
+    },
+  }
+}
+export function getOpenTrips(authToken) {
+  return {
+    type: actions.TRIPS_OPEN,
+    payload: {
+      request: {
+        url: urls.trips.open.get.all(),
+        method: 'get',
         headers: getBaseHeaders(authToken),
       },
     },

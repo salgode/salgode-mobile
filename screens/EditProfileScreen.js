@@ -56,6 +56,7 @@ import {
 import { uploadImageToS3 } from '../utils/image'
 import * as ImagePicker from 'expo-image-picker'
 import { analytics, ANALYTICS_CATEGORIES } from '../utils/analytics'
+import Divider from '../components/Divider'
 
 function validateName(str) {
   if (typeof str !== 'string') {
@@ -130,10 +131,10 @@ const Field = ({ field }) => {
   const validity = field.validate(field.value)
     ? 'valid'
     : isEditing
-      ? 'partial'
-      : hasBeenBlurred
-        ? 'invalid'
-        : 'partial'
+    ? 'partial'
+    : hasBeenBlurred
+    ? 'invalid'
+    : 'partial'
 
   return (
     <Item
@@ -845,12 +846,12 @@ const EditProfileScreen = props => {
                     {avatar ? (
                       <Thumbnail source={{ uri: avatar }} large />
                     ) : (
-                        <MaterialCommunityIcons
-                          name="face-profile"
-                          color="gray"
-                          size={photoSize}
-                        />
-                      )}
+                      <MaterialCommunityIcons
+                        name="face-profile"
+                        color="gray"
+                        size={photoSize}
+                      />
+                    )}
                   </View>
                   <View
                     style={{
@@ -938,7 +939,32 @@ const EditProfileScreen = props => {
               >
                 <Text style={styles.buttonText}>Política de Privacidad</Text>
               </Button>
+              <Button
+                transparent
+                onPress={() => {
+                  props.navigation.navigate('Landing')
+                }}
+              >
+                <Text style={styles.buttonText}>Página Web</Text>
+              </Button>
+              <Button
+                transparent
+                onPress={() => {
+                  props.navigation.navigate('Instagram')
+                }}
+              >
+                <Text style={styles.buttonText}>Instagram</Text>
+              </Button>
+              <Button
+                transparent
+                onPress={() => {
+                  props.navigation.navigate('Twitter')
+                }}
+              >
+                <Text style={styles.buttonText}>Twitter</Text>
+              </Button>
             </View>
+            <Divider />
             <Form style={styles.form}>
               <View style={styles.headerTextContainer}>
                 <Text style={styles.headerText}>Datos Personales</Text>
@@ -986,8 +1012,8 @@ const EditProfileScreen = props => {
                   'Estado verificación: '
                 )
               ) : (
-                  <></>
-                )}
+                <></>
+              )}
               <Button
                 block
                 borderRadius={10}
@@ -1014,7 +1040,9 @@ const EditProfileScreen = props => {
                 </TouchableOpacity>
               )}
               {hasCar ? (
-                <View>
+                <View style={{ paddingTop: 20 }}>
+                  <Divider />
+
                   <View style={styles.headerTextContainer}>
                     <Text style={styles.headerText}>Licencia de conducir</Text>
                   </View>
@@ -1044,8 +1072,8 @@ const EditProfileScreen = props => {
                       'Estado verificación: '
                     )
                   ) : (
-                      <></>
-                    )}
+                    <></>
+                  )}
                   <Button
                     block
                     borderRadius={10}
@@ -1056,6 +1084,7 @@ const EditProfileScreen = props => {
                   >
                     <Text style={styles.buttonText}>Solicitar revisión</Text>
                   </Button>
+                  <Divider />
 
                   <View style={styles.headerTextContainer}>
                     <Text style={styles.headerText}>Datos Vehículo</Text>
@@ -1068,8 +1097,8 @@ const EditProfileScreen = props => {
                       </Text>
                     </View>
                   ) : (
-                      <></>
-                    )}
+                    <></>
+                  )}
                   {carFields.map(field => (
                     <Field key={field.label} field={field} validity="partial" />
                   ))}
@@ -1085,12 +1114,12 @@ const EditProfileScreen = props => {
                       <Text style={styles.buttonText}>Ingresar Vehículo</Text>
                     </Button>
                   ) : (
-                      <></>
-                    )}
+                    <></>
+                  )}
                 </View>
               ) : (
-                  <></>
-                )}
+                <></>
+              )}
             </Form>
           </View>
           {hasCar && <View style={styles.artificialKeyboardPadding} />}

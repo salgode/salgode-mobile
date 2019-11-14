@@ -29,7 +29,9 @@
     },
     "android": {
       "package": "cl.salgode.salgode",
-      "versionCode": 7
+      "versionCode": 7,
+      "permissions": ["CAMERA_ROLL", "CAMERA"],
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=cl.salgode.salgode"
     },
     "description": "",
     "githubUrl": "https://github.com/salgode/salgode-mobile",

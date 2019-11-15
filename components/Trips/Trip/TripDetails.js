@@ -10,25 +10,6 @@ import Colors from '../../../constants/Colors'
 
 const photoSize = 96
 
-// TODO: Delete this function
-const fakePlaces = (spots) => {
-  let final = []
-  if (spots && spots.length >= 2) {
-    for (let i in [1,2]) {
-      final.push(spots[i])
-    }
-    Object.assign(final[0], {
-      lat: -33.43178,
-      lon: -70.5453808,
-    })
-    Object.assign(final[1], {
-      lat: -33.4469777,
-      lon: -70.6298197,
-    })
-  }
-  return final
-}
-
 class TripDetails extends Component {
   constructor(props) {
     super(props)
@@ -135,10 +116,6 @@ class TripDetails extends Component {
       etd,
       vehicle,
     } = this.props
-
-    // TODO: Delete this fake
-    const fakeRoute = fakePlaces(tripRoutePoints)
-
     return (
       <ScrollView style={styles.container}>
         <Card
@@ -173,12 +150,12 @@ class TripDetails extends Component {
           </CardItem>
           <CardItem style={styles.mapView}>
             <SalgoDeMap
-              markers={fakeRoute}
+              markers={tripRoutePoints}
               showPath
-              path={fakeRoute}
+              path={tripRoutePoints}
               showDescription
-              start={fakeRoute[0]}
-              end={fakeRoute.slice(-1)[0]}
+              start={tripRoutePoints[0]}
+              end={tripRoutePoints.slice(-1)[0]}
               goToMarkers
             />
           </CardItem>

@@ -8,29 +8,6 @@ import TimeInfo from './TimeInfo'
 import SalgoDeMap from '../../SalgoDeMap'
 import { Ionicons } from '@expo/vector-icons'
 
-// TODO: Delete this function
-const fakePlaces = (spots) => {
-  let final = []
-  if (spots && spots.length >= 3) {
-    for (let i in [1,2,3]) {
-      final.push(spots[i])
-    }
-    Object.assign(final[0], {
-      lat: -33.43178,
-      lon: -70.5453808,
-    })
-    Object.assign(final[1], {
-      lat: -33.4469777,
-      lon: -70.6298197,
-    })
-    Object.assign(final[2], {
-      lat: -33.69526,
-      lon: -71.214668,
-    })
-  }
-  return final
-}
-
 export const DetailedTrip = ({
   trip,
   asDriver,
@@ -62,9 +39,6 @@ export const DetailedTrip = ({
   const [loadingButton, setLoadingButton] = React.useState(false)
 
   const selfieImage = driver != null ? driver.driver_avatar : 'placeholder'
-
-  // TODO: Delete this fake
-  const fakeRoute = fakePlaces(trip.trip_route_points)
 
   return trip !== null ? (
     <Card
@@ -98,12 +72,12 @@ export const DetailedTrip = ({
       </CardItem>
       <CardItem style={styles.mapView}>
         <SalgoDeMap
-          markers={fakeRoute}
+          markers={trip.trip_route_points}
           showPath
-          path={fakeRoute}
+          path={trip.trip_route_points}
           showDescription
-          start={fakeRoute[0]}
-          end={fakeRoute.slice(-1)[0]}
+          start={trip.trip_route_points[0]}
+          end={trip.trip_route_points.slice(-1)[0]}
           goToMarkers
         />
       </CardItem>

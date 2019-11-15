@@ -36,8 +36,8 @@ const SalgoDeMap = ({
         if (goToMarkers) {
           try {
             const showMarkers = markers.map(m => ({
-              latitude: m.lat,
-              longitude: m.lon,
+              latitude: parseFloat(m.lat),
+              longitude: parseFloat(m.lon),
             }))
             mapRef.current.fitToCoordinates(showMarkers, {
               edgePadding: {
@@ -94,8 +94,8 @@ const SalgoDeMap = ({
                 key={`${m.place_id}-${color}`}
                 identifier={m.place_id}
                 coordinate={{
-                  latitude: m.lat,
-                  longitude: m.lon,
+                  latitude: parseFloat(m.lat),
+                  longitude: parseFloat(m.lon),
                 }}
                 title={showDescription ? m.place_name : undefined}
                 description={showDescription ? m.address : undefined}
@@ -119,8 +119,8 @@ const SalgoDeMap = ({
       {showPath && (
         <Polyline
           coordinates={path.map(p => ({
-            latitude: p.lat,
-            longitude: p.lon,
+            latitude: parseFloat(p.lat),
+            longitude: parseFloat(p.lon),
           }))}
           strokeColor={'red'}
           strokeWidth={5}

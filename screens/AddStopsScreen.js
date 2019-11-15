@@ -17,49 +17,6 @@ import CardInput from '../components/CardInput'
 import SalgoDeMap from '../components/SalgoDeMap'
 import { analytics, ANALYTICS_CATEGORIES } from '../utils/analytics'
 
-// TODO: Delete this function
-const fakePlaces = (spots) => {
-  let final = []
-  if (spots && spots.length >= 10) {
-    for (let i in [1,2,3,4,5,6,7,8]) {
-      final.push(spots[i])
-    }
-    Object.assign(final[0], {
-      lat: -33.43178,
-      lon: -70.5453808,
-    })
-    Object.assign(final[1], {
-      lat: -33.4469777,
-      lon: -70.6298197,
-    })
-    Object.assign(final[2], {
-      lat: -33.69526,
-      lon: -71.214668,
-    })
-    Object.assign(final[3], {
-      lat: -33.443699,
-      lon: -70.633053,
-    })
-    Object.assign(final[4], {
-      lat: -33.436248,
-      lon: -70.650219,
-    })
-    Object.assign(final[5], {
-      lat: -33.436195,
-      lon: -70.6508967,
-    })
-    Object.assign(final[6], {
-      lat: -33.4496991,
-      lon: -70.6884408,
-    })
-    Object.assign(final[7], {
-      lat: -33.3580534,
-      lon: -70.5066107,
-    })
-  }
-  return final
-}
-
 class AddStopsScreen extends Component {
   constructor(props) {
     super(props)
@@ -158,15 +115,13 @@ class AddStopsScreen extends Component {
       endStop,
       ...stops,
     ])
-    // TODO: Add initial Region
-    const fakeSpots = fakePlaces(this.props.spots)
     return (
       <View style={styles.container}>
         {this.state.isFormHidden ? (
           <View style={styles.mapContainer}>
             <View style={{ flex: 1 }}>
               <SalgoDeMap
-                markers={fakeSpots}
+                markers={this.props.spots}
                 showPath
                 path={[
                   startStop,

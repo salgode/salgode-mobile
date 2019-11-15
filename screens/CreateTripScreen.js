@@ -21,7 +21,7 @@ import EmptyState from '../components/EmptyState/EmptyState'
 import noTrips from '../assets/images/notrips.png'
 import { spotsFilter } from '../utils/spotsFilter'
 import Layout from '../constants/Layout'
-import Map from '../components/Map'
+import SalgoDeMap from '../components/SalgoDeMap'
 
 // TODO: Delete this function
 const fakePlaces = (spots) => {
@@ -76,7 +76,6 @@ class CreateTripScreen extends Component {
       pickedDate: null,
       isFormHidden: false,
       showActions: false,
-      marker: undefined,
     }
   }
 
@@ -280,7 +279,7 @@ class CreateTripScreen extends Component {
           )}
           <View style={styles.mapView}>
             <View style={styles.mapContainer}>
-              <Map
+              <SalgoDeMap
                 showLocation
                 markers={fakeSpots}
                 pressMarker={this.pressMarker}
@@ -294,7 +293,7 @@ class CreateTripScreen extends Component {
             <View>
               <Button
                 block
-                style={{ backgroundColor: 'white', borderBottomRightRadius: 30, borderBottomLeftRadius: 30, }}
+                style={styles.showMoreButton}
                 onPress={() => this.setState({
                   isFormHidden: !this.state.isFormHidden
                 })}
@@ -503,6 +502,11 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
     width: Layout.window.width
+  },
+  showMoreButton: {
+    backgroundColor: 'white',
+    borderBottomRightRadius: 30,
+    borderBottomLeftRadius: 30,
   },
   viewContainer: {
     alignItems: 'center',

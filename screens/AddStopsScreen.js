@@ -8,12 +8,57 @@ import {
   ActivityIndicator,
 } from 'react-native'
 import { connect } from 'react-redux'
+import { FontAwesome } from '@expo/vector-icons'
 import { createTrip } from '../redux/actions/createtrip'
-import { Button, Icon } from 'native-base'
+import { Button, Icon, Card, CardItem } from 'native-base'
 import { spotsFilter } from '../utils/spotsFilter'
 import Colors from '../constants/Colors'
 import CardInput from '../components/CardInput'
+import SalgoDeMap from '../components/SalgoDeMap'
 import { analytics, ANALYTICS_CATEGORIES } from '../utils/analytics'
+
+// TODO: Delete this function
+const fakePlaces = (spots) => {
+  let final = []
+  if (spots && spots.length >= 10) {
+    for (let i in [1,2,3,4,5,6,7,8]) {
+      final.push(spots[i])
+    }
+    Object.assign(final[0], {
+      lat: -33.43178,
+      lon: -70.5453808,
+    })
+    Object.assign(final[1], {
+      lat: -33.4469777,
+      lon: -70.6298197,
+    })
+    Object.assign(final[2], {
+      lat: -33.69526,
+      lon: -71.214668,
+    })
+    Object.assign(final[3], {
+      lat: -33.443699,
+      lon: -70.633053,
+    })
+    Object.assign(final[4], {
+      lat: -33.436248,
+      lon: -70.650219,
+    })
+    Object.assign(final[5], {
+      lat: -33.436195,
+      lon: -70.6508967,
+    })
+    Object.assign(final[6], {
+      lat: -33.4496991,
+      lon: -70.6884408,
+    })
+    Object.assign(final[7], {
+      lat: -33.3580534,
+      lon: -70.5066107,
+    })
+  }
+  return final
+}
 
 class AddStopsScreen extends Component {
   constructor(props) {
@@ -22,6 +67,8 @@ class AddStopsScreen extends Component {
     this.state = {
       stops: [],
       loading: false,
+      isFormHidden: false,
+      showActions: false,
     }
   }
 
@@ -92,55 +139,165 @@ class AddStopsScreen extends Component {
     })
   }
 
+  pressMarker = marker => {
+    this.setState({
+      showActions: true,
+      poi: marker,
+    })
+  }
+
+  onTapMap = () => {
+    this.setState({ showActions: false })
+  }
+
   render() {
     const { startStop, endStop, navigation } = this.props
-    const { stops } = this.state
+    const { stops, showActions } = this.state
     const filteredSpots = spotsFilter(this.props.spots, [
       startStop,
       endStop,
       ...stops,
     ])
+    // TODO: Add initial Region
+    const fakeSpots = fakePlaces(this.props.spots)
     return (
       <View style={styles.container}>
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}
+        {this.state.isFormHidden ? (
+          <View style={styles.mapContainer}>
+            <View style={{ flex: 1 }}>
+              <SalgoDeMap
+                markers={fakeSpots}
+                showPath
+                path={[
+                  startStop,
+                  ...stops,
+                  endStop,
+                ]}
+                start={startStop}
+                end={endStop}
+                pressMarker={this.pressMarker}
+                onTapMap={this.onTapMap}
+              />
+            </View>
+            {showActions && (
+              <Card style={styles.actions}>
+                <CardItem style={styles.info}>
+                  <Text style={{ fontWeight: 'bold' }}>{this.state.poi.name}</Text>
+                  <Text>{this.state.poi.address}</Text>
+                </CardItem>
+                <CardItem style={styles.actionButtons}>
+                  {this.state.stops.find(sp => sp.id === this.state.poi.id) ? (
+                    <Button
+                      block
+                      style={styles.actionButton}
+                      borderRadius={10}
+                      onPress={() => {
+                        this.cleanInput(
+                          this.state.stops.findIndex(sp => sp.id === this.state.poi.id)
+                        )
+                        this.onTapMap()
+                      }}
+                      color={'#0000FF'}
+                    >
+                      <Text
+                        style={styles.actionButtonText}
+                      >
+                        Quitar parada
+                      </Text>
+                    </Button>
+                  ) : (
+                    <>
+                      {this.state.poi.id === startStop.id ? (
+                        <Text>Inicio del viaje</Text>
+                      ) : this.state.poi.id === endStop.id ? (
+                        <Text> Fin del viaje</Text>
+                      ) : (
+                        <Button
+                          block
+                          style={styles.actionButton}
+                          borderRadius={10}
+                          onPress={() => {
+                            this.setState({
+                              stops: this.state.stops.concat(this.state.poi)
+                            })
+                            this.onTapMap()
+                          }}
+                          color={'#0000FF'}
+                        >
+                          <Text
+                            style={styles.actionButtonText}
+                          >
+                            Agregar parada
+                          </Text>
+                        </Button>
+                      )}
+                    </>
+                  )}
+                </CardItem>
+              </Card>
+            )}
+          </View>
+        ) : (
+          <ScrollView
+            style={styles.container}
+            contentContainerStyle={styles.contentContainer}
+          >
+            <View style={styles.group}>
+              <View style={styles.stopContainer}>
+                <Text style={{ fontWeight: 'bold', marginRight: 10 }}>
+                  #SalgoDe{' '}
+                </Text>
+                <Text>{startStop.name}</Text>
+              </View>
+              <View style={styles.stopContainer}>
+                <Text style={{ fontWeight: 'bold', marginRight: 10 }}>
+                  #Hasta{' '}
+                </Text>
+                <Text>{endStop.name}</Text>
+              </View>
+            </View>
+            <View style={styles.group}>
+              <Text style={styles.centeredText}>
+                Agrega paradas extra (opcional)
+              </Text>
+              {this.renderStops()}
+              <CardInput
+                onTouchablePress={() =>
+                  navigation.navigate('SpotSelectorScreen', {
+                    title: 'Seleccionar #Parada',
+                    text: '#Parada',
+                    data: filteredSpots,
+                    onItemPress: item =>
+                      this.setState({ stops: stops.concat(item) }),
+                  })
+                }
+                placeholder="Filtra por Comuna o Parada"
+                text="#PasoPor"
+                editable={false}
+              />
+            </View>
+          </ScrollView>
+        )}
+        <Button
+          block
+          style={styles.showMoreButton}
+          onPress={() => this.setState({
+            isFormHidden: !this.state.isFormHidden,
+            showActions: false,
+          })}
         >
-          <View style={styles.group}>
-            <View style={styles.stopContainer}>
-              <Text style={{ fontWeight: 'bold', marginRight: 10 }}>
-                #SalgoDe{' '}
-              </Text>
-              <Text>{startStop.name}</Text>
+          {this.state.isFormHidden ? (
+            <View style={styles.hideButtonContent}>
+              <FontAwesome name="angle-double-down" size={20} />
+              <Text>Mostrar paradas</Text>
             </View>
-            <View style={styles.stopContainer}>
-              <Text style={{ fontWeight: 'bold', marginRight: 10 }}>
-                #Hasta{' '}
-              </Text>
-              <Text>{endStop.name}</Text>
+          ) : (
+            <View style={styles.hideButtonContent}>
+              <FontAwesome name="angle-double-up" size={20} />
+              <Text>Agregar paradas desde el mapa</Text>
             </View>
-          </View>
-          <View style={styles.group}>
-            <Text style={styles.centeredText}>
-              Agrega paradas extra (opcional)
-            </Text>
-            {this.renderStops()}
-            <CardInput
-              onTouchablePress={() =>
-                navigation.navigate('SpotSelectorScreen', {
-                  title: 'Seleccionar #Parada',
-                  text: '#Parada',
-                  data: filteredSpots,
-                  onItemPress: item =>
-                    this.setState({ stops: stops.concat(item) }),
-                })
-              }
-              placeholder="Filtra por Comuna o Parada"
-              text="#PasoPor"
-              editable={false}
-            />
-          </View>
-        </ScrollView>
+          )}
+        </Button>
         {this.state.loading && <ActivityIndicator />}
         {!this.state.loading && (
           <View>
@@ -159,6 +316,28 @@ AddStopsScreen.navigationOptions = {
 }
 
 const styles = StyleSheet.create({
+  actions: {
+    backgroundColor: 'white',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: '3%',
+  },
+  actionButton: {
+    flex: 1,
+    marginHorizontal: 10,
+  },
+  actionButtons: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  actionButtonText: {
+    fontSize: 14,
+    color: 'white',
+  },
   addButton: {
     backgroundColor: Colors.mainBlue,
     marginBottom: 25,
@@ -177,12 +356,28 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 30,
   },
-
   group: {
     marginBottom: 20,
     marginLeft: 20,
     marginRight: 20,
     marginTop: 20,
+  },
+  hideButtonContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  info: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  mapContainer: {
+    backgroundColor: '#fff',
+    position: 'absolute',
+    width: '100%',
+    height: '100%'
   },
   stopContainer: {
     borderRadius: 4,
@@ -190,6 +385,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: 5,
     padding: 10,
+  },
+  showMoreButton: {
+    backgroundColor: 'white',
+    borderBottomRightRadius: 30,
+    borderBottomLeftRadius: 30,
   },
   textView: {
     alignItems: 'center',

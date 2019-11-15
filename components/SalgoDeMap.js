@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native'
 import PropTypes from 'prop-types'
 import mapStyle from '../config/google/mapStyle'
 
-const Map = ({
+const SalgoDeMap = ({
   showLocation,
   initialRegion,
   markers,
@@ -135,4 +135,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Map
+export default SalgoDeMap

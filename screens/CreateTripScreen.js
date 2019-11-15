@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Alert } from 'react-native'
 import { Appearance } from 'react-native-appearance'
 import { connect } from 'react-redux'
 import { Button, Spinner } from 'native-base'
+import { FontAwesome } from '@expo/vector-icons'
 import {
   setStartStop,
   setEndStop,
@@ -30,13 +31,7 @@ class CreateTripScreen extends Component {
     this.state = {
       isDateTimePickerVisible: false,
       pickedDate: null,
-      region: {
-        latitude: -33.437183,
-        longitude: -70.633395,
-        latitudeDelta: 0.2,
-        longitudeDelta: 0.2,
-      },
-      findUserFirstTime: true,
+      isFormHidden: false,
     }
   }
 
@@ -136,68 +131,93 @@ class CreateTripScreen extends Component {
             <Map showLocation />
           </View>
           <View style={styles.formContainer}>
-            <View>
-              <CardInput
-                onTouchablePress={() =>
-                  navigation.navigate('SpotSelectorScreen', {
-                    title: 'Seleccionar #SalgoDe',
-                    text: '#SalgoDe',
-                    onClearPress: clearStartStop,
-                    onItemPress: setStartStop,
-                    data: filteredSpots,
-                  })
-                }
-                placeholder="Filtra por Comuna o Parada"
-                value={startStop.name}
-                text="#SalgoDe"
-                editable={false}
-                onClearPress={clearStartStop}
-              />
-              {startStop.name ? (
-                <CardInput
-                  onTouchablePress={() =>
-                    navigation.navigate('SpotSelectorScreen', {
-                      title: 'Seleccionar #Hasta',
-                      text: '#Hasta',
-                      onClearPress: clearStartStop,
-                      onItemPress: setEndStop,
-                      data: filteredSpots,
-                    })
-                  }
-                  placeholder="Filtra por Comuna o Parada"
-                  value={endStop.name}
-                  text="#Hasta"
-                  editable={false}
-                  onClearPress={clearEndStop}
-                />
-              ) : <></>}
-            </View>
+            {!this.state.isFormHidden && (
+              <>
+                <View>
+                  <CardInput
+                    onTouchablePress={() =>
+                      navigation.navigate('SpotSelectorScreen', {
+                        title: 'Seleccionar #SalgoDe',
+                        text: '#SalgoDe',
+                        onClearPress: clearStartStop,
+                        onItemPress: setStartStop,
+                        data: filteredSpots,
+                      })
+                    }
+                    placeholder="Filtra por Comuna o Parada"
+                    value={startStop.name}
+                    text="#SalgoDe"
+                    editable={false}
+                    onClearPress={clearStartStop}
+                  />
+                  {startStop.name ? (
+                    <CardInput
+                      onTouchablePress={() =>
+                        navigation.navigate('SpotSelectorScreen', {
+                          title: 'Seleccionar #Hasta',
+                          text: '#Hasta',
+                          onClearPress: clearStartStop,
+                          onItemPress: setEndStop,
+                          data: filteredSpots,
+                        })
+                      }
+                      placeholder="Filtra por Comuna o Parada"
+                      value={endStop.name}
+                      text="#Hasta"
+                      editable={false}
+                      onClearPress={clearEndStop}
+                    />
+                  ) : <></>}
+                </View>
 
-            <View style={styles.group}>
-              <Button style={styles.dateButton} onPress={this.showDateTimePicker}>
-                <Text>
-                  {pickedDate
-                    ? `${day} - ${hours}:${minutes < 10 ? '0' : ''}${minutes}`
-                    : 'Selecciona Hora/Fecha de Salida'}
-                </Text>
-              </Button>
-              <DateTimePicker
-                isDarkModeEnabled={colorScheme === 'dark'}
-                mode="datetime"
-                isVisible={this.state.isDateTimePickerVisible}
-                onConfirm={this.handleDatePicked}
-                onCancel={this.hideDateTimePicker}
-                minimumDate={new Date()}
-              />
-            </View>
+                <View style={styles.group}>
+                  <Button style={styles.dateButton} onPress={this.showDateTimePicker}>
+                    <Text>
+                      {pickedDate
+                        ? `${day} - ${hours}:${minutes < 10 ? '0' : ''}${minutes}`
+                        : 'Selecciona Hora/Fecha de Salida'}
+                    </Text>
+                  </Button>
+                  <DateTimePicker
+                    isDarkModeEnabled={colorScheme === 'dark'}
+                    mode="datetime"
+                    isVisible={this.state.isDateTimePickerVisible}
+                    onConfirm={this.handleDatePicked}
+                    onCancel={this.hideDateTimePicker}
+                    minimumDate={new Date()}
+                  />
+                </View>
+                <View>
+                  <Button
+                    block
+                    style={disabled ? styles.addButtonDisabled : styles.addButton}
+                    disabled={disabled}
+                    onPress={() => navigation.navigate('AddStopsScreen')}
+                  >
+                    <Text style={styles.whiteText}>Siguiente</Text>
+                  </Button>
+                </View>
+              </>
+            )}
             <View>
               <Button
                 block
-                style={disabled ? styles.addButtonDisabled : styles.addButton}
-                disabled={disabled}
-                onPress={() => navigation.navigate('AddStopsScreen')}
+                transparent
+                onPress={() => this.setState({
+                  isFormHidden: !this.state.isFormHidden
+                })}
               >
-                <Text style={styles.whiteText}>Siguiente</Text>
+                {this.state.isFormHidden ? (
+                  <View style={styles.hideButtonContent}>
+                    <FontAwesome name="angle-double-down" size={20} />
+                    <Text>Mostrar</Text>
+                  </View>
+                ) : (
+                  <View style={styles.hideButtonContent}>
+                    <FontAwesome name="angle-double-up" size={20} />
+                    <Text>Esconder</Text>
+                  </View>
+                )}
               </Button>
             </View>
             {/*<Button
@@ -273,9 +293,17 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: Layout.window.width,
     backgroundColor: 'white',
+    borderBottomRightRadius: 30,
+    borderBottomLeftRadius: 30,
   },
   group: {
     margin: 10,
+  },
+  hideButtonContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   mapContainer: {
     flex: 1,

@@ -19,18 +19,42 @@ import { getUserCars } from '../redux/actions/user'
 import EmptyState from '../components/EmptyState/EmptyState'
 import noTrips from '../assets/images/notrips.png'
 import { spotsFilter } from '../utils/spotsFilter'
+import Layout from '../constants/Layout'
+import Map from '../components/Map'
 
 const colorScheme = Appearance.getColorScheme()
 
 class CreateTripScreen extends Component {
-  state = {
-    isDateTimePickerVisible: false,
-    pickedDate: null,
+  constructor(props) {
+    super(props)
+    this.state = {
+      isDateTimePickerVisible: false,
+      pickedDate: null,
+      region: {
+        latitude: -33.437183,
+        longitude: -70.633395,
+        latitudeDelta: 0.2,
+        longitudeDelta: 0.2,
+      },
+      findUserFirstTime: true,
+    }
   }
 
   componentDidMount = () => {
     this.props.getAllSpots(this.props.user.token)
     this.props.getUserCars(this.props.user.token)
+  }
+
+  componentDidUpdate(prevProps) {
+    const { startStop } = this.props
+    if (
+      startStop &&
+      prevProps.startStop &&
+      prevProps.startStop.name &&
+      !startStop.name
+    ) {
+      this.props.clearEndStop()
+    }
   }
 
   showDateTimePicker = () => {
@@ -54,9 +78,6 @@ class CreateTripScreen extends Component {
       this.props.user.license.front &&
       this.props.user.license.back
     )
-  }
-  onMapPress() {
-    this.props.navigation.navigate('SpotsMap')
   }
 
   render() {
@@ -99,76 +120,82 @@ class CreateTripScreen extends Component {
     if (isConfirmedDriver) {
       return (
         <View style={styles.container}>
-          <View>
-            <CardInput
-              onTouchablePress={() =>
-                navigation.navigate('SpotSelectorScreen', {
-                  title: 'Seleccionar #SalgoDe',
-                  text: '#SalgoDe',
-                  onClearPress: clearStartStop,
-                  onItemPress: setStartStop,
-                  data: filteredSpots,
-                })
-              }
-              placeholder="Filtra por Comuna o Parada"
-              value={startStop.name}
-              text="#SalgoDe"
-              editable={false}
-              onClearPress={clearStartStop}
-            />
-
-            <CardInput
-              onTouchablePress={() =>
-                navigation.navigate('SpotSelectorScreen', {
-                  title: 'Seleccionar #Hasta',
-                  text: '#Hasta',
-                  onClearPress: clearStartStop,
-                  onItemPress: setEndStop,
-                  data: filteredSpots,
-                })
-              }
-              placeholder="Filtra por Comuna o Parada"
-              value={endStop.name}
-              text="#Hasta"
-              editable={false}
-              onClearPress={clearEndStop}
-            />
+          <View style={styles.mapContainer}>
+            <Map showLocation />
           </View>
+          <View style={styles.formContainer}>
+            <View>
+              <CardInput
+                onTouchablePress={() =>
+                  navigation.navigate('SpotSelectorScreen', {
+                    title: 'Seleccionar #SalgoDe',
+                    text: '#SalgoDe',
+                    onClearPress: clearStartStop,
+                    onItemPress: setStartStop,
+                    data: filteredSpots,
+                  })
+                }
+                placeholder="Filtra por Comuna o Parada"
+                value={startStop.name}
+                text="#SalgoDe"
+                editable={false}
+                onClearPress={clearStartStop}
+              />
+              {startStop.name ? (
+                <CardInput
+                  onTouchablePress={() =>
+                    navigation.navigate('SpotSelectorScreen', {
+                      title: 'Seleccionar #Hasta',
+                      text: '#Hasta',
+                      onClearPress: clearStartStop,
+                      onItemPress: setEndStop,
+                      data: filteredSpots,
+                    })
+                  }
+                  placeholder="Filtra por Comuna o Parada"
+                  value={endStop.name}
+                  text="#Hasta"
+                  editable={false}
+                  onClearPress={clearEndStop}
+                />
+              ) : <></>}
+            </View>
 
-          <View style={styles.group}>
-            <Button style={styles.dateButton} onPress={this.showDateTimePicker}>
-              <Text>
-                {pickedDate
-                  ? `${day} - ${hours}:${minutes < 10 ? '0' : ''}${minutes}`
-                  : 'Selecciona Hora/Fecha de Salida'}
-              </Text>
-            </Button>
-            <DateTimePicker
-              isDarkModeEnabled={colorScheme === 'dark'}
-              mode="datetime"
-              isVisible={this.state.isDateTimePickerVisible}
-              onConfirm={this.handleDatePicked}
-              onCancel={this.hideDateTimePicker}
-              minimumDate={new Date()}
-            />
-          </View>
-          <View>
-            <Button
-              block
-              style={disabled ? styles.addButtonDisabled : styles.addButton}
-              disabled={disabled}
-              onPress={() => navigation.navigate('AddStopsScreen')}
+            <View style={styles.group}>
+              <Button style={styles.dateButton} onPress={this.showDateTimePicker}>
+                <Text>
+                  {pickedDate
+                    ? `${day} - ${hours}:${minutes < 10 ? '0' : ''}${minutes}`
+                    : 'Selecciona Hora/Fecha de Salida'}
+                </Text>
+              </Button>
+              <DateTimePicker
+                isDarkModeEnabled={colorScheme === 'dark'}
+                mode="datetime"
+                isVisible={this.state.isDateTimePickerVisible}
+                onConfirm={this.handleDatePicked}
+                onCancel={this.hideDateTimePicker}
+                minimumDate={new Date()}
+              />
+            </View>
+            <View>
+              <Button
+                block
+                style={disabled ? styles.addButtonDisabled : styles.addButton}
+                disabled={disabled}
+                onPress={() => navigation.navigate('AddStopsScreen')}
+              >
+                <Text style={styles.whiteText}>Siguiente</Text>
+              </Button>
+            </View>
+            {/*<Button
+              transparent
+              onPress={() => this.props.navigation.navigate('SpotsMap')}
+              style={{ alignSelf: 'center' }}
             >
-              <Text style={styles.whiteText}>Siguiente</Text>
-            </Button>
+              <Text>Ve el mapa de puntos de SalgoDe</Text>
+            </Button>*/}
           </View>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.navigate('SpotsMap')}
-            style={{ alignSelf: 'center' }}
-          >
-            <Text>Ve el mapa de puntos de SalgoDe</Text>
-          </Button>
         </View>
       )
     } else {
@@ -230,8 +257,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 20,
   },
+  formContainer: {
+    position: 'absolute',
+    width: Layout.window.width,
+    backgroundColor: 'white',
+  },
   group: {
     margin: 10,
+  },
+  mapContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  viewContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
   },
   whiteText: {
     color: 'white',

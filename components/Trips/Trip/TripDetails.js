@@ -5,9 +5,29 @@ import PropTypes from 'prop-types'
 import { MaterialCommunityIcons, AntDesign, Octicons } from '@expo/vector-icons'
 import TimeInfo from './TimeInfo'
 import Location from './Location'
+import SalgoDeMap from '../../SalgoDeMap'
 import Colors from '../../../constants/Colors'
 
 const photoSize = 96
+
+// TODO: Delete this function
+const fakePlaces = (spots) => {
+  let final = []
+  if (spots && spots.length >= 2) {
+    for (let i in [1,2]) {
+      final.push(spots[i])
+    }
+    Object.assign(final[0], {
+      lat: -33.43178,
+      lon: -70.5453808,
+    })
+    Object.assign(final[1], {
+      lat: -33.4469777,
+      lon: -70.6298197,
+    })
+  }
+  return final
+}
 
 class TripDetails extends Component {
   constructor(props) {
@@ -115,6 +135,10 @@ class TripDetails extends Component {
       etd,
       vehicle,
     } = this.props
+
+    // TODO: Delete this fake
+    const fakeRoute = fakePlaces(tripRoutePoints)
+
     return (
       <ScrollView style={styles.container}>
         <Card
@@ -146,6 +170,17 @@ class TripDetails extends Component {
           </CardItem>
           <CardItem style={styles.locationContainer}>
             {this.renderLocation(tripRoutePoints)}
+          </CardItem>
+          <CardItem style={styles.mapView}>
+            <SalgoDeMap
+              markers={fakeRoute}
+              showPath
+              path={fakeRoute}
+              showDescription
+              start={fakeRoute[0]}
+              end={fakeRoute.slice(-1)[0]}
+              goToMarkers
+            />
           </CardItem>
           <CardItem>
             <TimeInfo timestamp={Date.parse(etd)} isDate />
@@ -215,7 +250,7 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderRadius: 20,
     marginBottom: 25,
-    padding: 15,
+    paddingVertical: 15,
   },
   container: {
     padding: 15,
@@ -224,6 +259,10 @@ const styles = StyleSheet.create({
   locationContainer: {
     alignItems: 'flex-start',
     flexDirection: 'column',
+  },
+  mapView: {
+    height: 200,
+    width: '100%',
   },
   phoneText: {
     color: 'grey',

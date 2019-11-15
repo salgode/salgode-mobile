@@ -17,6 +17,7 @@ const SalgoDeMap = ({
   start,
   end,
   allowInteraction = true,
+  goToMarkers = false,
 }) => {
   const [region, setRegion] = React.useState(initialRegion)
   const [allowFindOnce, setAllowFindOnce] = React.useState(true)
@@ -32,7 +33,7 @@ const SalgoDeMap = ({
         Permissions.askAsync(Permissions.LOCATION)
       }}
       onLayout={() => {
-        if (!allowInteraction) {
+        if (goToMarkers) {
           try {
             const showMarkers = markers.map(m => ({
               latitude: m.lat,
@@ -142,6 +143,7 @@ Map.propTypes = {
   start: PropTypes.object,
   end: PropTypes.object,
   allowInteraction: PropTypes.bool.isRequired,
+  goToMarkers: PropTypes.bool.isRequired,
 }
 
 Map.defaultProps = {

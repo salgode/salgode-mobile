@@ -104,7 +104,7 @@ export const DetailedTrip = ({
           showDescription
           start={fakeRoute[0]}
           end={fakeRoute.slice(-1)[0]}
-          allowInteraction={false}
+          goToMarkers
         />
       </CardItem>
       <CardItem>

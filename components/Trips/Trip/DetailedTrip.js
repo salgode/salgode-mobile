@@ -5,7 +5,31 @@ import Location from './Location'
 import PropTypes from 'prop-types'
 import Colors from '../../../constants/Colors'
 import TimeInfo from './TimeInfo'
+import SalgoDeMap from '../../SalgoDeMap'
 import { Ionicons } from '@expo/vector-icons'
+
+// TODO: Delete this function
+const fakePlaces = (spots) => {
+  let final = []
+  if (spots && spots.length >= 3) {
+    for (let i in [1,2,3]) {
+      final.push(spots[i])
+    }
+    Object.assign(final[0], {
+      lat: -33.43178,
+      lon: -70.5453808,
+    })
+    Object.assign(final[1], {
+      lat: -33.4469777,
+      lon: -70.6298197,
+    })
+    Object.assign(final[2], {
+      lat: -33.69526,
+      lon: -71.214668,
+    })
+  }
+  return final
+}
 
 export const DetailedTrip = ({
   trip,
@@ -39,6 +63,9 @@ export const DetailedTrip = ({
 
   const selfieImage = driver != null ? driver.driver_avatar : 'placeholder'
 
+  // TODO: Delete this fake
+  const fakeRoute = fakePlaces(trip.trip_route_points)
+
   return trip !== null ? (
     <Card
       style={{
@@ -68,6 +95,17 @@ export const DetailedTrip = ({
       </CardItem>
       <CardItem style={styles.locationContainer}>
         {renderLocation(trip.trip_route_points)}
+      </CardItem>
+      <CardItem style={styles.mapView}>
+        <SalgoDeMap
+          markers={fakeRoute}
+          showPath
+          path={fakeRoute}
+          showDescription
+          start={fakeRoute[0]}
+          end={fakeRoute.slice(-1)[0]}
+          allowInteraction={false}
+        />
       </CardItem>
       <CardItem>
         <TimeInfo timestamp={Date.parse(trip.etd_info.etd)} />
@@ -141,11 +179,15 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderRadius: 20,
     marginBottom: 25,
-    padding: 15,
+    paddingVertical: 15,
   },
   locationContainer: {
     alignItems: 'flex-start',
     flexDirection: 'column',
+  },
+  mapView: {
+    height: 200,
+    width: '100%',
   },
   shadow: {
     shadowColor: '#b3b3b3',

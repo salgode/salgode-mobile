@@ -1,7 +1,7 @@
 import React from 'react'
 import * as Permissions from 'expo-permissions'
 import MapView, { PROVIDER_GOOGLE, Marker, Polyline } from 'react-native-maps'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Alert } from 'react-native'
 import PropTypes from 'prop-types'
 import mapStyle from '../config/google/mapStyle'
 
@@ -16,17 +16,43 @@ const SalgoDeMap = ({
   onTapMap,
   start,
   end,
+  allowInteraction = true,
 }) => {
   const [region, setRegion] = React.useState(initialRegion)
   const [allowFindOnce, setAllowFindOnce] = React.useState(true)
+  const mapRef = React.useRef()
   return (
     <MapView
+      ref={mapRef}
       provider={PROVIDER_GOOGLE}
       style={styles.mapStyle}
       showsUserLocation={showLocation}
       customMapStyle={mapStyle}
       onMapReady={() => {
         Permissions.askAsync(Permissions.LOCATION)
+      }}
+      onLayout={() => {
+        if (!allowInteraction) {
+          try {
+            const showMarkers = markers.map(m => ({
+              latitude: m.lat,
+              longitude: m.lon,
+            }))
+            mapRef.current.fitToCoordinates(showMarkers, {
+              edgePadding: {
+                top: 40,
+                bottom: 30,
+                right: 10,
+                left: 10,
+              }
+            })
+          } catch (e) {
+            Alert.alert(
+              'Problema cargando el mapa',
+              'Hubo un problema visualizando el recorrido en el mapa'
+            )
+          }
+        }
       }}
       onUserLocationChange={({ nativeEvent }) => {
         const { coordinate } = nativeEvent
@@ -45,20 +71,27 @@ const SalgoDeMap = ({
       region={region}
       userLocationAnnotationTitle="Mi ubicación"
       onPress={onTapMap}
+      zoomEnabled={allowInteraction}
+      zoomControlEnabled={false}
+      rotateEnabled={allowInteraction}
+      scrollEnabled={allowInteraction}
+      pitchEnabled={false}
+      toolbarEnabled={false}
     >
       {(markers && markers.length) ? (
         <>
           {markers.map(m => {
             let color = 'red'
-            if (start && m.id === start.id) {
+            if (start && m.place_id === start.place_id) {
               color = 'blue'
             }
-            if (end && m.id === end.id) {
+            if (end && m.place_id === end.place_id) {
               color = 'green'
             }
             return (
               <Marker
-                key={`${m.id}-${color}`}
+                key={`${m.place_id}-${color}`}
+                identifier={m.place_id}
                 coordinate={{
                   latitude: m.lat,
                   longitude: m.lon,
@@ -108,6 +141,7 @@ Map.propTypes = {
   onTapMap: PropTypes.func,
   start: PropTypes.object,
   end: PropTypes.object,
+  allowInteraction: PropTypes.bool.isRequired,
 }
 
 Map.defaultProps = {

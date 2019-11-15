@@ -58,6 +58,7 @@ import { uploadImageToS3 } from '../utils/image'
 import * as ImagePicker from 'expo-image-picker'
 import { analytics, ANALYTICS_CATEGORIES } from '../utils/analytics'
 import Divider from '../components/Divider'
+import { registerForPushNotifications } from '../utils/notifications'
 
 function validateName(str) {
   if (typeof str !== 'string') {
@@ -1309,10 +1310,11 @@ const _SignOutC = props => (
               ANALYTICS_CATEGORIES.LogIn.actions.LogOut,
               userId
             )
+            const pushNotificationToken = await registerForPushNotifications()
+            // eslint-disable-next-line react/prop-types
+            props.signOut(pushNotificationToken, Constants.installationId)
             // eslint-disable-next-line react/prop-types
             props.navigation.navigate('Login')
-            // eslint-disable-next-line react/prop-types
-            props.signOut()
           },
         },
         { text: 'No', style: 'cancel' },

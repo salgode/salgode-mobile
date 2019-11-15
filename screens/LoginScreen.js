@@ -21,6 +21,7 @@ import { loginUser } from '../redux/actions/user'
 import lang from '../languages/es'
 import { analytics, ANALYTICS_CATEGORIES } from '../utils/analytics'
 import { registerForPushNotifications } from '../utils/notifications'
+import Constants from 'expo-constants'
 
 const window = Dimensions.get('window')
 const IMAGE_HEIGHT = window.width / 1.5
@@ -74,7 +75,14 @@ class LoginScreen extends Component {
   async onSend(email, password) {
     this.setState({ loading: true })
     const pushNotificationToken = await registerForPushNotifications()
-    const user = await this.props.login(email, password, pushNotificationToken)
+    // console.log(pushNotificationToken)
+    // console.log(Constants.installationId)\
+    const user = await this.props.login(
+      email,
+      password,
+      pushNotificationToken,
+      Constants.installationId
+    )
     this.setState({ loading: false })
     if (user.error) {
       Alert.alert(

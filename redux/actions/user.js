@@ -85,7 +85,12 @@ const mapDataToUser = data => {
   return user
 }
 
-export function loginUser(email, password, notificationToken = null) {
+export function loginUser(
+  email,
+  password,
+  notificationToken = null,
+  deviceId = null
+) {
   return {
     type: actions.USER_LOGIN,
     payload: {
@@ -96,7 +101,8 @@ export function loginUser(email, password, notificationToken = null) {
         data: {
           email,
           password,
-          expoPushToken: notificationToken,
+          expo_push_token: notificationToken,
+          device_id: deviceId,
         },
         transformResponse: mapDataToUser,
       },
@@ -156,10 +162,20 @@ export function updateUser(authToken, data, extraData) {
   }
 }
 
-export function signoutUser() {
+export function signoutUser(notificationToken = null, deviceId = null) {
   return {
     type: actions.USER_SIGNOUT,
-    payload: {},
+    payload: {
+      request: {
+        url: urls.session.post.signout(),
+        method: 'post',
+        headers: getDefaultHeaders(),
+        data: {
+          expo_push_token: notificationToken,
+          device_id: deviceId,
+        },
+      },
+    },
   }
 }
 

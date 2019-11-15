@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Text, Alert } from 'react-native'
 import { Appearance } from 'react-native-appearance'
 import { connect } from 'react-redux'
 import { Button, Spinner } from 'native-base'
@@ -66,8 +66,20 @@ class CreateTripScreen extends Component {
   }
 
   handleDatePicked = date => {
-    this.props.setStartTime(date)
-    this.setState({ pickedDate: date })
+    if (date) {
+      const actual = new Date()
+      if (date.getTime() - actual.getTime() > 300000) {
+        this.props.setStartTime(date)
+        this.setState({ pickedDate: date })
+      } else {
+        Alert.alert(
+          'Error en fecha de salida',
+          'Debes planificar tu viaje con al menos 5 minutos de anticipación. Por favor inténtalo nuevamente'
+        )
+        this.props.setStartTime(undefined)
+        this.setState({ pickedDate: undefined })
+      }
+    }
     this.hideDateTimePicker()
   }
 

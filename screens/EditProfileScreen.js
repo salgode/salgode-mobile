@@ -1014,6 +1014,11 @@ const EditProfileScreen = props => {
               ) : (
                 <></>
               )}
+              <View>
+                <Text style={{ marginHorizontal: 10, fontSize: 12 }}>
+                  Las fotos de tu identificación son totalmente privadas y de uso exclusivo para verificar tu identidad como usuario dentro de la aplicación
+                </Text>
+              </View>
               <Button
                 block
                 borderRadius={10}
@@ -1074,6 +1079,11 @@ const EditProfileScreen = props => {
                   ) : (
                     <></>
                   )}
+                  <View>
+                    <Text style={{ marginHorizontal: 10, fontSize: 12 }}>
+                      Las fotos de tu licencia son totalmente privadas y de uso exclusivo para verificar tu identidad como usuario conductor dentro de la aplicación
+                    </Text>
+                  </View>
                   <Button
                     block
                     borderRadius={10}

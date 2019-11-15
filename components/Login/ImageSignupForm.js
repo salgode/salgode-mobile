@@ -262,6 +262,12 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
           title="Foto trasera Carnet de Identidad"
         />
 
+        <View>
+          <Text style={{ marginHorizontal: 10, fontSize: 12 }}>
+            Las fotos de tu identificación son totalmente privadas y de uso exclusivo para verificar tu identidad como usuario dentro de la aplicación
+          </Text>
+        </View>
+
         {loading && <Spinner color={'#0000FF'} />}
         {!loading && (
           <Button

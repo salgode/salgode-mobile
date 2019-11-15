@@ -497,12 +497,6 @@ const mapDispatchToProps = dispatch => ({
 
 CreateTripScreen.navigationOptions = ({ navigation }) => ({
   title: 'Crear un viaje',
-  headerRightContainerStyle: { marginRight: '3%' },
-  headerRight: (
-    <Button transparent onPress={() => navigation.navigate('SpotsMap')}>
-      <Text>Mapa</Text>
-    </Button>
-  ),
 })
 export default connect(
   mapStateToProps,

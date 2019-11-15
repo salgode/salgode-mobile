@@ -92,7 +92,10 @@ class SignupForm extends Component {
   onChangePasswordRepeat(password) {
     this.setState(oldState => ({
       passwordRepeat: password,
-      validity: { ...oldState.validity, passwordRepeat: password.length >= 8 },
+      validity: {
+        ...oldState.validity,
+        passwordRepeat: password.length >= 8 && password === this.state.password
+      },
     }))
   }
 

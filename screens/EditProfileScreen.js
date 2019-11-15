@@ -60,7 +60,6 @@ import { analytics, ANALYTICS_CATEGORIES } from '../utils/analytics'
 import Divider from '../components/Divider'
 import { registerForPushNotifications } from '../utils/notifications'
 
-
 function validateName(str) {
   if (typeof str !== 'string') {
     return false

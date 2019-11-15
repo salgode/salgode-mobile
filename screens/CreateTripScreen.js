@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { StyleSheet, View, Text, Alert } from 'react-native'
 import { Appearance } from 'react-native-appearance'
 import { connect } from 'react-redux'
-import { Button, Spinner } from 'native-base'
+import { Button, Spinner, Card, CardItem } from 'native-base'
 import { FontAwesome } from '@expo/vector-icons'
 import {
   setStartStop,
@@ -23,6 +23,49 @@ import { spotsFilter } from '../utils/spotsFilter'
 import Layout from '../constants/Layout'
 import Map from '../components/Map'
 
+// TODO: Delete this function
+const fakePlaces = (spots) => {
+  let final = []
+  if (spots && spots.length >= 10) {
+    for (let i in [1,2,3,4,5,6,7,8]) {
+      final.push(spots[i])
+    }
+    Object.assign(final[0], {
+      lat: -33.43178,
+      lon: -70.5453808,
+    })
+    Object.assign(final[1], {
+      lat: -33.4469777,
+      lon: -70.6298197,
+    })
+    Object.assign(final[2], {
+      lat: -33.69526,
+      lon: -71.214668,
+    })
+    Object.assign(final[3], {
+      lat: -33.443699,
+      lon: -70.633053,
+    })
+    Object.assign(final[4], {
+      lat: -33.436248,
+      lon: -70.650219,
+    })
+    Object.assign(final[5], {
+      lat: -33.436195,
+      lon: -70.6508967,
+    })
+    Object.assign(final[6], {
+      lat: -33.4496991,
+      lon: -70.6884408,
+    })
+    Object.assign(final[7], {
+      lat: -33.3580534,
+      lon: -70.5066107,
+    })
+  }
+  return final
+}
+
 const colorScheme = Appearance.getColorScheme()
 
 class CreateTripScreen extends Component {
@@ -32,6 +75,8 @@ class CreateTripScreen extends Component {
       isDateTimePickerVisible: false,
       pickedDate: null,
       isFormHidden: false,
+      showActions: false,
+      marker: undefined,
     }
   }
 
@@ -87,6 +132,38 @@ class CreateTripScreen extends Component {
     )
   }
 
+  pressMarker = marker => {
+    this.setState({
+      isFormHidden: true,
+      showActions: true,
+      poi: marker,
+    })
+  }
+
+  onTapMap = () => {
+    this.setState({ showActions: false })
+  }
+
+  resolvePoint = () => {
+    const { startStop, endStop } = this.props
+    const { poi } = this.state
+    if (
+      poi &&
+      startStop &&
+      poi.id === startStop.id
+    ) {
+      return 'start'
+    }
+    if (
+      poi &&
+      endStop &&
+      poi.id === endStop.id
+    ) {
+      return 'end'
+    }
+    return false
+  }
+
   render() {
     const {
       navigation,
@@ -100,6 +177,7 @@ class CreateTripScreen extends Component {
       setEndStop,
       loading,
     } = this.props
+    const fakeSpots = fakePlaces(spots)
 
     // const disabled = startStop && endStop && startTime ? false : true
     const startStopValid = startStop
@@ -124,85 +202,99 @@ class CreateTripScreen extends Component {
 
     const isConfirmedDriver = this.isVerifiedDriver()
 
+    const resultResolvePoint = this.resolvePoint()
+    const path = (endStop && endStop.id && startStop && endStop.id)
+      ? [startStop, endStop]
+      : []
+
     if (isConfirmedDriver) {
       return (
         <View style={styles.container}>
-          <View style={styles.mapContainer}>
-            <Map showLocation />
-          </View>
-          <View style={styles.formContainer}>
-            {!this.state.isFormHidden && (
-              <>
-                <View>
+          {!this.state.isFormHidden && (
+            <View style={styles.formContainer}>
+              <View>
+                <CardInput
+                  onTouchablePress={() =>
+                    navigation.navigate('SpotSelectorScreen', {
+                      title: 'Seleccionar #SalgoDe',
+                      text: '#SalgoDe',
+                      onClearPress: clearStartStop,
+                      onItemPress: setStartStop,
+                      data: filteredSpots,
+                    })
+                  }
+                  placeholder="Filtra por Comuna o Parada"
+                  value={startStop.place_name}
+                  text="#SalgoDe"
+                  editable={false}
+                  onClearPress={clearStartStop}
+                />
+                {startStop.name ? (
                   <CardInput
                     onTouchablePress={() =>
                       navigation.navigate('SpotSelectorScreen', {
-                        title: 'Seleccionar #SalgoDe',
-                        text: '#SalgoDe',
+                        title: 'Seleccionar #Hasta',
+                        text: '#Hasta',
                         onClearPress: clearStartStop,
-                        onItemPress: setStartStop,
+                        onItemPress: setEndStop,
                         data: filteredSpots,
                       })
                     }
                     placeholder="Filtra por Comuna o Parada"
-                    value={startStop.name}
-                    text="#SalgoDe"
+                    value={endStop.place_name}
+                    text="#Hasta"
                     editable={false}
-                    onClearPress={clearStartStop}
+                    onClearPress={clearEndStop}
                   />
-                  {startStop.name ? (
-                    <CardInput
-                      onTouchablePress={() =>
-                        navigation.navigate('SpotSelectorScreen', {
-                          title: 'Seleccionar #Hasta',
-                          text: '#Hasta',
-                          onClearPress: clearStartStop,
-                          onItemPress: setEndStop,
-                          data: filteredSpots,
-                        })
-                      }
-                      placeholder="Filtra por Comuna o Parada"
-                      value={endStop.name}
-                      text="#Hasta"
-                      editable={false}
-                      onClearPress={clearEndStop}
-                    />
-                  ) : <></>}
-                </View>
+                ) : <></>}
+              </View>
 
-                <View style={styles.group}>
-                  <Button style={styles.dateButton} onPress={this.showDateTimePicker}>
-                    <Text>
-                      {pickedDate
-                        ? `${day} - ${hours}:${minutes < 10 ? '0' : ''}${minutes}`
-                        : 'Selecciona Hora/Fecha de Salida'}
-                    </Text>
-                  </Button>
-                  <DateTimePicker
-                    isDarkModeEnabled={colorScheme === 'dark'}
-                    mode="datetime"
-                    isVisible={this.state.isDateTimePickerVisible}
-                    onConfirm={this.handleDatePicked}
-                    onCancel={this.hideDateTimePicker}
-                    minimumDate={new Date()}
-                  />
-                </View>
-                <View>
-                  <Button
-                    block
-                    style={disabled ? styles.addButtonDisabled : styles.addButton}
-                    disabled={disabled}
-                    onPress={() => navigation.navigate('AddStopsScreen')}
-                  >
-                    <Text style={styles.whiteText}>Siguiente</Text>
-                  </Button>
-                </View>
-              </>
-            )}
+              <View style={styles.group}>
+                <Button style={styles.dateButton} onPress={this.showDateTimePicker}>
+                  <Text>
+                    {pickedDate
+                      ? `${day} - ${hours}:${minutes < 10 ? '0' : ''}${minutes}`
+                      : 'Selecciona Hora/Fecha de Salida'}
+                  </Text>
+                </Button>
+                <DateTimePicker
+                  isDarkModeEnabled={colorScheme === 'dark'}
+                  mode="datetime"
+                  isVisible={this.state.isDateTimePickerVisible}
+                  onConfirm={this.handleDatePicked}
+                  onCancel={this.hideDateTimePicker}
+                  minimumDate={new Date()}
+                />
+              </View>
+              <View>
+                <Button
+                  block
+                  style={disabled ? styles.addButtonDisabled : styles.addButton}
+                  disabled={disabled}
+                  onPress={() => navigation.navigate('AddStopsScreen')}
+                >
+                  <Text style={styles.whiteText}>Siguiente</Text>
+                </Button>
+              </View>
+            </View>
+          )}
+          <View style={styles.mapView}>
+            <View style={styles.mapContainer}>
+              <Map
+                showLocation
+                markers={fakeSpots}
+                pressMarker={this.pressMarker}
+                onTapMap={this.onTapMap}
+                start={startStop}
+                end={endStop}
+                showPath
+                path={path}
+              />
+            </View>
             <View>
               <Button
                 block
-                transparent
+                style={{ backgroundColor: 'white', borderBottomRightRadius: 30, borderBottomLeftRadius: 30, }}
                 onPress={() => this.setState({
                   isFormHidden: !this.state.isFormHidden
                 })}
@@ -210,12 +302,12 @@ class CreateTripScreen extends Component {
                 {this.state.isFormHidden ? (
                   <View style={styles.hideButtonContent}>
                     <FontAwesome name="angle-double-down" size={20} />
-                    <Text>Mostrar</Text>
+                    <Text>Abrir</Text>
                   </View>
                 ) : (
                   <View style={styles.hideButtonContent}>
                     <FontAwesome name="angle-double-up" size={20} />
-                    <Text>Esconder</Text>
+                    <Text>Ver mapa</Text>
                   </View>
                 )}
               </Button>
@@ -228,6 +320,79 @@ class CreateTripScreen extends Component {
               <Text>Ve el mapa de puntos de SalgoDe</Text>
             </Button>*/}
           </View>
+          {this.state.showActions && (
+            <Card style={styles.actions}>
+              <CardItem header>
+                <Text>¿Qué deseas hacer?</Text>
+              </CardItem>
+              <CardItem style={styles.info}>
+                <Text style={{ fontWeight: 'bold' }}>{this.state.poi.name}</Text>
+                <Text>{this.state.poi.address}</Text>
+              </CardItem>
+              <CardItem style={styles.actionButtons}>
+                {!resultResolvePoint ? (
+                  <>
+                    <Button
+                      block
+                      style={styles.actionButton}
+                      borderRadius={10}
+                      onPress={() => {
+                        setStartStop(this.state.poi)
+                        this.onTapMap()
+                      }}
+                      color={'#0000FF'}
+                    >
+                      <Text
+                        style={styles.actionButtonText}
+                      >
+                        Inicio
+                      </Text>
+                    </Button>
+                    <Button
+                      block
+                      style={styles.actionButton}
+                      borderRadius={10}
+                      onPress={() => {
+                        setEndStop(this.state.poi)
+                        this.onTapMap()
+                        this.setState({ isFormHidden: false })
+                      }}
+                      disabled={!(startStop && startStop.id)}
+                      color={'#0000FF'}
+                    >
+                      <Text
+                        style={styles.actionButtonText}
+                      >
+                        Destino
+                      </Text>
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    block
+                    style={styles.actionButton}
+                    borderRadius={10}
+                    onPress={() => {
+                      if (resultResolvePoint === 'start') {
+                        clearStartStop()
+                      }
+                      if (resultResolvePoint === 'end') {
+                        clearEndStop()
+                      }
+                      this.onTapMap()
+                    }}
+                    color={'#0000FF'}
+                  >
+                    <Text
+                      style={styles.actionButtonText}
+                    >
+                      Quitar
+                    </Text>
+                  </Button>
+                )}
+              </CardItem>
+            </Card>
+          )}
         </View>
       )
     } else {
@@ -263,6 +428,28 @@ CreateTripScreen.propTypes = {
 }
 
 const styles = StyleSheet.create({
+  actions: {
+    backgroundColor: 'white',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: '3%',
+  },
+  actionButton: {
+    flex: 1,
+    marginHorizontal: 10,
+  },
+  actionButtons: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  actionButtonText: {
+    fontSize: 14,
+    color: 'white',
+  },
   addButton: {
     backgroundColor: Colors.mainBlue,
     marginBottom: 25,
@@ -279,8 +466,7 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: Colors.lightBackground,
-    flex: 1,
-    paddingTop: 30,
+    flex: 1
   },
   dateButton: {
     backgroundColor: 'white',
@@ -290,11 +476,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   formContainer: {
-    position: 'absolute',
     width: Layout.window.width,
     backgroundColor: 'white',
-    borderBottomRightRadius: 30,
-    borderBottomLeftRadius: 30,
   },
   group: {
     margin: 10,
@@ -305,11 +488,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  info: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
   mapContainer: {
-    flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: 'absolute',
+    width: '100%',
+    height: '100%'
+  },
+  mapView: {
+    flex: 1,
+    position: 'relative',
+    width: Layout.window.width
   },
   viewContainer: {
     alignItems: 'center',

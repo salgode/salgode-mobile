@@ -281,7 +281,7 @@ class CreateTripScreen extends Component {
                 <Text>¿Qué deseas hacer?</Text>
               </CardItem>
               <CardItem style={styles.info}>
-                <Text style={{ fontWeight: 'bold' }}>{this.state.poi.name}</Text>
+                <Text style={{ fontWeight: 'bold' }}>{this.state.poi.place_name}</Text>
                 <Text>{this.state.poi.address}</Text>
               </CardItem>
               <CardItem style={styles.actionButtons}>

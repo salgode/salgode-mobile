@@ -11,6 +11,7 @@ const SalgoDeMap = ({
   markers,
   showPath,
   path,
+  multiPaths,
   pressMarker,
   showDescription,
   onTapMap,
@@ -117,15 +118,33 @@ const SalgoDeMap = ({
         </>
       ) : <></>}
       {showPath && (
-        <Polyline
-          coordinates={path.map(p => ({
-            latitude: parseFloat(p.lat),
-            longitude: parseFloat(p.lon),
-          }))}
-          strokeColor={'red'}
-          strokeWidth={5}
-          lineDashPattern={[10, 20]}
-        />
+        <>
+          {(path && path.length) ? (
+            <Polyline
+              coordinates={path.map(p => ({
+                latitude: parseFloat(p.lat),
+                longitude: parseFloat(p.lon),
+              }))}
+              strokeColor={'red'}
+              strokeWidth={5}
+              lineDashPattern={[10, 20]}
+            />
+          ) : (multiPaths && multiPaths.length) ? (
+            <>
+              {multiPaths.map(singlePath => (
+                <Polyline
+                  coordinates={singlePath.map(p => ({
+                    latitude: parseFloat(p.lat),
+                    longitude: parseFloat(p.lon),
+                  }))}
+                  strokeColor={'red'}
+                  strokeWidth={5}
+                  lineDashPattern={[10, 20]}
+                />
+              ))}
+            </>
+          ) : (<></>)}
+        </>
       )}
     </MapView>
   )
@@ -144,6 +163,7 @@ Map.propTypes = {
   end: PropTypes.object,
   allowInteraction: PropTypes.bool.isRequired,
   goToMarkers: PropTypes.bool.isRequired,
+  multiPaths: PropTypes.array,
 }
 
 Map.defaultProps = {
@@ -162,6 +182,7 @@ Map.defaultProps = {
   onTapMap: undefined,
   start: undefined,
   end: undefined,
+  multiPaths: [],
 }
 
 const styles = StyleSheet.create({

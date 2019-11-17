@@ -220,8 +220,7 @@ class ChooseTripsScreen extends Component {
                 </CardItem>
                 <CardItem footer>
                   <Text style={styles.warning}>
-                    Recuerda que si el punto corresponde al destino del viaje,
-                    este no aparecerá en el buscador
+                    Si el punto es el final del viaje, no aparecerá en el buscador
                   </Text>
                 </CardItem>
               </Card>

@@ -22,6 +22,7 @@ const SalgoDeMap = ({
 }) => {
   const [region, setRegion] = React.useState(initialRegion)
   const [allowFindOnce, setAllowFindOnce] = React.useState(true)
+  const [fitOnce, setFitOnce] = React.useState(true)
   const mapRef = React.useRef()
   return (
     <MapView
@@ -34,20 +35,23 @@ const SalgoDeMap = ({
         Permissions.askAsync(Permissions.LOCATION)
       }}
       onLayout={() => {
-        if (goToMarkers) {
+        if (goToMarkers && fitOnce) {
           try {
             const showMarkers = markersToFit.map(m => ({
               latitude: parseFloat(m.lat),
               longitude: parseFloat(m.lon),
             }))
-            setTimeout(() => mapRef.current.fitToCoordinates(showMarkers, {
-              edgePadding: {
-                top: 40,
-                bottom: 30,
-                right: 10,
-                left: 10,
-              },
-            }), 1000)
+            setTimeout(() => {
+              setFitOnce(false)
+              mapRef.current.fitToCoordinates(showMarkers, {
+                edgePadding: {
+                  top: 40,
+                  bottom: 30,
+                  right: 10,
+                  left: 10,
+                },
+              })
+            }, 1000)
           } catch (e) {
             Alert.alert(
               'Problema cargando el mapa',
@@ -78,6 +82,21 @@ const SalgoDeMap = ({
       scrollEnabled={allowInteraction}
       pitchEnabled={false}
       toolbarEnabled={false}
+      onMarkerPress={({ nativeEvent }) => {
+        const mkr = JSON.parse(nativeEvent.id)
+        if (mkr) {
+          const { coordinate } = nativeEvent
+          if (pressMarker) {
+            pressMarker(mkr)
+          }
+          setRegion({
+            latitudeDelta: 0.02,
+            longitudeDelta: 0.02,
+            latitude: coordinate.latitude,
+            longitude: coordinate.longitude,
+          })
+        }
+      }}
     >
       {markers.length !== 0 && markers.map(m => {
         let color = 'red'
@@ -90,24 +109,13 @@ const SalgoDeMap = ({
         return (
           <Marker
             key={`${m.place_id}-${color}`}
-            identifier={m.place_id}
+            identifier={JSON.stringify(m)}
             coordinate={{
               latitude: parseFloat(m.lat),
               longitude: parseFloat(m.lon),
             }}
             title={showDescription ? m.place_name : undefined}
             description={showDescription ? m.address : undefined}
-            onPress={({ nativeEvent }) => {
-              const { coordinate } = nativeEvent
-              if (pressMarker) {
-                pressMarker(m)
-              }
-              setRegion({
-                ...region,
-                latitude: coordinate.latitude,
-                longitude: coordinate.longitude,
-              })
-            }}
             pinColor={color}
           />
         )

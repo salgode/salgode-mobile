@@ -127,19 +127,39 @@ class ChooseTripsScreen extends Component {
         <View style={styles.headerSelect}>
           <Button
             block
-            style={[styles.headerButton, { backgroundColor: isFormHidden ? '#f4f7fc' : '#0000FF' }]}
+            style={[
+              styles.headerButton,
+              { backgroundColor: isFormHidden ? '#f4f7fc' : '#0000FF' },
+            ]}
             borderRadius={0}
             onPress={() => this.setState({ isFormHidden: false })}
           >
-            <Text style={[styles.headerText, { color: isFormHidden ? 'black' : 'white' }]}>Viajes</Text>
+            <Text
+              style={[
+                styles.headerText,
+                { color: isFormHidden ? 'black' : 'white' },
+              ]}
+            >
+              Viajes
+            </Text>
           </Button>
           <Button
             block
-            style={[styles.headerButton, { backgroundColor: isFormHidden ? '#0000FF' : '#f4f7fc' }]}
+            style={[
+              styles.headerButton,
+              { backgroundColor: isFormHidden ? '#0000FF' : '#f4f7fc' },
+            ]}
             borderRadius={0}
             onPress={() => this.setState({ isFormHidden: true })}
           >
-            <Text style={[styles.headerText, { color: isFormHidden ? 'white' : 'black' }]}>Mapa</Text>
+            <Text
+              style={[
+                styles.headerText,
+                { color: isFormHidden ? 'white' : 'black' },
+              ]}
+            >
+              Mapa
+            </Text>
           </Button>
         </View>
         {this.state.isFormHidden ? (
@@ -177,7 +197,7 @@ class ChooseTripsScreen extends Component {
             {this.state.showActions && (
               <Card style={styles.actions}>
                 <CardItem header>
-                  <Text>¿Qué deseas hacer?</Text>
+                  <Text>¿Quieres buscar viajes que pasan por este punto?</Text>
                 </CardItem>
                 <CardItem style={styles.info}>
                   <Text style={{ fontWeight: 'bold' }}>
@@ -195,16 +215,13 @@ class ChooseTripsScreen extends Component {
                     }}
                     color={'#0000FF'}
                   >
-                    <Text
-                      style={styles.actionButtonText}
-                    >
-                      Buscar viajes
-                    </Text>
+                    <Text style={styles.actionButtonText}>Buscar viajes</Text>
                   </Button>
                 </CardItem>
                 <CardItem footer>
                   <Text style={styles.warning}>
-                    Recuerda que si el punto corresponde al destino del viaje, este no aparecerá en el buscador
+                    Recuerda que si el punto corresponde al destino del viaje,
+                    este no aparecerá en el buscador
                   </Text>
                 </CardItem>
               </Card>
@@ -321,54 +338,54 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 10,
   },
+  headerButton: {
+    flex: 1
+  },
   headerSelect: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 10,
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: 10
   },
   headerText: {
-    color: 'white',
+    color: "white"
+  },
+  headerText: {
+    color: "white"
   },
   info: {
-    alignItems: 'flex-start',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-  },
-  headerButton: {
-    flex: 1,
-  },
-  headerText: {
-    color: 'white',
+    alignItems: "flex-start",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start"
   },
   loadingView: {
-    display: 'flex',
+    display: "flex",
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    position: 'absolute',
-    height: '100%',
-    width: '100%',
-    backgroundColor: '#f4f7fc',
-    opacity: 0.7,
-  },
-  mapContainer: {
-    position: 'absolute',
-    height: '100%',
-    width: '100%',
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
+    position: "absolute",
+    height: "100%",
+    width: "100%",
+    backgroundColor: "#f4f7fc",
+    opacity: 0.7
   },
   mapButton: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 20
   },
   mapButtonContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10
+  },
+  mapContainer: {
+    position: "absolute",
+    height: "100%",
+    width: "100%"
   },
   warning: {
     fontSize: 10,

@@ -51,6 +51,7 @@ class ChooseTripsScreen extends Component {
     this.pressMarker = this.pressMarker.bind(this)
     this.onTapMap = this.onTapMap.bind(this)
     this.goToDetails = this.goToDetails.bind(this)
+    this.getAllTrips = this.getAllTrips.bind(this)
   }
 
   async componentDidMount() {
@@ -66,6 +67,12 @@ class ChooseTripsScreen extends Component {
       stops,
       tripId,
     })
+  }
+
+  async getAllTrips() {
+    this.setState({ loading: true })
+    await this.props.getOpenTrips(this.props.user.token)
+    this.setState({ loading: false })
   }
 
   async setSearchStartPlaceFetch(item, reset) {
@@ -104,44 +111,68 @@ class ChooseTripsScreen extends Component {
     this.setState({ showActions: false })
   }
 
-  goToDetails() {
-    // TODO: Go to trip details
-    console.log('TODO')
+  async goToDetails() {
+    this.setState({
+      isFormHidden: false,
+      showActions: false,
+    })
+    await this.setSearchStartPlaceFetch(this.state.poi, true)
   }
 
   render() {
     const { navigation, startPlace, requestedTrips } = this.props
+    const { isFormHidden } = this.state
     return (
       <View style={styles.container}>
         <View style={styles.headerSelect}>
           <Button
             block
-            style={styles.headerButton}
-            borderRadius={10}
+            style={[styles.headerButton, { backgroundColor: isFormHidden ? '#f4f7fc' : '#0000FF' }]}
+            borderRadius={0}
             onPress={() => this.setState({ isFormHidden: false })}
           >
-            <Text style={styles.headerText}>Lista</Text>
+            <Text style={[styles.headerText, { color: isFormHidden ? 'black' : 'white' }]}>Viajes</Text>
           </Button>
           <Button
             block
-            style={styles.headerButton}
-            borderRadius={10}
+            style={[styles.headerButton, { backgroundColor: isFormHidden ? '#0000FF' : '#f4f7fc' }]}
+            borderRadius={0}
             onPress={() => this.setState({ isFormHidden: true })}
           >
-            <Text style={styles.headerText}>Mapa</Text>
+            <Text style={[styles.headerText, { color: isFormHidden ? 'white' : 'black' }]}>Mapa</Text>
           </Button>
         </View>
         {this.state.isFormHidden ? (
           <>
             <View style={{ flex: 1 }}>
-              <SalgoDeMap
-                showLocation
-                markers={collectPlaces(requestedTrips)}
-                showPath
-                multiPaths={requestedTrips.map(rt => rt.trip_route_points)}
-                pressMarker={this.pressMarker}
-                onTapMap={this.onTapMap}
-              />
+              <View style={styles.mapContainer}>
+                <SalgoDeMap
+                  showLocation
+                  markers={collectPlaces(requestedTrips)}
+                  showPath
+                  multiPaths={requestedTrips.map(rt => rt.trip_route_points)}
+                  pressMarker={this.pressMarker}
+                  onTapMap={this.onTapMap}
+                />
+              </View>
+              {!this.state.loading && (
+                <View style={styles.mapButtonContainer}>
+                  <Button
+                    block
+                    light
+                    style={styles.mapButton}
+                    borderRadius={25}
+                    onPress={() => this.getAllTrips()}
+                  >
+                    <Text>Mostrar todos los viajes</Text>
+                  </Button>
+                </View>
+              )}
+              {this.state.loading && (
+                <View style={styles.loadingView}>
+                  <Spinner color="blue" />
+                </View>
+              )}
             </View>
             {this.state.showActions && (
               <Card style={styles.actions}>
@@ -164,10 +195,17 @@ class ChooseTripsScreen extends Component {
                     }}
                     color={'#0000FF'}
                   >
-                    <Text style={styles.actionButtonText}>
-                      Detalle del viaje
+                    <Text
+                      style={styles.actionButtonText}
+                    >
+                      Buscar viajes
                     </Text>
                   </Button>
+                </CardItem>
+                <CardItem footer>
+                  <Text style={styles.warning}>
+                    Recuerda que si el punto corresponde al destino del viaje, este no aparecerá en el buscador
+                  </Text>
                 </CardItem>
               </Card>
             )}
@@ -297,6 +335,46 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  headerButton: {
+    flex: 1,
+  },
+  headerText: {
+    color: 'white',
+  },
+  loadingView: {
+    display: 'flex',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    backgroundColor: '#f4f7fc',
+    opacity: 0.7,
+  },
+  mapContainer: {
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+  },
+  mapButton: {
+    paddingHorizontal: 20,
+  },
+  mapButtonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+  },
+  warning: {
+    fontSize: 10,
+  },
+  warningContainer: {
+    marginTop: 0,
   },
 })
 

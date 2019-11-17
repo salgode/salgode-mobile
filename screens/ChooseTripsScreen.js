@@ -140,7 +140,7 @@ class ChooseTripsScreen extends Component {
                 { color: isFormHidden ? 'black' : 'white' },
               ]}
             >
-              Viajes
+              Lista
             </Text>
           </Button>
           <Button

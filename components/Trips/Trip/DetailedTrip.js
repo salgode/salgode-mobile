@@ -79,6 +79,7 @@ export const DetailedTrip = ({
           start={trip.trip_route_points[0]}
           end={trip.trip_route_points.slice(-1)[0]}
           goToMarkers
+          markersToFit={trip.trip_route_points}
         />
       </CardItem>
       <CardItem>

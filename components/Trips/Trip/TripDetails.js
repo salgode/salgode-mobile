@@ -157,6 +157,7 @@ class TripDetails extends Component {
               start={tripRoutePoints[0]}
               end={tripRoutePoints.slice(-1)[0]}
               goToMarkers
+              markersToFit={tripRoutePoints}
             />
           </CardItem>
           <CardItem>

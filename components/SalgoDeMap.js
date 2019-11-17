@@ -18,6 +18,7 @@ const SalgoDeMap = ({
   end,
   allowInteraction = true,
   goToMarkers = false,
+  markersToFit = [],
 }) => {
   const [region, setRegion] = React.useState(initialRegion)
   const [allowFindOnce, setAllowFindOnce] = React.useState(true)
@@ -35,18 +36,18 @@ const SalgoDeMap = ({
       onLayout={() => {
         if (goToMarkers) {
           try {
-            const showMarkers = markers.map(m => ({
+            const showMarkers = markersToFit.map(m => ({
               latitude: parseFloat(m.lat),
               longitude: parseFloat(m.lon),
             }))
-            mapRef.current.fitToCoordinates(showMarkers, {
+            setTimeout(() => mapRef.current.fitToCoordinates(showMarkers, {
               edgePadding: {
                 top: 40,
                 bottom: 30,
                 right: 10,
                 left: 10,
               },
-            })
+            }), 1000)
           } catch (e) {
             Alert.alert(
               'Problema cargando el mapa',
@@ -78,45 +79,39 @@ const SalgoDeMap = ({
       pitchEnabled={false}
       toolbarEnabled={false}
     >
-      {markers && markers.length ? (
-        <>
-          {markers.map(m => {
-            let color = 'red'
-            if (start && m.place_id === start.place_id) {
-              color = 'blue'
-            }
-            if (end && m.place_id === end.place_id) {
-              color = 'green'
-            }
-            return (
-              <Marker
-                key={`${m.place_id}-${color}`}
-                identifier={m.place_id}
-                coordinate={{
-                  latitude: parseFloat(m.lat),
-                  longitude: parseFloat(m.lon),
-                }}
-                title={showDescription ? m.place_name : undefined}
-                description={showDescription ? m.address : undefined}
-                onPress={({ nativeEvent }) => {
-                  const { coordinate } = nativeEvent
-                  if (pressMarker) {
-                    pressMarker(m)
-                  }
-                  setRegion({
-                    ...region,
-                    latitude: coordinate.latitude,
-                    longitude: coordinate.longitude,
-                  })
-                }}
-                pinColor={color}
-              />
-            )
-          })}
-        </>
-      ) : (
-        <></>
-      )}
+      {markers.length !== 0 && markers.map(m => {
+        let color = 'red'
+        if (start && m.place_id === start.place_id) {
+          color = 'blue'
+        }
+        if (end && m.place_id === end.place_id) {
+          color = 'green'
+        }
+        return (
+          <Marker
+            key={`${m.place_id}-${color}`}
+            identifier={m.place_id}
+            coordinate={{
+              latitude: parseFloat(m.lat),
+              longitude: parseFloat(m.lon),
+            }}
+            title={showDescription ? m.place_name : undefined}
+            description={showDescription ? m.address : undefined}
+            onPress={({ nativeEvent }) => {
+              const { coordinate } = nativeEvent
+              if (pressMarker) {
+                pressMarker(m)
+              }
+              setRegion({
+                ...region,
+                latitude: coordinate.latitude,
+                longitude: coordinate.longitude,
+              })
+            }}
+            pinColor={color}
+          />
+        )
+      })}
       {showPath && (
         <>
           {path && path.length ? (
@@ -166,6 +161,7 @@ SalgoDeMap.propTypes = {
   allowInteraction: PropTypes.bool.isRequired,
   goToMarkers: PropTypes.bool.isRequired,
   multiPaths: PropTypes.array,
+  markersToFit: PropTypes.array.isRequired,
 }
 
 SalgoDeMap.defaultProps = {

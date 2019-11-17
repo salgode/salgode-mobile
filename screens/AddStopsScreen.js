@@ -24,7 +24,7 @@ class AddStopsScreen extends Component {
     this.state = {
       stops: [],
       loading: false,
-      isFormHidden: false,
+      isFormHidden: true,
       showActions: false,
     }
   }
@@ -129,6 +129,7 @@ class AddStopsScreen extends Component {
                 pressMarker={this.pressMarker}
                 onTapMap={this.onTapMap}
                 goToMarkers={true}
+                markersToFit={[startStop, endStop]}
               />
             </View>
             {showActions && (

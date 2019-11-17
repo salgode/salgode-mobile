@@ -25,7 +25,8 @@ function collectPlaces(allTrips) {
     const tripRoutesArray = allTrips.map(obj => obj.trip_route_points)
     const allPlaces = [].concat.apply([], tripRoutesArray)
     return allPlaces.filter(
-      (place, index) => allPlaces.findIndex(i => i.place_id === place.place_id) === index
+      (place, index) =>
+        allPlaces.findIndex(i => i.place_id === place.place_id) === index
     )
   }
   return []
@@ -119,7 +120,7 @@ class ChooseTripsScreen extends Component {
             borderRadius={10}
             onPress={() => this.setState({ isFormHidden: false })}
           >
-            <Text style={styles.headerText}>Filtrar</Text>
+            <Text style={styles.headerText}>Lista</Text>
           </Button>
           <Button
             block
@@ -148,7 +149,9 @@ class ChooseTripsScreen extends Component {
                   <Text>¿Qué deseas hacer?</Text>
                 </CardItem>
                 <CardItem style={styles.info}>
-                  <Text style={{ fontWeight: 'bold' }}>{this.state.poi.place_name}</Text>
+                  <Text style={{ fontWeight: 'bold' }}>
+                    {this.state.poi.place_name}
+                  </Text>
                 </CardItem>
                 <CardItem style={styles.actionButtons}>
                   <Button
@@ -161,9 +164,7 @@ class ChooseTripsScreen extends Component {
                     }}
                     color={'#0000FF'}
                   >
-                    <Text
-                      style={styles.actionButtonText}
-                    >
+                    <Text style={styles.actionButtonText}>
                       Detalle del viaje
                     </Text>
                   </Button>
@@ -212,7 +213,8 @@ class ChooseTripsScreen extends Component {
                       style={{ alignSelf: 'center' }}
                     >
                       <Text style={{ textAlign: 'center' }}>
-                        ¿No sabes dónde buscar? Puedes ver el mapa haciendo click en el menú de arriba
+                        ¿No sabes dónde buscar? Puedes ver el mapa haciendo
+                        click en el menú de arriba
                       </Text>
                     </Button>
                   </>
@@ -250,51 +252,51 @@ ChooseTripsScreen.defaultProps = {
 }
 
 const styles = StyleSheet.create({
-  actions: {
-    backgroundColor: 'white',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: '3%',
-  },
   actionButton: {
     flex: 1,
     marginHorizontal: 10,
   },
+  actionButtonText: {
+    color: 'white',
+    fontSize: 14,
+  },
   actionButtons: {
+    alignItems: 'center',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
   },
-  actionButtonText: {
-    fontSize: 14,
-    color: 'white',
+  actions: {
+    alignItems: 'center',
+    backgroundColor: 'white',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    paddingHorizontal: '3%',
   },
   container: {
     backgroundColor: Colors.lightBackground,
     paddingTop: 15,
     ...StyleSheet.absoluteFill,
   },
-  headerSelect: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10,
-  },
-  info: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-  },
   headerButton: {
     flex: 1,
     marginHorizontal: 10,
   },
+  headerSelect: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 10,
+  },
   headerText: {
     color: 'white',
+  },
+  info: {
+    alignItems: 'flex-start',
+    display: 'flex',
+    flexDirection: 'column',
   },
 })
 

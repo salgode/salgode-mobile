@@ -203,6 +203,11 @@ class CreateTripScreen extends Component {
               </View>
 
               <View style={styles.group}>
+                <Text style={styles.supportText} onPress={() => {
+                  this.props.navigation.navigate('Support')
+                }}>
+                  ¿No encuentras el punto que deseas? Sugiérelo acá
+                </Text>
                 <Button
                   style={styles.dateButton}
                   onPress={this.showDateTimePicker}
@@ -461,6 +466,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
+  },
+  supportText: {
+    textAlign: 'center',
+    fontSize: 12,
+    color: 'blue',
+    margin: 0,
+    padding: 0,
   },
   viewContainer: {
     alignItems: 'center',

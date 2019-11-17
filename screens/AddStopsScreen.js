@@ -344,6 +344,11 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     padding: 10,
   },
+  showMoreButton: {
+    backgroundColor: 'white',
+    borderBottomRightRadius: 30,
+    borderBottomLeftRadius: 30,
+  },
   textView: {
     alignItems: 'center',
     flex: 1,

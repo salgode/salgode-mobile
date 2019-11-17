@@ -17,8 +17,16 @@ import {
   userModel,
 } from './models/createTrip'
 
+// eslint-disable-next-line no-undef
+const baseURL = __DEV__
+  ? 'https://staging-api.salgode.com'
+  : 'https://api.salgode.com'
+
+// eslint-disable-next-line no-console
+console.log(`Using ${baseURL}`)
+
 export const client = axios.create({
-  baseURL: 'https://api.salgode.com',
+  baseURL,
   responseType: 'json',
   requestType: 'json',
 })

@@ -14,7 +14,6 @@ const SalgoDeMap = ({
   multiPaths,
   pressMarker,
   showDescription,
-  onTapMap,
   start,
   end,
   allowInteraction = true,
@@ -46,7 +45,7 @@ const SalgoDeMap = ({
                 bottom: 30,
                 right: 10,
                 left: 10,
-              }
+              },
             })
           } catch (e) {
             Alert.alert(
@@ -72,7 +71,6 @@ const SalgoDeMap = ({
       showsMyLocationButton={false}
       region={region}
       userLocationAnnotationTitle="Mi ubicación"
-      onPress={onTapMap}
       zoomEnabled={allowInteraction}
       zoomControlEnabled={false}
       rotateEnabled={allowInteraction}
@@ -80,7 +78,7 @@ const SalgoDeMap = ({
       pitchEnabled={false}
       toolbarEnabled={false}
     >
-      {(markers && markers.length) ? (
+      {markers && markers.length ? (
         <>
           {markers.map(m => {
             let color = 'red'
@@ -108,7 +106,7 @@ const SalgoDeMap = ({
                   setRegion({
                     ...region,
                     latitude: coordinate.latitude,
-                    longitude: coordinate.longitude
+                    longitude: coordinate.longitude,
                   })
                 }}
                 pinColor={color}
@@ -116,10 +114,12 @@ const SalgoDeMap = ({
             )
           })}
         </>
-      ) : <></>}
+      ) : (
+        <></>
+      )}
       {showPath && (
         <>
-          {(path && path.length) ? (
+          {path && path.length ? (
             <Polyline
               coordinates={path.map(p => ({
                 latitude: parseFloat(p.lat),
@@ -129,10 +129,11 @@ const SalgoDeMap = ({
               strokeWidth={5}
               lineDashPattern={[10, 20]}
             />
-          ) : (multiPaths && multiPaths.length) ? (
+          ) : multiPaths && multiPaths.length ? (
             <>
-              {multiPaths.map(singlePath => (
+              {multiPaths.map((singlePath, id) => (
                 <Polyline
+                  key={id}
                   coordinates={singlePath.map(p => ({
                     latitude: parseFloat(p.lat),
                     longitude: parseFloat(p.lon),
@@ -143,7 +144,9 @@ const SalgoDeMap = ({
                 />
               ))}
             </>
-          ) : (<></>)}
+          ) : (
+            <></>
+          )}
         </>
       )}
     </MapView>
@@ -158,7 +161,6 @@ Map.propTypes = {
   path: PropTypes.array,
   pressMarker: PropTypes.func,
   showDescription: PropTypes.bool,
-  onTapMap: PropTypes.func,
   start: PropTypes.object,
   end: PropTypes.object,
   allowInteraction: PropTypes.bool.isRequired,
@@ -179,7 +181,6 @@ Map.defaultProps = {
   path: [],
   pressMarker: undefined,
   showDescription: false,
-  onTapMap: undefined,
   start: undefined,
   end: undefined,
   multiPaths: [],
@@ -188,8 +189,8 @@ Map.defaultProps = {
 const styles = StyleSheet.create({
   mapStyle: {
     height: '100%',
-    width: '100%'
-  }
+    width: '100%',
+  },
 })
 
 export default SalgoDeMap

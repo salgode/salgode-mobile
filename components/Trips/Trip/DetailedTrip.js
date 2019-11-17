@@ -1,6 +1,14 @@
 import React from 'react'
 import { StyleSheet, Platform } from 'react-native'
-import { Card, View, Text, CardItem, Button, Thumbnail, Spinner } from 'native-base'
+import {
+  Card,
+  View,
+  Text,
+  CardItem,
+  Button,
+  Thumbnail,
+  Spinner,
+} from 'native-base'
 import Location from './Location'
 import PropTypes from 'prop-types'
 import Colors from '../../../constants/Colors'
@@ -39,7 +47,6 @@ export const DetailedTrip = ({
   const [loadingButton, setLoadingButton] = React.useState(false)
 
   const selfieImage = driver != null ? driver.driver_avatar : 'placeholder'
-
   return trip !== null ? (
     <Card
       style={{
@@ -78,7 +85,7 @@ export const DetailedTrip = ({
           showDescription
           start={trip.trip_route_points[0]}
           end={trip.trip_route_points.slice(-1)[0]}
-          goToMarkers
+          goToMarkers={true}
         />
       </CardItem>
       <CardItem>
@@ -115,24 +122,24 @@ export const DetailedTrip = ({
         </>
       ) : trip.trip_status === 'in_progress' ? (
         <>
-        {loadingButton ? (
-          <CardItem style={styles.spinner}>
-            <Spinner style={{ flex: 1 }} color="blue" />
-          </CardItem>
-        ) : (
-          <Button
-            style={{ alignSelf: 'center', backgroundColor: '#0000FF' }}
-            onPress={async () => {
-              setLoadingButton(true)
-              await toCurrentTrip()
-              setLoadingButton(false)
-            }}
-          >
-            <Text style={{ color: 'white', fontSize: 18, fontWeight: '800' }}>
-              Ver
-            </Text>
-          </Button>
-        )}
+          {loadingButton ? (
+            <CardItem style={styles.spinner}>
+              <Spinner style={{ flex: 1 }} color="blue" />
+            </CardItem>
+          ) : (
+            <Button
+              style={{ alignSelf: 'center', backgroundColor: '#0000FF' }}
+              onPress={async () => {
+                setLoadingButton(true)
+                await toCurrentTrip()
+                setLoadingButton(false)
+              }}
+            >
+              <Text style={{ color: 'white', fontSize: 18, fontWeight: '800' }}>
+                Ver
+              </Text>
+            </Button>
+          )}
         </>
       ) : null}
     </Card>

@@ -127,19 +127,39 @@ class ChooseTripsScreen extends Component {
         <View style={styles.headerSelect}>
           <Button
             block
-            style={[styles.headerButton, { backgroundColor: isFormHidden ? '#f4f7fc' : '#0000FF' }]}
+            style={[
+              styles.headerButton,
+              { backgroundColor: isFormHidden ? '#f4f7fc' : '#0000FF' },
+            ]}
             borderRadius={0}
             onPress={() => this.setState({ isFormHidden: false })}
           >
-            <Text style={[styles.headerText, { color: isFormHidden ? 'black' : 'white' }]}>Viajes</Text>
+            <Text
+              style={[
+                styles.headerText,
+                { color: isFormHidden ? 'black' : 'white' },
+              ]}
+            >
+              Viajes
+            </Text>
           </Button>
           <Button
             block
-            style={[styles.headerButton, { backgroundColor: isFormHidden ? '#0000FF' : '#f4f7fc' }]}
+            style={[
+              styles.headerButton,
+              { backgroundColor: isFormHidden ? '#0000FF' : '#f4f7fc' },
+            ]}
             borderRadius={0}
             onPress={() => this.setState({ isFormHidden: true })}
           >
-            <Text style={[styles.headerText, { color: isFormHidden ? 'white' : 'black' }]}>Mapa</Text>
+            <Text
+              style={[
+                styles.headerText,
+                { color: isFormHidden ? 'white' : 'black' },
+              ]}
+            >
+              Mapa
+            </Text>
           </Button>
         </View>
         {this.state.isFormHidden ? (
@@ -153,6 +173,7 @@ class ChooseTripsScreen extends Component {
                   multiPaths={requestedTrips.map(rt => rt.trip_route_points)}
                   pressMarker={this.pressMarker}
                   onTapMap={this.onTapMap}
+                  cluster={true}
                 />
               </View>
               {!this.state.loading && (
@@ -195,16 +216,13 @@ class ChooseTripsScreen extends Component {
                     }}
                     color={'#0000FF'}
                   >
-                    <Text
-                      style={styles.actionButtonText}
-                    >
-                      Buscar viajes
-                    </Text>
+                    <Text style={styles.actionButtonText}>Buscar viajes</Text>
                   </Button>
                 </CardItem>
                 <CardItem footer>
                   <Text style={styles.warning}>
-                    Recuerda que si el punto corresponde al destino del viaje, este no aparecerá en el buscador
+                    Recuerda que si el punto corresponde al destino del viaje,
+                    este no aparecerá en el buscador
                   </Text>
                 </CardItem>
               </Card>
@@ -321,6 +339,9 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 10,
   },
+  headerButton: {
+    flex: 1,
+  },
   headerSelect: {
     alignItems: 'center',
     display: 'flex',
@@ -331,44 +352,41 @@ const styles = StyleSheet.create({
   headerText: {
     color: 'white',
   },
-  info: {
-    alignItems: 'flex-start',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-  },
-  headerButton: {
-    flex: 1,
-  },
   headerText: {
     color: 'white',
   },
+  info: {
+    alignItems: 'flex-start',
+    alignItems: 'flex-start',
+    display: 'flex',
+    flexDirection: 'column',
+  },
   loadingView: {
+    alignItems: 'center',
+    backgroundColor: '#f4f7fc',
     display: 'flex',
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     flexDirection: 'column',
-    position: 'absolute',
     height: '100%',
-    width: '100%',
-    backgroundColor: '#f4f7fc',
+    justifyContent: 'center',
     opacity: 0.7,
-  },
-  mapContainer: {
     position: 'absolute',
-    height: '100%',
     width: '100%',
   },
   mapButton: {
     paddingHorizontal: 20,
   },
   mapButtonContainer: {
+    alignItems: 'center',
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'center',
     marginTop: 10,
+  },
+  mapContainer: {
+    height: '100%',
+    position: 'absolute',
+    width: '100%',
   },
   warning: {
     fontSize: 10,

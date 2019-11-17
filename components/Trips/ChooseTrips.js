@@ -68,7 +68,7 @@ class ChooseTrips extends Component {
     }
 
     return (
-      <SafeAreaView style={{ paddingBottom: 50 }}>
+      <SafeAreaView style={{ flex: 1, marginHorizontal: 15 }}>
         <FlatList
           data={this.props.trips}
           onRefresh={this.onReload}

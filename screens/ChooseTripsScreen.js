@@ -8,7 +8,7 @@ import {
 } from '../redux/actions/trips'
 import { getAllSpots } from '../redux/actions/spots'
 import { View, StyleSheet, Alert, Text } from 'react-native'
-import { Spinner, Button } from 'native-base'
+import { Spinner, Button, Card, CardItem } from 'native-base'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import ChooseTrips from '../components/Trips/ChooseTrips'
@@ -17,7 +17,20 @@ import { getOwnProfile } from '../redux/actions/user'
 import noTrips from '../assets/images/notrips.png'
 import Colors from '../constants/Colors'
 import CardInput from '../components/CardInput'
+import SalgoDeMap from '../components/SalgoDeMap'
 import lang from '../languages/es'
+
+function collectPlaces(allTrips) {
+  if (allTrips && allTrips.length) {
+    const tripRoutesArray = allTrips.map(obj => obj.trip_route_points)
+    const allPlaces = [].concat.apply([], tripRoutesArray)
+    return allPlaces.filter(
+      (place, index) =>
+        allPlaces.findIndex(i => i.place_id === place.place_id) === index
+    )
+  }
+  return []
+}
 
 class ChooseTripsScreen extends Component {
   static navigationOptions = {
@@ -28,11 +41,17 @@ class ChooseTripsScreen extends Component {
     super(props)
     this.state = {
       loading: false,
+      isFormHidden: true,
+      showActions: false,
     }
 
     this.onRequestTrip = this.onRequestTrip.bind(this)
     this.setSearchStartPlaceFetch = this.setSearchStartPlaceFetch.bind(this)
     this.onReload = this.onReload.bind(this)
+    this.pressMarker = this.pressMarker.bind(this)
+    this.onTapMap = this.onTapMap.bind(this)
+    this.goToDetails = this.goToDetails.bind(this)
+    this.getAllTrips = this.getAllTrips.bind(this)
   }
 
   async componentDidMount() {
@@ -48,6 +67,12 @@ class ChooseTripsScreen extends Component {
       stops,
       tripId,
     })
+  }
+
+  async getAllTrips() {
+    this.setState({ loading: true })
+    await this.props.getOpenTrips(this.props.user.token)
+    this.setState({ loading: false })
   }
 
   async setSearchStartPlaceFetch(item, reset) {
@@ -78,52 +103,176 @@ class ChooseTripsScreen extends Component {
     }
   }
 
+  pressMarker(marker) {
+    this.setState({ showActions: true, poi: marker })
+  }
+
+  onTapMap() {
+    this.setState({ showActions: false })
+  }
+
+  async goToDetails() {
+    this.setState({
+      isFormHidden: false,
+      showActions: false,
+    })
+    await this.setSearchStartPlaceFetch(this.state.poi, true)
+  }
+
   render() {
     const { navigation, startPlace, requestedTrips } = this.props
+    const { isFormHidden } = this.state
     return (
       <View style={styles.container}>
-        <View>
-          <CardInput
-            onTouchablePress={() =>
-              navigation.navigate('SpotSelectorScreen', {
-                title: 'Buscas #SalgoDe',
-                text: '#SalgoDe',
-                onClearPress: this.props.cleanSearchStartPlace,
-                onItemPress: i => this.setSearchStartPlaceFetch(i, true),
-                data: this.props.spots,
-              })
-            }
-            placeholder="Filtra por Comuna o Parada"
-            value={startPlace ? startPlace.place_name : ''}
-            text="#SalgoDe"
-            editable={false}
-            onClearPress={this.props.cleanSearchStartPlace}
-          />
+        <View style={styles.headerSelect}>
+          <Button
+            block
+            style={[
+              styles.headerButton,
+              { backgroundColor: isFormHidden ? '#f4f7fc' : '#0000FF' },
+            ]}
+            borderRadius={0}
+            onPress={() => this.setState({ isFormHidden: false })}
+          >
+            <Text
+              style={[
+                styles.headerText,
+                { color: isFormHidden ? 'black' : 'white' },
+              ]}
+            >
+              Lista
+            </Text>
+          </Button>
+          <Button
+            block
+            style={[
+              styles.headerButton,
+              { backgroundColor: isFormHidden ? '#0000FF' : '#f4f7fc' },
+            ]}
+            borderRadius={0}
+            onPress={() => this.setState({ isFormHidden: true })}
+          >
+            <Text
+              style={[
+                styles.headerText,
+                { color: isFormHidden ? 'white' : 'black' },
+              ]}
+            >
+              Mapa
+            </Text>
+          </Button>
         </View>
-        {this.state.loading && <Spinner color="blue" />}
-        {!this.state.loading && (
+        {this.state.isFormHidden ? (
           <>
-            {requestedTrips.length > 0 ? (
-              <ChooseTrips
-                onSend={this.onRequestTrip}
-                onReload={this.onReload}
-                trips={requestedTrips}
-              />
-            ) : (
-              <>
-                <EmptyState
-                  image={noTrips}
-                  text="No se ha encontrado ningún viaje según lo solicitado."
+            <View style={{ flex: 1 }}>
+              <View style={styles.mapContainer}>
+                <SalgoDeMap
+                  showLocation
+                  markers={collectPlaces(requestedTrips)}
+                  showPath
+                  multiPaths={requestedTrips.map(rt => rt.trip_route_points)}
+                  pressMarker={this.pressMarker}
+                  onTapMap={this.onTapMap}
                 />
-                <Button
-                  transparent
-                  onPress={() => this.props.navigation.navigate('SpotsMap')}
-                  style={{ alignSelf: 'center' }}
-                >
-                  <Text>
-                    No sabes donde buscar? Ve el mapa de puntos de SalgoDe
+              </View>
+              {!this.state.loading && (
+                <View style={styles.mapButtonContainer}>
+                  <Button
+                    block
+                    light
+                    style={styles.mapButton}
+                    borderRadius={25}
+                    onPress={() => this.getAllTrips()}
+                  >
+                    <Text>Mostrar todos los viajes</Text>
+                  </Button>
+                </View>
+              )}
+              {this.state.loading && (
+                <View style={styles.loadingView}>
+                  <Spinner color="blue" />
+                </View>
+              )}
+            </View>
+            {this.state.showActions && (
+              <Card style={styles.actions}>
+                <CardItem header>
+                  <Text>¿Quieres buscar viajes que pasan por este punto?</Text>
+                </CardItem>
+                <CardItem style={styles.info}>
+                  <Text style={{ fontWeight: 'bold' }}>
+                    {this.state.poi.place_name}
                   </Text>
-                </Button>
+                </CardItem>
+                <CardItem style={styles.actionButtons}>
+                  <Button
+                    block
+                    style={styles.actionButton}
+                    borderRadius={10}
+                    onPress={() => {
+                      this.onTapMap()
+                      this.goToDetails()
+                    }}
+                    color={'#0000FF'}
+                  >
+                    <Text style={styles.actionButtonText}>Buscar viajes</Text>
+                  </Button>
+                </CardItem>
+                <CardItem footer>
+                  <Text style={styles.warning}>
+                    Si el punto es el final del viaje, no aparecerá en el buscador
+                  </Text>
+                </CardItem>
+              </Card>
+            )}
+          </>
+        ) : (
+          <>
+            <View style={{ marginHorizontal: 15 }}>
+              <CardInput
+                onTouchablePress={() =>
+                  navigation.navigate('SpotSelectorScreen', {
+                    title: 'Buscas #SalgoDe',
+                    text: '#SalgoDe',
+                    onClearPress: this.props.cleanSearchStartPlace,
+                    onItemPress: i => this.setSearchStartPlaceFetch(i, true),
+                    data: this.props.spots,
+                  })
+                }
+                placeholder="Filtra por Comuna o Parada"
+                value={startPlace ? startPlace.place_name : ''}
+                text="#SalgoDe"
+                editable={false}
+                onClearPress={this.props.cleanSearchStartPlace}
+              />
+            </View>
+            {this.state.loading && <Spinner color="blue" />}
+            {!this.state.loading && (
+              <>
+                {requestedTrips.length > 0 ? (
+                  <ChooseTrips
+                    onSend={this.onRequestTrip}
+                    onReload={this.onReload}
+                    trips={requestedTrips}
+                  />
+                ) : (
+                  <>
+                    <EmptyState
+                      image={noTrips}
+                      text="No se ha encontrado ningún viaje según lo solicitado."
+                    />
+                    <Button
+                      transparent
+                      onPress={() => this.props.navigation.navigate('SpotsMap')}
+                      style={{ alignSelf: 'center' }}
+                    >
+                      <Text style={{ textAlign: 'center' }}>
+                        ¿No sabes dónde buscar? Puedes ver el mapa haciendo
+                        click en el menú de arriba
+                      </Text>
+                    </Button>
+                  </>
+                )}
               </>
             )}
           </>
@@ -157,10 +306,91 @@ ChooseTripsScreen.defaultProps = {
 }
 
 const styles = StyleSheet.create({
+  actionButton: {
+    flex: 1,
+    marginHorizontal: 10,
+  },
+  actionButtonText: {
+    color: 'white',
+    fontSize: 14,
+  },
+  actionButtons: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  actions: {
+    alignItems: 'center',
+    backgroundColor: 'white',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    paddingHorizontal: '3%',
+  },
   container: {
     backgroundColor: Colors.lightBackground,
-    padding: 15,
+    paddingTop: 15,
     ...StyleSheet.absoluteFill,
+  },
+  headerButton: {
+    flex: 1,
+    marginHorizontal: 10,
+  },
+  headerButton: {
+    flex: 1
+  },
+  headerSelect: {
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: 10
+  },
+  headerText: {
+    color: "white"
+  },
+  headerText: {
+    color: "white"
+  },
+  info: {
+    alignItems: "flex-start",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start"
+  },
+  loadingView: {
+    display: "flex",
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
+    position: "absolute",
+    height: "100%",
+    width: "100%",
+    backgroundColor: "#f4f7fc",
+    opacity: 0.7
+  },
+  mapButton: {
+    paddingHorizontal: 20
+  },
+  mapButtonContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10
+  },
+  mapContainer: {
+    position: "absolute",
+    height: "100%",
+    width: "100%"
+  },
+  warning: {
+    fontSize: 10,
+  },
+  warningContainer: {
+    marginTop: 0,
   },
 })
 
@@ -188,12 +418,6 @@ const mapDispatchToProps = dispatch => ({
 ChooseTripsScreen.navigationOptions = ({ navigation }) => ({
   title: 'Busca tu viaje',
   headerBackTitle: lang.default.back,
-  headerRightContainerStyle: { marginRight: '3%' },
-  headerRight: (
-    <Button transparent onPress={() => navigation.navigate('SpotsMap')}>
-      <Text>Mapa</Text>
-    </Button>
-  ),
 })
 export default connect(
   mapStateToProps,

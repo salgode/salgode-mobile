@@ -8,6 +8,7 @@ import {
   Keyboard,
   AsyncStorage,
   Alert,
+  ScrollView,
 } from 'react-native'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
@@ -109,25 +110,27 @@ class LoginScreen extends Component {
   render() {
     const { loading } = this.state
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
-        <Animated.Image
-          source={logo}
-          style={[styles.logo, { height: this.imageHeight }]}
-        />
-        {!loading && <LoginForm onSend={this.onSend} />}
-        {loading && <Spinner color="blue" />}
-        {!loading && (
-          <View>
-            <Button transparent onPress={this.onCreateAccountPress}>
-              <Text>{lang.signin.create}</Text>
-            </Button>
-            {/* <Button transparent onPress={this.onRecoverPasswordPress}>
-              <Text>{lang.signin.forget}</Text>
-            </Button> */}
-          </View>
-        )}
-        {loading && <Text>{lang.signin.verifying}</Text>}
-      </KeyboardAvoidingView>
+      <ScrollView style={{ flex: 1 }}>
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
+          <Animated.Image
+            source={logo}
+            style={[styles.logo, { height: this.imageHeight }]}
+          />
+          {!loading && <LoginForm onSend={this.onSend} />}
+          {loading && <Spinner color="blue" />}
+          {!loading && (
+            <View>
+              <Button transparent onPress={this.onCreateAccountPress}>
+                <Text>{lang.signin.create}</Text>
+              </Button>
+              {/* <Button transparent onPress={this.onRecoverPasswordPress}>
+                <Text>{lang.signin.forget}</Text>
+              </Button> */}
+            </View>
+          )}
+          {loading && <Text>{lang.signin.verifying}</Text>}
+        </KeyboardAvoidingView>
+      </ScrollView>
     )
   }
 }

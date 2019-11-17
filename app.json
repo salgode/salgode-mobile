@@ -19,18 +19,27 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "config": {
+        "googleMapsApiKey": "AIzaSyDV9yJbynZoZkpw25XEDLC0Y0IUsaCN-C8"
+      },
       "supportsTablet": true,
       "bundleIdentifier": "app.salgode.salgode",
       "buildNumber": "13",
       "infoPlist": {
         "NSCameraUsageDescription": "Esta app utiliza tu cámara para poder sacar una selfie.",
+        "NSLocationWhenInUseUsageDescription": "Esta app utiliza tu ubicación para mejorar la usabilidad de la misma y que puedas encontrar el punto de encuentro más cercano a tu posición",
         "NSPhotoLibraryUsageDescription": "Esta app requiere acceso a tu biblioteca de imágenes para poder subir una imagen a tu perfil de usuario."
       }
     },
     "android": {
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDV9yJbynZoZkpw25XEDLC0Y0IUsaCN-C8"
+        }
+      },
       "package": "cl.salgode.salgode",
       "versionCode": 8,
-      "permissions": ["CAMERA_ROLL", "CAMERA"],
+      "permissions": ["CAMERA_ROLL", "CAMERA", "LOCATION"],
       "playStoreUrl": "https://play.google.com/store/apps/details?id=cl.salgode.salgode"
     },
     "description": "",

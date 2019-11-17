@@ -25,7 +25,8 @@ function collectPlaces(allTrips) {
     const tripRoutesArray = allTrips.map(obj => obj.trip_route_points)
     const allPlaces = [].concat.apply([], tripRoutesArray)
     return allPlaces.filter(
-      (place, index) => allPlaces.findIndex(i => i.place_id === place.place_id) === index
+      (place, index) =>
+        allPlaces.findIndex(i => i.place_id === place.place_id) === index
     )
   }
   return []
@@ -50,6 +51,7 @@ class ChooseTripsScreen extends Component {
     this.pressMarker = this.pressMarker.bind(this)
     this.onTapMap = this.onTapMap.bind(this)
     this.goToDetails = this.goToDetails.bind(this)
+    this.getAllTrips = this.getAllTrips.bind(this)
   }
 
   async componentDidMount() {
@@ -65,6 +67,12 @@ class ChooseTripsScreen extends Component {
       stops,
       tripId,
     })
+  }
+
+  async getAllTrips() {
+    this.setState({ loading: true })
+    await this.props.getOpenTrips(this.props.user.token)
+    this.setState({ loading: false })
   }
 
   async setSearchStartPlaceFetch(item, reset) {
@@ -103,52 +111,98 @@ class ChooseTripsScreen extends Component {
     this.setState({ showActions: false })
   }
 
-  goToDetails() {
-    // TODO: Go to trip details
-    console.log('TODO')
+  async goToDetails() {
+    this.setState({
+      isFormHidden: false,
+      showActions: false,
+    })
+    await this.setSearchStartPlaceFetch(this.state.poi, true)
   }
 
   render() {
     const { navigation, startPlace, requestedTrips } = this.props
+    const { isFormHidden } = this.state
     return (
       <View style={styles.container}>
         <View style={styles.headerSelect}>
           <Button
             block
-            style={styles.headerButton}
-            borderRadius={10}
+            style={[
+              styles.headerButton,
+              { backgroundColor: isFormHidden ? '#f4f7fc' : '#0000FF' },
+            ]}
+            borderRadius={0}
             onPress={() => this.setState({ isFormHidden: false })}
           >
-            <Text style={styles.headerText}>Filtrar</Text>
+            <Text
+              style={[
+                styles.headerText,
+                { color: isFormHidden ? 'black' : 'white' },
+              ]}
+            >
+              Lista
+            </Text>
           </Button>
           <Button
             block
-            style={styles.headerButton}
-            borderRadius={10}
+            style={[
+              styles.headerButton,
+              { backgroundColor: isFormHidden ? '#0000FF' : '#f4f7fc' },
+            ]}
+            borderRadius={0}
             onPress={() => this.setState({ isFormHidden: true })}
           >
-            <Text style={styles.headerText}>Mapa</Text>
+            <Text
+              style={[
+                styles.headerText,
+                { color: isFormHidden ? 'white' : 'black' },
+              ]}
+            >
+              Mapa
+            </Text>
           </Button>
         </View>
         {this.state.isFormHidden ? (
           <>
             <View style={{ flex: 1 }}>
-              <SalgoDeMap
-                showLocation
-                markers={collectPlaces(requestedTrips)}
-                showPath
-                multiPaths={requestedTrips.map(rt => rt.trip_route_points)}
-                pressMarker={this.pressMarker}
-                onTapMap={this.onTapMap}
-              />
+              <View style={styles.mapContainer}>
+                <SalgoDeMap
+                  showLocation
+                  markers={collectPlaces(requestedTrips)}
+                  showPath
+                  multiPaths={requestedTrips.map(rt => rt.trip_route_points)}
+                  pressMarker={this.pressMarker}
+                  onTapMap={this.onTapMap}
+                />
+              </View>
+              {!this.state.loading && (
+                <View style={styles.mapButtonContainer}>
+                  <Button
+                    block
+                    light
+                    style={styles.mapButton}
+                    borderRadius={25}
+                    onPress={() => this.getAllTrips()}
+                  >
+                    <Text>Mostrar todos los viajes</Text>
+                  </Button>
+                </View>
+              )}
+              {this.state.loading && (
+                <View style={styles.loadingView}>
+                  <Spinner color="blue" />
+                </View>
+              )}
             </View>
             {this.state.showActions && (
               <Card style={styles.actions}>
                 <CardItem header>
-                  <Text>¿Qué deseas hacer?</Text>
+                  <Text>¿Quieres buscar viajes que pasan por este punto?</Text>
                 </CardItem>
                 <CardItem style={styles.info}>
-                  <Text style={{ fontWeight: 'bold' }}>{this.state.poi.place_name}</Text>
+                  <Text style={{ fontWeight: 'bold' }}>
+                    {this.state.poi.place_name}
+                  </Text>
                 </CardItem>
                 <CardItem style={styles.actionButtons}>
                   <Button
@@ -161,12 +215,13 @@ class ChooseTripsScreen extends Component {
                     }}
                     color={'#0000FF'}
                   >
-                    <Text
-                      style={styles.actionButtonText}
-                    >
-                      Detalle del viaje
-                    </Text>
+                    <Text style={styles.actionButtonText}>Buscar viajes</Text>
                   </Button>
+                </CardItem>
+                <CardItem footer>
+                  <Text style={styles.warning}>
+                    Si el punto es el final del viaje, no aparecerá en el buscador
+                  </Text>
                 </CardItem>
               </Card>
             )}
@@ -212,7 +267,8 @@ class ChooseTripsScreen extends Component {
                       style={{ alignSelf: 'center' }}
                     >
                       <Text style={{ textAlign: 'center' }}>
-                        ¿No sabes dónde buscar? Puedes ver el mapa haciendo click en el menú de arriba
+                        ¿No sabes dónde buscar? Puedes ver el mapa haciendo
+                        click en el menú de arriba
                       </Text>
                     </Button>
                   </>
@@ -250,51 +306,91 @@ ChooseTripsScreen.defaultProps = {
 }
 
 const styles = StyleSheet.create({
-  actions: {
-    backgroundColor: 'white',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: '3%',
-  },
   actionButton: {
     flex: 1,
     marginHorizontal: 10,
   },
+  actionButtonText: {
+    color: 'white',
+    fontSize: 14,
+  },
   actionButtons: {
+    alignItems: 'center',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
   },
-  actionButtonText: {
-    fontSize: 14,
-    color: 'white',
+  actions: {
+    alignItems: 'center',
+    backgroundColor: 'white',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    paddingHorizontal: '3%',
   },
   container: {
     backgroundColor: Colors.lightBackground,
     paddingTop: 15,
     ...StyleSheet.absoluteFill,
   },
-  headerSelect: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10,
-  },
-  info: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-  },
   headerButton: {
     flex: 1,
     marginHorizontal: 10,
   },
+  headerButton: {
+    flex: 1
+  },
+  headerSelect: {
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: 10
+  },
   headerText: {
-    color: 'white',
+    color: "white"
+  },
+  headerText: {
+    color: "white"
+  },
+  info: {
+    alignItems: "flex-start",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start"
+  },
+  loadingView: {
+    display: "flex",
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
+    position: "absolute",
+    height: "100%",
+    width: "100%",
+    backgroundColor: "#f4f7fc",
+    opacity: 0.7
+  },
+  mapButton: {
+    paddingHorizontal: 20
+  },
+  mapButtonContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10
+  },
+  mapContainer: {
+    position: "absolute",
+    height: "100%",
+    width: "100%"
+  },
+  warning: {
+    fontSize: 10,
+  },
+  warningContainer: {
+    marginTop: 0,
   },
 })
 

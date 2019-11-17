@@ -14,14 +14,15 @@ const SalgoDeMap = ({
   multiPaths,
   pressMarker,
   showDescription,
-  onTapMap,
   start,
   end,
   allowInteraction = true,
   goToMarkers = false,
+  markersToFit = [],
 }) => {
   const [region, setRegion] = React.useState(initialRegion)
   const [allowFindOnce, setAllowFindOnce] = React.useState(true)
+  const [fitOnce, setFitOnce] = React.useState(true)
   const mapRef = React.useRef()
   return (
     <MapView
@@ -34,20 +35,23 @@ const SalgoDeMap = ({
         Permissions.askAsync(Permissions.LOCATION)
       }}
       onLayout={() => {
-        if (goToMarkers) {
+        if (goToMarkers && fitOnce) {
           try {
-            const showMarkers = markers.map(m => ({
+            const showMarkers = markersToFit.map(m => ({
               latitude: parseFloat(m.lat),
               longitude: parseFloat(m.lon),
             }))
-            mapRef.current.fitToCoordinates(showMarkers, {
-              edgePadding: {
-                top: 40,
-                bottom: 30,
-                right: 10,
-                left: 10,
-              }
-            })
+            setTimeout(() => {
+              setFitOnce(false)
+              mapRef.current.fitToCoordinates(showMarkers, {
+                edgePadding: {
+                  top: 40,
+                  bottom: 30,
+                  right: 10,
+                  left: 10,
+                },
+              })
+            }, 1000)
           } catch (e) {
             Alert.alert(
               'Problema cargando el mapa',
@@ -72,54 +76,53 @@ const SalgoDeMap = ({
       showsMyLocationButton={false}
       region={region}
       userLocationAnnotationTitle="Mi ubicación"
-      onPress={onTapMap}
       zoomEnabled={allowInteraction}
       zoomControlEnabled={false}
       rotateEnabled={allowInteraction}
       scrollEnabled={allowInteraction}
       pitchEnabled={false}
       toolbarEnabled={false}
+      onMarkerPress={({ nativeEvent }) => {
+        const mkr = JSON.parse(nativeEvent.id)
+        if (mkr) {
+          const { coordinate } = nativeEvent
+          if (pressMarker) {
+            pressMarker(mkr)
+          }
+          setRegion({
+            latitudeDelta: 0.02,
+            longitudeDelta: 0.02,
+            latitude: coordinate.latitude,
+            longitude: coordinate.longitude,
+          })
+        }
+      }}
     >
-      {(markers && markers.length) ? (
-        <>
-          {markers.map(m => {
-            let color = 'red'
-            if (start && m.place_id === start.place_id) {
-              color = 'blue'
-            }
-            if (end && m.place_id === end.place_id) {
-              color = 'green'
-            }
-            return (
-              <Marker
-                key={`${m.place_id}-${color}`}
-                identifier={m.place_id}
-                coordinate={{
-                  latitude: parseFloat(m.lat),
-                  longitude: parseFloat(m.lon),
-                }}
-                title={showDescription ? m.place_name : undefined}
-                description={showDescription ? m.address : undefined}
-                onPress={({ nativeEvent }) => {
-                  const { coordinate } = nativeEvent
-                  if (pressMarker) {
-                    pressMarker(m)
-                  }
-                  setRegion({
-                    ...region,
-                    latitude: coordinate.latitude,
-                    longitude: coordinate.longitude
-                  })
-                }}
-                pinColor={color}
-              />
-            )
-          })}
-        </>
-      ) : <></>}
+      {markers.length !== 0 && markers.map(m => {
+        let color = 'red'
+        if (start && m.place_id === start.place_id) {
+          color = 'blue'
+        }
+        if (end && m.place_id === end.place_id) {
+          color = 'green'
+        }
+        return (
+          <Marker
+            key={`${m.place_id}-${color}`}
+            identifier={JSON.stringify(m)}
+            coordinate={{
+              latitude: parseFloat(m.lat),
+              longitude: parseFloat(m.lon),
+            }}
+            title={showDescription ? m.place_name : undefined}
+            description={showDescription ? m.address : undefined}
+            pinColor={color}
+          />
+        )
+      })}
       {showPath && (
         <>
-          {(path && path.length) ? (
+          {path && path.length ? (
             <Polyline
               coordinates={path.map(p => ({
                 latitude: parseFloat(p.lat),
@@ -129,10 +132,11 @@ const SalgoDeMap = ({
               strokeWidth={5}
               lineDashPattern={[10, 20]}
             />
-          ) : (multiPaths && multiPaths.length) ? (
+          ) : multiPaths && multiPaths.length ? (
             <>
-              {multiPaths.map(singlePath => (
+              {multiPaths.map((singlePath, id) => (
                 <Polyline
+                  key={id}
                   coordinates={singlePath.map(p => ({
                     latitude: parseFloat(p.lat),
                     longitude: parseFloat(p.lon),
@@ -143,14 +147,16 @@ const SalgoDeMap = ({
                 />
               ))}
             </>
-          ) : (<></>)}
+          ) : (
+            <></>
+          )}
         </>
       )}
     </MapView>
   )
 }
 
-Map.propTypes = {
+SalgoDeMap.propTypes = {
   showLocation: PropTypes.bool,
   initialRegion: PropTypes.object,
   markers: PropTypes.array,
@@ -158,15 +164,15 @@ Map.propTypes = {
   path: PropTypes.array,
   pressMarker: PropTypes.func,
   showDescription: PropTypes.bool,
-  onTapMap: PropTypes.func,
   start: PropTypes.object,
   end: PropTypes.object,
   allowInteraction: PropTypes.bool.isRequired,
   goToMarkers: PropTypes.bool.isRequired,
   multiPaths: PropTypes.array,
+  markersToFit: PropTypes.array.isRequired,
 }
 
-Map.defaultProps = {
+SalgoDeMap.defaultProps = {
   showLocation: false,
   initialRegion: {
     latitude: -33.437183,
@@ -179,7 +185,6 @@ Map.defaultProps = {
   path: [],
   pressMarker: undefined,
   showDescription: false,
-  onTapMap: undefined,
   start: undefined,
   end: undefined,
   multiPaths: [],
@@ -188,8 +193,8 @@ Map.defaultProps = {
 const styles = StyleSheet.create({
   mapStyle: {
     height: '100%',
-    width: '100%'
-  }
+    width: '100%',
+  },
 })
 
 export default SalgoDeMap

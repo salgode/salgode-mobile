@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Text, Alert } from 'react-native'
+import { StyleSheet, View, Text, Alert, Platform } from 'react-native'
 import { Appearance } from 'react-native-appearance'
 import { connect } from 'react-redux'
 import { Button, Spinner, Card, CardItem } from 'native-base'
-import { FontAwesome } from '@expo/vector-icons'
+import { FontAwesome, Ionicons } from '@expo/vector-icons'
 import {
   setStartStop,
   setEndStop,
@@ -34,6 +34,8 @@ class CreateTripScreen extends Component {
       isFormHidden: false,
       showActions: false,
     }
+    this.pressMarker = this.pressMarker.bind(this)
+    this.onTapMap = this.onTapMap.bind(this)
   }
 
   componentDidMount = () => {
@@ -73,7 +75,7 @@ class CreateTripScreen extends Component {
           'Debes planificar tu viaje con al menos 5 minutos de anticipación. Por favor inténtalo nuevamente'
         )
         this.props.setStartTime(undefined)
-        this.setState({ pickedDate: undefined })
+        this.setState({ ...this.state, pickedDate: undefined })
       }
     }
     this.hideDateTimePicker()
@@ -90,6 +92,7 @@ class CreateTripScreen extends Component {
 
   pressMarker = marker => {
     this.setState({
+      ...this.state,
       isFormHidden: true,
       showActions: true,
       poi: marker,
@@ -103,18 +106,10 @@ class CreateTripScreen extends Component {
   resolvePoint = () => {
     const { startStop, endStop } = this.props
     const { poi } = this.state
-    if (
-      poi &&
-      startStop &&
-      poi.id === startStop.id
-    ) {
+    if (poi && startStop && poi.id === startStop.id) {
       return 'start'
     }
-    if (
-      poi &&
-      endStop &&
-      poi.id === endStop.id
-    ) {
+    if (poi && endStop && poi.id === endStop.id) {
       return 'end'
     }
     return false
@@ -158,9 +153,10 @@ class CreateTripScreen extends Component {
     const isConfirmedDriver = this.isVerifiedDriver()
 
     const resultResolvePoint = this.resolvePoint()
-    const path = (endStop && endStop.id && startStop && endStop.id)
-      ? [startStop, endStop]
-      : []
+    const path =
+      endStop && endStop.id && startStop && endStop.id
+        ? [startStop, endStop]
+        : []
 
     if (isConfirmedDriver) {
       return (
@@ -201,11 +197,24 @@ class CreateTripScreen extends Component {
                     editable={false}
                     onClearPress={clearEndStop}
                   />
-                ) : <></>}
+                ) : (
+                  <></>
+                )}
               </View>
 
               <View style={styles.group}>
-                <Button style={styles.dateButton} onPress={this.showDateTimePicker}>
+                <Text
+                  style={styles.supportText}
+                  onPress={() => {
+                    this.props.navigation.navigate('Support')
+                  }}
+                >
+                  ¿No encuentras el punto que deseas? Sugiérelo acá
+                </Text>
+                <Button
+                  style={styles.dateButton}
+                  onPress={this.showDateTimePicker}
+                >
                   <Text>
                     {pickedDate
                       ? `${day} - ${hours}:${minutes < 10 ? '0' : ''}${minutes}`
@@ -239,7 +248,6 @@ class CreateTripScreen extends Component {
                 showLocation
                 markers={spots}
                 pressMarker={this.pressMarker}
-                onTapMap={this.onTapMap}
                 start={startStop}
                 end={endStop}
                 showPath
@@ -250,9 +258,11 @@ class CreateTripScreen extends Component {
               <Button
                 block
                 style={styles.showMoreButton}
-                onPress={() => this.setState({
-                  isFormHidden: !this.state.isFormHidden
-                })}
+                onPress={() =>
+                  this.setState({
+                    isFormHidden: !this.state.isFormHidden,
+                  })
+                }
               >
                 {this.state.isFormHidden ? (
                   <View style={styles.hideButtonContent}>
@@ -278,10 +288,18 @@ class CreateTripScreen extends Component {
           {this.state.showActions && (
             <Card style={styles.actions}>
               <CardItem header>
-                <Text>¿Qué deseas hacer?</Text>
+                <Text>¿Como quieres usar este punto?</Text>
+                <Ionicons
+                  style={{ marginLeft: 15 }}
+                  name={Platform.OS === 'ios' ? 'ios-close' : 'md-close'}
+                  size={30}
+                  onPress={this.onTapMap}
+                />
               </CardItem>
               <CardItem style={styles.info}>
-                <Text style={{ fontWeight: 'bold' }}>{this.state.poi.place_name}</Text>
+                <Text style={{ fontWeight: 'bold' }}>
+                  {this.state.poi.place_name}
+                </Text>
                 <Text>{this.state.poi.address}</Text>
               </CardItem>
               <CardItem style={styles.actionButtons}>
@@ -297,11 +315,7 @@ class CreateTripScreen extends Component {
                       }}
                       color={'#0000FF'}
                     >
-                      <Text
-                        style={styles.actionButtonText}
-                      >
-                        Inicio
-                      </Text>
+                      <Text style={styles.actionButtonText}>Como Inicio</Text>
                     </Button>
                     <Button
                       block
@@ -315,11 +329,7 @@ class CreateTripScreen extends Component {
                       disabled={!(startStop && startStop.id)}
                       color={'#0000FF'}
                     >
-                      <Text
-                        style={styles.actionButtonText}
-                      >
-                        Destino
-                      </Text>
+                      <Text style={styles.actionButtonText}>Como Destino</Text>
                     </Button>
                   </>
                 ) : (
@@ -338,11 +348,7 @@ class CreateTripScreen extends Component {
                     }}
                     color={'#0000FF'}
                   >
-                    <Text
-                      style={styles.actionButtonText}
-                    >
-                      Quitar
-                    </Text>
+                    <Text style={styles.actionButtonText}>Quitar</Text>
                   </Button>
                 )}
               </CardItem>
@@ -383,27 +389,27 @@ CreateTripScreen.propTypes = {
 }
 
 const styles = StyleSheet.create({
-  actions: {
-    backgroundColor: 'white',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: '3%',
-  },
   actionButton: {
     flex: 1,
     marginHorizontal: 10,
   },
+  actionButtonText: {
+    color: 'white',
+    fontSize: 14,
+  },
   actionButtons: {
+    alignItems: 'center',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
   },
-  actionButtonText: {
-    fontSize: 14,
-    color: 'white',
+  actions: {
+    alignItems: 'center',
+    backgroundColor: 'white',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    paddingHorizontal: '3%',
   },
   addButton: {
     backgroundColor: Colors.mainBlue,
@@ -421,7 +427,7 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: Colors.lightBackground,
-    flex: 1
+    flex: 1,
   },
   dateButton: {
     backgroundColor: 'white',
@@ -431,38 +437,45 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   formContainer: {
-    width: Layout.window.width,
     backgroundColor: 'white',
+    width: Layout.window.width,
   },
   group: {
     margin: 10,
   },
   hideButtonContent: {
+    alignItems: 'center',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
   },
   info: {
+    alignItems: 'flex-start',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'flex-start',
   },
   mapContainer: {
     backgroundColor: '#fff',
+    height: '100%',
     position: 'absolute',
     width: '100%',
-    height: '100%'
   },
   mapView: {
     flex: 1,
     position: 'relative',
-    width: Layout.window.width
+    width: Layout.window.width,
   },
   showMoreButton: {
     backgroundColor: 'white',
-    borderBottomRightRadius: 30,
     borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+  },
+  supportText: {
+    color: 'blue',
+    fontSize: 12,
+    margin: 0,
+    padding: 0,
+    textAlign: 'center',
   },
   viewContainer: {
     alignItems: 'center',

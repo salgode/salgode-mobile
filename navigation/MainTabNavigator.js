@@ -24,6 +24,7 @@ import PrivacyScreen from '../screens/Webviews/PrivacyScreen'
 import TwitterScreen from '../screens/Webviews/TwitterScreen'
 import InstagramScreen from '../screens/Webviews/InstagramScreen'
 import LandingScreen from '../screens/Webviews/LandingScreen'
+import SupportScreen from '../screens/Webviews/SupportScreen'
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -100,6 +101,7 @@ const CreateTripStack = createStackNavigator(
     CreateTripScreen,
     AddStopsScreen,
     SpotSelectorScreen,
+    Support: SupportScreen,
   },
   config
 )

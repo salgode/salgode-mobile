@@ -24,7 +24,7 @@ class AddStopsScreen extends Component {
     this.state = {
       stops: [],
       loading: false,
-      isFormHidden: false,
+      isFormHidden: true,
       showActions: false,
     }
   }
@@ -123,21 +123,21 @@ class AddStopsScreen extends Component {
               <SalgoDeMap
                 markers={this.props.spots}
                 showPath
-                path={[
-                  startStop,
-                  ...stops,
-                  endStop,
-                ]}
+                path={[startStop, ...stops, endStop]}
                 start={startStop}
                 end={endStop}
                 pressMarker={this.pressMarker}
                 onTapMap={this.onTapMap}
+                goToMarkers={true}
+                markersToFit={[startStop, endStop]}
               />
             </View>
             {showActions && (
               <Card style={styles.actions}>
                 <CardItem style={styles.info}>
-                  <Text style={{ fontWeight: 'bold' }}>{this.state.poi.name}</Text>
+                  <Text style={{ fontWeight: 'bold' }}>
+                    {this.state.poi.name}
+                  </Text>
                   <Text>{this.state.poi.address}</Text>
                 </CardItem>
                 <CardItem style={styles.actionButtons}>
@@ -148,17 +148,15 @@ class AddStopsScreen extends Component {
                       borderRadius={10}
                       onPress={() => {
                         this.cleanInput(
-                          this.state.stops.findIndex(sp => sp.id === this.state.poi.id)
+                          this.state.stops.findIndex(
+                            sp => sp.id === this.state.poi.id
+                          )
                         )
                         this.onTapMap()
                       }}
                       color={'#0000FF'}
                     >
-                      <Text
-                        style={styles.actionButtonText}
-                      >
-                        Quitar parada
-                      </Text>
+                      <Text style={styles.actionButtonText}>Quitar parada</Text>
                     </Button>
                   ) : (
                     <>
@@ -173,15 +171,13 @@ class AddStopsScreen extends Component {
                           borderRadius={10}
                           onPress={() => {
                             this.setState({
-                              stops: this.state.stops.concat(this.state.poi)
+                              stops: this.state.stops.concat(this.state.poi),
                             })
                             this.onTapMap()
                           }}
                           color={'#0000FF'}
                         >
-                          <Text
-                            style={styles.actionButtonText}
-                          >
+                          <Text style={styles.actionButtonText}>
                             Agregar parada
                           </Text>
                         </Button>
@@ -236,10 +232,12 @@ class AddStopsScreen extends Component {
         <Button
           block
           style={styles.showMoreButton}
-          onPress={() => this.setState({
-            isFormHidden: !this.state.isFormHidden,
-            showActions: false,
-          })}
+          onPress={() =>
+            this.setState({
+              isFormHidden: !this.state.isFormHidden,
+              showActions: false,
+            })
+          }
         >
           {this.state.isFormHidden ? (
             <View style={styles.hideButtonContent}>
@@ -271,27 +269,27 @@ AddStopsScreen.navigationOptions = {
 }
 
 const styles = StyleSheet.create({
-  actions: {
-    backgroundColor: 'white',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: '3%',
-  },
   actionButton: {
     flex: 1,
     marginHorizontal: 10,
   },
-  actionButtons: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   actionButtonText: {
-    fontSize: 14,
-    color: 'white',
+    color: "white",
+    fontSize: 14
+  },
+  actionButtons: {
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center"
+  },
+  actions: {
+    alignItems: "center",
+    backgroundColor: "white",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: 'center',
+    paddingHorizontal: '3%',
   },
   addButton: {
     backgroundColor: Colors.mainBlue,
@@ -318,21 +316,26 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   hideButtonContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center"
   },
   info: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
+    display: "flex",
+    flexDirection: "column"
   },
   mapContainer: {
     backgroundColor: '#fff',
-    position: 'absolute',
-    width: '100%',
-    height: '100%'
+    height: "100%",
+    position: "absolute",
+    width: "100%"
+  },
+  showMoreButton: {
+    backgroundColor: 'white',
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
   },
   stopContainer: {
     borderRadius: 4,
@@ -369,7 +372,8 @@ const mapStateToProps = ({ user, createTrip, spots }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  dispatchCreateTrip: (rp, st, vid, token) => dispatch(createTrip(rp, st, vid, token)),
+  dispatchCreateTrip: (rp, st, vid, token) =>
+    dispatch(createTrip(rp, st, vid, token)),
 })
 
 AddStopsScreen.navigationOptions = {

@@ -153,7 +153,7 @@ const SalgoDeMap = ({
   )
 }
 
-Map.propTypes = {
+SalgoDeMap.propTypes = {
   showLocation: PropTypes.bool,
   initialRegion: PropTypes.object,
   markers: PropTypes.array,
@@ -168,7 +168,7 @@ Map.propTypes = {
   multiPaths: PropTypes.array,
 }
 
-Map.defaultProps = {
+SalgoDeMap.defaultProps = {
   showLocation: false,
   initialRegion: {
     latitude: -33.437183,

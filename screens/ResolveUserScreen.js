@@ -30,11 +30,12 @@ class ResolveUserScreen extends Component {
             },
           ]
         )
+      } else {
+        this.props.navigation.navigate('ResolveCurrentTripScreen')
+        return
       }
-      this.props.navigation.navigate('ResolveCurrentTripScreen')
-    } else {
-      this.props.navigation.navigate('Login')
     }
+    this.props.navigation.navigate('Login')
   }
 
   componentDidMount() {

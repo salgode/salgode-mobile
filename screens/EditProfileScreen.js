@@ -1174,8 +1174,8 @@ const mapDispatchToProps = dispatch => ({
   updateUser: (authToken, data, ed) =>
     dispatch(updateUser(authToken, data, ed)),
   uploadImage: (name, type) => dispatch(getImageUrl(name, type)),
-  signOut: (pushNotificationToken, installationId) =>
-    dispatch(signoutUser(pushNotificationToken, installationId)),
+  signOut: (token, pushNotificationToken, installationId) =>
+    dispatch(signoutUser(token, pushNotificationToken, installationId)),
   getUserCar: (token, carId) => dispatch(getUserCar(token, carId)),
   createVehicle: (token, data) => dispatch(createVehicle(token, data)),
   loadUser: token => dispatch(getOwnProfile(token)),
@@ -1304,6 +1304,7 @@ const _SignOutC = props => (
           text: 'Si',
           onPress: async () => {
             const userId = await AsyncStorage.getItem('@userId')
+            const userToken = await AsyncStorage.getItem('@userToken')
             AsyncStorage.removeItem('@userToken')
             AsyncStorage.removeItem('@userId')
             analytics.newEvent(
@@ -1313,9 +1314,13 @@ const _SignOutC = props => (
             )
             const pushNotificationToken = await registerForPushNotifications()
             // eslint-disable-next-line react/prop-types
-            props.signOut(pushNotificationToken, Constants.installationId)
-            // eslint-disable-next-line react/prop-types
             props.navigation.navigate('Login')
+            // eslint-disable-next-line react/prop-types
+            props.signOut(
+              JSON.parse(userToken),
+              pushNotificationToken,
+              Constants.installationId
+            )
           },
         },
         { text: 'No', style: 'cancel' },

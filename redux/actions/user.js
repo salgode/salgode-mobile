@@ -162,14 +162,14 @@ export function updateUser(authToken, data, extraData) {
   }
 }
 
-export function signoutUser(notificationToken = null, deviceId = null) {
+export function signoutUser(token, notificationToken = null, deviceId = null) {
   return {
     type: actions.USER_SIGNOUT,
     payload: {
       request: {
         url: urls.session.post.signout(),
         method: 'post',
-        headers: getDefaultHeaders(),
+        headers: getBaseHeaders(token),
         data: {
           expo_push_token: notificationToken,
           device_id: deviceId,

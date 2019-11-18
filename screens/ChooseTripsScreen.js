@@ -220,7 +220,8 @@ class ChooseTripsScreen extends Component {
                 </CardItem>
                 <CardItem footer>
                   <Text style={styles.warning}>
-                    Si el punto es el final del viaje, no aparecerá en el buscador
+                    Si el punto es el final del viaje, no aparecerá en el
+                    buscador
                   </Text>
                 </CardItem>
               </Card>
@@ -266,7 +267,7 @@ class ChooseTripsScreen extends Component {
                       onPress={() => this.props.navigation.navigate('SpotsMap')}
                       style={{ alignSelf: 'center' }}
                     >
-                      <Text style={{ textAlign: 'center' }}>
+                      <Text style={{ textAlign: 'center', flexWrap: 'wrap' }}>
                         ¿No sabes dónde buscar? Puedes ver el mapa haciendo
                         click en el menú de arriba
                       </Text>
@@ -338,53 +339,53 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   headerButton: {
-    flex: 1
+    flex: 1,
   },
   headerSelect: {
-    alignItems: "center",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    marginBottom: 10
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 10,
   },
   headerText: {
-    color: "white"
+    color: 'white',
   },
   headerText: {
-    color: "white"
+    color: 'white',
   },
   info: {
-    alignItems: "flex-start",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start"
+    alignItems: 'flex-start',
+    alignItems: 'flex-start',
+    display: 'flex',
+    flexDirection: 'column',
   },
   loadingView: {
-    display: "flex",
+    alignItems: 'center',
+    backgroundColor: '#f4f7fc',
+    display: 'flex',
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "column",
-    position: "absolute",
-    height: "100%",
-    width: "100%",
-    backgroundColor: "#f4f7fc",
-    opacity: 0.7
+    flexDirection: 'column',
+    height: '100%',
+    justifyContent: 'center',
+    opacity: 0.7,
+    position: 'absolute',
+    width: '100%',
   },
   mapButton: {
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   mapButtonContainer: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 10
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 10,
   },
   mapContainer: {
-    position: "absolute",
-    height: "100%",
-    width: "100%"
+    height: '100%',
+    position: 'absolute',
+    width: '100%',
   },
   warning: {
     fontSize: 10,

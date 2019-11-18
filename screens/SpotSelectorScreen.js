@@ -91,8 +91,8 @@ class SpotSelectorScreen extends Component {
 
 SpotSelectorScreen.navigationOptions = ({ navigation }) => ({
   title:
-    typeof navigation.state.params === 'undefined' ||
-    typeof navigation.state.params.title === 'undefined'
+    typeof navigation.state.params === undefined ||
+    typeof navigation.state.params.title === undefined
       ? 'Selecciona un destino'
       : navigation.state.params.title,
 

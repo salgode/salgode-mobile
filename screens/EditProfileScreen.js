@@ -1174,7 +1174,8 @@ const mapDispatchToProps = dispatch => ({
   updateUser: (authToken, data, ed) =>
     dispatch(updateUser(authToken, data, ed)),
   uploadImage: (name, type) => dispatch(getImageUrl(name, type)),
-  signOut: () => dispatch(signoutUser()),
+  signOut: (pushNotificationToken, installationId) =>
+    dispatch(signoutUser(pushNotificationToken, installationId)),
   getUserCar: (token, carId) => dispatch(getUserCar(token, carId)),
   createVehicle: (token, data) => dispatch(createVehicle(token, data)),
   loadUser: token => dispatch(getOwnProfile(token)),

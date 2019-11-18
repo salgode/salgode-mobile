@@ -4,6 +4,8 @@ import { Spinner } from 'native-base'
 import { connect } from 'react-redux'
 import { getOwnProfile } from '../redux/actions/user'
 import PropTypes from 'prop-types'
+import { Notifications } from 'expo'
+import { handleNotification } from '../utils/notifications'
 
 class ResolveUserScreen extends Component {
   constructor(props) {
@@ -31,6 +33,7 @@ class ResolveUserScreen extends Component {
           ]
         )
       } else {
+        Notifications.addListener(handleNotification)
         this.props.navigation.navigate('ResolveCurrentTripScreen')
         return
       }

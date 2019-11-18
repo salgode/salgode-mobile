@@ -1,5 +1,8 @@
 import * as Permissions from 'expo-permissions'
 import { Notifications } from 'expo'
+import { AsyncStorage } from 'react-native'
+import { getOwnProfile } from '../redux/actions/user'
+import { dispatch } from 'react-redux'
 
 export const registerForPushNotifications = async () => {
   const { status: existingStatus } = await Permissions.getAsync(
@@ -22,4 +25,18 @@ export const registerForPushNotifications = async () => {
   }
 
   return Notifications.getExpoPushTokenAsync()
+}
+
+export const handleNotification = async (notification, navigation) => {
+  console.log(notification)
+  const userToken = await AsyncStorage.getItem('@userToken').then(JSON.parse)
+  const userId = await AsyncStorage.getItem('@userId').then(JSON.parse)
+  if (!userToken || !userId) return
+  if (notification.origin === 'selected') {
+    // TODO: Re autentificar
+    const response = await dispatch(getOwnProfile(userToken))
+    // TODO: Si no fue autentificado, terminar
+    if (!response || response.error) return
+    // TODO: Navegar
+  }
 }

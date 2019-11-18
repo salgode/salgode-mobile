@@ -58,7 +58,6 @@ import { uploadImageToS3 } from '../utils/image'
 import * as ImagePicker from 'expo-image-picker'
 import { analytics, ANALYTICS_CATEGORIES } from '../utils/analytics'
 import Divider from '../components/Divider'
-import { registerForPushNotifications } from '../utils/notifications'
 
 function validateName(str) {
   if (typeof str !== 'string') {

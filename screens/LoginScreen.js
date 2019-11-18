@@ -6,10 +6,10 @@ import {
   Dimensions,
   Animated,
   Keyboard,
-  AsyncStorage,
   Alert,
   ScrollView,
 } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 

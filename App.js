@@ -19,7 +19,7 @@ if (Platform.OS === 'android') {
 
 Sentry.init({
   dsn: 'https://3b65a5c913f649f8a31690cd68f82ebb@sentry.io/1811743',
-  enableInExpoDevelopment: true,
+  enableInExpoDevelopment: false,
   debug: true,
 })
 Sentry.setRelease(Constants.manifest.revisionId)

@@ -24,8 +24,8 @@ class ResolveAuthScreen extends Component {
     if (
       !userToken ||
       !userId ||
-      userToken === 'undefined' ||
-      userId === 'undefined'
+      userToken === undefined ||
+      userId === undefined
     ) {
       this.props.navigation.navigate('Login')
     } else {

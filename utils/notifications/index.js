@@ -2,9 +2,14 @@ import * as Permissions from 'expo-permissions'
 import { Notifications } from 'expo'
 import Constants from 'expo-constants'
 import { AsyncStorage } from 'react-native'
-import { getOwnProfile } from '../redux/actions/user'
-import { dispatch } from 'react-redux'
-import userModel from '../redux/models/user'
+import { getOwnProfile } from '../../redux/actions/user'
+import userModel from '../../redux/models/user'
+import { store } from '../../redux/store'
+import {
+  declineReservation,
+  requestTrip,
+  acceptReservation,
+} from './notificationActions'
 
 export const registerForPushNotifications = async () => {
   const { status: existingStatus } = await Permissions.getAsync(
@@ -31,37 +36,29 @@ export const registerForPushNotifications = async () => {
   }
 }
 
-const dispatchNavigation = (navigation, notificationData) => {
+const dispatchNavigation = async (navigation, notificationData, userToken) => {
   const { action, resource, resource_id } = notificationData
-  if (action === 'decline' && resource === 'trip') {
-    navigation.navigate('Pedidos')
+  if (action === 'decline' && resource === 'reservation') {
+    declineReservation(navigation)
   } else if (action === 'request' && resource === 'trip' && resource_id) {
-    navigation.navigate('DetailedTrip', {
-      asDriver: true,
-      trip_id: resource_id,
-    })
-  } else if (action === 'accept' && resource === 'trip' && resource_id) {
-    // TODO
-    navigation.navigate('ReservationDetails', {
-      userData: null,
-      vehicle: null, // TODO: Ver como llegan a RequestedTrip.js
-    })
+    requestTrip(navigation, resource_id)
+  } else if (action === 'accept' && resource === 'reservation' && resource_id) {
+    acceptReservation(navigation, resource_id, userToken)
   }
 }
 
 export const handleNotification = navigation => {
   return async notification => {
-    console.log(notification)
+    // console.log(notification)
     const userToken = await AsyncStorage.getItem('@userToken').then(JSON.parse)
     const userId = await AsyncStorage.getItem('@userId').then(JSON.parse)
     if (!userToken || !userId) return
     if (notification.origin === 'selected') {
       if (!userModel.email) {
-        const response = await dispatch(getOwnProfile(userToken))
+        const response = await store.dispatch(getOwnProfile(userToken))
         if (!response || response.error) return
       }
-      // TODO: Navegar
-      dispatchNavigation(navigation, notification.data)
+      dispatchNavigation(navigation, notification.data, userToken)
     }
   }
 }

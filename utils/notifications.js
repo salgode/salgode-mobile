@@ -27,16 +27,24 @@ export const registerForPushNotifications = async () => {
   return Notifications.getExpoPushTokenAsync()
 }
 
-export const handleNotification = async (notification, navigation) => {
-  console.log(notification)
-  const userToken = await AsyncStorage.getItem('@userToken').then(JSON.parse)
-  const userId = await AsyncStorage.getItem('@userId').then(JSON.parse)
-  if (!userToken || !userId) return
-  if (notification.origin === 'selected') {
-    // TODO: Re autentificar
-    const response = await dispatch(getOwnProfile(userToken))
-    // TODO: Si no fue autentificado, terminar
-    if (!response || response.error) return
-    // TODO: Navegar
+const dispatchNavigation = (navigation, notificationData) => {
+  const { action, resource } = notificationData
+  if (action === 'decline' && resource === 'trip') {
+    navigation.navigate('Pedidos')
+  }
+}
+
+export const handleNotification = navigation => {
+  return async notification => {
+    console.log(notification)
+    const userToken = await AsyncStorage.getItem('@userToken').then(JSON.parse)
+    const userId = await AsyncStorage.getItem('@userId').then(JSON.parse)
+    if (!userToken || !userId) return
+    if (notification.origin === 'selected' && notification.data.length) {
+      const response = await dispatch(getOwnProfile(userToken))
+      if (!response || response.error) return
+      // TODO: Navegar
+      dispatchNavigation(navigation, notification.data)
+    }
   }
 }

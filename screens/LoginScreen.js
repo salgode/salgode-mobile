@@ -94,7 +94,7 @@ class LoginScreen extends Component {
         'Las credenciales ingresadas son incorrectas'
       )
     } else {
-      Notifications.addListener(handleNotification)
+      Notifications.addListener(handleNotification(this.props.navigation))
       const { data } = user.payload
       if (data.verifications.email) {
         AsyncStorage.setItem('@userToken', String(JSON.stringify(data.token)))

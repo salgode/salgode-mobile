@@ -33,7 +33,7 @@ class ResolveUserScreen extends Component {
           ]
         )
       } else {
-        Notifications.addListener(handleNotification)
+        Notifications.addListener(handleNotification(this.props.navigation))
         this.props.navigation.navigate('ResolveCurrentTripScreen')
         return
       }

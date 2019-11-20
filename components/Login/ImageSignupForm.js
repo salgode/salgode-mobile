@@ -11,9 +11,9 @@ import * as Permissions from 'expo-permissions'
 import { analytics, ANALYTICS_CATEGORIES } from '../../utils/analytics'
 
 const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
-  const [selfie, setSelfie] = React.useState(null)
-  const [frontId, setFrontId] = React.useState(null)
-  const [backId, setBackId] = React.useState(null)
+  const [selfie, setSelfie] = React.useState('')
+  const [frontId, setFrontId] = React.useState('')
+  const [backId, setBackId] = React.useState('')
   const [userData, setUserData] = React.useState(null)
   const [loading, setLoading] = React.useState(false)
 

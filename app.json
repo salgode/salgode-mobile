@@ -39,7 +39,7 @@
       },
       "package": "cl.salgode.salgode",
       "versionCode": 9,
-      "permissions": ["CAMERA_ROLL", "CAMERA", "LOCATION"],
+      "permissions": ["CAMERA_ROLL", "CAMERA", "ACCESS_FINE_LOCATION"],
       "playStoreUrl": "https://play.google.com/store/apps/details?id=cl.salgode.salgode"
     },
     "description": "",

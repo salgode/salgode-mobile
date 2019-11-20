@@ -4,8 +4,8 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Alert,
+  AsyncStorage,
 } from 'react-native'
-import AsyncStorage from '@react-native-community/async-storage'
 import { connect } from 'react-redux'
 import { View } from 'native-base'
 import PropTypes from 'prop-types'

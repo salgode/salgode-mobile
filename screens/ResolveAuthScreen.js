@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import { SafeAreaView, StyleSheet } from 'react-native'
-import AsyncStorage from '@react-native-community/async-storage'
+import { SafeAreaView, StyleSheet, AsyncStorage } from 'react-native'
 import { Spinner } from 'native-base'
 import { connect } from 'react-redux'
 import { getOwnProfile, setToken } from '../redux/actions/user'

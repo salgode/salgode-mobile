@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, View } from 'native-base'
 import * as Sentry from 'sentry-expo'
-import AsyncStorage from '@react-native-community/async-storage'
+import { AsyncStorage } from 'react-native'
 
 class ErrorBoundary extends React.Component {
   constructor(props) {

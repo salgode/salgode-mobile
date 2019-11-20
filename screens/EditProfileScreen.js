@@ -11,8 +11,9 @@ import {
   TouchableOpacity,
   Platform,
   Modal,
+  AsyncStorage,
 } from 'react-native'
-import AsyncStorage from '@react-native-community/async-storage'
+
 import {
   Button,
   Form,

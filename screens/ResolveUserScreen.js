@@ -1,14 +1,9 @@
 import React, { Component } from 'react'
-<<<<<<< e1b3fbfc3f34d5cb93a05b31da80be3e62530b42
 import { SafeAreaView, StyleSheet, Alert, AsyncStorage } from 'react-native'
-=======
-import { SafeAreaView, StyleSheet, Alert } from 'react-native'
->>>>>>> fix: async storage imports
 import { Spinner } from 'native-base'
 import { connect } from 'react-redux'
 import { getOwnProfile } from '../redux/actions/user'
 import PropTypes from 'prop-types'
-import AsyncStorage from '@react-native-community/async-storage'
 
 class ResolveUserScreen extends Component {
   constructor(props) {

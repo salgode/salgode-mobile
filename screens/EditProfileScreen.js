@@ -10,9 +10,10 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Platform,
-  AsyncStorage,
   Modal,
+  AsyncStorage,
 } from 'react-native'
+
 import {
   Button,
   Form,
@@ -1016,7 +1017,9 @@ const EditProfileScreen = props => {
               )}
               <View>
                 <Text style={{ marginHorizontal: 10, fontSize: 12 }}>
-                  Las fotos de tu identificación son totalmente privadas y de uso exclusivo para verificar tu identidad como usuario dentro de la aplicación
+                  Las fotos de tu identificación son totalmente privadas y de
+                  uso exclusivo para verificar tu identidad como usuario dentro
+                  de la aplicación
                 </Text>
               </View>
               <Button
@@ -1081,7 +1084,9 @@ const EditProfileScreen = props => {
                   )}
                   <View>
                     <Text style={{ marginHorizontal: 10, fontSize: 12 }}>
-                      Las fotos de tu licencia son totalmente privadas y de uso exclusivo para verificar tu identidad como usuario conductor dentro de la aplicación
+                      Las fotos de tu licencia son totalmente privadas y de uso
+                      exclusivo para verificar tu identidad como usuario
+                      conductor dentro de la aplicación
                     </Text>
                   </View>
                   <Button

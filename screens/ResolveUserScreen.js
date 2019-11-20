@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { SafeAreaView, StyleSheet, AsyncStorage, Alert } from 'react-native'
+import { SafeAreaView, StyleSheet, Alert, AsyncStorage } from 'react-native'
 import { Spinner } from 'native-base'
 import { connect } from 'react-redux'
-import { getOwnProfile, setToken } from '../redux/actions/user'
+import { getOwnProfile } from '../redux/actions/user'
 import PropTypes from 'prop-types'
 
 class ResolveUserScreen extends Component {

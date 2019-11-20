@@ -6,9 +6,9 @@ import {
   Dimensions,
   Animated,
   Keyboard,
-  AsyncStorage,
   Alert,
   ScrollView,
+  AsyncStorage,
 } from 'react-native'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'

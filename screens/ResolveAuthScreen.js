@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { SafeAreaView, StyleSheet, AsyncStorage, Alert } from 'react-native'
+import { SafeAreaView, StyleSheet, AsyncStorage } from 'react-native'
 import { Spinner } from 'native-base'
 import { connect } from 'react-redux'
 import { getOwnProfile, setToken } from '../redux/actions/user'
@@ -18,13 +18,13 @@ class ResolveAuthScreen extends Component {
 
   async loginHandler() {
     let userToken = await AsyncStorage.getItem('@userToken')
-    let userId = await AsyncStorage.getItem('@userId')
+    const userId = await AsyncStorage.getItem('@userId')
 
     if (
       !userToken ||
       !userId ||
-      userToken === 'undefined' ||
-      userId === 'undefined'
+      userToken === undefined ||
+      userId === undefined
     ) {
       this.props.navigation.navigate('Login')
     } else {

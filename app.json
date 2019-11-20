@@ -34,7 +34,7 @@
     "android": {
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyDV9yJbynZoZkpw25XEDLC0Y0IUsaCN-C8"
+          "apiKey": "AIzaSyAat5ZwVNMN-m3Mgj8boi-8WvbLOqI4Gkk"
         }
       },
       "package": "cl.salgode.salgode",

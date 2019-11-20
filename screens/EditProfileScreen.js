@@ -507,7 +507,7 @@ const EditProfileScreen = props => {
     if (!result.cancelled) {
       const { uri } = result
       const { uploadImage } = props
-      if (uri) {
+      if (uri && typeof uri === 'string') {
         setAvatar(result.uri)
 
         // TODO: refactor -> upload function & duplicate code on ImageSignupForm

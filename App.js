@@ -19,10 +19,13 @@ if (Platform.OS === 'android') {
 
 Sentry.init({
   dsn: 'https://3b65a5c913f649f8a31690cd68f82ebb@sentry.io/1811743',
-  enableInExpoDevelopment: false,
+  enableInExpoDevelopment: true,
   debug: true,
+  environment: __DEV__ ? 'development' : 'production',
 })
+
 Sentry.setRelease(Constants.manifest.revisionId)
+
 export default function App({ skipLoadingScreen }) {
   const [isLoadingComplete, setLoadingComplete] = useState(false)
   if (!isLoadingComplete && !skipLoadingScreen) {

@@ -49,10 +49,11 @@ class DetailedTripScreen extends Component {
     const asDriver = this.props.navigation.getParam('asDriver', null)
     const trip_id = this.props.navigation.getParam('trip_id', null)
     await this.props.fetchTrip(this.props.user.token, trip_id)
-    this.setState({ ...this.state, asDriver, tripId: trip_id, loading: false })
+    this.setState({ ...this.state, asDriver, tripId: trip_id })
     if (asDriver) {
-      this.getDataAsDriver(trip_id)
+      await this.getDataAsDriver(trip_id)
     }
+    this.setState({ loading: false })
   }
 
   async onReload() {

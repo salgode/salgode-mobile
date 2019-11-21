@@ -23,7 +23,7 @@ class ResolveCurrentTripScreen extends Component {
     )
 
     this.props.fetchCurrentTrip(userToken).then(async response => {
-      if (response.payload) {
+      if (response.payload && Object.keys(response.payload.data).length) {
         if (response.payload.data.is_driver === false) {
           return this.props.navigation.navigate('Main')
         }

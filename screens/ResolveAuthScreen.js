@@ -4,6 +4,8 @@ import { Spinner } from 'native-base'
 import { connect } from 'react-redux'
 import { getOwnProfile, setToken } from '../redux/actions/user'
 import PropTypes from 'prop-types'
+import { Notifications } from 'expo'
+import { handleNotification } from '../utils/notifications'
 
 class ResolveAuthScreen extends Component {
   constructor(props) {
@@ -30,6 +32,7 @@ class ResolveAuthScreen extends Component {
     } else {
       userToken = JSON.parse(userToken)
       await this.props.storeToken(userToken)
+      Notifications.addListener(handleNotification(this.props.navigation))
       this.props.navigation.navigate('ResolveUserScreen')
     }
   }

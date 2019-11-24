@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "841670835597",
+    "firebase_url": "https://salgode-843f3.firebaseio.com",
+    "project_id": "salgode-843f3",
+    "storage_bucket": "salgode-843f3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:841670835597:android:3df0f235cdc5a8123951c4",
+        "android_client_info": {
+          "package_name": "cl.salgode.salgode"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "841670835597-e397nfp98b99qc5ipcjmbul9oe5c5rmo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTOL5rqCFClC0-kbB9sPM_qEdl5yCftZM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "841670835597-e397nfp98b99qc5ipcjmbul9oe5c5rmo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

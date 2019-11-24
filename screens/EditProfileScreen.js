@@ -58,6 +58,7 @@ import { uploadImageToS3 } from '../utils/image'
 import * as ImagePicker from 'expo-image-picker'
 import { analytics, ANALYTICS_CATEGORIES } from '../utils/analytics'
 import Divider from '../components/Divider'
+import { registerForPushNotifications } from '../utils/notifications'
 
 function validateName(str) {
   if (typeof str !== 'string') {
@@ -1173,7 +1174,8 @@ const mapDispatchToProps = dispatch => ({
   updateUser: (authToken, data, ed) =>
     dispatch(updateUser(authToken, data, ed)),
   uploadImage: (name, type) => dispatch(getImageUrl(name, type)),
-  signOut: () => dispatch(signoutUser()),
+  signOut: (token, pushNotificationToken, installationId) =>
+    dispatch(signoutUser(token, pushNotificationToken, installationId)),
   getUserCar: (token, carId) => dispatch(getUserCar(token, carId)),
   createVehicle: (token, data) => dispatch(createVehicle(token, data)),
   loadUser: token => dispatch(getOwnProfile(token)),
@@ -1302,6 +1304,7 @@ const _SignOutC = props => (
           text: 'Si',
           onPress: async () => {
             const userId = await AsyncStorage.getItem('@userId')
+            const userToken = await AsyncStorage.getItem('@userToken')
             AsyncStorage.removeItem('@userToken')
             AsyncStorage.removeItem('@userId')
             analytics.newEvent(
@@ -1309,10 +1312,15 @@ const _SignOutC = props => (
               ANALYTICS_CATEGORIES.LogIn.actions.LogOut,
               userId
             )
+            const pushNotificationToken = await registerForPushNotifications()
             // eslint-disable-next-line react/prop-types
             props.navigation.navigate('Login')
             // eslint-disable-next-line react/prop-types
-            props.signOut()
+            props.signOut(
+              JSON.parse(userToken),
+              pushNotificationToken,
+              Constants.installationId
+            )
           },
         },
         { text: 'No', style: 'cancel' },

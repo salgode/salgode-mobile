@@ -48,12 +48,15 @@ class DetailedTripScreen extends Component {
     this.setState({ loading: true })
     const asDriver = this.props.navigation.getParam('asDriver', null)
     const trip_id = this.props.navigation.getParam('trip_id', null)
-    await this.props.fetchTrip(this.props.user.token, trip_id)
-    this.setState({ ...this.state, asDriver, tripId: trip_id })
+    const response = await this.props.fetchTrip(this.props.user.token, trip_id)
+    if (!response || response.error) {
+      this.props.navigation.pop()
+      return
+    }
     if (asDriver) {
       await this.getDataAsDriver(trip_id)
     }
-    this.setState({ loading: false })
+    this.setState({ ...this.state, asDriver, tripId: trip_id, loading: false })
   }
 
   async onReload() {
@@ -314,6 +317,7 @@ DetailedTripScreen.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
     getParam: PropTypes.func.isRequired,
+    pop: PropTypes.func.isRequired,
   }).isRequired,
   user: PropTypes.shape({
     token: PropTypes.string.isRequired,

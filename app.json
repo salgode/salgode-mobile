@@ -45,7 +45,8 @@
         "CAMERA",
         "ACCESS_FINE_LOCATION"
       ],
-      "playStoreUrl": "https://play.google.com/store/apps/details?id=cl.salgode.salgode"
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=cl.salgode.salgode",
+      "googleServicesFile": "./google-services.json"
     },
     "description": "",
     "githubUrl": "https://github.com/salgode/salgode-mobile",
@@ -60,6 +61,10 @@
           }
         }
       ]
+    },
+    "notification": {
+      "icon": "./assets/images/icon.png",
+      "iosDisplayInForeground": true
     }
   }
 }

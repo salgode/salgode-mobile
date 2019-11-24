@@ -1,4 +1,4 @@
-import { AppLoading } from 'expo'
+import { AppLoading, Notifications } from 'expo'
 import { Asset } from 'expo-asset'
 import * as Font from 'expo-font'
 import React, { useState } from 'react'
@@ -28,6 +28,11 @@ Sentry.setRelease(Constants.manifest.revisionId)
 
 export default function App({ skipLoadingScreen }) {
   const [isLoadingComplete, setLoadingComplete] = useState(false)
+
+  React.useEffect(() => {
+    Notifications.setBadgeNumberAsync(0)
+  }, [])
+
   if (!isLoadingComplete && !skipLoadingScreen) {
     return (
       <AppLoading

@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.2](https://github.com/salgode/salgode-mobile/compare/v1.0.0...v1.3.2) (2019-11-25)
+
+
+### Bug Fixes
+
+* add verifications on array slice ([#159](https://github.com/salgode/salgode-mobile/issues/159)) ([e47dd31](https://github.com/salgode/salgode-mobile/commit/e47dd31))
+* android permissions ([8001e37](https://github.com/salgode/salgode-mobile/commit/8001e37))
+* clear badge count on startup ([#162](https://github.com/salgode/salgode-mobile/issues/162)) ([750ae6b](https://github.com/salgode/salgode-mobile/commit/750ae6b))
+* first request current trip without trips ([#160](https://github.com/salgode/salgode-mobile/issues/160)) ([bc18de2](https://github.com/salgode/salgode-mobile/commit/bc18de2))
+* **app.json:** change android permission ([24b9000](https://github.com/salgode/salgode-mobile/commit/24b9000))
+* **maps:** change android api key ([fd09588](https://github.com/salgode/salgode-mobile/commit/fd09588))
+* scroll view on sign up ([f605316](https://github.com/salgode/salgode-mobile/commit/f605316))
+
+
+### Features
+
+* Add maps ([#154](https://github.com/salgode/salgode-mobile/issues/154)) ([1e40109](https://github.com/salgode/salgode-mobile/commit/1e40109))
+* error boundary ([#156](https://github.com/salgode/salgode-mobile/issues/156)) ([8c13e86](https://github.com/salgode/salgode-mobile/commit/8c13e86))
+* push notifications ([#161](https://github.com/salgode/salgode-mobile/issues/161)) ([0190a58](https://github.com/salgode/salgode-mobile/commit/0190a58)), closes [#153](https://github.com/salgode/salgode-mobile/issues/153)
+
 ## [1.0.0](https://github.com/salgode/salgode-mobile/compare/v0.0.1...v1.0.0) (2019-11-10)
 
 

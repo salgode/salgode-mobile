@@ -5,6 +5,7 @@ import Location from './Location'
 import PropTypes from 'prop-types'
 import Colors from '../../../constants/Colors'
 import TimeInfo from './TimeInfo'
+import SalgoDeMap from '../../SalgoDeMap'
 import { Ionicons } from '@expo/vector-icons'
 
 export const DetailedTrip = ({
@@ -68,6 +69,18 @@ export const DetailedTrip = ({
       </CardItem>
       <CardItem style={styles.locationContainer}>
         {renderLocation(trip.trip_route_points)}
+      </CardItem>
+      <CardItem style={styles.mapView}>
+        <SalgoDeMap
+          markers={trip.trip_route_points}
+          showPath
+          path={trip.trip_route_points}
+          showDescription
+          start={trip.trip_route_points[0]}
+          end={trip.trip_route_points.slice(-1)[0]}
+          goToMarkers
+          markersToFit={trip.trip_route_points}
+        />
       </CardItem>
       <CardItem>
         <TimeInfo timestamp={Date.parse(trip.etd_info.etd)} />
@@ -141,11 +154,15 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderRadius: 20,
     marginBottom: 25,
-    padding: 15,
+    paddingVertical: 15,
   },
   locationContainer: {
     alignItems: 'flex-start',
     flexDirection: 'column',
+  },
+  mapView: {
+    height: 200,
+    width: '100%',
   },
   shadow: {
     shadowColor: '#b3b3b3',

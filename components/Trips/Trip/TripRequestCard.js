@@ -19,6 +19,7 @@ import {
   acceptReservation,
   declineReservation,
 } from '../../../redux/actions/trips'
+import { analytics, ANALYTICS_CATEGORIES } from '../../../utils/analytics'
 
 class TripRequestCard extends Component {
   constructor(props) {
@@ -91,6 +92,13 @@ class TripRequestCard extends Component {
     if (response && response.error) {
       Alert.alert(alertTitle, alertMessage)
     } else {
+      if (status === 'accepted') {
+        analytics.newEvent(
+          ANALYTICS_CATEGORIES.AsDriver.name,
+          ANALYTICS_CATEGORIES.AsDriver.actions.Accept,
+          user.userId
+        )
+      }
       updateReservations(status, reservation.reservation_id)
     }
   }
@@ -116,11 +124,11 @@ class TripRequestCard extends Component {
             {passenger_avatar ? (
               <Thumbnail source={{ uri: passenger_avatar }} />
             ) : (
-              <Ionicons
-                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-                size={40}
-              />
-            )}
+                <Ionicons
+                  name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                  size={40}
+                />
+              )}
             <View style={styles.userInfo}>
               <Text style={styles.userText}>{passenger_name}</Text>
               {passenger_verifications.identity ? (
@@ -156,49 +164,49 @@ class TripRequestCard extends Component {
                 <Spinner color="blue" />
               </View>
             ) : (
-              <Button
-                style={{
-                  ...styles.buttonTrip,
-                  backgroundColor: '#white',
-                  borderColor: '#0000FF',
-                  borderWidth: 1,
-                }}
-                onPress={() => this.handleChangeStatus('accepted')}
-              >
-                <Text
+                <Button
                   style={{
-                    color: '#0000FF',
-                    fontSize: 15,
-                    fontWeight: '700',
-                    alignSelf: 'center',
+                    ...styles.buttonTrip,
+                    backgroundColor: '#white',
+                    borderColor: '#0000FF',
+                    borderWidth: 1,
                   }}
+                  onPress={() => this.handleChangeStatus('accepted')}
                 >
-                  Aceptar
+                  <Text
+                    style={{
+                      color: '#0000FF',
+                      fontSize: 15,
+                      fontWeight: '700',
+                      alignSelf: 'center',
+                    }}
+                  >
+                    Aceptar
                 </Text>
-              </Button>
-            )}
+                </Button>
+              )}
             {loading.decline ? (
               <View style={styles.buttonTrip}>
                 <Spinner color="blue" />
               </View>
             ) : (
-              <Button
-                bordered
-                style={{ ...styles.buttonTrip, borderColor: '#FF5242' }}
-                onPress={() => this.handleChangeStatus('declined')}
-              >
-                <Text
-                  style={{
-                    color: '#FF5242',
-                    fontSize: 15,
-                    fontWeight: '700',
-                    alignSelf: 'center',
-                  }}
+                <Button
+                  bordered
+                  style={{ ...styles.buttonTrip, borderColor: '#FF5242' }}
+                  onPress={() => this.handleChangeStatus('declined')}
                 >
-                  Rechazar
+                  <Text
+                    style={{
+                      color: '#FF5242',
+                      fontSize: 15,
+                      fontWeight: '700',
+                      alignSelf: 'center',
+                    }}
+                  >
+                    Rechazar
                 </Text>
-              </Button>
-            )}
+                </Button>
+              )}
           </CardItem>
         )}
       </Card>
@@ -212,6 +220,9 @@ TripRequestCard.propTypes = {
   finishStop: PropTypes.string,
   token: PropTypes.string.isRequired,
   tripStatus: PropTypes.string.isRequired,
+  user: PropTypes.shape({
+    userId: PropTypes.any.isRequired,
+  }).isRequired,
 }
 
 const styles = StyleSheet.create({

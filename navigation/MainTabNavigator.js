@@ -19,6 +19,12 @@ import CurrentStopScreen from '../screens/CurrentTrip/CurrentStopScreen'
 import CurrentFinishScreen from '../screens/CurrentTrip/CurrentFinishScreen'
 import TripDetailsScreen from '../screens/TripDetailsScreen'
 import MapScreen from '../screens/MapScreen'
+import TermScreen from '../screens/Webviews/TermScreen'
+import PrivacyScreen from '../screens/Webviews/PrivacyScreen'
+import TwitterScreen from '../screens/Webviews/TwitterScreen'
+import InstagramScreen from '../screens/Webviews/InstagramScreen'
+import LandingScreen from '../screens/Webviews/LandingScreen'
+import SupportScreen from '../screens/Webviews/SupportScreen'
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -60,6 +66,11 @@ const ChooseTripsStack = createStackNavigator({
 const EditProfileStack = createStackNavigator(
   {
     EditProfile: EditProfileScreen,
+    TermsProfile: TermScreen,
+    PrivacyProfile: PrivacyScreen,
+    Twitter: TwitterScreen,
+    Instagram: InstagramScreen,
+    Landing: LandingScreen,
   },
   config
 )
@@ -90,6 +101,7 @@ const CreateTripStack = createStackNavigator(
     CreateTripScreen,
     AddStopsScreen,
     SpotSelectorScreen,
+    Support: SupportScreen,
   },
   config
 )

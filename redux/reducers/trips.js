@@ -100,10 +100,16 @@ export default function tripsReducer(state = {}, action) {
     case tripActions.TRIPS_DECLINE_RESERVATION_FAIL:
       return { ...state, loading: false }
     case tripActions.TRIPS_REMOVE_TRIP_FROM_LIST:
-      const { trip_id } = action.payload
       return {
         ...state,
-        requestedTrips: state.requestedTrips.filter(i => i.trip_id !== trip_id),
+        requestedTrips: state.requestedTrips.filter(
+          i => i.trip_id !== action.payload.trip_id
+        ),
+      }
+    case tripActions.TRIPS_OPEN_SUCCESS:
+      return {
+        ...state,
+        requestedTrips: action.payload.data,
       }
     default:
       return state

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import { MaterialCommunityIcons, AntDesign, Octicons } from '@expo/vector-icons'
 import TimeInfo from './TimeInfo'
 import Location from './Location'
+import SalgoDeMap from '../../SalgoDeMap'
 import Colors from '../../../constants/Colors'
 
 const photoSize = 96
@@ -147,6 +148,18 @@ class TripDetails extends Component {
           <CardItem style={styles.locationContainer}>
             {this.renderLocation(tripRoutePoints)}
           </CardItem>
+          <CardItem style={styles.mapView}>
+            <SalgoDeMap
+              markers={tripRoutePoints}
+              showPath
+              path={tripRoutePoints}
+              showDescription
+              start={tripRoutePoints[0]}
+              end={tripRoutePoints.slice(-1)[0]}
+              goToMarkers
+              markersToFit={tripRoutePoints}
+            />
+          </CardItem>
           <CardItem>
             <TimeInfo timestamp={Date.parse(etd)} isDate />
           </CardItem>
@@ -215,7 +228,7 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderRadius: 20,
     marginBottom: 25,
-    padding: 15,
+    paddingVertical: 15,
   },
   container: {
     padding: 15,
@@ -224,6 +237,10 @@ const styles = StyleSheet.create({
   locationContainer: {
     alignItems: 'flex-start',
     flexDirection: 'column',
+  },
+  mapView: {
+    height: 200,
+    width: '100%',
   },
   phoneText: {
     color: 'grey',

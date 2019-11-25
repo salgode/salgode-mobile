@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert, StyleSheet } from 'react-native'
+import { Alert, StyleSheet, ScrollView } from 'react-native'
 import { View, Spinner, Button, Text } from 'native-base'
 import PhotoTaker from './PhotoTaker'
 import PropTypes from 'prop-types'
@@ -8,11 +8,12 @@ import * as ImagePicker from 'expo-image-picker'
 import { signupUser, getImageUrl } from '../../redux/actions/user'
 import { uploadImageToS3 } from '../../utils/image'
 import * as Permissions from 'expo-permissions'
+import { analytics, ANALYTICS_CATEGORIES } from '../../utils/analytics'
 
 const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
-  const [selfie, setSelfie] = React.useState(null)
-  const [frontId, setFrontId] = React.useState(null)
-  const [backId, setBackId] = React.useState(null)
+  const [selfie, setSelfie] = React.useState('')
+  const [frontId, setFrontId] = React.useState('')
+  const [backId, setBackId] = React.useState('')
   const [userData, setUserData] = React.useState(null)
   const [loading, setLoading] = React.useState(false)
 
@@ -27,10 +28,10 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
   }, [])
 
   const alertIfCamPermissionsDisabledAsync = async () => {
-    const { status } = await Permissions.getAsync(Permissions.CAMERA)
-    if (status !== 'granted') {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA)
-      if (status !== 'granted') {
+    const camGet = await Permissions.getAsync(Permissions.CAMERA)
+    if (camGet.status !== 'granted') {
+      const camAsk = await Permissions.askAsync(Permissions.CAMERA)
+      if (camAsk.status !== 'granted') {
         alert(
           'Debes habilitar los permisos para usar la cámara en configuración'
         )
@@ -39,10 +40,10 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
   }
 
   const alertIfRollPermissionsDisabledAsync = async () => {
-    const { status } = await Permissions.getAsync(Permissions.CAMERA_ROLL)
-    if (status !== 'granted') {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
-      if (status !== 'granted') {
+    const rollGet = await Permissions.getAsync(Permissions.CAMERA_ROLL)
+    if (rollGet.status !== 'granted') {
+      const rollAsk = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+      if (rollAsk.status !== 'granted') {
         alert(
           'Debes habilitar los permisos a la biblioteca de imágenes en configuración'
         )
@@ -137,7 +138,7 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
       setLoading(false)
       Alert.alert(
         'Error de registro',
-        'Hubo un problema registrandote. Por favor inténtalo de nuevo.'
+        'Hubo un problema en el proceso de registro. Por favor inténtalo de nuevo.'
       )
       return
     }
@@ -146,11 +147,17 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
       .slice(-1)[0]
       .split('.')
     const frontResponse = await uploadImage(frontFN, frontFT)
-    if (!uploadImageToS3(frontResponse.payload.data.upload, frontFT, frontId)) {
+    if (
+      !(await uploadImageToS3(
+        frontResponse.payload.data.upload,
+        frontFT,
+        frontId
+      ))
+    ) {
       setLoading(false)
       Alert.alert(
         'Error de registro',
-        'Hubo un problema registrandote. Por favor inténtalo de nuevo.'
+        'Hubo un problema en el proceso de registro. Por favor inténtalo de nuevo.'
       )
       return
     }
@@ -159,11 +166,13 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
       .slice(-1)[0]
       .split('.')
     const backResponse = await uploadImage(backFN, backFT)
-    if (!uploadImageToS3(backResponse.payload.data.upload, backFT, backId)) {
+    if (
+      !(await uploadImageToS3(backResponse.payload.data.upload, backFT, backId))
+    ) {
       setLoading(false)
       Alert.alert(
         'Error de registro',
-        'Hubo un problema registrandote. Por favor inténtalo de nuevo.'
+        'Hubo un problema en el proceso de registro. Por favor inténtalo de nuevo.'
       )
       return
     }
@@ -185,6 +194,11 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
         'El correo que has ingresado ya está en uso. Por lo que podrías ya estar registrado en la app. De no ser así, por favor inténtalo ingresando un correo distinto.'
       )
     } else {
+      analytics.newEvent(
+        ANALYTICS_CATEGORIES.LogIn.name,
+        ANALYTICS_CATEGORIES.LogIn.actions.SignUp
+      )
+
       Alert.alert(
         'Registro exitoso',
         'Se ha enviado un correo de confirmación a tu cuenta'
@@ -213,49 +227,60 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
   alertIfCamPermissionsDisabledAsync()
   alertIfRollPermissionsDisabledAsync()
   return (
-    <View style={styles.container}>
-      <PhotoTaker
-        takePhoto={takePhoto}
-        choosePhoto={choosePhoto}
-        selfie={selfie}
-        setImage={'selfie'}
-        disableLibrary={true}
-        title="Subir selfie"
-      />
-      <PhotoTaker
-        takePhoto={takePhoto}
-        choosePhoto={choosePhoto}
-        setImage={'frontId'}
-        selfie={frontId}
-        iconName="vcard-o"
-        iconType="FontAwesome"
-        size={60}
-        title="Foto frontal Carnet de Identidad"
-      />
-      <PhotoTaker
-        takePhoto={takePhoto}
-        choosePhoto={choosePhoto}
-        setImage={'backId'}
-        selfie={backId}
-        iconName="vcard-o"
-        iconType="FontAwesome"
-        size={60}
-        title="Foto trasera Carnet de Identidad"
-      />
+    <ScrollView>
+      <View style={styles.container}>
+        <PhotoTaker
+          takePhoto={takePhoto}
+          choosePhoto={choosePhoto}
+          selfie={selfie}
+          setImage={'selfie'}
+          disableLibrary={true}
+          title="Subir selfie"
+        />
+        <PhotoTaker
+          takePhoto={takePhoto}
+          choosePhoto={choosePhoto}
+          setImage={'frontId'}
+          selfie={frontId}
+          iconName="vcard-o"
+          iconType="FontAwesome"
+          size={60}
+          title="Foto frontal Carnet de Identidad"
+        />
+        <PhotoTaker
+          takePhoto={takePhoto}
+          choosePhoto={choosePhoto}
+          setImage={'backId'}
+          selfie={backId}
+          iconName="vcard-o"
+          iconType="FontAwesome"
+          size={60}
+          title="Foto trasera Carnet de Identidad"
+        />
 
-      {loading && <Spinner color={'#0000FF'} />}
-      {!loading && (
-        <Button
-          block
-          borderRadius={10}
-          style={styles.button}
-          disabled={!validity()}
-          onPress={onSend}
-        >
-          <Text>Registrar</Text>
-        </Button>
-      )}
-    </View>
+        <View>
+          <Text style={{ marginHorizontal: 10, fontSize: 12 }}>
+            Las fotos de tu identificación son totalmente privadas y de uso
+            exclusivo para verificar tu identidad como usuario dentro de la
+            aplicación
+          </Text>
+        </View>
+
+        {loading && <Spinner color={'#0000FF'} />}
+        {!loading && (
+          <Button
+            block
+            borderRadius={10}
+            style={styles.button}
+            disabled={!validity()}
+            onPress={onSend}
+          >
+            <Text>Registrar</Text>
+          </Button>
+        )}
+        <View style={{ marginBottom: 50 }} />
+      </View>
+    </ScrollView>
   )
 }
 

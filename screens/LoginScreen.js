@@ -6,8 +6,9 @@ import {
   Dimensions,
   Animated,
   Keyboard,
-  AsyncStorage,
   Alert,
+  ScrollView,
+  AsyncStorage,
 } from 'react-native'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
@@ -18,6 +19,13 @@ import LoginForm from '../components/Login/LoginForm'
 import { loginUser } from '../redux/actions/user'
 
 import lang from '../languages/es'
+import { analytics, ANALYTICS_CATEGORIES } from '../utils/analytics'
+import {
+  registerForPushNotifications,
+  handleNotification,
+} from '../utils/notifications'
+import Constants from 'expo-constants'
+import { Notifications } from 'expo'
 
 const window = Dimensions.get('window')
 const IMAGE_HEIGHT = window.width / 1.5
@@ -70,15 +78,39 @@ class LoginScreen extends Component {
 
   async onSend(email, password) {
     this.setState({ loading: true })
-    const user = await this.props.login(email, password)
+    const pushNotificationToken = await registerForPushNotifications()
+    // console.log(pushNotificationToken)
+    // console.log(Constants.installationId)\
+    const user = await this.props.login(
+      email,
+      password,
+      pushNotificationToken,
+      Constants.installationId
+    )
     this.setState({ loading: false })
     if (user.error) {
-      Alert.alert('No se pudo iniciar sesión', 'Las credenciales ingresadas son incorrectas')
+      Alert.alert(
+        'No se pudo iniciar sesión',
+        'Las credenciales ingresadas son incorrectas'
+      )
     } else {
+      Notifications.addListener(handleNotification(this.props.navigation))
       const { data } = user.payload
-      AsyncStorage.setItem('@userToken', String(JSON.stringify(data.token)))
-      AsyncStorage.setItem('@userId', String(JSON.stringify(data.userId)))
-      this.props.navigation.navigate('ResolveUserScreen')
+      if (data.verifications.email) {
+        AsyncStorage.setItem('@userToken', String(JSON.stringify(data.token)))
+        AsyncStorage.setItem('@userId', String(JSON.stringify(data.userId)))
+        this.props.navigation.navigate('ResolveUserScreen')
+        analytics.newEvent(
+          ANALYTICS_CATEGORIES.LogIn.name,
+          ANALYTICS_CATEGORIES.LogIn.actions.LogIn,
+          data.userId
+        )
+      } else {
+        Alert.alert(
+          'No has confirmado tu cuenta',
+          'Por favor revisa el correo que te enviamos para verificar tu cuenta'
+        )
+      }
     }
   }
 
@@ -93,25 +125,27 @@ class LoginScreen extends Component {
   render() {
     const { loading } = this.state
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
-        <Animated.Image
-          source={logo}
-          style={[styles.logo, { height: this.imageHeight }]}
-        />
-        {!loading && <LoginForm onSend={this.onSend} />}
-        {loading && <Spinner color="blue" />}
-        {!loading && (
-          <View>
-            <Button transparent onPress={this.onCreateAccountPress}>
-              <Text>{lang.signin.create}</Text>
-            </Button>
-            {/* <Button transparent onPress={this.onRecoverPasswordPress}>
-              <Text>{lang.signin.forget}</Text>
-            </Button> */}
-          </View>
-        )}
-        {loading && <Text>{lang.signin.verifying}</Text>}
-      </KeyboardAvoidingView>
+      <ScrollView style={{ flex: 1 }}>
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
+          <Animated.Image
+            source={logo}
+            style={[styles.logo, { height: this.imageHeight }]}
+          />
+          {!loading && <LoginForm onSend={this.onSend} />}
+          {loading && <Spinner color="blue" />}
+          {!loading && (
+            <View>
+              <Button transparent onPress={this.onCreateAccountPress}>
+                <Text>{lang.signin.create}</Text>
+              </Button>
+              {/* <Button transparent onPress={this.onRecoverPasswordPress}>
+                <Text>{lang.signin.forget}</Text>
+              </Button> */}
+            </View>
+          )}
+          {loading && <Text>{lang.signin.verifying}</Text>}
+        </KeyboardAvoidingView>
+      </ScrollView>
     )
   }
 }
@@ -143,7 +177,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  login: (email, password) => dispatch(loginUser(email, password)),
+  login: (email, password, pushNotificationToken, installationId) =>
+    dispatch(loginUser(email, password, pushNotificationToken, installationId)),
 })
 
 export default connect(

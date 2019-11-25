@@ -3,9 +3,10 @@
     "name": "SalgoDe",
     "slug": "SalgoDe",
     "privacy": "public",
+    "scheme": "salgode",
     "sdkVersion": "35.0.0",
     "platforms": ["ios", "android", "web"],
-    "version": "1.0.0",
+    "version": "1.3.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "splash": {
@@ -18,18 +19,52 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "config": {
+        "googleMapsApiKey": "AIzaSyA7sn4e4Xs4LwpKzXOt1Cm1h7BaclwBMcQ"
+      },
       "supportsTablet": true,
-      "bundleIdentifier": "cl.salgode.salgode",
-      "buildNumber": "5",
+      "bundleIdentifier": "app.salgode.salgode",
+      "buildNumber": "18",
       "infoPlist": {
         "NSCameraUsageDescription": "Esta app utiliza tu cámara para poder sacar una selfie.",
+        "NSLocationWhenInUseUsageDescription": "Esta app utiliza tu ubicación para mejorar la usabilidad de la misma y que puedas encontrar el punto de encuentro más cercano a tu posición",
         "NSPhotoLibraryUsageDescription": "Esta app requiere acceso a tu biblioteca de imágenes para poder subir una imagen a tu perfil de usuario."
       }
     },
     "android": {
-      "package": "cl.salgode.salgode"
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAat5ZwVNMN-m3Mgj8boi-8WvbLOqI4Gkk"
+        }
+      },
+      "package": "cl.salgode.salgode",
+      "versionCode": 10,
+      "permissions": [
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "CAMERA",
+        "ACCESS_FINE_LOCATION"
+      ],
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=cl.salgode.salgode",
+      "googleServicesFile": "./google-services.json"
     },
     "description": "",
-    "githubUrl": "https://github.com/salgode/salgode-mobile"
+    "githubUrl": "https://github.com/salgode/salgode-mobile",
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "varus",
+            "project": "salgode",
+            "authToken": "8cc5519b7a4e4c6b9511f2f2139c660c751df6c6af674f5abbed5c442b369375"
+          }
+        }
+      ]
+    },
+    "notification": {
+      "icon": "./assets/images/icon.png",
+      "iosDisplayInForeground": true
+    }
   }
 }

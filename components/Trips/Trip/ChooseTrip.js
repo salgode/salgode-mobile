@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Platform, TouchableWithoutFeedback } from 'react-native'
+import { StyleSheet, Platform, TouchableOpacity } from 'react-native'
 import { Card, View, Text, CardItem, Thumbnail } from 'native-base'
 import Location from './Location'
 import { Ionicons } from '@expo/vector-icons'
@@ -37,7 +37,7 @@ const ChooseTrip = ({
     )
   }
   return (
-    <TouchableWithoutFeedback onPress={() => onPress()}>
+    <TouchableOpacity>
       <Card style={styles.containerRequested}>
         <CardItem style={styles.dataContainer}>
           <View style={styles.user}>
@@ -45,24 +45,31 @@ const ChooseTrip = ({
               {Avatar}
               <Text style={styles.userText}>{`${driver.driver_name}`}</Text>
             </View>
-            {/* <View style={styles.iconInfoGroup}>
-              <View style={styles.iconContainer}>
-                <Icon name="like1" style={styles.infoIcon} />
-                <Text style={styles.iconText}>{driver.reputation}</Text>
-              </View>
-            </View> */}
           </View>
         </CardItem>
         <CardItem style={styles.locationContainer}>
           <Location color={'#0000FF'} location={stops[0].place_name} />
-          <Location color={'#33C534'} location={stops[stops.length - 1].place_name} />
+          <Location
+            color={'#33C534'}
+            location={stops[stops.length - 1].place_name}
+          />
         </CardItem>
         <CardItem style={styles.bottomSection}>
           <TimeInfo timestamp={timestamp} isDate />
-          <PedirBoton onSend={() => onSend(stops, tripId)} />
+
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+            }}
+          >
+            <PedirBoton text="Ver" onSend={() => onPress()} />
+            <PedirBoton onSend={() => onSend(stops, tripId)} />
+          </View>
         </CardItem>
       </Card>
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   )
 }
 
@@ -81,10 +88,6 @@ ChooseTrip.propTypes = {
 }
 
 const styles = StyleSheet.create({
-  avatar: {
-    height: 80,
-    width: 80,
-  },
   bottomSection: {
     alignSelf: 'stretch',
   },

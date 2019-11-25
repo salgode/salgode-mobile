@@ -10,9 +10,10 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Platform,
-  AsyncStorage,
   Modal,
+  AsyncStorage,
 } from 'react-native'
+
 import {
   Button,
   Form,
@@ -41,6 +42,7 @@ import {
   getUserCar,
   getImageUrl,
   createVehicle,
+  getOwnProfile,
 } from '../redux/actions/user'
 import Layout from '../constants/Layout'
 import Colors from '../constants/Colors'
@@ -54,6 +56,9 @@ import {
 } from '../utils/input'
 import { uploadImageToS3 } from '../utils/image'
 import * as ImagePicker from 'expo-image-picker'
+import { analytics, ANALYTICS_CATEGORIES } from '../utils/analytics'
+import Divider from '../components/Divider'
+import { registerForPushNotifications } from '../utils/notifications'
 
 function validateName(str) {
   if (typeof str !== 'string') {
@@ -182,7 +187,6 @@ Field.propTypes = {
     editable: PropTypes.bool,
     validate: PropTypes.func.isRequired,
     isSecure: PropTypes.bool,
-    editable: PropTypes.bool,
     keyboardType: PropTypes.oneOf([
       'default',
       'number-pad',
@@ -450,7 +454,6 @@ const EditProfileScreen = props => {
       },
       body
     )
-    setIsLoading(false)
     if (response.error) {
       Alert.alert(
         'Error actualizando datos',
@@ -459,6 +462,8 @@ const EditProfileScreen = props => {
     } else {
       Alert.alert('Actualización exitosa', 'Informacion actualizada con exito')
     }
+    await props.loadUser(props.user.token)
+    setIsLoading(false)
   }
 
   const onPressSaveProfile = React.useCallback(() => {
@@ -503,7 +508,7 @@ const EditProfileScreen = props => {
     if (!result.cancelled) {
       const { uri } = result
       const { uploadImage } = props
-      if (uri) {
+      if (uri && typeof uri === 'string') {
         setAvatar(result.uri)
 
         // TODO: refactor -> upload function & duplicate code on ImageSignupForm
@@ -627,7 +632,6 @@ const EditProfileScreen = props => {
         },
       }
     )
-    setIsLoading(false)
     setDniFrontSubmit('')
     setDniBackSubmit('')
     setIsUploadingDni(false)
@@ -639,6 +643,8 @@ const EditProfileScreen = props => {
     } else {
       Alert.alert('Actualización exitosa', 'Solicitud enviada con éxito')
     }
+    await props.loadUser(props.user.token)
+    setIsLoading(false)
   }
 
   const onPressSaveLicense = async () => {
@@ -703,7 +709,6 @@ const EditProfileScreen = props => {
         },
       }
     )
-    setIsLoading(false)
     setFrontSubmit('')
     setBackSubmit('')
     setIsUploadingLicense(false)
@@ -715,6 +720,8 @@ const EditProfileScreen = props => {
     } else {
       Alert.alert('Actualización exitosa', 'Solicitud enviada con éxito')
     }
+    await props.loadUser(props.user.token)
+    setIsLoading(false)
   }
 
   const onPressUpdatePassword = async () => {
@@ -735,6 +742,7 @@ const EditProfileScreen = props => {
         'Tu contraseña se ha cambiado con éxito'
       )
     }
+    await props.loadUser(props.user.token)
     setIsLoading(false)
   }
 
@@ -757,7 +765,6 @@ const EditProfileScreen = props => {
         color: carColor,
       },
     })
-    setIsLoading(false)
     setIsSaving(false)
     if (response.error) {
       Alert.alert(
@@ -768,6 +775,8 @@ const EditProfileScreen = props => {
       setCanSubmitCar(false)
       Alert.alert('Ingreso exitoso', 'Tu vehículo fue ingresado exitosamente')
     }
+    await props.loadUser(token)
+    setIsLoading(false)
   }
 
   const takePhoto = async dest => {
@@ -913,6 +922,51 @@ const EditProfileScreen = props => {
                 </Modal>
               </View>
             </View>
+            <View>
+              <Button
+                transparent
+                onPress={() => {
+                  props.navigation.navigate('TermsProfile')
+                }}
+              >
+                <Text style={styles.buttonText}>
+                  Términos y Condiciones de uso
+                </Text>
+              </Button>
+              <Button
+                transparent
+                onPress={() => {
+                  props.navigation.navigate('PrivacyProfile')
+                }}
+              >
+                <Text style={styles.buttonText}>Política de Privacidad</Text>
+              </Button>
+              <Button
+                transparent
+                onPress={() => {
+                  props.navigation.navigate('Landing')
+                }}
+              >
+                <Text style={styles.buttonText}>Página Web</Text>
+              </Button>
+              <Button
+                transparent
+                onPress={() => {
+                  props.navigation.navigate('Instagram')
+                }}
+              >
+                <Text style={styles.buttonText}>Instagram</Text>
+              </Button>
+              <Button
+                transparent
+                onPress={() => {
+                  props.navigation.navigate('Twitter')
+                }}
+              >
+                <Text style={styles.buttonText}>Twitter</Text>
+              </Button>
+            </View>
+            <Divider />
             <Form style={styles.form}>
               <View style={styles.headerTextContainer}>
                 <Text style={styles.headerText}>Datos Personales</Text>
@@ -962,6 +1016,13 @@ const EditProfileScreen = props => {
               ) : (
                 <></>
               )}
+              <View>
+                <Text style={{ marginHorizontal: 10, fontSize: 12 }}>
+                  Las fotos de tu identificación son totalmente privadas y de
+                  uso exclusivo para verificar tu identidad como usuario dentro
+                  de la aplicación
+                </Text>
+              </View>
               <Button
                 block
                 borderRadius={10}
@@ -988,7 +1049,9 @@ const EditProfileScreen = props => {
                 </TouchableOpacity>
               )}
               {hasCar ? (
-                <View>
+                <View style={{ paddingTop: 20 }}>
+                  <Divider />
+
                   <View style={styles.headerTextContainer}>
                     <Text style={styles.headerText}>Licencia de conducir</Text>
                   </View>
@@ -1020,6 +1083,13 @@ const EditProfileScreen = props => {
                   ) : (
                     <></>
                   )}
+                  <View>
+                    <Text style={{ marginHorizontal: 10, fontSize: 12 }}>
+                      Las fotos de tu licencia son totalmente privadas y de uso
+                      exclusivo para verificar tu identidad como usuario
+                      conductor dentro de la aplicación
+                    </Text>
+                  </View>
                   <Button
                     block
                     borderRadius={10}
@@ -1030,6 +1100,7 @@ const EditProfileScreen = props => {
                   >
                     <Text style={styles.buttonText}>Solicitar revisión</Text>
                   </Button>
+                  <Divider />
 
                   <View style={styles.headerTextContainer}>
                     <Text style={styles.headerText}>Datos Vehículo</Text>
@@ -1103,9 +1174,11 @@ const mapDispatchToProps = dispatch => ({
   updateUser: (authToken, data, ed) =>
     dispatch(updateUser(authToken, data, ed)),
   uploadImage: (name, type) => dispatch(getImageUrl(name, type)),
-  signOut: () => dispatch(signoutUser()),
+  signOut: (token, pushNotificationToken, installationId) =>
+    dispatch(signoutUser(token, pushNotificationToken, installationId)),
   getUserCar: (token, carId) => dispatch(getUserCar(token, carId)),
   createVehicle: (token, data) => dispatch(createVehicle(token, data)),
+  loadUser: token => dispatch(getOwnProfile(token)),
 })
 
 const photoSize = 96
@@ -1229,13 +1302,25 @@ const _SignOutC = props => (
       Alert.alert('Salir', '¿Deseas cerrar sesión?', [
         {
           text: 'Si',
-          onPress: () => {
+          onPress: async () => {
+            const userId = await AsyncStorage.getItem('@userId')
+            const userToken = await AsyncStorage.getItem('@userToken')
             AsyncStorage.removeItem('@userToken')
             AsyncStorage.removeItem('@userId')
+            analytics.newEvent(
+              ANALYTICS_CATEGORIES.LogIn.name,
+              ANALYTICS_CATEGORIES.LogIn.actions.LogOut,
+              userId
+            )
+            const pushNotificationToken = await registerForPushNotifications()
             // eslint-disable-next-line react/prop-types
             props.navigation.navigate('Login')
             // eslint-disable-next-line react/prop-types
-            props.signOut()
+            props.signOut(
+              JSON.parse(userToken),
+              pushNotificationToken,
+              Constants.installationId
+            )
           },
         },
         { text: 'No', style: 'cancel' },

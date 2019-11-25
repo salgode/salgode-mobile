@@ -6,6 +6,7 @@ import TripRequest from '../components/Trips/TripRequest'
 import { createSlot } from '../redux/actions/slots'
 import { removeTripFromList } from '../redux/actions/trips'
 import { connect } from 'react-redux'
+import { analytics, ANALYTICS_CATEGORIES } from '../utils/analytics'
 
 class TripRequestScreen extends Component {
   static navigationOptions = {
@@ -32,7 +33,7 @@ class TripRequestScreen extends Component {
   async onRequestSlot(startStop, endStop) {
     const { user, createSlot } = this.props
     this.setState({ loading: true })
-    const response = await this.props.createSlot(
+    const response = await createSlot(
       user.token,
       this.state.tripId,
       startStop.place_id,
@@ -46,6 +47,13 @@ class TripRequestScreen extends Component {
       )
     } else {
       this.props.removeTrip(this.state.tripId)
+
+      analytics.newEvent(
+        ANALYTICS_CATEGORIES.AsPassenger.name,
+        ANALYTICS_CATEGORIES.AsPassenger.actions.Request,
+        user.userId
+      )
+
       Alert.alert(
         'Solicitud enviada correctamente!',
         'Tu pedido está siendo revisado por el conductor.'

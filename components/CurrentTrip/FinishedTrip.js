@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import { Card, CardItem, View, Text, Button } from 'native-base'
+import { Card, CardItem, View, Text, Button, Spinner } from 'native-base'
 import PropTypes from 'prop-types'
 import { urls } from '../../config/api/index'
 import { client } from '../../redux/store'
@@ -22,6 +22,7 @@ const FinishedTrip = ({
   tripId,
   // requerido: token del usuario
   token,
+  loading,
 }) => {
   return (
     <Card
@@ -41,11 +42,15 @@ const FinishedTrip = ({
         <Text>{thankYouMessage}</Text>
       </CardItem>
       <CardItem style={styles.buttonSection}>
-        <Button style={styles.button} onPress={onPress}>
-          <Text style={styles.buttonText} uppercase={false}>
-            {buttonText}
-          </Text>
-        </Button>
+        {loading ? (
+          <Spinner color="blue" />
+        ) : (
+          <Button style={styles.button} onPress={onPress}>
+            <Text style={styles.buttonText} uppercase={false}>
+              {buttonText}
+            </Text>
+          </Button>
+        )}
       </CardItem>
     </Card>
   )
@@ -60,6 +65,7 @@ FinishedTrip.propTypes = {
   onPress: PropTypes.func.isRequired,
   tripId: PropTypes.string.isRequired,
   token: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
 }
 
 const styles = StyleSheet.create({

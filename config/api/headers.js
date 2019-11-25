@@ -8,6 +8,6 @@ export const getAuthHeader = token => ({
 })
 
 export const getBaseHeaders = token => ({
-  ...getDefaultHeaders,
+  ...getDefaultHeaders(),
   ...getAuthHeader(token),
 })

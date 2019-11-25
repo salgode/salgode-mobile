@@ -19,7 +19,7 @@ const TripRequest = ({ stops, onSend, loading }) => {
         Selecciona la parada en la que te subirás
       </Text>
       <Picker
-        placeholder="Selecciona la parada"
+        placeholder="Donde te subirás?"
         selectedValue={state.selectedStop}
         onValueChange={value =>
           setState({ selectedStop: value, selected: true })
@@ -36,7 +36,7 @@ const TripRequest = ({ stops, onSend, loading }) => {
         ))}
       </Picker>
       <Text style={styles.smallTitle}>
-        Puedes bajar en cualquiera de estas paradas.
+        Puedes bajar en cualquiera de estas paradas 🏁
       </Text>
       {loading && <Spinner color={Colors.mainBlue} />}
       {!loading && (
@@ -84,12 +84,12 @@ const styles = StyleSheet.create({
   pickerTitle: {
     fontSize: 15,
     fontWeight: '500',
-    marginBottom: 10,
-    marginTop: 10,
+    marginBottom: 5,
+    marginTop: 5,
   },
   smallTitle: {
-    fontSize: 15,
-    fontWeight: '300',
+    fontSize: 16,
+    fontWeight: '500',
     marginBottom: 10,
     marginTop: 10,
   },

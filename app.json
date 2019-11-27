@@ -6,7 +6,7 @@
     "scheme": "salgode",
     "sdkVersion": "35.0.0",
     "platforms": ["ios", "android", "web"],
-    "version": "1.3.1",
+    "version": "1.3.2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "splash": {
@@ -24,7 +24,7 @@
       },
       "supportsTablet": true,
       "bundleIdentifier": "app.salgode.salgode",
-      "buildNumber": "18",
+      "buildNumber": "19",
       "infoPlist": {
         "NSCameraUsageDescription": "Esta app utiliza tu cámara para poder sacar una selfie.",
         "NSLocationWhenInUseUsageDescription": "Esta app utiliza tu ubicación para mejorar la usabilidad de la misma y que puedas encontrar el punto de encuentro más cercano a tu posición",
@@ -38,7 +38,7 @@
         }
       },
       "package": "cl.salgode.salgode",
-      "versionCode": 10,
+      "versionCode": 11,
       "permissions": [
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE",

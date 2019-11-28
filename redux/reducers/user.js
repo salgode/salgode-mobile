@@ -1,5 +1,6 @@
 import { actions as userActions } from '../actions/user'
 import { compareStrKeyAscending } from '../../utils/compare'
+import * as Sentry from 'sentry-expo'
 
 export default function userReducer(state = {}, action) {
   // console.log('Here: ', action.type, action.payload)
@@ -9,6 +10,7 @@ export default function userReducer(state = {}, action) {
     case userActions.USER_LOGIN:
       return { ...state, loading: true }
     case userActions.USER_LOGIN_SUCCESS:
+      Sentry.setUser(action.payload.data)
       return { ...state, loading: false, ...action.payload.data }
     case userActions.USER_LOGIN_FAIL:
       return {
@@ -19,6 +21,7 @@ export default function userReducer(state = {}, action) {
     case userActions.USER_SIGNUP:
       return { ...state, loading: true }
     case userActions.USER_SIGNUP_SUCCESS:
+      Sentry.setUser(action.payload.data)
       return { ...state, loading: false, ...action.payload.data }
     case userActions.USER_SIGNUP_FAIL:
       return {

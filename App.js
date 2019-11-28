@@ -1,4 +1,4 @@
-import { AppLoading } from 'expo'
+import { AppLoading, Notifications } from 'expo'
 import { Asset } from 'expo-asset'
 import * as Font from 'expo-font'
 import React, { useState } from 'react'
@@ -10,6 +10,7 @@ import * as Sentry from 'sentry-expo'
 import AppNavigator from './navigation/AppNavigator'
 import { store } from './redux/store'
 import Constants from 'expo-constants'
+import ErrorBoundary from './components/ErrorBoundary'
 // Esto es para arreglar el ancho del header de react navigation
 // No es un bug, solución aca https://github.com/react-navigation/react-navigation/releases/tag/v1.0.0-beta.26
 if (Platform.OS === 'android') {
@@ -20,10 +21,18 @@ Sentry.init({
   dsn: 'https://3b65a5c913f649f8a31690cd68f82ebb@sentry.io/1811743',
   enableInExpoDevelopment: true,
   debug: true,
+  environment: __DEV__ ? 'development' : 'production',
 })
+
 Sentry.setRelease(Constants.manifest.revisionId)
+
 export default function App({ skipLoadingScreen }) {
   const [isLoadingComplete, setLoadingComplete] = useState(false)
+
+  React.useEffect(() => {
+    Notifications.setBadgeNumberAsync(0)
+  }, [])
+
   if (!isLoadingComplete && !skipLoadingScreen) {
     return (
       <AppLoading
@@ -34,12 +43,14 @@ export default function App({ skipLoadingScreen }) {
     )
   }
   return (
-    <Provider store={store}>
-      <View style={styles.container}>
-        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <AppNavigator />
-      </View>
-    </Provider>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <View style={styles.container}>
+          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          <AppNavigator />
+        </View>
+      </Provider>
+    </ErrorBoundary>
   )
 }
 

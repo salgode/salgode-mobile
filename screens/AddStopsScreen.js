@@ -24,7 +24,7 @@ class AddStopsScreen extends Component {
     this.state = {
       stops: [],
       loading: false,
-      isFormHidden: false,
+      isFormHidden: true,
       showActions: false,
     }
   }
@@ -129,7 +129,7 @@ class AddStopsScreen extends Component {
                 pressMarker={this.pressMarker}
                 onTapMap={this.onTapMap}
                 goToMarkers={true}
-                cluster={true}
+                markersToFit={[startStop, endStop]}
               />
             </View>
             {showActions && (
@@ -274,20 +274,20 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   actionButtonText: {
-    color: 'white',
-    fontSize: 14,
+    color: "white",
+    fontSize: 14
   },
   actionButtons: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center"
   },
   actions: {
-    alignItems: 'center',
-    backgroundColor: 'white',
-    display: 'flex',
-    flexDirection: 'column',
+    alignItems: "center",
+    backgroundColor: "white",
+    display: "flex",
+    flexDirection: "column",
     justifyContent: 'center',
     paddingHorizontal: '3%',
   },
@@ -316,21 +316,21 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   hideButtonContent: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center"
   },
   info: {
-    alignItems: 'flex-start',
-    display: 'flex',
-    flexDirection: 'column',
+    alignItems: "flex-start",
+    display: "flex",
+    flexDirection: "column"
   },
   mapContainer: {
     backgroundColor: '#fff',
-    height: '100%',
-    position: 'absolute',
-    width: '100%',
+    height: "100%",
+    position: "absolute",
+    width: "100%"
   },
   showMoreButton: {
     backgroundColor: 'white',
@@ -343,6 +343,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: 5,
     padding: 10,
+  },
+  showMoreButton: {
+    backgroundColor: 'white',
+    borderBottomRightRadius: 30,
+    borderBottomLeftRadius: 30,
   },
   textView: {
     alignItems: 'center',

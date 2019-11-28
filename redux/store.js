@@ -16,9 +16,18 @@ import {
   futureTripsModel,
   userModel,
 } from './models/createTrip'
+import * as Sentry from 'sentry-expo'
+
+// eslint-disable-next-line no-undef
+const baseURL = __DEV__
+  ? 'https://staging-api.salgode.com'
+  : 'https://api.salgode.com'
+
+// eslint-disable-next-line no-console
+console.log(`USING ${baseURL}`)
 
 export const client = axios.create({
-  baseURL: 'https://api.salgode.com',
+  baseURL,
   responseType: 'json',
   requestType: 'json',
 })
@@ -56,5 +65,15 @@ export const store = createStore(
     spots: spotsModel,
     trips: futureTripsModel,
   },
-  composeWithDevTools(applyMiddleware(axiosMiddleware(client)))
+  composeWithDevTools(
+    applyMiddleware(
+      axiosMiddleware(client, {
+        onError: err => {
+          console.log('Axios Err: ', err)
+          Sentry.captureException(err)
+          return err
+        },
+      })
+    )
+  )
 )

@@ -68,6 +68,7 @@ export const urls = {
     post: {
       register: () => '/signup',
       signin: () => '/signin',
+      signout: () => '/signout',
     },
   },
   trips: {

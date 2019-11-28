@@ -203,9 +203,12 @@ class CreateTripScreen extends Component {
               </View>
 
               <View style={styles.group}>
-                <Text style={styles.supportText} onPress={() => {
-                  this.props.navigation.navigate('Support')
-                }}>
+                <Text
+                  style={styles.supportText}
+                  onPress={() => {
+                    this.props.navigation.navigate('Support')
+                  }}
+                >
                   ¿No encuentras el punto que deseas? Sugiérelo acá
                 </Text>
                 <Button
@@ -284,10 +287,10 @@ class CreateTripScreen extends Component {
           </View>
           {this.state.showActions && (
             <Card style={styles.actions}>
-              <CardItem header style={{ position: 'relative' }}>
+              <CardItem header>
                 <Text>¿Como quieres usar este punto?</Text>
                 <Ionicons
-                  style={{ position: 'absolute', right: 0, top: 0 }}
+                  style={{ marginLeft: 15 }}
                   name={Platform.OS === 'ios' ? 'ios-close' : 'md-close'}
                   size={30}
                   onPress={this.onTapMap}
@@ -468,11 +471,11 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 30,
   },
   supportText: {
-    textAlign: 'center',
-    fontSize: 12,
     color: 'blue',
+    fontSize: 12,
     margin: 0,
     padding: 0,
+    textAlign: 'center',
   },
   viewContainer: {
     alignItems: 'center',

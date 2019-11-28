@@ -85,7 +85,8 @@ export const DetailedTrip = ({
           showDescription
           start={trip.trip_route_points[0]}
           end={trip.trip_route_points.slice(-1)[0]}
-          goToMarkers={true}
+          goToMarkers
+          markersToFit={trip.trip_route_points}
         />
       </CardItem>
       <CardItem>

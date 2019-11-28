@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
-import { SafeAreaView, StyleSheet, AsyncStorage, Alert } from 'react-native'
+import { SafeAreaView, StyleSheet, Alert, AsyncStorage } from 'react-native'
 import { Spinner } from 'native-base'
 import { connect } from 'react-redux'
-import { getOwnProfile, setToken } from '../redux/actions/user'
+import { getOwnProfile } from '../redux/actions/user'
 import PropTypes from 'prop-types'
+import { Notifications } from 'expo'
+import { handleNotification } from '../utils/notifications'
 
 class ResolveUserScreen extends Component {
   constructor(props) {
@@ -30,11 +32,13 @@ class ResolveUserScreen extends Component {
             },
           ]
         )
+      } else {
+        Notifications.addListener(handleNotification(this.props.navigation))
+        this.props.navigation.navigate('ResolveCurrentTripScreen')
+        return
       }
-      this.props.navigation.navigate('ResolveCurrentTripScreen')
-    } else {
-      this.props.navigation.navigate('Login')
     }
+    this.props.navigation.navigate('Login')
   }
 
   componentDidMount() {

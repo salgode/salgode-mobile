@@ -140,7 +140,7 @@ class ChooseTripsScreen extends Component {
                 { color: isFormHidden ? 'black' : 'white' },
               ]}
             >
-              Viajes
+              Lista
             </Text>
           </Button>
           <Button
@@ -173,7 +173,6 @@ class ChooseTripsScreen extends Component {
                   multiPaths={requestedTrips.map(rt => rt.trip_route_points)}
                   pressMarker={this.pressMarker}
                   onTapMap={this.onTapMap}
-                  cluster={true}
                 />
               </View>
               {!this.state.loading && (
@@ -198,7 +197,7 @@ class ChooseTripsScreen extends Component {
             {this.state.showActions && (
               <Card style={styles.actions}>
                 <CardItem header>
-                  <Text>¿Qué deseas hacer?</Text>
+                  <Text>¿Quieres buscar viajes que pasan por este punto?</Text>
                 </CardItem>
                 <CardItem style={styles.info}>
                   <Text style={{ fontWeight: 'bold' }}>
@@ -221,8 +220,8 @@ class ChooseTripsScreen extends Component {
                 </CardItem>
                 <CardItem footer>
                   <Text style={styles.warning}>
-                    Recuerda que si el punto corresponde al destino del viaje,
-                    este no aparecerá en el buscador
+                    Si el punto es el final del viaje, no aparecerá en el
+                    buscador
                   </Text>
                 </CardItem>
               </Card>
@@ -268,7 +267,7 @@ class ChooseTripsScreen extends Component {
                       onPress={() => this.props.navigation.navigate('SpotsMap')}
                       style={{ alignSelf: 'center' }}
                     >
-                      <Text style={{ textAlign: 'center' }}>
+                      <Text style={{ textAlign: 'center', flexWrap: 'wrap' }}>
                         ¿No sabes dónde buscar? Puedes ver el mapa haciendo
                         click en el menú de arriba
                       </Text>

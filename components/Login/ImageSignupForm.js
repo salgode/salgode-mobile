@@ -11,9 +11,9 @@ import * as Permissions from 'expo-permissions'
 import { analytics, ANALYTICS_CATEGORIES } from '../../utils/analytics'
 
 const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
-  const [selfie, setSelfie] = React.useState(null)
-  const [frontId, setFrontId] = React.useState(null)
-  const [backId, setBackId] = React.useState(null)
+  const [selfie, setSelfie] = React.useState('')
+  const [frontId, setFrontId] = React.useState('')
+  const [backId, setBackId] = React.useState('')
   const [userData, setUserData] = React.useState(null)
   const [loading, setLoading] = React.useState(false)
 
@@ -28,10 +28,10 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
   }, [])
 
   const alertIfCamPermissionsDisabledAsync = async () => {
-    const { status } = await Permissions.getAsync(Permissions.CAMERA)
-    if (status !== 'granted') {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA)
-      if (status !== 'granted') {
+    const camGet = await Permissions.getAsync(Permissions.CAMERA)
+    if (camGet.status !== 'granted') {
+      const camAsk = await Permissions.askAsync(Permissions.CAMERA)
+      if (camAsk.status !== 'granted') {
         alert(
           'Debes habilitar los permisos para usar la cámara en configuración'
         )
@@ -40,10 +40,10 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
   }
 
   const alertIfRollPermissionsDisabledAsync = async () => {
-    const { status } = await Permissions.getAsync(Permissions.CAMERA_ROLL)
-    if (status !== 'granted') {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
-      if (status !== 'granted') {
+    const rollGet = await Permissions.getAsync(Permissions.CAMERA_ROLL)
+    if (rollGet.status !== 'granted') {
+      const rollAsk = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+      if (rollAsk.status !== 'granted') {
         alert(
           'Debes habilitar los permisos a la biblioteca de imágenes en configuración'
         )
@@ -167,11 +167,7 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
       .split('.')
     const backResponse = await uploadImage(backFN, backFT)
     if (
-      !(await uploadImageToS3(
-        backResponse.payload.data.upload,
-        backFT,
-        backId
-      ))
+      !(await uploadImageToS3(backResponse.payload.data.upload, backFT, backId))
     ) {
       setLoading(false)
       Alert.alert(
@@ -264,7 +260,9 @@ const ImageSignupForm = ({ navigation, uploadImage, signup }) => {
 
         <View>
           <Text style={{ marginHorizontal: 10, fontSize: 12 }}>
-            Las fotos de tu identificación son totalmente privadas y de uso exclusivo para verificar tu identidad como usuario dentro de la aplicación
+            Las fotos de tu identificación son totalmente privadas y de uso
+            exclusivo para verificar tu identidad como usuario dentro de la
+            aplicación
           </Text>
         </View>
 

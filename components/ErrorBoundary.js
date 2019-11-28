@@ -24,9 +24,17 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       // You can render any custom fallback UI
       return (
-        <View>
+        <View
+          style={{
+            flex: 1,
+            height: '100%',
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
           <Text>Algo salió mal :( </Text>
-          <Text>
+          <Text style={{ textAlign: 'center' }}>
             Intenta cerrar y abrir la app. Si tienes mas problemas puedes
             contactarnos en Instagram @salgodecl
           </Text>

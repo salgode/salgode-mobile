@@ -252,6 +252,7 @@ class CreateTripScreen extends Component {
                 end={endStop}
                 showPath
                 path={path}
+                cluster
               />
             </View>
             <View>

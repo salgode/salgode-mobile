@@ -173,6 +173,7 @@ class ChooseTripsScreen extends Component {
                   multiPaths={requestedTrips.map(rt => rt.trip_route_points)}
                   pressMarker={this.pressMarker}
                   onTapMap={this.onTapMap}
+                  cluster
                 />
               </View>
               {!this.state.loading && (

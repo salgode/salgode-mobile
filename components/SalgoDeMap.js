@@ -94,9 +94,7 @@ const SalgoDeMap = ({
   }
 
   const renderCluster = (cluster, onPress) => {
-    const pointCount = cluster.pointCount,
-      coordinate = cluster.coordinate,
-      clusterId = cluster.clusterId
+    const { pointCount, coordinate, clusterId } = cluster
 
     // use pointCount to calculate cluster size scaling
     // and apply it to "style" prop below
@@ -104,8 +102,8 @@ const SalgoDeMap = ({
     // eventually get clustered points by using
     // underlying SuperCluster instance
     // Methods ref: https://github.com/mapbox/supercluster
-    const clusteringEngine = this.map.getClusteringEngine(),
-      clusteredPoints = clusteringEngine.getLeaves(clusterId, 100)
+    const clusteringEngine = mapRef.current.getClusteringEngine()
+    const clusteredPoints = clusteringEngine.getLeaves(clusterId, 100)
 
     return (
       <Marker coordinate={coordinate} onPress={onPress}>
@@ -133,47 +131,47 @@ const SalgoDeMap = ({
   if (cluster === true) {
     return (
       <ClusteredMapView
-        // style={{ flex: 1 }}
+        ref={mapRef}
+        provider={PROVIDER_GOOGLE}
+        style={styles.mapStyle}
+        showsUserLocation={showLocation}
         data={markers.map(m => ({
           location: {
             latitude: parseFloat(m.lat),
             longitude: parseFloat(m.lon),
           },
+          marker: m
         }))}
-        initialRegion={initialRegion}
-        ref={r => {
-          this.map = r
-        }}
-        renderMarker={renderMarker}
-        renderCluster={renderCluster}
-        provider={PROVIDER_GOOGLE}
-        style={styles.mapStyle}
-        showsUserLocation={showLocation}
         customMapStyle={mapStyle}
         onMapReady={onMapReady}
         onLayout={onLayout}
         onUserLocationChange={onUserLocationChange}
+        renderMarker={(data) => renderMarker(data.marker)}
+        renderCluster={renderCluster}
         showsCompass={false}
         showsMyLocationButton={false}
-        // region={region}
+        initialRegion={region}
         userLocationAnnotationTitle="Mi ubicación"
-        // zoomEnabled={allowInteraction}
-        // zoomControlEnabled={false}
-        // rotateEnabled={allowInteraction}
-        // scrollEnabled={allowInteraction}
-        // pitchEnabled={false}
-        // toolbarEnabled={false}
+        zoomEnabled={allowInteraction}
+        zoomControlEnabled={false}
+        rotateEnabled={allowInteraction}
+        scrollEnabled={allowInteraction}
+        pitchEnabled={false}
+        toolbarEnabled={false}
         onMarkerPress={({ nativeEvent }) => {
-          const { coordinate } = nativeEvent
-
-          if (pressMarker) {
-            pressMarker(JSON.parse(nativeEvent.id))
+          const mkr = JSON.parse(nativeEvent.id)
+          if (mkr) {
+            const { coordinate } = nativeEvent
+            if (pressMarker) {
+              pressMarker(mkr)
+            }
+            setRegion({
+              latitudeDelta: 0.02,
+              longitudeDelta: 0.02,
+              latitude: coordinate.latitude,
+              longitude: coordinate.longitude,
+            })
           }
-          setRegion({
-            ...region,
-            latitude: coordinate.latitude,
-            longitude: coordinate.longitude,
-          })
         }}
       />
     )

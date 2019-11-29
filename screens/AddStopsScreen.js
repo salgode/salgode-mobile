@@ -130,6 +130,7 @@ class AddStopsScreen extends Component {
                 onTapMap={this.onTapMap}
                 goToMarkers={true}
                 markersToFit={[startStop, endStop]}
+                cluster
               />
             </View>
             {showActions && (

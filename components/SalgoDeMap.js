@@ -27,10 +27,23 @@ const SalgoDeMap = ({
   const [fitOnce, setFitOnce] = React.useState(true)
   const mapRef = React.useRef()
 
-  const onMapReady = () => {
-    Permissions.askAsync(Permissions.LOCATION)
+  if (markers.length) {
+    for (let mk of markers) {
+      if (start && mk.place_id === start.place_id) {
+        mk.color = 'blue'
+      } else if (end && mk.place_id === end.place_id) {
+        mk.color = 'green'
+      } else {
+        mk.color = 'red'
+      }
+    }
   }
-  const onLayout = () => {
+
+  const onMapReady = React.useCallback(() => {
+    Permissions.askAsync(Permissions.LOCATION)
+  }, [])
+
+  const onLayout = React.useCallback(() => {
     if (goToMarkers && fitOnce) {
       try {
         const showMarkers = markersToFit.map(m => ({
@@ -55,32 +68,34 @@ const SalgoDeMap = ({
         )
       }
     }
-  }
+  }, [fitOnce])
 
-  const onUserLocationChange = ({ nativeEvent }) => {
+  const onUserLocationChange = React.useCallback(({ nativeEvent }) => {
     const { coordinate } = nativeEvent
-    if (coordinate && allowFindOnce) {
+    if (coordinate && allowFindOnce && mapRef) {
       setAllowFindOnce(false)
-      setRegion({
-        latitudeDelta: 0.02,
-        longitudeDelta: 0.02,
-        latitude: coordinate.latitude,
-        longitude: coordinate.longitude,
-      })
+      if (cluster) {
+        mapRef.current.mapview.animateToRegion({
+          latitudeDelta: 0.02,
+          longitudeDelta: 0.02,
+          latitude: coordinate.latitude,
+          longitude: coordinate.longitude,
+        }, 1500)
+      } else {
+        mapRef.current.animateToRegion({
+          latitudeDelta: 0.02,
+          longitudeDelta: 0.02,
+          latitude: coordinate.latitude,
+          longitude: coordinate.longitude,
+        }, 1500)
+      }
     }
-  }
+  }, [mapRef, allowFindOnce])
 
-  const renderMarker = m => {
-    let color = 'red'
-    if (start && m.place_id === start.place_id) {
-      color = 'blue'
-    }
-    if (end && m.place_id === end.place_id) {
-      color = 'green'
-    }
+  const renderMarker = React.useCallback((m) => {
     return (
       <Marker
-        key={`${m.place_id}-${color}`}
+        key={`${m.place_id}-${m.color}`}
         identifier={JSON.stringify(m)}
         coordinate={{
           latitude: parseFloat(m.lat),
@@ -88,12 +103,12 @@ const SalgoDeMap = ({
         }}
         title={showDescription ? m.place_name : undefined}
         description={showDescription ? m.address : undefined}
-        pinColor={color}
+        pinColor={m.color}
       />
     )
-  }
+  }, [])
 
-  const renderCluster = (cluster, onPress) => {
+  const renderCluster = React.useCallback((cluster, onPress) => {
     const { pointCount, coordinate, clusterId } = cluster
 
     // use pointCount to calculate cluster size scaling
@@ -127,7 +142,33 @@ const SalgoDeMap = ({
            */}
       </Marker>
     )
-  }
+  }, [mapRef])
+
+  const onMarkerPress = React.useCallback(({ nativeEvent }) => {
+    const mkr = JSON.parse(nativeEvent.id)
+    if (mkr && mapRef) {
+      const { coordinate } = nativeEvent
+      if (pressMarker) {
+        pressMarker(mkr)
+      }
+      if (cluster) {
+        mapRef.current.mapview.animateToRegion({
+          latitudeDelta: 0.02,
+          longitudeDelta: 0.02,
+          latitude: coordinate.latitude,
+          longitude: coordinate.longitude,
+        }, 1000)
+      } else {
+        mapRef.current.animateToRegion({
+          latitudeDelta: 0.02,
+          longitudeDelta: 0.02,
+          latitude: coordinate.latitude,
+          longitude: coordinate.longitude,
+        }, 1000)
+      }
+    }
+  }, [mapRef])
+
   if (cluster === true) {
     return (
       <ClusteredMapView
@@ -158,22 +199,41 @@ const SalgoDeMap = ({
         scrollEnabled={allowInteraction}
         pitchEnabled={false}
         toolbarEnabled={false}
-        onMarkerPress={({ nativeEvent }) => {
-          const mkr = JSON.parse(nativeEvent.id)
-          if (mkr) {
-            const { coordinate } = nativeEvent
-            if (pressMarker) {
-              pressMarker(mkr)
-            }
-            setRegion({
-              latitudeDelta: 0.02,
-              longitudeDelta: 0.02,
-              latitude: coordinate.latitude,
-              longitude: coordinate.longitude,
-            })
-          }
-        }}
-      />
+        onMarkerPress={onMarkerPress}
+      >
+        {showPath && (
+          <>
+            {path && path.length ? (
+              <Polyline
+                coordinates={path.map(p => ({
+                  latitude: parseFloat(p.lat),
+                  longitude: parseFloat(p.lon),
+                }))}
+                strokeColor={'red'}
+                strokeWidth={5}
+                lineDashPattern={[10, 20]}
+              />
+            ) : multiPaths && multiPaths.length ? (
+              <>
+                {multiPaths.map((singlePath, id) => (
+                  <Polyline
+                    key={id}
+                    coordinates={singlePath.map(p => ({
+                      latitude: parseFloat(p.lat),
+                      longitude: parseFloat(p.lon),
+                    }))}
+                    strokeColor={'red'}
+                    strokeWidth={5}
+                    lineDashPattern={[10, 20]}
+                  />
+                ))}
+              </>
+            ) : (
+              <></>
+            )}
+          </>
+        )}
+      </ClusteredMapView>
     )
   }
   return (
@@ -188,7 +248,7 @@ const SalgoDeMap = ({
       onUserLocationChange={onUserLocationChange}
       showsCompass={false}
       showsMyLocationButton={false}
-      region={region}
+      initialRegion={region}
       userLocationAnnotationTitle="Mi ubicación"
       zoomEnabled={allowInteraction}
       zoomControlEnabled={false}
@@ -196,44 +256,9 @@ const SalgoDeMap = ({
       scrollEnabled={allowInteraction}
       pitchEnabled={false}
       toolbarEnabled={false}
-      onMarkerPress={({ nativeEvent }) => {
-        const mkr = JSON.parse(nativeEvent.id)
-        if (mkr) {
-          const { coordinate } = nativeEvent
-          if (pressMarker) {
-            pressMarker(mkr)
-          }
-          setRegion({
-            latitudeDelta: 0.02,
-            longitudeDelta: 0.02,
-            latitude: coordinate.latitude,
-            longitude: coordinate.longitude,
-          })
-        }
-      }}
+      onMarkerPress={onMarkerPress}
     >
-      {markers.length !== 0 && markers.map(m => {
-        let color = 'red'
-        if (start && m.place_id === start.place_id) {
-          color = 'blue'
-        }
-        if (end && m.place_id === end.place_id) {
-          color = 'green'
-        }
-        return (
-          <Marker
-            key={`${m.place_id}-${color}`}
-            identifier={JSON.stringify(m)}
-            coordinate={{
-              latitude: parseFloat(m.lat),
-              longitude: parseFloat(m.lon),
-            }}
-            title={showDescription ? m.place_name : undefined}
-            description={showDescription ? m.address : undefined}
-            pinColor={color}
-          />
-        )
-      })}
+      {markers.length !== 0 && markers.map(renderMarker)}
       {showPath && (
         <>
           {path && path.length ? (

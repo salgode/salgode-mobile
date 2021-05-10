@@ -43,7 +43,7 @@
     "expo-web-browser": "^7.0.0",
     "fonts": "^0.0.2",
     "i18n-js": "^3.3.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "native-base": "^2.13.8",
     "react": "16.8.3",
     "react-dom": "16.8.3",
